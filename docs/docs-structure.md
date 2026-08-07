@@ -19,10 +19,14 @@ docs/
     data-flow.md            # cross-cutting concerns that have no home directory
     deployment.md
   work/
-    backlog.md              # one line per unshaped idea
+    backlog.md              # one line per unshaped idea — unsorted collection dump
+    candidates/             # picked and briefed, not yet shaped
+      0043-usage-export/
+        brief.md
     planned/                # shaped, not started
     active/                 # in progress
       0042-billing-retries/
+        brief.md            # if interview-sourced; frozen once design.md exists
         design.md
         plan.md             # only if sequencing rationale exists
         tickets/
@@ -42,15 +46,16 @@ Two lifetimes are in play, and confusing them is the main failure mode:
 
 ## 2. Document types
 
-| Doc                   | Question it answers                         | Lifetime                 |
-| --------------------- | ------------------------------------------- | ------------------------ |
-| Colocated `README.md` | What is this subsystem, as it exists now    | Durable                  |
-| `decisions/NNNN-*.md` | Why we chose X over Y                       | Immutable                |
-| `research/*.md`       | What we found out                           | Durable, but non-binding |
-| `work/backlog.md`     | What might be worth doing                   | Rolling                  |
-| `design.md`           | What will be true when this feature is done | Feature                  |
-| `plan.md`             | In what order, and why that order           | Feature                  |
-| `tickets/NN-*.md`     | What one agent does in one PR               | Feature                  |
+| Doc                   | Question it answers                         | Lifetime                                 |
+| --------------------- | ------------------------------------------- | ---------------------------------------- |
+| Colocated `README.md` | What is this subsystem, as it exists now    | Durable                                  |
+| `decisions/NNNN-*.md` | Why we chose X over Y                       | Immutable                                |
+| `research/*.md`       | What we found out                           | Durable, but non-binding                 |
+| `work/backlog.md`     | What might be worth doing                   | Rolling                                  |
+| `brief.md`            | What was asked, in the user's framing       | Feature — frozen once `design.md` exists |
+| `design.md`           | What will be true when this feature is done | Feature                                  |
+| `plan.md`             | In what order, and why that order           | Feature                                  |
+| `tickets/NN-*.md`     | What one agent does in one PR               | Feature                                  |
 
 **Precedence.** When a colocated `README.md` and a feature `design.md` disagree, the README wins. It describes what _is_; the design doc described what someone intended at a point in time.
 
@@ -60,27 +65,15 @@ Terms deliberately avoided: _spec_ (means four different things depending on who
 
 ## 3. Workflow
 
-```
-discover ⇄ shape        gate: Open questions is empty
-  ↓
-implement ⇄ test        gate: CI green, per ticket
-  ↓
-review                  gate: human approval
-  ↓
-reconcile               durable docs updated in the same PR
-  ↓
-ship
-```
+The process — stages, gates, loops, approval points — is defined in [agentic-workflow.md](agentic-workflow.md), which is authoritative for anything about sequence or approval. This doc owns the artifact side: which stage reads and writes which document.
 
-Gates must be checkable. "Is the design good?" is not a gate — that is what review is for.
-
-### Rules that make the stages real
-
-- **Fresh context per stage.** New session for shaping; new session per ticket. An agent that wrote the design an hour ago will reinterpret it to match whatever it just built.
-- **No write access during shaping.** An agent that _can_ write code will write code and retrofit the design to it.
-- **Shaping cites real files.** A design that doesn't reference actual paths in this repo describes an imaginary architecture.
-- **Human reviews the decomposition** before tickets are created. Bad slicing is cheap to fix in a list and expensive to fix across twelve started tickets.
-- **Reconcile is not optional.** Implementation always reveals the design was wrong somewhere. Skip this three times and the docs are actively misleading.
+| Stage     | Reads                                                  | Writes                                                                         |
+| --------- | ------------------------------------------------------ | ------------------------------------------------------------------------------ |
+| Discover  | `backlog.md`, colocated READMEs                        | `research/*.md`, backlog lines, `candidates/<id>/brief.md`                     |
+| Shape     | brief or backlog line, colocated READMEs, `decisions/` | `design.md`, `plan.md` (rarely), first tickets; moves the bundle to `planned/` |
+| Implement | ticket, `design.md`, colocated READMEs                 | code; ticket status; README and `design.md` amendments                         |
+| Review    | the PR diff, `design.md`, colocated READMEs            | findings                                                                       |
+| Ship      | the bundle                                             | durable docs (absorbing the design); deletes the bundle                        |
 
 ---
 
@@ -96,6 +89,7 @@ Gates must be checkable. "Is the design good?" is not a gate — that is what re
 | Small feature (1–2 PRs)        | No — backlog line, then PR                                     |
 | Multi-increment feature        | Yes                                                            |
 | Refactor with risky boundaries | Yes                                                            |
+| Interview-sourced feature      | Yes — starts in `candidates/` with `brief.md`                  |
 | Migration                      | `plan.md` only — design is trivial, ordering is the difficulty |
 | Spike                          | No — output goes to `research/`                                |
 
@@ -103,7 +97,7 @@ Writing hollow design docs for work that doesn't need them trains everyone to sk
 
 ### Scale
 
-- Under ~3 tickets → one file, `work/planned/0042-billing-retries.md`, with `## Target state` and `## Increments`.
+- Under ~3 tickets → one file, `work/planned/0042-billing-retries.md`, with `## Target state` and `## Increments`. Interview-sourced items are the exception: a brief already forces the directory form.
 - More → promote to a directory. `git mv`, never delete-and-recreate.
 - Monorepo → push bundles down to `packages/<pkg>/docs/work/`; keep only cross-cutting work at root.
 - If `active/` holds more than ~20 bundles, or multiple teams share the ID space, switch tickets to GitHub issues. You need query and filter at that point, not storage.
@@ -121,6 +115,16 @@ ls docs/work/*/0042-*        # resolve by ID
 - **In repo markdown**: reference by ID in prose, don't link the path. Paths break on status moves.
 - **In PR descriptions**: use a GitHub permalink (press `y` to pin the commit SHA). That points at the design as it read when the PR opened, which is the version the reviewer needs.
 - Always `git mv` so `git log --follow` survives the rename.
+
+### `brief.md`
+
+Written during discovery, by the interview — before any design exists. It captures **what was asked, in the user's framing**: problem, constraints, motivation. Not a solution.
+
+Writing one is itself a judgment: a brief claims the item needs shaping. If the intent fits in a backlog line, it wasn't a brief — write the line instead.
+
+The bundle starts life in `candidates/` holding only the brief, and moves to `planned/` when shaping completes.
+
+**Frozen once** `design.md` **exists.** From that point the brief is the record of intent and the design is what's being done about it. They may overlap, and that's harmless precisely because a frozen document can't drift — the same reasoning that lets superseded decision records keep their original text. When they disagree, `design.md` wins.
 
 ### `design.md`
 
@@ -208,7 +212,7 @@ Colocation is the only thing that reliably prevents staleness. A PR touching `sr
 
 - **Published package?** Keep `README.md` for consumers, put target state in `ARCHITECTURE.md` beside it. A README is expected to be install-and-usage; don't cram two genres into one file.
 - **No home directory?** Auth, data flow, deployment topology, observability — these genuinely cut across everything. They go in `docs/systems/`.
-- **`docs/systems/README.md` is an index.** One line per system, linking to the colocated file. Links only. Content never lives in two places.
+- `docs/systems/README.md` **is an index.** One line per system, linking to the colocated file. Links only. Content never lives in two places.
 
 Reconcile means updating these — not just patching the feature's own design doc. Two features touching billing concurrently both diff against one README, so incompatibility surfaces as a merge conflict instead of shipping silently.
 
@@ -249,16 +253,22 @@ Findings from discovery: benchmarks, spikes, vendor comparisons, prior-art reads
 
 **Research files are evidence, not commitments.** A doc weighing three options has not chosen one. An agent must not treat the last option described as the decision — if something was decided, there is a record in `decisions/`.
 
+Anything actionable a research doc reveals becomes a backlog line pointing at it. Research feeds the backlog; it never enters the workflow directly — otherwise there are two competing answers to "what might be worth doing".
+
 ---
 
 ## 8. `backlog.md`
 
 One line per unshaped idea. Keep capture friction near zero; a file-per-idea directory raises it just enough that people stop capturing.
 
+The list is an **unsorted collection dump** — order carries no meaning. Ranking happens at pick time, in front of the human, not in the file.
+
 ```markdown
 ## Features
 
 - Retry failed billing charges with backoff — asked by 3 customers
+- Vite 6 migration — breaking changes in plugin API
+  - see research/vite-6-migration.md
 
 ## Bugs
 
@@ -270,6 +280,8 @@ One line per unshaped idea. Keep capture friction near zero; a file-per-idea dir
 ```
 
 Append at the end of a section so concurrent edits conflict trivially. Prune periodically — move stale lines to `## Parked` or delete them. Items graduate to `work/planned/` when they're worth shaping.
+
+Sub-bullets pointing at `research/` files are fine — those paths never move, unlike work items, so the no-path-links rule doesn't apply.
 
 ---
 
