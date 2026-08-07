@@ -1,7 +1,7 @@
 ---
 name: backlog
 description: Read and maintain docs/work/backlog.md — add items, mark them done, promote them to work items, or list what's pending for an area. Use this whenever the user mentions something to handle later, notices a bug they're not fixing right now, says "add to backlog" / "we should eventually" / "remind me to" / "note that down", reports finishing a backlog item, or asks what's outstanding for a given area of the codebase. Use it even when they don't say the word "backlog".
-argument-hint: '[what to add, complete, or look up]'
+argument-hint: "[what to add, complete, or look up]"
 allowed-tools: Read, Edit, Glob, Grep, Bash(ls *)
 ---
 
@@ -114,13 +114,13 @@ than writing a placeholder.
 
 ## Operations
 
-**Add** — append at the end of the **ranked** list, immediately above the `## Trigger-gated`
-section if the file has one. Never append inside Trigger-gated: everything there is waiting on an
-event rather than a priority, so a normal item filed under that heading quietly contradicts both
-the heading and the order-is-priority rule, and nothing about the file looks wrong afterwards.
+**Add** — append at the end of the list, immediately above the `## Trigger-gated` section if the
+file has one. Never append inside Trigger-gated: everything there is waiting on an event rather
+than sitting in the general pool, so a normal item filed under that heading quietly contradicts
+the heading, and nothing about the file looks wrong afterwards.
 
-Order carries priority, so an item's position is the user's call, not yours: only place something
-higher when they say it's urgent, and never reshuffle the list to make room.
+The backlog is an unsorted collection dump — position carries no priority. Append rather than
+insert so concurrent edits conflict trivially, and never reshuffle the list.
 
 **Complete** — delete the line. Git holds the history; a `## Done` section grows without bound and
 nobody reads it. If the work produced a choice worth keeping, mention it and offer to invoke the
