@@ -8,7 +8,7 @@ and meta concerns.
 
 ## Items
 
-- [docs][skills] decision + backlog skills contradict docs-structure.md
+- [docs] [skills] decision + backlog skills contradict docs-structure.md
   - template shape, `done/` vs delete-on-ship, `.agents/rules/`, ID scheme
   - candidates/ + brief.md not yet reflected in the skills
 - [repo] no decided distribution model — plugin, template, or notes
@@ -23,6 +23,13 @@ and meta concerns.
 - [skills] review could run parallel critics — standards axis vs requirements axis
 - [skills] skill-layer patterns from mattpocock/skills worth evaluating
   - router skill, per-repo setup skill, reference layer, user- vs model-invoked split
+- [docs] the bundle-less 80% path is undefined — which stages and gates still apply
+- [docs] verify evidence is self-reported — CI ownership of the gate unstated
+- [docs] no rule for when a design.md amendment needs re-approval
+- [docs] failure paths undefined — rejected review, abandoned ticket, cancelled bundle
+- [docs] open-questions gate rewards not recording doubt; resolved answers vanish
+- [docs][skills] document ID allocation — next-id counter file; bundle-creating skill executes it
+- [docs] gather has no trigger — audit/research/prune cadence undefined
 - [docs] dogfood decisions/ — docs-structure choices have real rejected alternatives
   - no done/, files over issues, decisions not adr, colocation, target-state phrasing
 - [docs] AGENTS.md and decisions/template.md are referenced but never defined or exampled
