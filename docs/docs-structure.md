@@ -207,7 +207,7 @@ There is no `done/`. Feature docs describe the system at a moment that is now pa
 
 Target state for a subsystem lives **next to its code**:
 
-```
+```text
 src/billing/README.md
 ```
 
