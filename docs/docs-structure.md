@@ -106,14 +106,14 @@ Writing hollow design docs for work that doesn't need them trains everyone to sk
 
 Features get a 4-digit ID. Tickets are numbered locally (`01`, `02`) — `0042/03` is a sufficient global reference.
 
-The parent directory is the status. **Never hardcode it.**
+The parent directory is the status. **Never hardcode it, and never assume it from an earlier session** — re-resolve every time:
 
 ```bash
-ls docs/work/*/0042-*        # resolve by ID
+ls docs/work/*/0042-*        # resolve by ID, works from any status directory
 ```
 
-- **In repo markdown**: reference by ID in prose, don't link the path. Paths break on status moves.
-- **In PR descriptions**: use a GitHub permalink (press `y` to pin the commit SHA). That points at the design as it read when the PR opened, which is the version the reviewer needs.
+- **In repo markdown**: reference by ID in prose, don't link the path. A markdown link is a literal relative path — the glob only helps something that can execute it — so `[0042](../planned/0042-…)` 404s on the first `git mv`. Humans resolve IDs the same way: `t` on GitHub or `Cmd+P` in an editor, then type the ID.
+- **In PR descriptions**: use a GitHub permalink (press `y` to pin the commit SHA). It never breaks, and it points at the design as it read when the PR was opened — the version the reviewer needs, not whatever it says three moves later. Branch-name URLs (`/blob/main/...`) are the ones that rot.
 - Always `git mv` so `git log --follow` survives the rename.
 
 ### `brief.md`
@@ -184,6 +184,7 @@ Backoff policy, alerting.
 ```
 
 - **Slice by what must be true when this PR merges** — not by file, not by layer. One PR, independently revertible, `main` stays green after each.
+- **Make ticket 01 a tracer bullet** — the thinnest end-to-end slice that exercises the whole architecture; later tickets widen it. It's the ticket most likely to invalidate the design's assumptions, which is why it goes first — and why the remaining tickets wait for it to land.
 - **Every ticket needs a machine-checkable done condition.** "Users can retry failed payments" is not verifiable. A test command is. If you can't write the check, the ticket isn't specified yet.
 - **Don't duplicate the design's reasoning.** Link to it. Duplicated rationale goes stale and the agent can't tell which copy is current.
 - **Don't create all tickets upfront.** Beyond the first two or three, they're written against assumptions implementation will invalidate. Generate the rest after the first lands.
@@ -191,6 +192,8 @@ Backoff policy, alerting.
 ### Claiming, with parallel agents
 
 Set `status: doing` and push _before_ starting work. A rejected push on a stale ref means someone else claimed it — re-read and pick another. Not a real lock, but sufficient for two or three concurrent agents. Beyond that, use issues, where assignment is atomic.
+
+A claim only prevents two agents taking the _same ticket_. Two agents on different tickets can still conflict in code — nothing in this protocol prevents that. Small tickets and a rebase before opening the PR are the mitigation, not the claim.
 
 ### On ship
 
@@ -215,6 +218,8 @@ Colocation is the only thing that reliably prevents staleness. A PR touching `sr
 - `docs/systems/README.md` **is an index.** One line per system, linking to the colocated file. Links only. Content never lives in two places.
 
 Reconcile means updating these — not just patching the feature's own design doc. Two features touching billing concurrently both diff against one README, so incompatibility surfaces as a merge conflict instead of shipping silently.
+
+The check can be mechanical: a CI step that warns when a PR touches `src/billing/` without touching `src/billing/README.md`. Warn, don't block — plenty of changes leave the README accurate — but the warning turns "did you reconcile?" into a question the PR answers instead of one the reviewer must remember to ask.
 
 ---
 
