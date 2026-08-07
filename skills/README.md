@@ -1,0 +1,42 @@
+# Skills — the mechanism layer
+
+How the roles in [docs/agentic-workflow.md](../docs/agentic-workflow.md) map onto Claude Code skills and subagents. The workflow doc owns the process and stays tool-agnostic; this file owns the Claude Code realization. When a question is about sequence, gates, or approval, the workflow doc wins.
+
+The subagents these skills fork into are documented in [agents/README.md](../agents/README.md) — skills own the _when_, agents own the _who_.
+
+## The rule that decides every placement
+
+A skill runs **inline** when the human is part of the loop — forked skills get no conversation history and no user, so dialogue and approval can't fork. A skill runs `context: fork` when the role requires isolation (fresh context, no authorship) or would flood the main context. The process rules map onto mechanisms almost 1:1.
+
+## Workflow skills
+
+| Skill          | Role (workflow doc) | Invocation                             | Context                                      | Notes                                                                                                                                                                                                                 |
+| -------------- | ------------------- | -------------------------------------- | -------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `audit`        | Discover / gather   | `/audit`, manual                       | fork (background), `agent: researcher`       | Autonomous sweep; writes `research/audit-*.md` + backlog lines. `disallowed-tools: AskUserQuestion`.                                                                                                                  |
+| `research`     | Discover / gather   | `/research <topic>`, manual            | fork (background), `agent: researcher`       | Needs WebSearch/WebFetch; writes `research/*.md` + backlog line.                                                                                                                                                      |
+| `from-backlog` | Discover / pick     | `/from-backlog`, manual                | inline                                       | Dialogue — human picks. Presents candidates neutrally, routes to interview or shape, ends with prune.                                                                                                                 |
+| `interview`    | Discover / pick     | `/interview`, manual                   | inline                                       | The user is the data source. Allocates the ID (`work/next-id`) and creates `candidates/<id>-<slug>/brief.md`.                                                                                                         |
+| `shape`        | Shape / author      | `/shape <id>`, manual                  | inline                                       | Judgment questions go to the human mid-flow. Write boundary enforced by a skill-scoped hook (below). Invokes `critique` before exit.                                                                                  |
+| `critique`     | Shape / critic      | model-invocable (triggered by `shape`) | fork, `background: false`, `agent: critic`   | Fork = no conversation history = the fresh-context rule enforced mechanically. Author waits for findings.                                                                                                             |
+| `implement`    | Implement           | `/implement <id>/<nn>`, manual         | inline                                       | The session's operating procedure: resolve → read → claim → work → verify evidence → reconcile → PR. Also handles the bundle-less light path, branching on "no ticket exists" — one procedure, artifact-scaled.       |
+| `review`       | Review              | `/review <pr>`, manual                 | fork, `background: false`, `agent: reviewer` | Fork gives authorship isolation even when invoked from the implementer's session. Findings return to the human for the Accept gate. One reviewer for now; the standards/requirements split is a backlog optimization. |
+| `ship`         | Ship                | `/ship <id>`, manual                   | inline                                       | Absorbs the design into durable docs, deletes the bundle, merges. Durable-doc writes deserve main-session visibility.                                                                                                 |
+
+Existing skills that slot in unchanged: `backlog` (model-invocable by design — triggers on "note that down"), `decision` (model-invocable at wrap-ups), `handoff` (manual; the unplanned-break mechanism from Sessions and handoffs).
+
+## Reference layer
+
+Background knowledge, hidden from the `/` menu (`user-invocable: false`), preloaded into subagents via their `skills:` field so the full content is in their context at startup:
+
+- `docs-rules` — the procedural distillate of docs-structure: ID glob resolution, README-over-design precedence, target-state phrasing, ticket format, the freeze rule. Workflow skills link here instead of restating — the one-copy rule applied to skills themselves.
+- `evidence` — the evidence-block format `implement` produces and `reviewer` checks.
+
+## Settings that carry process rules
+
+1. **"No write access during shaping" needs a hook.** `allowed-tools` is per-tool, not per-path — the write boundary (shape edits only its bundle; researcher edits only research/ + backlog) is a skill-scoped `hooks` entry (PreToolUse) blocking Edit/Write outside the allowed paths. This is the load-bearing rule; enforce it structurally.
+2. **Blocking semantics follow who's waiting.** `critique` and `review` set `background: false` — the author and the human wait for findings. `audit` and `research` stay background — gathering is fire-and-forget.
+3. **The manual/model-invoked split falls out of the gates.** Every skill that crosses a human gate is manual (`disable-model-invocation: true`); everything invoked by another skill or by context (critique, backlog, decision, the reference layer) stays model-invocable.
+
+## Status
+
+The workflow skills in the table above don't exist yet — this file is the build plan, paired with [agents/README.md](../agents/README.md) for the subagents. Existing today: `backlog`, `decision`, `handoff` (which need their own reconciliation with docs-structure — see the backlog). Build one skill end-to-end first, using the workflow itself.

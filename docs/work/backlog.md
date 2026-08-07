@@ -12,9 +12,8 @@ and meta concerns.
   - template shape, `done/` vs delete-on-ship, `.agents/rules/`, ID scheme
   - candidates/ + brief.md not yet reflected in the skills
 - [repo] no decided distribution model — plugin, template, or notes
-- [skills] workflow activities have no skills yet — decide the mapping once process is final
-  - gather: audit, research · pick: interview · shape: author, critic
-  - docs-structure §§3–4, 10 are procedural → skill material; §§5–7 are reference, not skills
+- [skills] build the workflow skills and subagents mapped in skills/README.md
+  - one end-to-end first, using the workflow itself
 - [docs] Codex section in setup-claude-code.md is an empty TODO
 - [docs] decide where review findings and verification evidence live
   - PR description/comments vs files in the repo

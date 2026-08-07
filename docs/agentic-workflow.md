@@ -140,3 +140,10 @@ Three approvals, and only three:
 3. **Accept** (Review → Ship): is the change good
 
 Everything between those points is agent-crossable on deterministic gates. Adding human checkpoints inside Implement defeats the purpose; removing any of the three hands the agent a judgment it doesn't own — priorities, architecture, or acceptance.
+
+## Mechanism mapping
+
+This doc stays tool-agnostic. The Claude Code realization lives next to the things it describes — links only:
+
+- [skills/README.md](../skills/README.md) — the skill for each role: invocation, inline vs. fork, settings
+- [agents/README.md](../agents/README.md) — the subagents forked skills run in: tools, preloaded knowledge
