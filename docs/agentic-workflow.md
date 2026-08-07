@@ -37,7 +37,7 @@ Two halves, named by where they end: **gather** activities end as backlog lines,
 
 Gathering fills the funnel:
 
-- **Audit** — scan the codebase for simplification, quality, reliability, and security opportunities. Findings become backlog lines; evidence worth keeping goes to `audit/`.
+- **Audit** — scan the codebase for simplification, quality, reliability, and security opportunities. Findings become backlog lines; evidence worth keeping goes to `research/` (as `audit-*.md`).
 - **Research** — investigate the world: new versions, migration paths, best practices, how another repo solved something. The write-up lands in `research/`; anything actionable it reveals becomes a backlog line pointing at it.
 
 Gathering never chooses. Its candidates enter the funnel like every other idea — the backlog is the single, unsorted collection point, and nothing bypasses it.
@@ -56,6 +56,8 @@ Two roles, deliberately separated:
 - **Author** — reads the brief (when one exists) and writes `design.md` (target state, non-goals, open questions, acceptance criteria) and the first two or three tickets, inside the candidate's bundle. Read-only on code: an agent that _can_ write code will write code and retrofit the design to it.
 - **Critic** — a **separate agent with a fresh context** that attempts to break the plan: missed states, API contracts, security, performance, testability, scope creep. The author cannot find the holes in a plan it just rationalized into existence; a critic that shares the author's context inherits the author's blind spots.
 
+Migration and rollout needs are sequencing rationale — ship behind a flag, reversible migration before the code that needs it — so they land in `plan.md`, which exists for exactly that. A risk the design can't absorb becomes an Open question; there is no hand-wavy Risks section.
+
 Exit is two checks: **Open questions is empty** (checkable without judgment — the section has no content), and **the human has approved the decomposition**. The second is a human gate because bad slicing is cheap to fix in a list and expensive to fix across twelve started tickets.
 
 On exit, the bundle moves from `candidates/` to `planned/`, and `brief.md` freezes: from here on the brief is the record of what was asked, the design is what's being done about it, and when they disagree the design wins.
@@ -66,14 +68,14 @@ One ticket per session, fresh context, dedicated branch or worktree. The agent r
 
 The exit gate has two halves, both in the same PR:
 
-1. **Verify** — every done-when command passes, and the PR records the exact commands and their output. Evidence, not claims.
+1. **Verify** — the repo's deterministic checks pass — typecheck, lint, unit/integration/e2e tests, build, migrations (up _and_ down) where touched — plus the ticket's own done-when commands, and a manual smoke test when the ticket calls for one. The PR records the exact commands, their output, and any check that was skipped and why: a stated gap is reviewable, an omitted one is a trap. Evidence, not claims.
 2. **Reconcile** — colocated `README.md`s updated if the change made them inaccurate; `design.md` amended if implementation proved it wrong.
 
 If a new open question appears mid-ticket: stop, add it to `design.md → Open questions`, don't decide it unilaterally.
 
 ### Review
 
-Fresh context, no authorship of the diff under review. Judges what verify cannot: architecture fit, requirement fit, security, edge cases, maintainability — and whether the reconcile half of the PR is honest (does the README diff actually match what the code now does?).
+Fresh context, no authorship of the diff under review. Judges what verify cannot: architecture fit, requirement fit, regressions, security, UX, edge cases, maintainability — and whether the reconcile half of the PR is honest (does the README diff actually match what the code now does?).
 
 The loop: **review → fix findings → re-run affected verification → review again if the fix was material → approve.** Re-verification after fixes is not optional; a fix that breaks a done-when condition is a regression wearing a review-approval costume.
 

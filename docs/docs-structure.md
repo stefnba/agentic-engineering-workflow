@@ -249,7 +249,9 @@ Use `template.md`. Never two directories for this.
 
 ## 7. `research/`
 
-Findings from discovery: benchmarks, spikes, vendor comparisons, prior-art reads.
+Findings from discovery: benchmarks, spikes, vendor comparisons, prior-art reads, codebase audits.
+
+One folder for the whole evidence genre, regardless of which activity produced a finding — provenance goes in the filename, not a directory (`audit-2026-08-auth.md`, `spike-duckdb-ingest.md`). Directories give you one axis, and source isn't the one worth spending it on.
 
 **Research files are evidence, not commitments.** A doc weighing three options has not chosen one. An agent must not treat the last option described as the decision — if something was decided, there is a record in `decisions/`.
 
