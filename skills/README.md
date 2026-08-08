@@ -49,6 +49,21 @@ Background knowledge, hidden from the `/` menu (`user-invocable: false`), preloa
 2. **Blocking semantics follow who's waiting.** `critique` and `review` set `background: false` — the author and the human wait for findings. `audit` and `research` stay background — gathering is fire-and-forget.
 3. **The manual/model-invoked split falls out of the gates.** Every skill that crosses a human gate is manual (`disable-model-invocation: true`); everything invoked by another skill or by context (critique, backlog, decision, the reference layer) stays model-invocable.
 
+## Exercising skills in this repo
+
+Claude Code loads skills from `.claude/skills/`, not `skills/` — this repo keeps them at the repo root because they're reference material meant to be copied elsewhere, not consumed here (see the top-level README). To invoke one for real inside this repo anyway, `.claude/skills/<name>` is a symlink to `../../skills/<name>`, one per skill directory (the pattern Claude Code documents for skill entries). Add the symlink when a skill is added; nothing else to configure. The same applies to `.claude/agents/<name>.md` → `../../agents/<name>.md` once subagents exist.
+
+## Plugin compatibility
+
+This repo ships as a Claude Code plugin (decision 0001; mechanics in `docs/research/docs-read-2026-08-claude-code-plugins.md`). Four rules hold for every skill and agent, continuously — not as a packaging step at the end:
+
+1. Target-repo paths only — a path assuming this repo's tree dangles in the consumer.
+2. Cross-skill references by plain name; namespacing (`/agentic-coding:shape`) is applied at install.
+3. Hooks live on skills, never on agents — plugin agents can't declare them.
+4. Hook commands reference plugin files via `${CLAUDE_PLUGIN_ROOT}` — installed plugins run from a cache.
+
+Where a Claude-Code-specific field isn't needed, prefer the portable [Agent Skills](https://agentskills.io) spec fields as a free hedge.
+
 ## Status
 
-The workflow skills and the reference layer don't exist yet — this file is the build plan, paired with [agents/README.md](../agents/README.md) for the subagents. The supporting skills exist today but need reconciliation with docs-structure (see the backlog). Build one workflow skill end-to-end first, using the workflow itself.
+The reference layer has `docs-rules`. `interview` exists. `shape`, `critique`, and the `critic` subagent don't exist yet — this file is the build plan, paired with [agents/README.md](../agents/README.md) for the subagents. The supporting skills (`backlog`, `decision`, `handoff`) exist today but need reconciliation with docs-structure (see the backlog). Build one workflow skill end-to-end first, using the workflow itself.
