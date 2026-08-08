@@ -11,7 +11,7 @@ and meta concerns.
 - [docs] [skills] decision + backlog skills contradict docs-structure.md
   - template shape, `done/` vs delete-on-ship, `.agents/rules/`, ID scheme
   - candidates/ + brief.md not yet reflected in the skills
-- [repo] no decided distribution model — plugin, template, or notes
+  - backlog skill's shell preamble hard-fails outside a workspace layout (`ls apps/*/package.json`)
 - [skills] build the workflow skills and subagents mapped in skills/README.md
   - one end-to-end first, using the workflow itself
 - [docs] Codex section in setup-claude-code.md is an empty TODO
@@ -27,8 +27,9 @@ and meta concerns.
 - [docs] no rule for when a design.md amendment needs re-approval
 - [docs] failure paths undefined — rejected review, abandoned ticket, cancelled bundle
 - [docs] open-questions gate rewards not recording doubt; resolved answers vanish
-- [docs][skills] document ID allocation — next-id counter file; bundle-creating skill executes it
 - [docs] gather has no trigger — audit/research/prune cadence undefined
 - [docs] dogfood decisions/ — docs-structure choices have real rejected alternatives
   - no done/, files over issues, decisions not adr, colocation, target-state phrasing
 - [docs] AGENTS.md and decisions/template.md are referenced but never defined or exampled
+- [skills] consistency-sweep skill (`tidy`) — detect drift between backlog, decisions, work items
+  - detect and propose only, human applies; don't name it "reconcile" (taken by the per-PR obligation)

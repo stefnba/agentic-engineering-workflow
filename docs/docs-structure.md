@@ -106,6 +106,10 @@ Writing hollow design docs for work that doesn't need them trains everyone to sk
 
 Features get a 4-digit ID. Tickets are numbered locally (`01`, `02`) — `0042/03` is a sufficient global reference.
 
+IDs come from `docs/work/next-id`, a single counter file holding the next one to give out — sequential, not hashed or content-addressed, because they're allocated before any content exists to address. The interview activity is the only thing that increments it, in the same commit as the bundle it creates; the skill implementing it owns the exact steps. A rejected push means someone else claimed that ID first — the push conflict is the lock, the same protocol as ticket claiming below.
+
+Decision records number themselves independently, so `0001` can be both a decision and a work item. In prose, bare IDs always mean work items; decisions are always written out as "decision 0007".
+
 The parent directory is the status. **Never hardcode it, and never assume it from an earlier session** — re-resolve every time:
 
 ```bash
@@ -119,6 +123,19 @@ ls docs/work/*/0042-*        # resolve by ID, works from any status directory
 ### `brief.md`
 
 Written during discovery, by the interview — before any design exists. It captures **what was asked, in the user's framing**: problem, constraints, motivation. Not a solution.
+
+```markdown
+# 0042 — Billing retries
+
+## Problem
+
+## Constraints
+
+## Motivation
+```
+
+- **Keep these headings identical across every brief**, for the same reason as `design.md`: stable anchors mean the interview skill and later tooling can rely on the shape without re-deriving it per feature.
+- No `Target state`, `Non-goals`, or `Acceptance criteria` here — those are `design.md`'s job. A brief that starts solutioning stopped being a brief.
 
 Writing one is itself a judgment: a brief claims the item needs shaping. If the intent fits in a backlog line, it wasn't a brief — write the line instead.
 

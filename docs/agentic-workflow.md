@@ -125,7 +125,7 @@ Still open: where review findings and verification evidence live durably — PR 
 ## Rules that make the stages real
 
 - **One creator per artifact type.** Interview creates briefs, shape creates designs and tickets, implement amends them — nothing is created twice. A stage writes only the artifact types in its row of the reads/writes table (docs-structure §3).
-- **Fresh context per stage.** New session for shaping; new session per ticket implementation. An agent that wrote the design an hour ago will reinterpret it to match whatever it just built.
+- **Fresh context per stage.** New session for shaping; new session per ticket implementation. An agent that wrote the design an hour ago will reinterpret it to match whatever it just built. The rule targets context that *biases* — interview flowing into shaping in one session is fine, because the shared context is the user's own words and the brief on disk is the checkpoint.
 - **No write access during shaping.** An agent that _can_ write code will write code and retrofit the design to it.
 - **Shaping cites real files.** A design that doesn't reference actual paths in the repo describes an imaginary architecture.
 - **Human reviews the decomposition** before tickets are created. Bad slicing is cheap to fix in a list and expensive to fix across twelve started tickets.
