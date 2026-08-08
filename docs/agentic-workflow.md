@@ -7,7 +7,7 @@ How work moves from idea to shipped. This doc owns the **process**: stages, gate
 ```text
 discover ⇄ shape                      gate: human picks the candidate
     ↓
-  shape                               gate: Open questions empty
+  shape                               gate: Open questions resolved
     ↓                                       + human approves the decomposition
 implement ⇄ verify        per ticket  gate: done-when commands pass (agent)
     ↓                                       + reconcile diff in the same PR
@@ -58,7 +58,9 @@ Two roles, deliberately separated:
 
 Migration and rollout needs are sequencing rationale — ship behind a flag, reversible migration before the code that needs it — so they land in `plan.md`, which exists for exactly that. A risk the design can't absorb becomes an Open question; there is no hand-wavy Risks section.
 
-Exit is two checks: **Open questions is empty** (checkable without judgment — the section has no content), and **the human has approved the decomposition**. The second is a human gate because bad slicing is cheap to fix in a list and expensive to fix across twelve started tickets.
+Exit is two checks: **every open question carries a resolution** (checkable without judgment — no line lacks one), and **the human has approved the decomposition**. The second is a human gate because bad slicing is cheap to fix in a list and expensive to fix across twelve started tickets.
+
+Questions are never deleted while the feature is open — deleting one deletes the reasoning ticket 7 will need. Resolve in place instead: `- [resolved] <question>? → <answer>`. Who may resolve depends on what kind of question it is: an **evidence question** ("does X call Y?") the agent resolves itself, citing the file; a **judgment question** ("should tokens live 15 minutes?") only the human resolves. An agent resolving a judgment question is grading its own homework — the split is what keeps `[resolved]` meaning something.
 
 On exit, the bundle moves from `candidates/` to `planned/`, and `brief.md` freezes: from here on the brief is the record of what was asked, the design is what's being done about it, and when they disagree the design wins.
 
@@ -71,11 +73,13 @@ The exit gate has two halves, both in the same PR:
 1. **Verify** — the repo's deterministic checks pass — typecheck, lint, unit/integration/e2e tests, build, migrations (up _and_ down) where touched — plus the ticket's own done-when commands, and a manual smoke test when the ticket calls for one. The PR records the exact commands, their output, and any check that was skipped and why: a stated gap is reviewable, an omitted one is a trap. Evidence, not claims.
 2. **Reconcile** — colocated `README.md`s updated if the change made them inaccurate; `design.md` amended if implementation proved it wrong.
 
-If a new open question appears mid-ticket: stop, add it to `design.md → Open questions`, don't decide it unilaterally.
+An amendment may **describe, never decide**: clarifying a `Target state` sentence that turned out ambiguous is an amendment; changing what the target state actually is is a deviation. When unsure which one a change is, treat it as a deviation — stopping costs minutes, deciding unilaterally costs the gate.
+
+If a new open question appears mid-ticket: stop, add it to `design.md → Open questions` unresolved, don't decide it unilaterally.
 
 ### Review
 
-Fresh context, no authorship of the diff under review. Judges what verify cannot: architecture fit, requirement fit, regressions, security, UX, edge cases, maintainability — and whether the reconcile half of the PR is honest (does the README diff actually match what the code now does?).
+Fresh context, no authorship of the diff under review. Judges what verify cannot: architecture fit, requirement fit, regressions, security, UX, edge cases, maintainability — and whether the reconcile half of the PR is honest (does the README diff actually match what the code now does?). Any `design.md` amendment in the diff gets checked against describe-never-decide — an amendment that smuggled a deviation through as a clarification is a finding, not a nitpick.
 
 The loop: **review → fix findings → re-run affected verification → review again if the fix was material → approve.** Re-verification after fixes is not optional; a fix that breaks a done-when condition is a regression wearing a review-approval costume.
 
@@ -125,10 +129,11 @@ Still open: where review findings and verification evidence live durably — PR 
 ## Rules that make the stages real
 
 - **One creator per artifact type.** Interview creates briefs, shape creates designs and tickets, implement amends them — nothing is created twice. A stage writes only the artifact types in its row of the reads/writes table (docs-structure §3).
-- **Fresh context per stage.** New session for shaping; new session per ticket implementation. An agent that wrote the design an hour ago will reinterpret it to match whatever it just built. The rule targets context that *biases* — interview flowing into shaping in one session is fine, because the shared context is the user's own words and the brief on disk is the checkpoint.
+- **Fresh context per stage.** New session for shaping; new session per ticket implementation. An agent that wrote the design an hour ago will reinterpret it to match whatever it just built. The rule targets context that _biases_ — interview flowing into shaping in one session is fine, because the shared context is the user's own words and the brief on disk is the checkpoint.
 - **No write access during shaping.** An agent that _can_ write code will write code and retrofit the design to it.
 - **Shaping cites real files.** A design that doesn't reference actual paths in the repo describes an imaginary architecture.
 - **Human reviews the decomposition** before tickets are created. Bad slicing is cheap to fix in a list and expensive to fix across twelve started tickets.
+- **An amendment may describe, never decide.** Post-approval edits to `design.md` clarify; they don't change what was approved. When unsure which one a change is, it's a deviation — an Open question, not a silent edit.
 - **Reconcile is enforced by gates, not conscience.** Review checks the doc diff; ship checks the bundle deletion. Skip it three times and the docs are actively misleading.
 
 ## Where the human sits
@@ -138,6 +143,8 @@ Three approvals, and only three:
 1. **Pick** (Discover → Shape): what is worth doing
 2. **Plan** (Shape → Implement): is this the right target state, sliced correctly
 3. **Accept** (Review → Ship): is the change good
+
+Pick and Plan are per-feature — each fires once for the whole bundle. Accept is per-PR: it recurs once per ticket (or per change, on the light path), because each diff is its own thing to judge.
 
 Everything between those points is agent-crossable on deterministic gates. Adding human checkpoints inside Implement defeats the purpose; removing any of the three hands the agent a judgment it doesn't own — priorities, architecture, or acceptance.
 

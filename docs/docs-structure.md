@@ -158,7 +158,7 @@ Delta descriptions are only true before you start. An agent picking up ticket 4 
 
 ## Non-goals
 
-## Open questions ← must be empty before implementation starts
+## Open questions ← every line resolved before implementation starts
 
 ## Acceptance criteria
 ```
@@ -166,7 +166,7 @@ Delta descriptions are only true before you start. An agent picking up ticket 4 
 - **Keep these headings identical across every design doc.** Stable anchors mean tickets can deep-link and `AGENTS.md` can give generic instructions.
 - **Non-goals is the highest-value section.** Agents wander — they refactor adjacent code, add unrequested error handling, upgrade dependencies. An explicit exclusion list prevents most scope drift.
 - **Say what and why, not how.** A design detailed enough to be pseudocode removes the agent's ability to adapt while adding surface area for you to have been wrong.
-- **Open questions is the gate.** If it's non-empty, do not implement. If a new question appears mid-implementation, stop and add it — do not decide it yourself.
+- **Open questions is the gate, but the gate is resolution, not absence.** Questions are never deleted while the feature is open — deleting one deletes the reasoning ticket 7 will need. Resolve in place: `- [resolved] <question>? → <answer>`. An evidence question ("does X call Y?") the agent resolves itself, citing the file; a judgment question ("should tokens live 15 minutes?") only the human resolves. Do not implement while a line is unresolved. If a new question appears mid-implementation, stop and add it unresolved — do not decide it yourself.
 
 ### `plan.md`
 
@@ -334,7 +334,7 @@ Starting a ticket
   5. Set status: doing, push, then work.
 
 Blocked by an unanswered question
-  Stop. Add it to design.md → Open questions. Do not decide it.
+  Stop. Add it to design.md → Open questions, unresolved. Do not decide it.
 
 Before opening the PR
   - Done-when conditions pass
