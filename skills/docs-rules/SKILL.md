@@ -6,7 +6,7 @@ user-invocable: false
 
 # docs-rules
 
-Distilled from [docs/docs-structure.md](../../docs/docs-structure.md), which stays authoritative — this file states the same rules without the reasoning behind them. When something isn't covered here, read that doc instead of guessing.
+Distilled from `docs/docs-structure.md`, which stays authoritative — this file states the same rules without the reasoning behind them. When something isn't covered here, read that doc instead of guessing.
 
 ## Resolve IDs, never hardcode or remember them
 
@@ -40,7 +40,7 @@ Headings are fixed across every design doc, so tickets can deep-link to them:
 ## Acceptance criteria
 ```
 
-Open questions must be empty before implementation starts. A question that appears mid-implementation gets added here, not decided unilaterally.
+Open questions resolves in place, it doesn't empty out. Every line needs `[resolved] <question>? → <answer>` before implementation starts; unresolved lines block. Evidence questions (cite the file) the agent resolves itself; judgment questions only the human resolves. A question that appears mid-implementation gets added unresolved — never decided unilaterally.
 
 ## Ticket format
 

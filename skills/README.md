@@ -66,4 +66,4 @@ Where a Claude-Code-specific field isn't needed, prefer the portable [Agent Skil
 
 ## Status
 
-The reference layer has `docs-rules`. `interview` and `critique` (with the `critic` subagent) exist. `shape` doesn't yet — this file is the build plan, paired with [agents/README.md](../agents/README.md) for the subagents. The supporting skills (`backlog`, `decision`, `handoff`) exist today but need reconciliation with docs-structure (see the backlog). Build one workflow skill end-to-end first, using the workflow itself.
+All four planned skills exist: `docs-rules` (reference), `interview`, `critique` (with the `critic` subagent), and `shape`. `pick`, `audit`, `research`, `implement`, `review`, and `ship` are unbuilt — this file remains their build plan, paired with [agents/README.md](../agents/README.md) for the subagents (`reviewer`, `researcher`, `ticket-runner`). The supporting skills (`backlog`, `decision`, `handoff`) exist today but need reconciliation with docs-structure (see the backlog).

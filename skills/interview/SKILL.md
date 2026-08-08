@@ -8,7 +8,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash(cat docs/work/next-id), Bash(
 
 # Interview
 
-The pick-side half of Discover that starts from the user instead of the backlog (see [docs/agentic-workflow.md § Discover](../../docs/agentic-workflow.md#discover)). Output is `candidates/<id>-<slug>/brief.md`: **the problem in the user's framing, not a solution.**
+The pick-side half of Discover that starts from the user instead of the backlog (see `docs/agentic-workflow.md` § Discover). Output is `candidates/<id>-<slug>/brief.md`: **the problem in the user's framing, not a solution.**
 
 ## Challenge, don't transcribe
 
@@ -35,7 +35,7 @@ Writing a brief is itself a judgment: it claims the item needs shaping. If the c
 ## Motivation
 ```
 
-Same three headings, every time — see [docs/docs-structure.md § brief.md](../../docs/docs-structure.md#briefmd) for why they're fixed. Title is a short noun phrase, not the problem statement restated.
+Same three headings, every time — see `docs/docs-structure.md` § `brief.md` for why they're fixed. Title is a short noun phrase, not the problem statement restated.
 
 ## Allocate the ID
 
@@ -52,4 +52,4 @@ Don't skip the push in a repo with a remote — an uncommitted or unpushed ID is
 
 ## After writing
 
-Report the ID and path (`0043 → docs/work/candidates/0043-usage-export/brief.md`) and the one-line problem statement. Don't summarize the whole brief back — the user just answered every question in it. Say the next step is shaping (`/shape 0043`), and don't invoke it yourself — Shape is a separate stage with its own fresh-context rule (see [docs/agentic-workflow.md § Rules that make the stages real](../../docs/agentic-workflow.md#rules-that-make-the-stages-real)).
+Report the ID and path (`0043 → docs/work/candidates/0043-usage-export/brief.md`) and the one-line problem statement. Don't summarize the whole brief back — the user just answered every question in it. Say the next step is shaping (`/shape 0043`), and don't invoke it yourself — Shape is a separate stage with its own fresh-context rule (see `docs/agentic-workflow.md` § Rules that make the stages real).

@@ -24,12 +24,12 @@ and meta concerns.
   - router skill, per-repo setup skill, reference layer, user- vs model-invoked split
 - [docs] the bundle-less 80% path is undefined — which stages and gates still apply
 - [docs] verify evidence is self-reported — CI ownership of the gate unstated
-- [docs] no rule for when a design.md amendment needs re-approval
 - [docs] failure paths undefined — rejected review, abandoned ticket, cancelled bundle
-- [docs] open-questions gate rewards not recording doubt; resolved answers vanish
 - [docs] gather has no trigger — audit/research/prune cadence undefined
 - [docs] dogfood decisions/ — docs-structure choices have real rejected alternatives
   - no done/, files over issues, decisions not adr, colocation, target-state phrasing
 - [docs] AGENTS.md and decisions/template.md are referenced but never defined or exampled
 - [skills] consistency-sweep skill (`tidy`) — detect drift between backlog, decisions, work items
   - detect and propose only, human applies; don't name it "reconcile" (taken by the per-PR obligation)
+- [skills] shape's write-boundary hook uses `${CLAUDE_PROJECT_DIR}`, not `${CLAUDE_PLUGIN_ROOT}` (decision 0001, rule 4)
+  - no `.claude-plugin/plugin.json` exists yet to make `${CLAUDE_PLUGIN_ROOT}` resolve; migrate once it does
