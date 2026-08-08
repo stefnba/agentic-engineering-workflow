@@ -16,4 +16,4 @@ Two conventions across all of them:
 - **Knowledge arrives via `skills:` preload**, not restated in the agent's system prompt — the reference layer (`docs-rules`, `evidence`) is injected in full at startup, so the one-copy rule holds for agents too.
 - **Tool lists encode the role's power, hooks encode its boundaries.** What an agent may touch at all is the `tools` list; _where_ it may write within those tools is a hook. Don't try to express path scope in tool lists — it can't.
 
-None of these exist yet; this file is the build plan, paired with the skills one.
+`critic` exists. `reviewer`, `researcher`, and `ticket-runner` don't yet; this file is the build plan, paired with the skills one.
