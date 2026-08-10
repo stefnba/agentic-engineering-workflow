@@ -42,3 +42,7 @@ and meta concerns.
 - [skills] writing-for-agents: verify the Source fidelity rule with a rerun
   - the fidelity assertion in evals/evals.json (eval 0) was added after iteration 1; no with-skill run has tested it yet
 - [skills] writing-for-agents: run skill-creator's description-trigger optimization on the frontmatter description
+- [docs] [skills] docs-structure, docs-rules, critic, workflow doc still describe the old five-heading spec
+  - the new spec/ticket templates in skills/shape are authoritative now; reconcile the four docs (headings, Non-goals→Out of Scope, open-questions fold rule)
+- [repo] verify the AGENTS.md prunes with a rerun (tie-break routing sentence removed, reference-repo caveat merged)
+  - restore the tie-break line if agents mis-route between docs-structure.md and agentic-workflow.md
