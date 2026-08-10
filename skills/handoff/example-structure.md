@@ -1,6 +1,6 @@
 # Handoff structure
 
-+An illustration of shape and detail level, not content to reuse — the task, paths, SHAs, and timestamp below are invented.
+An illustration of shape and detail level, not content to reuse — the task, paths, SHAs, and timestamp below are invented.
 
 Note what's missing: this was an implementation session, so it has no **Findings** or **Ground covered** sections. Those belong to discovery work. Omit sections the same way rather than filling them to complete the set.
 
