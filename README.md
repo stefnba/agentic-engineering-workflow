@@ -1,4 +1,4 @@
-# agentic-coding
+# Agentic Coding Workflow
 
 A **reference repo** for agentic coding: workflow design, documentation structure, tool setup, and reusable skills. It collects the practices — it is not a codebase that follows them.
 
@@ -8,21 +8,39 @@ That distinction matters when reading anything here:
 - The skills under `skills/` are meant to be copied into (or eventually installed by) other repos. Their instructions reference paths and structures of a target repo, not this one.
 - The one convention this repo does apply to itself is [work/backlog.md](work/backlog.md), which tracks work on the reference material — partly to have a backlog, partly to dogfood the format.
 
-## Skills and agents
+## Skills
 
 What exists today. The conventions they follow — and the build plan for the unbuilt rest — live in [docs/skills.md](docs/skills.md).
 
-| Name                 | Kind                      | What it does                                                            |
-| -------------------- | ------------------------- | ----------------------------------------------------------------------- |
-| `interview`          | workflow skill (Discover) | Turns user intent into a brief in `work/candidates/`                    |
-| `shape`              | workflow skill (Shape)    | Turns a picked candidate into `spec.md` and its full ticket set         |
-| `critique`           | workflow skill (Shape)    | Attacks a shaped spec in a fresh context; forks into the `critic` agent |
-| `backlog`            | supporting skill          | Maintains `work/backlog.md` — add, complete, promote, look up           |
-| `decision`           | supporting skill          | Writes or supersedes records in `docs/decisions/`                       |
-| `handoff`            | supporting skill          | Compacts a dying session into a handoff document                        |
-| `writing-for-agents` | supporting skill          | Writing and reviewing documents an agent will consume or follow         |
-| `docs-rules`         | reference skill           | Procedural distillate of docs-structure, preloaded into subagents       |
-| `critic`             | subagent                  | Read-only spec attacker the `critique` skill forks into                 |
+### Workflow skills
+
+Stage-bound — each realizes one role of the [workflow](docs/agentic-workflow.md):
+
+| Name        | Stage    | What it does                                                            |
+| ----------- | -------- | ----------------------------------------------------------------------- |
+| `interview` | Discover | Turns user intent into a brief in `work/candidates/`                    |
+| `shape`     | Shape    | Turns a picked candidate into `spec.md` and its full ticket set         |
+| `critique`  | Shape    | Attacks a shaped spec in a fresh context; forks into the `critic` agent |
+
+### Supporting skills
+
+Not stage-bound — they serve any session:
+
+| Name                 | What it does                                                      |
+| -------------------- | ----------------------------------------------------------------- |
+| `backlog`            | Maintains `work/backlog.md` — add, complete, promote, look up     |
+| `decision`           | Writes or supersedes records in `docs/decisions/`                 |
+| `handoff`            | Compacts a dying session into a handoff document                  |
+| `writing-for-agents` | Writing and reviewing documents an agent will consume or follow   |
+| `docs-rules`         | Procedural distillate of docs-structure, preloaded into subagents |
+
+## Agents
+
+The subagents forked skills run in:
+
+| Name     | What it does                                            |
+| -------- | ------------------------------------------------------- |
+| `critic` | Read-only spec attacker the `critique` skill forks into |
 
 ## Status
 
