@@ -32,5 +32,10 @@ and meta concerns.
 - [skills] shape's write-boundary hook uses `${CLAUDE_PROJECT_DIR}`, not `${CLAUDE_PLUGIN_ROOT}` (decision 0001, rule 4)
   - no `.claude-plugin/plugin.json` exists yet to make `${CLAUDE_PLUGIN_ROOT}` resolve; migrate once it does
 - [skills] recommendation skill — weigh options with pros/cons and give a recommendation
+- [skills] writing-for-agents: micro-test "Phrasing that changes behavior" and "Co-locate" before pruning
+  - baseline runs on Sonnet did both unprompted (candidate no-ops); needs 5+ rep micro-tests per references/testing.md before deciding
+- [skills] writing-for-agents is absent from skills/README.md (supporting-skills table, Status section)
+- [repo] scripts/find-by-frontmatter.py is unused — skills stick to grep for flat ticket frontmatter (decision 0004)
+  - wire it into a skill (and move it under skills/, shipped tree) only when a real use case appears: array queries (`depends_on`, `areas`) or nested metadata
 - [docs] metadata format inconsistent across plan/ticket/workflow markdown files
   - some use an inline `Key: Value · Key: Value` header (e.g. decisions/0001), others use YAML frontmatter (e.g. skills/shape/SKILL.md)
