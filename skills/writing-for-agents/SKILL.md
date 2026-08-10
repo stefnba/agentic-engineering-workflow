@@ -70,6 +70,8 @@ State commands with their expected output and what to do when reality differs. P
 
 Refer to other steps by name — "the tag-and-push step", not "step 7". Numbered cross-references break silently when a step is inserted, and doubly so when the reference lives in another file.
 
+**Source fidelity.** A document distilled from notes, a thread, or a conversation may state only the facts its sources contain plus what the environment confirms. Where the source is silent — a timeout, a default, a policy — write the assumption _as_ an assumption ("confirm: poll interval assumed 2 min"), because a fabricated parameter reads exactly as authoritative as a real one, and the agent following the document can't tell them apart.
+
 ## Phrasing that changes behavior
 
 - **Imperative voice**, and give the reason when it changes behavior: "Don't edit `dist/` — it's regenerated on every build" generalizes to cases you didn't list; a bare NEVER covers only the listed ones.

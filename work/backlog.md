@@ -39,3 +39,6 @@ and meta concerns.
   - wire it into a skill (and move it under skills/, shipped tree) only when a real use case appears: array queries (`depends_on`, `areas`) or nested metadata
 - [docs] metadata format inconsistent across plan/ticket/workflow markdown files
   - some use an inline `Key: Value · Key: Value` header (e.g. decisions/0001), others use YAML frontmatter (e.g. skills/shape/SKILL.md)
+- [skills] writing-for-agents: verify the Source fidelity rule with a rerun
+  - the fidelity assertion in evals/evals.json (eval 0) was added after iteration 1; no with-skill run has tested it yet
+- [skills] writing-for-agents: run skill-creator's description-trigger optimization on the frontmatter description
