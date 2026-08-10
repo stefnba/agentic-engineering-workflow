@@ -40,7 +40,7 @@ The boundary with the workflow table: `pick` is a pipeline entry point (choose, 
 
 Background knowledge, hidden from the `/` menu (`user-invocable: false`), preloaded into subagents via their `skills:` field so the full content is in their context at startup:
 
-- `docs-rules` — the procedural distillate of docs-structure: ID glob resolution, README-over-spec precedence, target-state phrasing, ticket format, the freeze rule. Workflow skills link here instead of restating — the one-copy rule applied to skills themselves.
+- `docs-rules` — the procedural distillate of docs-structure: ID glob resolution, README-over-spec precedence, target-state phrasing, ticket format, backlog line format, the freeze rule. Workflow skills link here instead of restating — the one-copy rule applied to skills themselves.
 - `evidence` — the evidence-block format `implement` produces and `reviewer` checks.
 
 ## Settings that carry process rules

@@ -22,11 +22,11 @@ Resolve the bundle (`work/*/$ARGUMENTS-*`) and read `brief.md` if one exists. Th
 
 ## Write spec.md
 
-Fixed headings, present tense — see how docs-rules and `docs/docs-structure.md` define `spec.md` for the exact template and why the headings don't move. `Non-goals` is the highest-value section: agents wander, and an explicit exclusion list is the cheapest fix. Migration or rollout sequencing that a dependency graph can't express goes in `plan.md`; skip `plan.md` entirely if there's no such rationale — a table that just restates ticket order goes stale invisibly.
+Start from [spec-template.md](spec-template.md), shipped with this skill; docs-rules and `docs/docs-structure.md` say why the headings don't move. `Non-goals` is the highest-value section: agents wander, and an explicit exclusion list is the cheapest fix. Migration or rollout sequencing that a dependency graph can't express goes in `plan.md`; skip `plan.md` entirely if there's no such rationale — a table that just restates ticket order goes stale invisibly.
 
 ## Write the first tickets
 
-Two or three, no more — later ones are written against assumptions this round of implementation will invalidate. Ticket format and slicing rules are docs-rules' territory; don't restate them here.
+Two or three, no more — later ones are written against assumptions this round of implementation will invalidate. Start from [ticket-template.md](ticket-template.md), shipped with this skill; slicing rules are docs-rules' territory, don't restate them here.
 
 ## Judgment calls happen inline, not in Open questions
 

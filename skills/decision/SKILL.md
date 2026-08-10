@@ -61,45 +61,21 @@ below. If the directory is empty, follow the template as written.
 
 Keep it under a page. If it runs longer, the decision is probably several decisions.
 
-```markdown
-# NNNN <Decision as a statement, not a topic>
-
-Date: YYYY-MM-DD · Status: accepted · Areas: <tags from work/backlog.md's header>
-
-## Context
-
-What was true that forced a choice. Two to four sentences. No history lesson.
-
-## Decision
-
-What was chosen, stated in the present tense as a rule the codebase follows.
-
-## Rejected
-
-- <Alternative>: <why it was set aside>
-- <Alternative>: <why it was set aside>
-
-## Costs
-
-What this makes worse, harder, or riskier. Name the tradeoff honestly.
-
-## Revisit if
-
-The conditions under which this decision is supposed to be overturned.
-```
+Start from [template.md](template.md), shipped with this skill — each section carries its own guidance in place.
 
 Title the file with the decision, not the subject area. `0003 Rotate refresh tokens on use` tells a
 reader scanning the folder what was decided. `0003 Token handling` makes them open the file.
 
 ## Immutability
 
-Accepted records are not edited. If the reasoning changes, write a new record and mark the old one:
+Accepted records are not edited. If the reasoning changes, write a new record and mark the old one in its frontmatter:
 
-```
-Status: superseded by 0009
+```yaml
+status: superseded
+superseded_by: "0009"
 ```
 
-Change only that status line in the old file — leave its body exactly as written, including the
+Change only those frontmatter lines in the old file — leave its body exactly as written, including the
 parts that turned out to be wrong. The sequence of records is the reasoning history of the
 codebase, and editing them in place destroys the only thing that made them worth keeping.
 

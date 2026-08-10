@@ -1,6 +1,6 @@
 ---
 name: docs-rules
-description: Procedural rules distilled from docs/docs-structure.md — ID resolution, README-over-spec precedence, target-state phrasing, ticket format, the freeze rule. Reference material preloaded into workflow subagents; not an action to invoke directly.
+description: Procedural rules distilled from docs/docs-structure.md — ID resolution, README-over-spec precedence, target-state phrasing, ticket format, backlog line format, the freeze rule. Reference material preloaded into workflow subagents; not an action to invoke directly.
 user-invocable: false
 ---
 
@@ -60,6 +60,20 @@ depends_on: [01]
 ```
 
 Slice by what must be true when the PR merges, not by file or layer. Every ticket needs a machine-checkable done condition — if you can't write the check, the ticket isn't specified yet. Don't duplicate the spec's reasoning here; link to it.
+
+## Backlog lines
+
+`work/backlog.md` is the single, unsorted collection point for unshaped ideas — order carries no meaning, and nothing bypasses it (audit findings, research follow-ups, and ship-time leftovers all land here as lines).
+
+```text
+- [tag] short imperative phrase
+```
+
+- One line, imperative, under about twelve words. Write the **problem, not your proposed solution** — the solution belongs to shaping and will be stale by the time it's read.
+- Tags come from the vocabulary the backlog's header declares (plus workspace packages where they exist). Never coin a synonym: once `[db]` and `[database]` coexist, every grep silently misses half the matches.
+- Append at the end of a section; never reshuffle the list.
+- Sub-bullets only when the line is meaningless without them, at most two, carrying constraints or evidence — pointers to `docs/research/` files are fine (those paths never move).
+- Completed lines are deleted, not archived — git holds the history.
 
 ## The freeze rule
 

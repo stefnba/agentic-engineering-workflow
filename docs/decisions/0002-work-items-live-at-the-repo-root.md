@@ -1,6 +1,10 @@
-# 0002 Work items live in `work/` at the repo root
+---
+status: accepted
+date: 2026-08-10
+areas: [docs, repo]
+---
 
-Date: 2026-08-10 · Status: accepted · Areas: docs, repo
+# 0002 Work items live in `work/` at the repo root
 
 ## Context
 

@@ -11,7 +11,6 @@ This file explains what lives where, why, and the rules that keep it from rottin
 docs/                       # durable — everything here accumulates and stays current
   README.md                 # this file
   decisions/                # immutable decision records
-    template.md
     0007-postgres-over-mongo.md
   research/                 # findings from discovery — evidence, not commitments
   systems/
@@ -64,6 +63,8 @@ The two lifetimes get two separate trees on purpose: `docs/` holds only what sta
 **Precedence.** When a colocated `README.md` and a feature `spec.md` disagree, the README wins. It describes what _is_; the spec described what someone intended at a point in time.
 
 _Spec_ is used here **with a fixed meaning**, because industry usage is genuinely sloppy: a spec describes the **external behavior the change must exhibit** — contracts, observable outcomes, acceptance criteria — plus only the internal decisions that constrain it (public interfaces, data models, patterns to follow). Interior implementation stays deliberately open; see `spec.md` below. Terms still avoided: _design doc_ (promises internal-structure content that belongs in `decisions/` and tickets), _SRD/SRS_ (waterfall artifact, needs a regulated context to earn its weight), _PRD_ (product framing, not ours unless a PM writes one).
+
+**Metadata.** A document carries metadata only if something reads it — and where metadata exists, the syntax is always YAML frontmatter, never a prose byline: one syntax means one parser for every query, skill, and sweep. Tickets carry `status`/`depends_on`; decisions carry `status`/`date`/`areas` (+ `supersedes`); research may carry `date`/`source`. Briefs and specs carry **none**, deliberately — nothing machine-reads them, the directory owns bundle status, and an unused metadata block is an invitation for a second status owner.
 
 ---
 
@@ -128,18 +129,7 @@ ls work/*/0042-*        # resolve by ID, works from any status directory
 
 Written during discovery, by the interview — before any spec exists. It captures **what was asked, in the user's framing**: problem, constraints, motivation. Not a solution.
 
-```markdown
-# 0042 — Billing retries
-
-## Problem
-
-## Constraints
-
-## Motivation
-```
-
-- **Keep these headings identical across every brief**, for the same reason as `spec.md`: stable anchors mean the interview skill and later tooling can rely on the shape without re-deriving it per feature.
-- No `Target state`, `Non-goals`, or `Acceptance criteria` here — those are `spec.md`'s job. A brief that starts solutioning stopped being a brief.
+Three headings, always — `Problem`, `Constraints`, `Motivation`; the template ships with its writer: [brief-template.md](../skills/interview/brief-template.md). Keep them identical across every brief, for the same reason as `spec.md`: stable anchors mean tooling can rely on the shape without re-deriving it per feature. No `Target state`, `Non-goals`, or `Acceptance criteria` here — those are `spec.md`'s job; a brief that starts solutioning stopped being a brief.
 
 Writing one is itself a judgment: a brief claims the item needs shaping. If the intent fits in a backlog line, it wasn't a brief — write the line instead.
 
@@ -155,19 +145,7 @@ Delta descriptions are only true before you start. An agent picking up ticket 4 
 
 **Spec-heavy, design-light.** `Target state` pins down observable behavior first — contracts, outcomes, what a caller or user can see — then only the internal decisions that constrain the work: public interfaces, data models, patterns to follow. Interior implementation stays open on purpose. Over-specifying constrains the agent exactly like it constrains a human, for no benefit; the pseudocode anti-pattern below is this rule's failure mode.
 
-```markdown
-# 0042 — Billing retries
-
-## Problem
-
-## Target state ← present tense, the durable core
-
-## Non-goals
-
-## Open questions ← every line resolved before implementation starts
-
-## Acceptance criteria
-```
+Five headings, always — `Problem`, `Target state`, `Non-goals`, `Open questions`, `Acceptance criteria`; the template ships with its writer: [spec-template.md](../skills/shape/spec-template.md).
 
 - **Keep these headings identical across every spec.** Stable anchors mean tickets can deep-link and `AGENTS.md` can give generic instructions.
 - **Non-goals is the highest-value section.** Agents wander — they refactor adjacent code, add unrequested error handling, upgrade dependencies. An explicit exclusion list prevents most scope drift.
@@ -184,27 +162,7 @@ No status column. No checkboxes. Those duplicate the tickets.
 
 ### `tickets/NN-*.md`
 
-```markdown
----
-status: todo # todo | doing | done
-depends_on: [01]
----
-
-# 02 — Retry scheduler
-
-## Scope
-
-One paragraph. What changes.
-
-## Done when
-
-- `pytest tests/billing/test_retry_schema.py` passes
-- Migration reversible: `alembic downgrade -1` clean
-
-## Not in this ticket
-
-Backoff policy, alerting.
-```
+Frontmatter carries `status` and `depends_on`; three headings — `Scope`, `Done when`, `Not in this ticket`; the template ships with its writer: [ticket-template.md](../skills/shape/ticket-template.md).
 
 - **Slice by what must be true when this PR merges** — not by file, not by layer. One PR, independently revertible, `main` stays green after each.
 - **Make ticket 01 a tracer bullet** — the thinnest end-to-end slice that exercises the whole architecture; later tickets widen it. It's the ticket most likely to invalidate the spec's assumptions, which is why it goes first — and why the remaining tickets wait for it to land.
@@ -250,28 +208,11 @@ The check can be mechanical: a CI step that warns when a PR touches `src/billing
 
 Immutable. Superseded, never edited.
 
-```markdown
----
-id: 0007
-type: architecture # architecture | tooling | process | product
-status: accepted # proposed | accepted | superseded
-supersedes: 0003
----
-
-# Postgres over Mongo
-
-## Context
-
-## Decision
-
-## Consequences
-```
+Frontmatter carries `status`, `date`, `areas`, and `supersedes` when overturning an earlier record; five headings — `Context`, `Decision`, `Rejected`, `Costs`, `Revisit if`. The template ships with its writer: [template.md](../skills/decision/template.md).
 
 Called `decisions/`, not `adr/`, deliberately. Conventional commits, trunk-based development, dropping Safari 15, vendoring instead of forking — none are architecture, all are durable and expensive to relitigate. A folder whose name gatekeeps its own contents gets used less than it should, and the decisions that go unrecorded are disproportionately the cross-cutting process ones — exactly what a fresh agent context has no other way to discover.
 
-`type:` recovers the ADR subset when you want it: `rg 'type: architecture' docs/decisions/`. Taxonomy belongs in a field, not a directory name — directories give you one axis and you'll find the second one later.
-
-Use `template.md`. Never two directories for this.
+`areas:` recovers any subset when you want it: `rg 'areas:.*server' docs/decisions/`. Taxonomy belongs in a field, not a directory name — directories give you one axis and you'll find the second one later. One folder, one template — never two directories for this.
 
 ---
 
@@ -293,21 +234,7 @@ One line per unshaped idea. Keep capture friction near zero; a file-per-idea dir
 
 The list is an **unsorted collection dump** — order carries no meaning. Ranking happens at pick time, in front of the human, not in the file.
 
-```markdown
-## Features
-
-- Retry failed billing charges with backoff — asked by 3 customers
-- Vite 6 migration — breaking changes in plugin API
-  - see docs/research/vite-6-migration.md
-
-## Bugs
-
-- Timezone drift in weekly digest — reproducible, low sev
-
-## Debt
-
-- `auth/` still on the old session shim
-```
+Sections group lines by kind — `## Features`, `## Bugs`, `## Debt`, plus `## Parked` for pruned-but-not-dead lines; the skeleton ships with its caretaker: [template.md](../skills/backlog/template.md). A line is `- [tag] short imperative phrase` — the problem, not a proposed solution.
 
 Append at the end of a section so concurrent edits conflict trivially. Prune periodically — move stale lines to `## Parked` or delete them. Items graduate to `work/planned/` when they're worth shaping.
 

@@ -1,6 +1,10 @@
-# 0003 The feature document is `spec.md`, not `design.md`
+---
+status: accepted
+date: 2026-08-10
+areas: [docs, skills]
+---
 
-Date: 2026-08-10 · Status: accepted · Areas: docs, skills
+# 0003 The feature document is `spec.md`, not `design.md`
 
 ## Context
 

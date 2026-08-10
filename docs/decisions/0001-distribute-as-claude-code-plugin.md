@@ -1,6 +1,10 @@
-# 0001 Distribute the workflow as a Claude Code plugin
+---
+status: accepted
+date: 2026-08-08
+areas: [repo]
+---
 
-Date: 2026-08-08 · Status: accepted · Areas: repo
+# 0001 Distribute the workflow as a Claude Code plugin
 
 ## Context
 

@@ -25,17 +25,7 @@ Writing a brief is itself a judgment: it claims the item needs shaping. If the c
 
 ## Write the brief
 
-```markdown
-# <id> — <Title>
-
-## Problem
-
-## Constraints
-
-## Motivation
-```
-
-Same three headings, every time — see `docs/docs-structure.md` § `brief.md` for why they're fixed. Title is a short noun phrase, not the problem statement restated.
+Copy the shape from [brief-template.md](brief-template.md), shipped with this skill. Same three headings, every time — see `docs/docs-structure.md` § `brief.md` for why they're fixed. Title is a short noun phrase, not the problem statement restated.
 
 ## Allocate the ID
 

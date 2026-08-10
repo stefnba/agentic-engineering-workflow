@@ -1,6 +1,9 @@
-# Docs read: packaging this repo as a Claude Code plugin
+---
+date: 2026-08-08
+source: official Claude Code docs (plugins, plugins-reference, plugin-marketplaces, discover-plugins), read against this repo's layout
+---
 
-Date: 2026-08-08 · Source: official Claude Code docs (plugins, plugins-reference, plugin-marketplaces, discover-plugins), read against this repo's layout.
+# Docs read: packaging this repo as a Claude Code plugin
 
 **Evidence, not commitments.** Nothing below is decided. This records what the plugin mechanism offers and how this repo maps onto it; whether and when to convert is a backlog/pick question.
 

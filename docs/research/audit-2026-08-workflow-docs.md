@@ -1,6 +1,9 @@
-# Audit: workflow + docs-structure critique
+---
+date: 2026-08-07
+source: critique pass over agentic-workflow.md and docs-structure.md, followed by a challenge round on the proposed fixes
+---
 
-Date: 2026-08-07 · Source: critique pass over `agentic-workflow.md` and `docs-structure.md`, followed by a challenge round on the proposed fixes.
+# Audit: workflow + docs-structure critique
 
 **Evidence, not commitments.** Nothing below is decided. The one-line pointers live in `work/backlog.md`; this file holds the reasoning those lines can't carry. Where a proposed fix survived the challenge round it says so — that's still a proposal, not a record. Decisions, when made, go to `decisions/`.
 
