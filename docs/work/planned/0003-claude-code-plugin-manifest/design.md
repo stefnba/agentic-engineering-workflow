@@ -1,0 +1,64 @@
+# 0003 — Claude Code plugin manifest
+
+## Problem
+
+Decision [0001](../../../decisions/0001-distribute-as-claude-code-plugin.md) committed this repo to shipping as a Claude Code plugin, but the one required file — `.claude-plugin/plugin.json` — doesn't exist. Nothing here is actually loadable via `--plugin-dir` yet, and `${CLAUDE_PLUGIN_ROOT}` has nothing to resolve to, which is what's blocking the backlog item to migrate `shape`'s write-boundary hook off `${CLAUDE_PROJECT_DIR}` ([skills/shape/SKILL.md:12](../../../../skills/shape/SKILL.md)).
+
+That hook migration turned out to be coupled to more than the manifest: `${CLAUDE_PLUGIN_ROOT}` is only exported to hook processes when a skill loads through the plugin system (`--plugin-dir` or a marketplace install), never when loaded the way this repo currently dogfoods itself — the `.claude/skills/<name>` → `../../skills/<name>` symlinks described in [skills/README.md § Exercising skills in this repo](../../../../skills/README.md). Landing the manifest without switching that dogfood mechanism would leave the migration exactly as blocked as before, just for a subtler reason. This design does both together.
+
+## Target state
+
+`.claude-plugin/plugin.json` exists at the repo root, relying on the default `skills/` and `agents/` directory scans rather than declaring explicit path fields (see § Open questions for why):
+
+```json
+{
+  "name": "agentic-coding",
+  "version": "0.1.0",
+  "description": "Agentic workflow skills: shape, implement, review, ship, backlog, handoff",
+  "author": { "name": "Stefan Bauer" },
+  "repository": "https://github.com/stefnba/agentic-coding"
+}
+```
+
+`agents/README.md` no longer exists. Its content lives in `skills/README.md` instead, which already treats the skill↔agent split as its territory (skills own the _when_, agents own the _who_) — including `skills/README.md`'s own prior references to `agents/README.md` (its intro line and Status section), which no longer point at a file that doesn't exist. This is a **documented exception** to the repo's README-colocation convention, not a silent violation of it, and it's recorded the way this repo records exactly this kind of tool-behavior-contingent call: a new decision record, `docs/decisions/0002-*.md`, in the shape of [decision 0001](../../../decisions/0001-distribute-as-claude-code-plugin.md) (Context / Decision / Rejected / Costs / Revisit if) — not a paragraph added to `docs-structure.md` directly, because the exception exists only because one CLI version's agent scanner has no README carve-out, and a decision's `Revisit if` is where that premise gets a place to be reconsidered later. `docs/docs-structure.md` § Durable system docs gets a one-line pointer to the decision, consistent with how the rest of that section treats decisions vs. restated content.
+
+The repo is dogfooded via `claude --plugin-dir .` (or `--plugin-dir <absolute-path>` from outside the tree), not via `.claude/skills`/`.claude/agents` symlinks — those are removed, and [skills/README.md § Exercising skills in this repo](../../../../skills/README.md) documents `--plugin-dir` as the mechanism instead, including whatever invocation form (`/shape` vs. a namespaced form) is actually observed when the plugin loads. [CLAUDE.md](../../../../CLAUDE.md) no longer describes the symlink pattern as current; it points at `skills/README.md` § Exercising skills in this repo instead.
+
+`shape`'s write-boundary hook command reads `${CLAUDE_PLUGIN_ROOT}/skills/shape/scripts/write-boundary.sh` ([skills/shape/SKILL.md:12](../../../../skills/shape/SKILL.md)), consistent with rule 4 in [skills/README.md § Plugin compatibility](../../../../skills/README.md). `write-boundary.sh` itself is unchanged — its internal use of `CLAUDE_PROJECT_DIR` computes the relative path of the _file being edited_ in the target repo, a separate and already-correct usage from the _hook command's own path_, which is the thing rule 4 governs.
+
+`docs/work/backlog.md`'s line about this migration is removed — the thing it was tracking now exists. `skills/README.md`'s Status section reflects that the plugin manifest exists and dogfooding runs through it. [AGENTS.md](../../../../AGENTS.md) and [docs/agentic-workflow.md](../../../agentic-workflow.md), which both currently link "subagent definitions" to `agents/README.md`, point at `skills/README.md` instead.
+
+## Non-goals
+
+- **No marketplace.** No `.claude-plugin/marketplace.json`, no `claude plugin install`, no versioning/release discipline. Decision 0001 explicitly deferred tier 2 until the workflow skills stabilize; this stays tier 1 (`--plugin-dir`).
+- **No `.claude/settings.json` auto-setup** (`extraKnownMarketplaces`, `enabledPlugins`) — that's tier 3, for a _consuming_ repo adopting this plugin, not this repo dogfooding itself.
+- **No changes to skills or agents that don't yet exist** (`pick`, `audit`, `research`, `implement`, `review`, `ship`, `reviewer`, `researcher`, `ticket-runner`). The default `skills/`/`agents/` directory scans pick them up automatically once they're built; nothing here needs to anticipate them.
+- **No change to `write-boundary.sh`'s internal logic.** Only the hook command path that invokes it moves to `${CLAUDE_PLUGIN_ROOT}`.
+- **No `claude plugin validate` CI wiring.** Running it by hand as a done-when check is in scope; adding it as an enforced gate is not.
+- **No rewrite of `skills/README.md`'s workflow table Invocation column** (`/shape <id>`, `/audit`, etc.). That table documents the logical invocation name as part of the skill's design spec, independent of packaging — it stays bare-form. Only § "Exercising skills in this repo" documents the concrete form this repo's own `--plugin-dir .` dogfooding actually uses, whatever ticket 01 finds that to be.
+- **No touching `docs/work/planned/0001-workflow-skills-v1.md`.** It also links to `agents/README.md`, but it's a separate, already-completed bundle instruction file that should have been absorbed and deleted on ship — that drift is pre-existing and belongs to a different backlog item, not this one.
+
+## Open questions
+
+- [resolved] Does adding `.claude-plugin/plugin.json` alone (without switching the dogfood mechanism) meaningfully unblock the hook-migration backlog item, or does it just move the blocker? → Just moves it: `${CLAUDE_PLUGIN_ROOT}` only resolves under `--plugin-dir`/marketplace loading, confirmed against [the plugins reference](https://code.claude.com/docs/en/plugins-reference) (`${CLAUDE_PLUGIN_ROOT}` is "exported as environment variables to hook processes" only for plugins "specified... [t]hrough `claude --plugin-dir`... [o]r [t]hrough a marketplace"). Discussed with the human; decided to do both together in this ticket rather than defer the real unblock again.
+- [resolved] Should the `.claude/skills/*` and `.claude/agents/critic.md` symlinks be removed rather than kept alongside `--plugin-dir`? → Yes. Two working mechanisms for the same purpose is exactly the kind of drift this repo's docs warn about elsewhere; once `--plugin-dir .` is confirmed working (ticket 01), the symlinks are redundant and removing them keeps one authoritative path (ticket 02).
+- [resolved] Does `plugin.json` need explicit `skills`/`agents` path fields, per the example manifest in `docs/research/docs-read-2026-08-claude-code-plugins.md`? → No. Tested directly against Claude Code v2.1.224: with no manifest at all beyond `name`/`version`/`description`/`author`, `claude --plugin-dir . plugin details` correctly discovered all 7 `skills/*/SKILL.md` directories and `agents/critic.md` via the default scan. That research doc is evidence from initial discovery, not a spec — its example manifest is superseded here. (Explicit path fields were also tried as a fix for the next question, and made things worse — see below.)
+- [resolved] Does `agents/README.md` interfere with plugin validation, and if so, what's the fix? → Yes, confirmed empirically with an isolated reproduction: a scratch directory containing _only_ `agents/README.md` (copied verbatim, untouched) and a minimal `plugin.json` fails `claude plugin validate . --strict` with a missing-frontmatter warning on that file; removing only that file from the same directory makes validation pass cleanly. Cause: Claude Code's agent scanner treats every `.md` file anywhere under `agents/` (recursively, including hidden subdirectories) as an agent definition — there's no README/docs carve-out. Adding real frontmatter silences the warning but creates a phantom "README" agent component that costs real tokens every session (confirmed via `claude plugin details`: ~580 tokens). The documented workaround — an explicit `"agents": ["./agents/critic.md"]` manifest field, which the reference doc says "replaces the default `agents/` scan" — did not work in the installed CLI: validation still flagged `README.md`, and `critic` itself dropped out of the component list entirely. The only fix that worked in testing: `agents/README.md` must not exist under `agents/` at all. Discussed with the human, who flagged that outsourcing it plainly would violate the repo's README-colocation convention — resolved by treating it as a documented exception, recorded as a decision (`docs/decisions/0002-*.md`) rather than a bare rule addition, since the exception is contingent on this specific tool behavior (see § Target state).
+- [resolved] What does `--plugin-dir .` actually resolve invocation names to — bare `/shape` or a namespaced form (e.g. `/agentic-coding:shape`)? → Not decidable without an interactive session (the reference doc confirms namespacing applies to agents in the `@`-mention typeahead and to components generally "in the UI," but doesn't state whether a skill's slash-command form stays bare when only one plugin is loaded). Ticket 01 verifies this empirically and records the observed form **as a new resolved line in this section** — `docs/work/backlog.md` already flags "where review findings and verification evidence live" as unsettled, so a PR description isn't a reliable enough handoff for the one fact ticket 02 structurally depends on. Ticket 02's "Exercising skills in this repo" rewrite then documents whatever that resolved line says, not an assumption.
+
+## Acceptance criteria
+
+Commands below were verified against a scratch copy of this repo's `skills/`/`agents/` trees under Claude Code v2.1.224; exact output strings may shift on other versions, but the pass/fail shape (exit code, component counts) shouldn't.
+
+- `.claude-plugin/plugin.json` is valid JSON with `name`, `version`, `description`, `author`, `repository` set as in § Target state.
+- `claude plugin validate . --strict` exits 0 against the repo root.
+- `claude --plugin-dir . plugin list` shows an entry for `agentic-coding` with `Status: ✔ loaded`.
+- `claude --plugin-dir . plugin details agentic-coding` shows all 7 skills (`backlog`, `critique`, `decision`, `docs-rules`, `handoff`, `interview`, `shape`) and exactly 1 agent (`critic`) — no phantom `README` component.
+- A real interactive `claude --plugin-dir .` session invokes `shape` and the transcript shows it actually running (resolving a bundle or asking for one — not a "no such skill" or permission error); the observed invocation form is recorded as a new resolved line in § Open questions, not left in a PR description.
+- `skills/shape/SKILL.md`'s hook `command` reads `${CLAUDE_PLUGIN_ROOT}/skills/shape/scripts/write-boundary.sh`; invoking `shape` under `--plugin-dir .` and attempting an out-of-bundle write is denied, with `write-boundary.sh`'s exact denial string ("shape writes only inside docs/work/candidates/ or docs/work/planned/ — denied: ...") visible in the transcript — the tracer-bullet check that the migration didn't silently disable the boundary.
+- `.claude/skills/*` and `.claude/agents/critic.md` no longer exist; `.claude/skills` and `.claude/agents` are removed if left empty.
+- `agents/README.md` no longer exists; its content is in `skills/README.md`, which carries the colocation-exception rationale and no longer links to `agents/README.md` anywhere in the file (its former intro-line and Status-section references are gone, not dangling).
+- `docs/decisions/0002-*.md` records the colocation exception (Context / Decision / Rejected / Costs / Revisit if, per decision 0001's shape); [docs/docs-structure.md](../../../docs-structure.md) § Durable system docs carries a one-line pointer to it, not a restated paragraph.
+- [skills/README.md](../../../../skills/README.md) § "Exercising skills in this repo" describes `--plugin-dir .`, not symlinks; its Status section mentions the manifest exists.
+- [CLAUDE.md](../../../../CLAUDE.md), [AGENTS.md](../../../../AGENTS.md), and [docs/agentic-workflow.md](../../../agentic-workflow.md) no longer reference the symlink pattern or link to `agents/README.md`.
+- [docs/work/backlog.md](../../backlog.md) no longer lists the hook-migration item.
