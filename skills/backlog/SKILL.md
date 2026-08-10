@@ -1,6 +1,6 @@
 ---
 name: backlog
-description: Read and maintain docs/work/backlog.md — add items, mark them done, promote them to work items, or list what's pending for an area. Use this whenever the user mentions something to handle later, notices a bug they're not fixing right now, says "add to backlog" / "we should eventually" / "remind me to" / "note that down", reports finishing a backlog item, or asks what's outstanding for a given area of the codebase. Use it even when they don't say the word "backlog".
+description: Read and maintain work/backlog.md — add items, mark them done, promote them to work items, or list what's pending for an area. Use this whenever the user mentions something to handle later, notices a bug they're not fixing right now, says "add to backlog" / "we should eventually" / "remind me to" / "note that down", reports finishing a backlog item, or asks what's outstanding for a given area of the codebase. Use it even when they don't say the word "backlog".
 argument-hint: "[what to add, complete, or look up]"
 allowed-tools: Read, Edit, Glob, Grep, Bash(ls *)
 ---
@@ -17,11 +17,11 @@ Each directory name above is a valid tag — `apps/api/package.json` means `[api
 list is generated, not written down, so it cannot drift from the tree.
 
 Some tags own no directory and therefore can't appear above; those are declared in
-`docs/work/backlog.md`'s header. Read them from there.
+`work/backlog.md`'s header. Read them from there.
 
-`docs/work/backlog.md` is the single list of unshaped ideas for this repo. Unshaped is the point:
+`work/backlog.md` is the single list of unshaped ideas for this repo. Unshaped is the point:
 an entry is a pointer to a conversation we'll have later, not the conversation itself. Items
-graduate out of it into `docs/work/planned/<slug>.md` once they're worth planning.
+graduate out of it into `work/planned/<slug>.md` once they're worth planning.
 
 Work items are features, bugs, refactors, and migrations alike — the backlog doesn't distinguish,
 and neither does `active/`.
@@ -32,11 +32,11 @@ detail, this file holds the reminder.
 
 ## Always read the file first
 
-Read `docs/work/backlog.md` in full before any edit. Two reasons: its header declares the valid
+Read `work/backlog.md` in full before any edit. Two reasons: its header declares the valid
 tag vocabulary, and near-duplicate entries are common — if something similar is already there,
 sharpen the existing line instead of adding a second one.
 
-Before adding, glance at `docs/work/planned/` and `docs/work/active/` too. If a work file there
+Before adding, glance at `work/planned/` and `work/active/` too. If a work file there
 already covers the thing, the backlog is the wrong home for it — say so, and offer to add it to
 that file's Plan or Open questions instead. A backlog line shadowing a live work item is the
 duplicated state this whole structure exists to avoid, and it's worse than a missing line
@@ -99,7 +99,7 @@ for, and a solution written now will be stale or wrong by the time it's read.
   - Consider a 10s grace window for in-flight requests
 ```
 
-That's a plan. Say so, and offer to create `docs/work/planned/auth-refresh.md` instead.
+That's a plan. Say so, and offer to create `work/planned/auth-refresh.md` instead.
 
 **Too vague:**
 
@@ -126,7 +126,7 @@ insert so concurrent edits conflict trivially, and never reshuffle the list.
 nobody reads it. If the work produced a choice worth keeping, mention it and offer to invoke the
 `decision` skill — that's where reasoning belongs, not here.
 
-**Promote** — delete the line from the backlog and offer to create `docs/work/planned/<slug>.md`.
+**Promote** — delete the line from the backlog and offer to create `work/planned/<slug>.md`.
 Promotion lands in `planned/`, not `active/`: the item now has somewhere to hold a plan but
 nobody has started it, and `active/` is reserved for work actually in flight. The item lives in
 exactly one place either way — duplicated state between backlog and work files is the failure

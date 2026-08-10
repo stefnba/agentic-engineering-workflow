@@ -20,7 +20,7 @@ A skill runs **inline** when the human is part of the loop — forked skills get
 | `critique`  | Shape     | critic | model-invocable (triggered by `shape`) | fork, `background: false`, `agent: critic`   | Fork = no conversation history = the fresh-context rule enforced mechanically. Author waits for findings.                                                                                                             |
 | `implement` | Implement | —      | `/implement <id>/<nn>`, manual         | inline                                       | The session's operating procedure: resolve → read → claim → work → verify evidence → reconcile → PR. Also handles the bundle-less light path, branching on "no ticket exists" — one procedure, artifact-scaled.       |
 | `review`    | Review    | —      | `/review <pr>`, manual                 | fork, `background: false`, `agent: reviewer` | Fork gives authorship isolation even when invoked from the implementer's session. Findings return to the human for the Accept gate. One reviewer for now; the standards/requirements split is a backlog optimization. |
-| `ship`      | Ship      | —      | `/ship <id>`, manual                   | inline                                       | Absorbs the design into durable docs, deletes the bundle, merges. Durable-doc writes deserve main-session visibility.                                                                                                 |
+| `ship`      | Ship      | —      | `/ship <id>`, manual                   | inline                                       | Absorbs the spec into durable docs, deletes the bundle, merges. Durable-doc writes deserve main-session visibility.                                                                                                 |
 
 A `—` in Role is deliberate: only stages containing multiple contexts (Discover's gather/pick, Shape's author/critic) earn distinct role vocabulary — a stage with one context needs no second name.
 
@@ -30,7 +30,7 @@ Not stage-bound — they serve any session:
 
 | Skill      | Invocation                                     | Purpose                                                                                                                                                                          |
 | ---------- | ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `backlog`  | model-invocable — triggers on "note that down" | CRUD on `docs/work/backlog.md`: add, complete, promote, look up. Named for the artifact it manages, not a direction — `to-backlog` would undersell three of its four operations. |
+| `backlog`  | model-invocable — triggers on "note that down" | CRUD on `work/backlog.md`: add, complete, promote, look up. Named for the artifact it manages, not a direction — `to-backlog` would undersell three of its four operations. |
 | `decision` | model-invocable at wrap-ups                    | Write or supersede records in `docs/decisions/`.                                                                                                                                 |
 | `handoff`  | `/handoff`, manual                             | Compact a dying session into a handoff file outside the repo — the unplanned-break mechanism from the workflow doc's Sessions and handoffs section.                              |
 
@@ -40,7 +40,7 @@ The boundary with the workflow table: `pick` is a pipeline entry point (choose, 
 
 Background knowledge, hidden from the `/` menu (`user-invocable: false`), preloaded into subagents via their `skills:` field so the full content is in their context at startup:
 
-- `docs-rules` — the procedural distillate of docs-structure: ID glob resolution, README-over-design precedence, target-state phrasing, ticket format, the freeze rule. Workflow skills link here instead of restating — the one-copy rule applied to skills themselves.
+- `docs-rules` — the procedural distillate of docs-structure: ID glob resolution, README-over-spec precedence, target-state phrasing, ticket format, the freeze rule. Workflow skills link here instead of restating — the one-copy rule applied to skills themselves.
 - `evidence` — the evidence-block format `implement` produces and `reviewer` checks.
 
 ## Settings that carry process rules

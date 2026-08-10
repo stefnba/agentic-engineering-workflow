@@ -7,7 +7,7 @@
 ## Constraints
 
 - Must fit the existing durable/disposable split in `docs-structure.md` — a glossary is durable, not scoped to one feature or bundle.
-- Must scale from a single repo to a monorepo. A monorepo with distinct domains (e.g. client/server) may need separate glossaries per domain rather than one global file — similar to how `work/` bundles already push down to `packages/<pkg>/docs/work/` in monorepos.
+- Must scale from a single repo to a monorepo. A monorepo with distinct domains (e.g. client/server) may need separate glossaries per domain rather than one global file — similar to how `work/` bundles already push down to `packages/<pkg>/work/` in monorepos.
 - Primarily agent-facing — read before creating or editing docs/code, the same way the top of `docs-structure.md` is — but should also be usable by humans onboarding.
 
 ## Motivation

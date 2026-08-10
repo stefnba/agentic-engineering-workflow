@@ -22,7 +22,7 @@ the ones that mattered are lost among the ones that didn't.
 - Conventions and style — `.agents/rules/general.md`
 - Gotchas specific to one area of the code — that area's file in `.agents/rules/`
   (`api.md`, `web.md`, `domain.md`, `packages.md`)
-- A record of what was built — the work item file in `docs/work/done/`
+- A record of what was built — the work item file in `work/done/`
 - Anything the code already states plainly — nowhere
 
 The `AGENTS.md` files scattered through the repo are **symlinks** into `.agents/rules/`, so a
@@ -64,7 +64,7 @@ Keep it under a page. If it runs longer, the decision is probably several decisi
 ```markdown
 # NNNN <Decision as a statement, not a topic>
 
-Date: YYYY-MM-DD · Status: accepted · Areas: <tags from docs/work/backlog.md's header>
+Date: YYYY-MM-DD · Status: accepted · Areas: <tags from work/backlog.md's header>
 
 ## Context
 

@@ -24,7 +24,7 @@ When two docs could answer the same question: artifact questions go to `docs-str
 
 ## Conventions this repo applies to itself
 
-The `docs/work/` tree is live here, dogfooding its own format: [docs/work/backlog.md](docs/work/backlog.md) tracks work on the reference material (tags and format are defined at the top of the file), and candidate/planned bundles follow the layout from `docs-structure.md`. New ideas, noticed drift, and follow-ups become backlog lines — not TODOs scattered in other files.
+The `work/` tree is live here, dogfooding its own format: [work/backlog.md](work/backlog.md) tracks work on the reference material (tags and format are defined at the top of the file), and candidate/planned bundles follow the layout from `docs-structure.md`. New ideas, noticed drift, and follow-ups become backlog lines — not TODOs scattered in other files.
 
 Decision records in `docs/decisions/` are immutable: supersede with a new record, never edit.
 
