@@ -8,13 +8,13 @@ This repo collects agentic-coding practices — workflow design, documentation s
 
 ## Where the conventions live
 
-| Question                                                  | Owning doc                                             |
-| --------------------------------------------------------- | ------------------------------------------------------ |
-| Which documents exist, what they contain, where they live | [docs/docs-structure.md](docs/docs-structure.md)       |
-| Process — stages, gates, loops, approval points           | [docs/agentic-workflow.md](docs/agentic-workflow.md)   |
-| How workflow roles map onto skills                        | [skills/README.md](skills/README.md)                   |
-| Subagent definitions the skills fork into                 | [agents/README.md](agents/README.md)                   |
-| Claude Code setup for a consuming repo                    | [docs/setup-claude-code.md](docs/setup-claude-code.md) |
+| Question                                                   | Owning doc                                             |
+| ---------------------------------------------------------- | ------------------------------------------------------ |
+| Which documents exist, what they contain, where they live  | [docs/docs-structure.md](docs/docs-structure.md)       |
+| Process — stages, gates, loops, approval points            | [docs/agentic-workflow.md](docs/agentic-workflow.md)   |
+| Conventions for skills and subagents, and their build plan | [docs/skills.md](docs/skills.md)                       |
+| Which skills and agents exist (inventory)                  | [README.md](README.md)                                 |
+| Claude Code setup for a consuming repo                     | [docs/setup-claude-code.md](docs/setup-claude-code.md) |
 
 **Before creating or editing anything under `docs/`, read `docs-structure.md`.** It is the rule file for that tree.
 

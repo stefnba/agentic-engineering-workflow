@@ -150,7 +150,7 @@ Everything between those points is agent-crossable on deterministic gates. Addin
 
 ## Mechanism mapping
 
-This doc stays tool-agnostic. The Claude Code realization lives next to the things it describes — links only:
+This doc stays tool-agnostic. The Claude Code realization is documented separately — links only:
 
-- [skills/README.md](../skills/README.md) — the skill for each role: invocation, inline vs. fork, settings
-- [agents/README.md](../agents/README.md) — the subagents forked skills run in: tools, preloaded knowledge
+- [skills.md](skills.md) — the conventions skills and subagents follow (placement, settings, hooks), plus the build plan for the unbuilt ones
+- the root [README.md](../README.md) — inventory of the skills and agents that exist today

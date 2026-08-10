@@ -12,7 +12,7 @@ and meta concerns.
   - `done/` vs delete-on-ship, `.agents/rules/`, ID scheme (template shape settled by decision 0005)
   - candidates/ + brief.md not yet reflected in the skills
   - backlog skill's shell preamble hard-fails outside a workspace layout (`ls apps/*/package.json`)
-- [skills] build the workflow skills and subagents mapped in skills/README.md
+- [skills] build the workflow skills and subagents mapped in docs/skills.md (Build plan)
   - one end-to-end first, using the workflow itself
 - [docs] Codex section in setup-claude-code.md is an empty TODO
 - [docs] decide where review findings and verification evidence live
@@ -34,7 +34,6 @@ and meta concerns.
 - [skills] recommendation skill — weigh options with pros/cons and give a recommendation
 - [skills] writing-for-agents: micro-test "Phrasing that changes behavior" and "Co-locate" before pruning
   - baseline runs on Sonnet did both unprompted (candidate no-ops); needs 5+ rep micro-tests per references/testing.md before deciding
-- [skills] writing-for-agents is absent from skills/README.md (supporting-skills table, Status section)
 - [repo] scripts/find-by-frontmatter.py is unused — skills stick to grep for flat ticket frontmatter (decision 0004)
   - wire it into a skill (and move it under skills/, shipped tree) only when a real use case appears: array queries (`depends_on`, `areas`) or nested metadata
 - [docs] metadata format inconsistent across plan/ticket/workflow markdown files
@@ -46,3 +45,7 @@ and meta concerns.
   - the new spec/ticket templates in skills/shape are authoritative now; reconcile the four docs (headings, Non-goals→Out of Scope, open-questions fold rule)
 - [repo] verify the AGENTS.md prunes with a rerun (tie-break routing sentence removed, reference-repo caveat merged)
   - restore the tie-break line if agents mis-route between docs-structure.md and agentic-workflow.md
+- [repo] bundles 0001, 0003, 0004 predate the skills/README.md + agents/README.md → docs/skills.md move
+  - 0003's spec shaped the opposite resolution (fold agents/README.md into skills/README.md, colocation-exception decision) — reconcile or re-shape before implementing; 0001 and 0004 only need their references re-pointed
+- [docs] record a decision for skills/agents docs moving central to docs/skills.md
+  - supersedes the colocation expectation for plugin payload trees; driver is the plugin agent scanner (no README carve-out) plus the derived-view cleanup
