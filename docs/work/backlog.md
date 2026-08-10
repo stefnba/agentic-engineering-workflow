@@ -33,3 +33,6 @@ and meta concerns.
   - detect and propose only, human applies; don't name it "reconcile" (taken by the per-PR obligation)
 - [skills] shape's write-boundary hook uses `${CLAUDE_PROJECT_DIR}`, not `${CLAUDE_PLUGIN_ROOT}` (decision 0001, rule 4)
   - no `.claude-plugin/plugin.json` exists yet to make `${CLAUDE_PLUGIN_ROOT}` resolve; migrate once it does
+- [skills] recommendation skill — weigh options with pros/cons and give a recommendation
+- [docs] metadata format inconsistent across plan/ticket/workflow markdown files
+  - some use an inline `Key: Value · Key: Value` header (e.g. decisions/0001), others use YAML frontmatter (e.g. skills/shape/SKILL.md)
