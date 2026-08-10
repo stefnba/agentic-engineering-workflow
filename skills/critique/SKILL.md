@@ -1,6 +1,6 @@
 ---
 name: critique
-description: Attack a shaped spec in a fresh, isolated context before the human sees it. Invoke after spec.md and its first tickets are drafted — never on an unfinished draft, and never for anything short of a real attempt to break it.
+description: Attack a shaped spec in a fresh, isolated context before the human sees it. Invoke after spec.md and its full ticket set are drafted — never on an unfinished draft, and never for anything short of a real attempt to break it.
 argument-hint: "[candidate id]"
 context: fork
 agent: critic

@@ -11,7 +11,7 @@ Three workflow skills exist under `skills/` — `interview`, `shape`, `critique`
 The tables in `skills/README.md` are the spec — this list adds nothing to them, and this file deliberately does not prescribe skill content:
 
 - `interview` — the pick-side dialogue that turns user intent into a brief inside a new candidate bundle
-- `shape` — the author role: brief in, spec and first tickets out, human plan-approval at the end
+- `shape` — the author role: brief in, spec and full ticket set out, human plan-approval at the end
 - `critique` — the critic role: a fresh, isolated context that attacks the spec before the human sees it
 - `critic` (agent) — the read-only context `critique` forks into
 - `docs-rules` (reference skill) — the procedural distillate of docs-structure that skills and agents load instead of restating it
@@ -22,9 +22,9 @@ The tables in `skills/README.md` are the spec — this list adds nothing to them
 2. `docs/docs-structure.md` — the artifacts: what each document is, its headings, its lifecycle
 3. `skills/README.md` and `agents/README.md` — the mechanism spec for exactly these skills
 4. The existing skills (`skills/backlog`, `skills/decision`, `skills/handoff`) — style exemplars: match their voice, density, and the way every rule carries its reason
-5. Official references: https://code.claude.com/docs/en/skills, https://code.claude.com/docs/en/sub-agents, https://code.claude.com/docs/en/hooks
+5. Official references: <https://code.claude.com/docs/en/skills>, <https://code.claude.com/docs/en/sub-agents>, <https://code.claude.com/docs/en/hooks>
 
-Inspiration, not import: https://www.aihero.dev/skills-grill-with-docs for the interviewing posture (challenge, don't transcribe), and https://github.com/mattpocock/skills/tree/main/skills/engineering for how mature skills are structured and composed. Where either conflicts with this repo's docs, this repo's docs win.
+Inspiration, not import: <https://www.aihero.dev/skills-grill-with-docs> for the interviewing posture (challenge, don't transcribe), and <https://github.com/mattpocock/skills/tree/main/skills/engineering> for how mature skills are structured and composed. Where either conflicts with this repo's docs, this repo's docs win.
 
 ## Increments, in order
 

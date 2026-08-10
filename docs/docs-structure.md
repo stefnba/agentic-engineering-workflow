@@ -72,13 +72,13 @@ _Spec_ is used here **with a fixed meaning**, because industry usage is genuinel
 
 The process — stages, gates, loops, approval points — is defined in [agentic-workflow.md](agentic-workflow.md), which is authoritative for anything about sequence or approval. This doc owns the artifact side: which stage reads and writes which document.
 
-| Stage     | Reads                                                  | Writes                                                                       |
-| --------- | ------------------------------------------------------ | ---------------------------------------------------------------------------- |
-| Discover  | `backlog.md`, colocated READMEs                        | `research/*.md`, backlog lines, `candidates/<id>/brief.md`                   |
-| Shape     | brief or backlog line, colocated READMEs, `decisions/` | `spec.md`, `plan.md` (rarely), first tickets; moves the bundle to `planned/` |
-| Implement | ticket, `spec.md`, colocated READMEs                   | code; ticket status; README and `spec.md` amendments                         |
-| Review    | the PR diff, `spec.md`, colocated READMEs              | findings                                                                     |
-| Ship      | the bundle                                             | durable docs (absorbing the spec); deletes the bundle                        |
+| Stage     | Reads                                                  | Writes                                                                     |
+| --------- | ------------------------------------------------------ | -------------------------------------------------------------------------- |
+| Discover  | `backlog.md`, colocated READMEs                        | `research/*.md`, backlog lines, `candidates/<id>/brief.md`                 |
+| Shape     | brief or backlog line, colocated READMEs, `decisions/` | `spec.md`, `plan.md` (rarely), all tickets; moves the bundle to `planned/` |
+| Implement | ticket, `spec.md`, colocated READMEs                   | code; ticket status; README and `spec.md` amendments                       |
+| Review    | the PR diff, `spec.md`, colocated READMEs              | findings                                                                   |
+| Ship      | the bundle                                             | durable docs (absorbing the spec); deletes the bundle                      |
 
 ---
 
@@ -165,10 +165,11 @@ No status column. No checkboxes. Those duplicate the tickets.
 Frontmatter carries `status` and `depends_on`; three headings — `Scope`, `Done when`, `Not in this ticket`; the template ships with its writer: [ticket-template.md](../skills/shape/ticket-template.md).
 
 - **Slice by what must be true when this PR merges** — not by file, not by layer. One PR, independently revertible, `main` stays green after each.
-- **Make ticket 01 a tracer bullet** — the thinnest end-to-end slice that exercises the whole architecture; later tickets widen it. It's the ticket most likely to invalidate the spec's assumptions, which is why it goes first — and why the remaining tickets wait for it to land.
+- **Make ticket 01 a tracer bullet** — the thinnest end-to-end slice that exercises the whole architecture; later tickets widen it. It's the ticket most likely to invalidate the spec's assumptions, which is why it goes first — and why landing it triggers a sweep of the remaining tickets (see below).
 - **Every ticket needs a machine-checkable done condition.** "Users can retry failed payments" is not verifiable. A test command is. If you can't write the check, the ticket isn't specified yet.
 - **Don't duplicate the spec's reasoning.** Link to it. Duplicated rationale goes stale and the agent can't tell which copy is current.
-- **Don't create all tickets upfront.** Beyond the first two or three, they're written against assumptions implementation will invalidate. Generate the rest after the first lands.
+- **Create all tickets at shape time.** Writing a concrete done-when for every ticket is a test of the spec — a ticket whose check can't be written yet is a spec hole found while it's cheap. Full decomposition is also what makes the Plan gate real: **every acceptance criterion maps to some ticket's done-when**, and a criterion with no ticket is bad slicing caught in a list. (Rejected alternative: stub the later tickets and specify at pick-up — it defers spec holes to mid-flight and hands ticket authority to implement sessions.)
+- **Tickets are reconciled, not frozen.** Landed work invalidates later tickets sometimes — that's expected, and the repair is part of the landing PR's reconcile obligation: amend the remaining tickets in the same diff, reviewed at Accept. A change to _scope_ rather than detail is a deviation — Open question, Plan gate re-arms. There is no re-shaping mid-flight.
 
 ### Claiming, with parallel agents
 

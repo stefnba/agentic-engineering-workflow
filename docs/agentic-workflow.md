@@ -26,7 +26,7 @@ Gates must be checkable. "Is the spec good?" is not a gate — that is what revi
 | Stage     | Purpose                                                                          | Output                             | Exit approved by                   |
 | --------- | -------------------------------------------------------------------------------- | ---------------------------------- | ---------------------------------- |
 | Discover  | Fill the backlog with candidates; pick one to pursue                             | A picked candidate (line or brief) | Human picks                        |
-| Shape     | Turn the picked candidate into a spec and small, verifiable work items (tickets) | `spec.md` + the first tickets      | Critic challenges → human approves |
+| Shape     | Turn the picked candidate into a spec and small, verifiable work items (tickets) | `spec.md` + the full ticket set    | Critic challenges → human approves |
 | Implement | Execute one ticket in a dedicated branch/worktree                                | A verified, reconciled change set  | Agent (gates pass)                 |
 | Review    | Judge the diff: correctness, architecture, security, requirement fit             | Findings or approval               | Human approves                     |
 | Ship      | Merge/release, absorb docs, delete the bundle, record follow-ups                 | Shipped outcome, traceable record  | — (approved at review)             |
@@ -53,7 +53,7 @@ The Pick gate is source-agnostic: the human picks one candidate, wherever it cam
 
 Two roles, deliberately separated:
 
-- **Author** — reads the brief (when one exists) and writes `spec.md` (target state, non-goals, open questions, acceptance criteria) and the first two or three tickets, inside the candidate's bundle. Read-only on code: an agent that _can_ write code will write code and retrofit the spec to it.
+- **Author** — reads the brief (when one exists) and writes `spec.md` (target state, non-goals, open questions, acceptance criteria) and the full ticket set, inside the candidate's bundle — every acceptance criterion covered by some ticket's done-when. Read-only on code: an agent that _can_ write code will write code and retrofit the spec to it.
 - **Critic** — a **separate agent with a fresh context** that attempts to break the plan: missed states, API contracts, security, performance, testability, scope creep. The author cannot find the holes in a plan it just rationalized into existence; a critic that shares the author's context inherits the author's blind spots.
 
 Migration and rollout needs are sequencing rationale — ship behind a flag, reversible migration before the code that needs it — so they land in `plan.md`, which exists for exactly that. A risk the spec can't absorb becomes an Open question; there is no hand-wavy Risks section.
@@ -71,7 +71,7 @@ One ticket per session, fresh context, dedicated branch or worktree. The agent r
 The exit gate has two halves, both in the same PR:
 
 1. **Verify** — the repo's deterministic checks pass — typecheck, lint, unit/integration/e2e tests, build, migrations (up _and_ down) where touched — plus the ticket's own done-when commands, and a manual smoke test when the ticket calls for one. The PR records the exact commands, their output, and any check that was skipped and why: a stated gap is reviewable, an omitted one is a trap. Evidence, not claims.
-2. **Reconcile** — colocated `README.md`s updated if the change made them inaccurate; `spec.md` amended if implementation proved it wrong.
+2. **Reconcile** — colocated `README.md`s updated if the change made them inaccurate; `spec.md` amended if implementation proved it wrong; remaining tickets amended if the landed change invalidated them. Detail repairs happen here; a _scope_ change is a deviation.
 
 An amendment may **describe, never decide**: clarifying a `Target state` sentence that turned out ambiguous is an amendment; changing what the target state actually is is a deviation. When unsure which one a change is, treat it as a deviation — stopping costs minutes, deciding unilaterally costs the gate.
 
