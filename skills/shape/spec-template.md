@@ -1,7 +1,7 @@
 # Feature Spec — Structure Reference
 
-Title line: `# <SPEC-ID> - <Title>` — ID from the tracker or repo convention, stable, and
-referenced by tickets, PRs, and commits.
+Title line: `# <id> — <Title>` — the bundle's 4-digit ID, stable, and referenced by
+tickets, PRs, and commits.
 
 Specs are the durable core, written in present tense — statements of how the system behaves,
 not future promises — so they remain valid as living documentation after shipping. Observable
@@ -72,9 +72,9 @@ Concrete prohibitions: features not to build, modules not to touch, refactors no
 
 ## 8. Tickets (required before implementation)
 
-Tickets live in `tickets/`, one file per ticket (`T-<n>-<slug>.md`), following the ticket
-structure reference. This section keeps only an ordered index — `- T-1 — <title> (depends:
-—)` — plus the coverage guarantee: every AC is covered by at least one ticket. Each ticket
+Tickets live in `tickets/`, one file per ticket (`NN-<slug>.md`, zero-padded), following the
+ticket structure reference. This section keeps only an ordered index — `- 01 — <title>
+(depends: —)` — plus the coverage guarantee: every AC is covered by at least one ticket. Each ticket
 is a vertical slice, independently testable, sized for one agent session. All ticket detail
 (covered ACs, file paths, verification) lives in the ticket file, never here.
 

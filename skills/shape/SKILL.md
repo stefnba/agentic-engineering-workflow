@@ -18,11 +18,15 @@ The author role. Input is a brief or a backlog line; output is `spec.md` and the
 
 ## Read before writing
 
-Resolve the bundle (`work/*/$ARGUMENTS-*`) and read `brief.md` if one exists. Then read the actual repo: the files, directories, and colocated READMEs the spec will reference. **Shaping cites real files** — a spec that doesn't reference actual paths describes an imaginary architecture, and you can't tell the difference from inside your own head.
+Resolve the bundle (`work/*/$ARGUMENTS-*`) and read `brief.md` if one exists. Then read the actual repo: the modules the change touches, their colocated READMEs, and the `docs/decisions/` records for those areas — a spec that contradicts a standing decision re-litigates it by accident. **Shaping is grounded in the real codebase**: the spec names real modules and observed behavior, tickets cite exact paths (the spec itself carries none — that's the template's rule), and a spec written without reading the code describes an imaginary architecture you can't tell from the real one from inside your own head.
+
+## Sketch the test seams
+
+Before drafting, pick the seams the acceptance tests will attach to — the boundaries where behavior gets observed. Prefer seams that already exist; place any new one as high as you can; the fewer the better, and one is the ideal. The choice is upstream of everything else: Behavioral Requirements and Acceptance Criteria are phrased at an observable boundary, and the seam is that boundary — pick it late and the spec gets rewritten around it. It's a judgment call, so confirm the sketch with the human before writing the spec. The confirmed answer lands in `Testing Decisions`.
 
 ## Write spec.md
 
-Start from [spec-template.md](spec-template.md), shipped with this skill; docs-rules and `docs/docs-structure.md` say why the headings don't move. `Non-goals` is the highest-value section: agents wander, and an explicit exclusion list is the cheapest fix. Migration or rollout sequencing that a dependency graph can't express goes in `plan.md`; skip `plan.md` entirely if there's no such rationale — a table that just restates ticket order goes stale invisibly.
+Start from [spec-template.md](spec-template.md), shipped with this skill — section order, per-section rules, and the `BR-`/`ID-`/`AC-` ID scheme live there, and headings never vary between specs so tickets and tooling can deep-link. `Out of Scope` is the highest-value section: agents wander, and an explicit exclusion list is the cheapest fix. Migration or rollout sequencing that a dependency graph can't express goes in `plan.md`; skip `plan.md` entirely if there's no such rationale — a table that just restates ticket order goes stale invisibly. (`Rollout & Flags` in the spec holds the flag mechanics; `plan.md` holds why this order.)
 
 ## Write all the tickets
 
@@ -45,4 +49,4 @@ Two checks, both required:
 1. **Every `Open questions` line carries a resolution.** No unresolved lines.
 2. **The human approves the decomposition.** Present the spec and tickets; this is the Plan gate, and it's a human call because bad slicing is cheap to fix in a list and expensive to fix across twelve started tickets.
 
-On approval: `git mv` the bundle from `candidates/` to `planned/`. From this point `brief.md` is frozen — don't edit it again, even to tidy it; if it and `spec.md` disagree from here on, `spec.md` wins.
+On approval, two moves in order. First fold each resolved answer into the section it constrains and delete its line — the implementing agent receives a spec whose `Open questions` section is empty or absent (the answer survives in the section it now constrains; git keeps the Q&A trail). Then `git mv` the bundle from `candidates/` to `planned/`. From this point `brief.md` is frozen — don't edit it again, even to tidy it; if it and `spec.md` disagree from here on, `spec.md` wins.
