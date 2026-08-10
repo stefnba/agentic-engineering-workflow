@@ -22,7 +22,7 @@ This is the tracer bullet: it validates the riskiest assumption (that this repo'
 - `docs/decisions/0002-*.md` exists with Context / Decision / Rejected / Costs / Revisit if sections; `docs/docs-structure.md` § Durable system docs links to it in one line.
 - `claude plugin validate . --strict` exits 0.
 - `claude --plugin-dir . plugin list` shows `agentic-coding` with `Status: ✔ loaded`.
-- `claude --plugin-dir . plugin details agentic-coding` shows 7 skills (`backlog`, `critique`, `decision`, `docs-rules`, `handoff`, `interview`, `shape`) and exactly 1 agent (`critic`) — no phantom `README` component.
+- `claude --plugin-dir . plugin details agentic-coding` shows 6 skills (`backlog`, `critique`, `decision`, `handoff`, `interview`, `shape`) and exactly 1 agent (`critic`) — no phantom `README` component.
 - A real interactive `claude --plugin-dir .` session invokes `shape` and the transcript shows it actually running, not erroring; the observed invocation form is added as a new resolved line in `spec.md` § Open questions.
 
 ## Not in this ticket

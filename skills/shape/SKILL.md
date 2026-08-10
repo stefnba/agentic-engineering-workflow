@@ -30,7 +30,7 @@ Start from [spec-template.md](spec-template.md), shipped with this skill — sec
 
 ## Write all the tickets
 
-The full decomposition, every ticket with a concrete `Done when` — writing that check is a test of the spec, and a ticket whose check you can't write yet is a spec hole you just found while it's cheap. Before exit, verify **coverage**: every acceptance criterion maps to some ticket's done-when; a criterion with no ticket is bad slicing. Start from [ticket-template.md](ticket-template.md), shipped with this skill; slicing rules are docs-rules' territory, don't restate them here. Later tickets invalidated by landed work get amended at reconcile, not re-shaped — expect that, don't pad against it.
+The full decomposition, every ticket with a concrete `Done when` — writing that check is a test of the spec, and a ticket whose check you can't write yet is a spec hole you just found while it's cheap. Before exit, verify **coverage**: every acceptance criterion maps to some ticket's done-when; a criterion with no ticket is bad slicing. Start from [ticket-template.md](ticket-template.md), shipped with this skill; slicing rules live in [docs/docs-structure.md](../../docs/docs-structure.md), don't restate them here. Later tickets invalidated by landed work get amended at reconcile, not re-shaped — expect that, don't pad against it.
 
 ## Judgment calls happen inline, not in Open questions
 

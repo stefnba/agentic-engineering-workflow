@@ -53,7 +53,7 @@ Commands below were verified against a scratch copy of this repo's `skills/`/`ag
 - `.claude-plugin/plugin.json` is valid JSON with `name`, `version`, `description`, `author`, `repository` set as in § Target state.
 - `claude plugin validate . --strict` exits 0 against the repo root.
 - `claude --plugin-dir . plugin list` shows an entry for `agentic-coding` with `Status: ✔ loaded`.
-- `claude --plugin-dir . plugin details agentic-coding` shows all 7 skills (`backlog`, `critique`, `decision`, `docs-rules`, `handoff`, `interview`, `shape`) and exactly 1 agent (`critic`) — no phantom `README` component.
+- `claude --plugin-dir . plugin details agentic-coding` shows all 6 skills (`backlog`, `critique`, `decision`, `handoff`, `interview`, `shape`) and exactly 1 agent (`critic`) — no phantom `README` component.
 - A real interactive `claude --plugin-dir .` session invokes `shape` and the transcript shows it actually running (resolving a bundle or asking for one — not a "no such skill" or permission error); the observed invocation form is recorded as a new resolved line in § Open questions, not left in a PR description.
 - `skills/shape/SKILL.md`'s hook `command` reads `${CLAUDE_PLUGIN_ROOT}/skills/shape/scripts/write-boundary.sh`; invoking `shape` under `--plugin-dir .` and attempting an out-of-bundle write is denied, with `write-boundary.sh`'s exact denial string ("shape writes only inside work/candidates/ or work/planned/ — denied: ...") visible in the transcript — the tracer-bullet check that the migration didn't silently disable the boundary.
 - `.claude/skills/*` and `.claude/agents/critic.md` no longer exist; `.claude/skills` and `.claude/agents` are removed if left empty.

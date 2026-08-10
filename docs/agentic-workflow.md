@@ -73,7 +73,7 @@ The exit gate has two halves, both in the same PR:
 1. **Verify** — the repo's deterministic checks pass — typecheck, lint, unit/integration/e2e tests, build, migrations (up _and_ down) where touched — plus the ticket's own done-when commands, and a manual smoke test when the ticket calls for one. The PR records the exact commands, their output, and any check that was skipped and why: a stated gap is reviewable, an omitted one is a trap. Evidence, not claims.
 2. **Reconcile** — colocated `README.md`s updated if the change made them inaccurate; `spec.md` amended if implementation proved it wrong; remaining tickets amended if the landed change invalidated them. Detail repairs happen here; a _scope_ change is a deviation.
 
-An amendment may **describe, never decide**: clarifying a `Target state` sentence that turned out ambiguous is an amendment; changing what the target state actually is is a deviation. When unsure which one a change is, treat it as a deviation — stopping costs minutes, deciding unilaterally costs the gate.
+An amendment may **describe, never decide**: clarifying a spec sentence that turned out ambiguous is an amendment; changing what the spec actually requires is a deviation. When unsure which one a change is, treat it as a deviation — stopping costs minutes, deciding unilaterally costs the gate.
 
 If a new open question appears mid-ticket: stop, add it to `spec.md → Open questions` unresolved, don't decide it unilaterally.
 

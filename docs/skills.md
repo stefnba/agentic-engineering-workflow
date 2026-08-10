@@ -18,8 +18,9 @@ A skill runs **inline** when the human is part of the loop — forked skills get
 
 Background knowledge, hidden from the `/` menu (`user-invocable: false`), preloaded into subagents via their `skills:` field so the full content is in their context at startup:
 
-- `docs-rules` — the procedural distillate of docs-structure: ID glob resolution, README-over-spec precedence, target-state phrasing, ticket format, backlog line format, the freeze rule. Workflow skills link here instead of restating — the one-copy rule applied to skills themselves.
 - `evidence` — the evidence-block format `implement` produces and `reviewer` checks.
+
+Rules that live in `docs/docs-structure.md` itself (ID glob resolution, README-over-spec precedence, spec/ticket format, the freeze rule) are not duplicated into a skill for preload — a forked agent that needs them reads `docs/docs-structure.md` directly with its `Read` tool, per the one-copy rule. A prior version of this repo carried a `docs-rules` skill that restated those rules for preload; it drifted from `docs-structure.md` within a few edits, so it was cut in favor of a direct read.
 
 ## Subagents
 
@@ -27,7 +28,7 @@ The subagents forked skills run in. In a consuming repo these land in `.claude/a
 
 Two conventions across all of them:
 
-- **Knowledge arrives via `skills:` preload**, not restated in the agent's system prompt — the reference layer (`docs-rules`, `evidence`) is injected in full at startup, so the one-copy rule holds for agents too.
+- **Knowledge arrives via `skills:` preload for reusable formats** (`evidence`), **or a direct `Read` of the authority doc for everything else** (`docs/docs-structure.md`) — never restated in the agent's system prompt, so the one-copy rule holds for agents too.
 - **Tool lists encode the role's power, hooks encode its boundaries.** What an agent may touch at all is the `tools` list; _where_ it may write within those tools is a hook. Don't try to express path scope in tool lists — it can't.
 
 ## Plugin compatibility
@@ -49,21 +50,21 @@ Claude Code loads skills from `.claude/skills/`, not `skills/` — this repo kee
 
 The unbuilt pieces. Each row is a mechanism commitment — invocation, context, agent — derived from the placement rule and settings rules above; skill _content_ is deliberately unspecified here (see work item 0001). When one of these is built, its row moves out of this table and into frontmatter, and the root README inventory picks it up.
 
-| Skill       | Stage     | Role   | Invocation                     | Context                                      | Notes                                                                                                                                                                                                                 |
-| ----------- | --------- | ------ | ------------------------------ | -------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `audit`     | Discover  | gather | `/audit`, manual               | fork (background), `agent: researcher`       | Autonomous sweep; writes `research/audit-*.md` + backlog lines. `disallowed-tools: AskUserQuestion`.                                                                                                                  |
-| `research`  | Discover  | gather | `/research <topic>`, manual    | fork (background), `agent: researcher`       | Needs WebSearch/WebFetch; writes `research/*.md` + backlog line.                                                                                                                                                      |
+| Skill       | Stage     | Role   | Invocation                     | Context                                      | Notes                                                                                                                                                                                                                                         |
+| ----------- | --------- | ------ | ------------------------------ | -------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `audit`     | Discover  | gather | `/audit`, manual               | fork (background), `agent: researcher`       | Autonomous sweep; writes `research/audit-*.md` + backlog lines. `disallowed-tools: AskUserQuestion`.                                                                                                                                          |
+| `research`  | Discover  | gather | `/research <topic>`, manual    | fork (background), `agent: researcher`       | Needs WebSearch/WebFetch; writes `research/*.md` + backlog line.                                                                                                                                                                              |
 | `pick`      | Discover  | pick   | `/pick`, manual                | inline                                       | Dialogue — human picks from the backlog. Presents candidates neutrally, routes to interview or shape, ends with prune. Boundary with `backlog`: pick is a pipeline entry point (choose, route, prune); `backlog` is the artifact's caretaker. |
-| `implement` | Implement | —      | `/implement <id>/<nn>`, manual | inline                                       | The session's operating procedure: resolve → read → claim → work → verify evidence → reconcile → PR. Also handles the bundle-less light path, branching on "no ticket exists" — one procedure, artifact-scaled.       |
-| `review`    | Review    | —      | `/review <pr>`, manual         | fork, `background: false`, `agent: reviewer` | Fork gives authorship isolation even when invoked from the implementer's session. Findings return to the human for the Accept gate. One reviewer for now; the standards/requirements split is a backlog optimization. |
-| `ship`      | Ship      | —      | `/ship <id>`, manual           | inline                                       | Absorbs the spec into durable docs, deletes the bundle, merges. Durable-doc writes deserve main-session visibility.                                                                                                 |
+| `implement` | Implement | —      | `/implement <id>/<nn>`, manual | inline                                       | The session's operating procedure: resolve → read → claim → work → verify evidence → reconcile → PR. Also handles the bundle-less light path, branching on "no ticket exists" — one procedure, artifact-scaled.                               |
+| `review`    | Review    | —      | `/review <pr>`, manual         | fork, `background: false`, `agent: reviewer` | Fork gives authorship isolation even when invoked from the implementer's session. Findings return to the human for the Accept gate. One reviewer for now; the standards/requirements split is a backlog optimization.                         |
+| `ship`      | Ship      | —      | `/ship <id>`, manual           | inline                                       | Absorbs the spec into durable docs, deletes the bundle, merges. Durable-doc writes deserve main-session visibility.                                                                                                                           |
 
 A `—` in Role is deliberate: only stages containing multiple contexts (Discover's gather/pick, Shape's author/critic) earn distinct role vocabulary — a stage with one context needs no second name.
 
-| Agent           | Serves              | tools                                                | Notes                                                                                                                  |
-| --------------- | ------------------- | ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| `reviewer`      | `review`            | `Read, Grep, Glob, Bash`                             | Bash for `gh pr diff` and re-running checks. `skills: [docs-rules, evidence]`.                                         |
-| `researcher`    | `audit`, `research` | `Read, Grep, Glob, Write, Edit, WebSearch, WebFetch` | Write scope (research/ + backlog only) enforced by hook, not tool list.                                                |
-| `ticket-runner` | parallel implement  | full, `isolation: worktree`                          | **Phase 2.** Worktree isolation per ticket is how the claiming protocol scales past one agent.                         |
+| Agent           | Serves              | tools                                                | Notes                                                                                                                                                      |
+| --------------- | ------------------- | ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `reviewer`      | `review`            | `Read, Grep, Glob, Bash`                             | Bash for `gh pr diff` and re-running checks. `skills: [evidence]`; reads `docs/docs-structure.md` directly for procedural rules, same pattern as `critic`. |
+| `researcher`    | `audit`, `research` | `Read, Grep, Glob, Write, Edit, WebSearch, WebFetch` | Write scope (research/ + backlog only) enforced by hook, not tool list.                                                                                    |
+| `ticket-runner` | parallel implement  | full, `isolation: worktree`                          | **Phase 2.** Worktree isolation per ticket is how the claiming protocol scales past one agent.                                                             |
 
 The supporting skills (`backlog`, `decision`, `handoff`) exist today but need reconciliation with docs-structure (see the backlog).

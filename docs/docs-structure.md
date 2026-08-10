@@ -129,7 +129,7 @@ ls work/*/0042-*        # resolve by ID, works from any status directory
 
 Written during discovery, by the interview — before any spec exists. It captures **what was asked, in the user's framing**: problem, constraints, motivation. Not a solution.
 
-Three headings, always — `Problem`, `Constraints`, `Motivation`; the template ships with its writer: [brief-template.md](../skills/interview/brief-template.md). Keep them identical across every brief, for the same reason as `spec.md`: stable anchors mean tooling can rely on the shape without re-deriving it per feature. No `Target state`, `Non-goals`, or `Acceptance criteria` here — those are `spec.md`'s job; a brief that starts solutioning stopped being a brief.
+Three headings, always — `Problem`, `Constraints`, `Motivation`; the template ships with its writer: [brief-template.md](../skills/interview/brief-template.md). Keep them identical across every brief, for the same reason as `spec.md`: stable anchors mean tooling can rely on the shape without re-deriving it per feature. No `Behavioral Requirements`, `Out of Scope`, or `Acceptance Criteria` here — those are `spec.md`'s job; a brief that starts solutioning stopped being a brief.
 
 Writing one is itself a judgment: a brief claims the item needs shaping. If the intent fits in a backlog line, it wasn't a brief — write the line instead.
 
@@ -143,14 +143,14 @@ The bundle starts life in `candidates/` holding only the brief, and moves to `pl
 
 Delta descriptions are only true before you start. An agent picking up ticket 4 of 7 can't tell which changes are already applied. Target-state descriptions are as true at ticket 7 as at ticket 1.
 
-**Spec-heavy, design-light.** `Target state` pins down observable behavior first — contracts, outcomes, what a caller or user can see — then only the internal decisions that constrain the work: public interfaces, data models, patterns to follow. Interior implementation stays open on purpose. Over-specifying constrains the agent exactly like it constrains a human, for no benefit; the pseudocode anti-pattern below is this rule's failure mode.
+**Spec-heavy, design-light.** `Behavioral Requirements` and `Acceptance Criteria` pin down observable behavior first — contracts, outcomes, what a caller or user can see — then `Implementation Decisions` carries only what constrains the work: public interfaces, data models, patterns to follow. Interior implementation stays open on purpose. Over-specifying constrains the agent exactly like it constrains a human, for no benefit; the pseudocode anti-pattern below is this rule's failure mode.
 
-Five headings, always — `Problem`, `Target state`, `Non-goals`, `Open questions`, `Acceptance criteria`; the template ships with its writer: [spec-template.md](../skills/shape/spec-template.md).
+Eight required headings, fixed order, plus two optional — `Problem Statement`, `Solution`, `Behavioral Requirements` (`BR-`), `Implementation Decisions` (`ID-`), `Testing Decisions`, `Acceptance Criteria` (`AC-`), `Out of Scope`, `Tickets`, and optionally `Rollout & Flags`, `Open Questions`; the template ships with its writer: [spec-template.md](../skills/shape/spec-template.md).
 
 - **Keep these headings identical across every spec.** Stable anchors mean tickets can deep-link and `AGENTS.md` can give generic instructions.
-- **Non-goals is the highest-value section.** Agents wander — they refactor adjacent code, add unrequested error handling, upgrade dependencies. An explicit exclusion list prevents most scope drift.
+- **Out of Scope is the highest-value section.** Agents wander — they refactor adjacent code, add unrequested error handling, upgrade dependencies. An explicit exclusion list prevents most scope drift.
 - **Say what and why, not how.** A spec detailed enough to be pseudocode removes the agent's ability to adapt while adding surface area for you to have been wrong.
-- **Open questions is the gate, but the gate is resolution, not absence.** Questions are never deleted while the feature is open — deleting one deletes the reasoning ticket 7 will need. Resolve in place: `- [resolved] <question>? → <answer>`. An evidence question ("does X call Y?") the agent resolves itself, citing the file; a judgment question ("should tokens live 15 minutes?") only the human resolves. Do not implement while a line is unresolved. If a new question appears mid-implementation, stop and add it unresolved — do not decide it yourself.
+- **Open Questions is the gate, but the gate is resolution, not absence.** Questions are never deleted while the feature is open — deleting one deletes the reasoning ticket 7 will need. Resolve in place: `- [resolved] <question>? → <answer>`. An evidence question ("does X call Y?") the agent resolves itself, citing the file; a judgment question ("should tokens live 15 minutes?") only the human resolves. Do not implement while a line is unresolved. If a new question appears mid-implementation, stop and add it unresolved — do not decide it yourself.
 
 ### `plan.md`
 
