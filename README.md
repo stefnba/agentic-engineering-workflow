@@ -16,11 +16,11 @@ What exists today. The conventions they follow — and the build plan for the un
 
 Stage-bound — each realizes one role of the [workflow](docs/agentic-workflow.md):
 
-| Name        | Stage    | What it does                                                            |
-| ----------- | -------- | ----------------------------------------------------------------------- |
-| `interview` | Discover | Turns user intent into a brief in `work/candidates/`                    |
-| `shape`     | Shape    | Turns a picked candidate into `spec.md` and its full ticket set         |
-| `critique`  | Shape    | Attacks a shaped spec in a fresh context; forks into the `critic` agent |
+| Name        | Stage    | What it does                                                                |
+| ----------- | -------- | --------------------------------------------------------------------------- |
+| `interview` | Discover | Grills user intent into a settled understanding                             |
+| `shape`     | Shape    | Claims a bundle from the session and writes `spec.md` + its full ticket set |
+| `critique`  | Shape    | Attacks a shaped spec in a fresh context; forks into the `critic` agent     |
 
 ### Supporting skills
 

@@ -1,9 +1,8 @@
 ---
 name: shape
-description: Turn a picked candidate into spec.md and its full ticket set. Use for /shape <id> once a candidate has a brief, or the human points at a backlog line ready to shape.
-argument-hint: "[candidate id]"
+description: Write spec.md and the full ticket set from this session's settled understanding — a just-finished interview, a backlog line, or requirements stated directly in chat.
 disable-model-invocation: true
-allowed-tools: Read, Grep, Glob, Write, Edit, Skill(critique *), Bash(mkdir -p work/planned/*), Bash(git mv *), Bash(git add *), Bash(git commit *)
+allowed-tools: Read, Grep, Glob, Write, Edit, Skill(critique *), Bash(skills/shape/scripts/claim-bundle.sh *), Bash(mkdir -p work/planned/*), Bash(git mv *), Bash(git add *), Bash(git commit *)
 hooks:
   PreToolUse:
     - matcher: "Edit|Write"
@@ -14,11 +13,27 @@ hooks:
 
 # Shape
 
-The author role. Input is a brief or a backlog line; output is `spec.md` and the full ticket set, inside the candidate's bundle. You are **read-only on code, structurally** — the hook above blocks any `Edit`/`Write` outside `work/candidates/` and `work/planned/`. An agent that can write code will write code and retrofit the spec to it; this removes the option rather than relying on restraint.
+The author role. Input is whatever's in front of you right now: a just-finished interview, a backlog line the human pointed at, or requirements stated directly in this chat — there's no argument to resolve a bundle by, because none exists yet. Output is `spec.md` and the full ticket set, inside a bundle you claim yourself. You are **read-only on code, structurally** — the hook above blocks any `Edit`/`Write` outside `work/candidates/` and `work/planned/`. An agent that can write code will write code and retrofit the spec to it; this removes the option rather than relying on restraint.
+
+## Claim the bundle
+
+Default: claim a fresh bundle. Derive a short title from the settled understanding — the problem statement in a few words is enough — and run:
+
+```
+skills/shape/scripts/claim-bundle.sh "<title>"
+```
+
+It allocates the next id, commits and pushes the claim (retrying on conflict — someone else's successful push is the lock, same protocol as ticket claiming), and creates `work/candidates/<id>-<slug>/`. Everything you write from here goes inside that directory. Do this before any deep reading — it's the first action, not something to reach after research.
+
+**Legacy path**, only when the human explicitly named an existing bundle to continue — a literal id or path, or a yes to `interview`'s "continue that bundle?" check. Topic overlap alone is not that signal: a fresh claim is always safe, since duplication is cheap to catch at reconcile and a wrongly-reused bundle is not. If it's genuinely unclear which one you're in, ask in one line before doing anything else — don't research your way to an answer. On the legacy path, skip claiming and resolve the bundle with Glob (`work/*/<id>-*`) instead; read `brief.md` if present, since it's that bundle's settled understanding, the same role a grilled conversation plays for a freshly claimed one.
 
 ## Read before writing
 
-Resolve the bundle (`work/*/$ARGUMENTS-*`) and read `brief.md` if one exists. Then read the actual repo: the modules the change touches, their colocated READMEs, and the `docs/decisions/` records for those areas — a spec that contradicts a standing decision re-litigates it by accident. **Shaping is grounded in the real codebase**: the spec names real modules and observed behavior, tickets cite exact paths (the spec itself carries none — that's the template's rule), and a spec written without reading the code describes an imaginary architecture you can't tell from the real one from inside your own head.
+Read the actual repo: the modules the change touches, their colocated READMEs, and the `docs/decisions/` records for those areas — a spec that contradicts a standing decision re-litigates it by accident. **Shaping is grounded in the real codebase**: the spec names real modules and observed behavior, tickets cite exact paths (the spec itself carries none — that's the template's rule), and a spec written without reading the code describes an imaginary architecture you can't tell from the real one from inside your own head.
+
+## Surface drift, don't route around it
+
+What you're reading — a legacy brief, an old backlog line, this conversation itself — may reference something that's since moved, been renamed, or never existed: a skill that was removed, a doc that relocated, a component the text assumes but the repo doesn't have. That's a judgment call, not a design problem. Say what you found and ask how to handle it. Don't invent the missing piece, don't quietly fold designing it into this bundle's scope, and don't spend minutes reasoning toward an answer only the human can give — one line, asked now, beats a well-researched guess.
 
 ## Sketch the test seams
 
@@ -36,6 +51,8 @@ The full decomposition, every ticket with a concrete `Done when` — writing tha
 
 You're running with the human in the conversation — unlike Implement, which is isolated and must stop-and-record. When you hit a real judgment question (not decidable from the repo), ask it directly and get the answer now. Record it resolved on the spot: `- [resolved] <question>? → <answer>`. Reserve unresolved `Open questions` lines for things nobody in the room can answer yet.
 
+Ask as you go, not in a batch at the end. The moment you notice a second or third judgment question piling up before you've written anything, stop and put them to the human right there — don't keep exploring the repo hoping the next file resolves them for you. Minutes of uninterrupted reading with nothing to show is the symptom; asking sooner is the fix.
+
 Evidence questions you resolve yourself, citing the file — don't ask the human something the repo already answers.
 
 ## Invoke critique before exit
@@ -49,4 +66,4 @@ Two checks, both required:
 1. **Every `Open questions` line carries a resolution.** No unresolved lines.
 2. **The human approves the decomposition.** Present the spec and tickets; this is the Plan gate, and it's a human call because bad slicing is cheap to fix in a list and expensive to fix across twelve started tickets.
 
-On approval, two moves in order. First fold each resolved answer into the section it constrains and delete its line — the implementing agent receives a spec whose `Open questions` section is empty or absent (the answer survives in the section it now constrains; git keeps the Q&A trail). Then `git mv` the bundle from `candidates/` to `planned/`. From this point `brief.md` is frozen — don't edit it again, even to tidy it; if it and `spec.md` disagree from here on, `spec.md` wins.
+On approval, two moves in order. First fold each resolved answer into the section it constrains and delete its line — the implementing agent receives a spec whose `Open questions` section is empty or absent (the answer survives in the section it now constrains; git keeps the Q&A trail). Then `git mv` the bundle from `candidates/` to `planned/`. If this bundle came in through the legacy path and still carries a `brief.md`, it freezes here too: from this point `spec.md` is what's being done about the ask, `brief.md` is only the historical record of it, and when they disagree `spec.md` wins.

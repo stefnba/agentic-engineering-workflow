@@ -23,13 +23,13 @@ Gates must be checkable. "Is the spec good?" is not a gate — that is what revi
 
 ## Stages
 
-| Stage     | Purpose                                                                          | Output                             | Exit approved by                   |
-| --------- | -------------------------------------------------------------------------------- | ---------------------------------- | ---------------------------------- |
-| Discover  | Fill the backlog with candidates; pick one to pursue                             | A picked candidate (line or brief) | Human picks                        |
-| Shape     | Turn the picked candidate into a spec and small, verifiable work items (tickets) | `spec.md` + the full ticket set    | Critic challenges → human approves |
-| Implement | Execute one ticket in a dedicated branch/worktree                                | A verified, reconciled change set  | Agent (gates pass)                 |
-| Review    | Judge the diff: correctness, architecture, security, requirement fit             | Findings or approval               | Human approves                     |
-| Ship      | Merge/release, absorb docs, delete the bundle, record follow-ups                 | Shipped outcome, traceable record  | — (approved at review)             |
+| Stage     | Purpose                                                                          | Output                                                                   | Exit approved by                   |
+| --------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------ | ---------------------------------- |
+| Discover  | Fill the backlog with candidates; pick one to pursue                             | A picked candidate (line, or a settled understanding carried in-session) | Human picks                        |
+| Shape     | Turn the picked candidate into a spec and small, verifiable work items (tickets) | `spec.md` + the full ticket set                                          | Critic challenges → human approves |
+| Implement | Execute one ticket in a dedicated branch/worktree                                | A verified, reconciled change set                                        | Agent (gates pass)                 |
+| Review    | Judge the diff: correctness, architecture, security, requirement fit             | Findings or approval                                                     | Human approves                     |
+| Ship      | Merge/release, absorb docs, delete the bundle, record follow-ups                 | Shipped outcome, traceable record                                        | — (approved at review)             |
 
 ### Discover
 
@@ -45,16 +45,16 @@ Gathering never chooses. Its candidates enter the funnel like every other idea �
 Picking settles on exactly one candidate:
 
 - **From the backlog** — the human scans the list and picks a line. A crisp line goes straight to shaping; a vague one goes through an interview first.
-- **Interview** — the user brings intent directly. The conversation challenges vague requirements and distills them into `work/candidates/<id>-<slug>/brief.md`: the problem in the user's framing, not a solution. Writing a brief is itself a judgment — it claims the item needs shaping. If the intent fits in a backlog line, it wasn't a brief; write the line instead.
+- **Interview** — the user brings intent directly. A relentless round-based Q&A (see [skills.md](skills.md)) challenges vague requirements until problem, constraints, and motivation are settled — the problem in the user's framing, not a solution. Nothing is written down; running the interview is itself a judgment, since it claims the item needs more than a line. If the intent fits in a backlog line, it wasn't worth interviewing; write the line instead.
 
-The Pick gate is source-agnostic: the human picks one candidate, wherever it came from. An agent can gather, annotate, and propose — what's worth doing is a judgment about priorities the agent doesn't own.
+The Pick gate is source-agnostic: the human picks one candidate, wherever it came from. For a backlog line, the line itself is the record of what was picked. For an interview, the record is the human's decision to carry the settled conversation straight into `shape` — the gate is the human's call, not a repo artifact (see decision 0012). An agent can gather, annotate, and propose — what's worth doing is a judgment about priorities the agent doesn't own.
 
 ### Shape
 
 Two roles, deliberately separated:
 
-- **Author** — reads the brief (when one exists) and writes `spec.md` (target state, non-goals, open questions, acceptance criteria) and the full ticket set, inside the candidate's bundle — every acceptance criterion covered by some ticket's done-when. Read-only on code: an agent that _can_ write code will write code and retrofit the spec to it.
-- **Critic** — a **separate agent with a fresh context** that attempts to break the plan: missed states, API contracts, security, performance, testability, scope creep. The author cannot find the holes in a plan it just rationalized into existence; a critic that shares the author's context inherits the author's blind spots.
+- **Author** — claims a fresh bundle (allocates the id, creates the directory — see [skills.md](skills.md)) from whatever's in front of it: a just-finished interview, a backlog line, or requirements stated directly in chat. Writes `spec.md` (target state, non-goals, open questions, acceptance criteria) and the full ticket set, inside that bundle — every acceptance criterion covered by some ticket's done-when. Read-only on code: an agent that _can_ write code will write code and retrofit the spec to it.
+- **Critic** — a **separate agent with a fresh context** that attempts to break the plan: missed states, API contracts, security, performance, testability, scope creep. The author cannot find the holes in a plan it just rationalized into existence; a critic that shares the author's context **inherits** the author's blind spots.
 
 Migration and rollout needs are sequencing rationale — ship behind a flag, reversible migration before the code that needs it — so they land in `plan.md`, which exists for exactly that. A risk the spec can't absorb becomes an Open question; there is no hand-wavy Risks section.
 
@@ -62,7 +62,7 @@ Exit is two checks: **every open question carries a resolution** (checkable with
 
 Questions are never deleted while the feature is open — deleting one deletes the reasoning ticket 7 will need. Resolve in place instead: `- [resolved] <question>? → <answer>`. Who may resolve depends on what kind of question it is: an **evidence question** ("does X call Y?") the agent resolves itself, citing the file; a **judgment question** ("should tokens live 15 minutes?") only the human resolves. An agent resolving a judgment question is grading its own homework — the split is what keeps `[resolved]` meaning something.
 
-On exit, the bundle moves from `candidates/` to `planned/`, and `brief.md` freezes: from here on the brief is the record of what was asked, the spec is what's being done about it, and when they disagree the spec wins.
+On exit, the bundle moves from `candidates/` to `planned/`. There's no separate record of the original ask to freeze alongside it — `spec.md`'s Problem Statement is that record, written by the same session that also made the implementation calls (decision 0012).
 
 ### Implement
 
@@ -118,18 +118,20 @@ Three mechanisms, one per situation:
 
 | Mechanism        | When                                                         | Carrier                                       |
 | ---------------- | ------------------------------------------------------------ | --------------------------------------------- |
-| Artifact handoff | Stage boundaries (planned)                                   | `brief.md`, `spec.md`, ticket, PR + evidence  |
+| Artifact handoff | Stage boundaries (planned)                                   | `spec.md`, ticket, PR + evidence              |
 | Sub-agent        | Within a stage, when the caller needs the result to continue | The sub-agent's report (e.g. critic findings) |
 | Handoff document | Unplanned breaks — a session dies mid-stage                  | A handoff file, outside the repo              |
 
 The decision rule: a **sub-agent** when the calling session continues (the critic reports back to the author); a **new session** when the previous context is a liability (implementing after shaping); a **handoff document** only when a session ends before reaching a stage boundary. The handoff document is the exception path — its content is disposable and personal, it lives outside the repo, and it never substitutes for a stage artifact.
 
+**One exception to artifact handoff:** the Pick gate, when sourced from an interview, has no carrier at all (decision 0012). Interview writes nothing, and hands off to `shape` within the same session — the boundary is real (the human's decision to invoke `shape` is a checkable action) but nothing evidences it on disk until `shape` claims a bundle and starts writing. A session that dies between interview and that claim loses the conversation entirely; none of the three mechanisms above cover it.
+
 Still open: where review findings and verification evidence live durably — PR description and comments, or files in the repo.
 
 ## Rules that make the stages real
 
-- **One creator per artifact type.** Interview creates briefs, shape creates specs and tickets, implement amends them — nothing is created twice. A stage writes only the artifact types in its row of the reads/writes table (docs-structure §3).
-- **Fresh context per stage.** New session for shaping; new session per ticket implementation. An agent that wrote the spec an hour ago will reinterpret it to match whatever it just built. The rule targets context that _biases_ — interview flowing into shaping in one session is fine, because the shared context is the user's own words and the brief on disk is the checkpoint.
+- **One creator per artifact type.** Interview creates nothing; shape creates specs and tickets; implement amends them — nothing is created twice. A stage writes only the artifact types in its row of the reads/writes table (docs-structure §3).
+- **Fresh context per stage.** New session for shaping; new session per ticket implementation. An agent that wrote the spec an hour ago will reinterpret it to match whatever it just built. The rule targets context that _biases_ — and interview never decides anything, it only elicits the human's answers. Interview flowing into shaping in one session is fine because shaping is the first activity in the pair that authors anything, and it does so fresh, from a transcript a reviewer could equally well read (decision 0012).
 - **No write access during shaping.** An agent that _can_ write code will write code and retrofit the spec to it.
 - **Shaping cites real files.** A spec that doesn't reference actual paths in the repo describes an imaginary architecture.
 - **Human reviews the decomposition** before tickets are created. Bad slicing is cheap to fix in a list and expensive to fix across twelve started tickets.

@@ -10,7 +10,6 @@ and meta concerns.
 
 - [docs] [skills] decision + backlog skills contradict docs-structure.md
   - `done/` vs delete-on-ship, `.agents/rules/`, ID scheme (template shape settled by decision 0005)
-  - candidates/ + brief.md not yet reflected in the skills
   - backlog skill's shell preamble hard-fails outside a workspace layout (`ls apps/*/package.json`)
 - [skills] build the workflow skills and subagents mapped in docs/skills.md (Build plan)
   - one end-to-end first, using the workflow itself
@@ -47,3 +46,5 @@ and meta concerns.
   - 0003's spec shaped the opposite resolution (fold agents/README.md into skills/README.md, colocation-exception decision) — reconcile or re-shape before implementing; 0001 and 0004 only need their references re-pointed
 - [docs] record a decision for skills/agents docs moving central to docs/skills.md
   - supersedes the colocation expectation for plugin payload trees; driver is the plugin agent scanner (no README carve-out) plus the derived-view cleanup
+- [repo] bundle 0001's spec describes the pre-0012 interview (writes `brief.md`) — one more reference to re-point alongside the skills/README.md move already noted above
+  - `work/candidates/0002-glossary-home` and `work/candidates/0004-implement-skill` still carry `brief.md` from before decision 0012; `shape`'s legacy path handles them, no migration needed
