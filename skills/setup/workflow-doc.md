@@ -54,11 +54,11 @@ Two roles, deliberately separated:
 - Starts from a just-finished interview, a backlog line, or a requirement stated directly in chat.
 - Writes `spec.md` (target state, non-goals, open questions, acceptance criteria) and the full ticket set, inside that bundle — every acceptance criterion covered by some ticket's done-when. Read-only on code: an agent that _can_ write code will write code and retrofit the spec to it.
 
-**Critic** attemts to break the artifacts:
+**Critic** attempts to break the artifacts:
 
 - Separate agent with a fresh context to not inherit the author's blind spots.
 - Attempts to break what the authoring agent wrote: missed states, API contracts, security, performance, testability, scope creep, adherence to repo conventions.
-- Goal is to have a documents that would pass a senior staff review.
+- Goal is to have a document that would pass a senior staff review.
 
 #### Implement
 
@@ -138,7 +138,7 @@ ls work/*/0042-*        # resolve by ID, works from any status directory
 - Single work item one agent implements
 - **Does't duplicate the spec's reasoning.** Link to it. Duplicated rationale goes stale and the agent can't tell which copy is current.
 
-**No `done/` folder**: On ship, bundle with its file get deleted. Git history keep it.
+**No `done/` folder**: On ship, the bundle and its files get deleted. Git history keeps it.
 
 #### `backlog.md`
 
