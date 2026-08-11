@@ -1,6 +1,6 @@
 #!/bin/bash
 # PreToolUse hook for the shape skill: Edit/Write may only touch the work
-# bundle tree (work/candidates/, work/planned/). Everything else —
+# bundle tree (work/shaped/). Everything else —
 # source code above all — is denied. This is the mechanical form of "shape
 # is read-only on code."
 set -euo pipefail
@@ -17,11 +17,11 @@ if [[ -n "${CLAUDE_PROJECT_DIR:-}" && "$FILE_PATH" == "$CLAUDE_PROJECT_DIR"/* ]]
   REL_PATH="${FILE_PATH#"$CLAUDE_PROJECT_DIR"/}"
 fi
 
-if [[ "$REL_PATH" == work/candidates/* || "$REL_PATH" == work/planned/* ]]; then
+if [[ "$REL_PATH" == work/shaped/* ]]; then
   exit 0
 fi
 
-jq -n --arg reason "shape writes only inside work/candidates/ or work/planned/ — denied: $REL_PATH" '{
+jq -n --arg reason "shape writes only inside work/shaped/ — denied: $REL_PATH" '{
   hookSpecificOutput: {
     hookEventName: "PreToolUse",
     permissionDecision: "deny",

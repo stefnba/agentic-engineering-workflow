@@ -100,25 +100,36 @@ Everything between those points is agent-crossable on deterministic gates.
 
 This file explains what lives where, why, and the rules that keep it from rotting.
 
+**Precedence.** When a colocated `README.md` and a bundle's `spec.md` disagree, the README wins —
+it describes what the system _is_; the spec describes what someone intended at a point in time.
+
 **Metadata.** A document carries metadata only if something reads it — and where metadata exists, the syntax is always YAML frontmatter, never a prose byline: one syntax means one parser for every query, skill, and sweep. Tickets carry `status`/`depends_on`; decisions carry `status`/`date`/`areas` (+ `supersedes`); research may carry `date`/`source`. `spec.md` carries **none**, deliberately — nothing machine-reads it, the directory owns bundle status, and an unused metadata block is an invitation for a second status owner.
 
 ### `work/`
+
+Every work item gets a bundle — there's no bundle-less path. Size is proportional to the work: under
+~3 tickets, a bundle is a single file (`work/shaped/2026-08-11-fix-flaky-test.md`, with `## Target
+state` and `## Increments`); more than that, it's promoted to a directory with `spec.md` + `tickets/`.
+`git mv` when promoting, never delete-and-recreate.
 
 #### `shaped/<bundle>/`
 
 ##### IDs and links
 
-**Bundles** get a 4-digit ID. **Tickets** are numbered locally (`01`, `02`) — `0042/03` is a sufficient global reference.
+**Bundles** are identified by `YYYY-MM-DD-<slug>` — the date claimed, plus a kebab-slug of the title.
+No shared counter and no claim step: before any deep reading, check that the exact path doesn't
+already exist and skim currently open bundles for topical overlap, then write the bundle directly
+(decision 0013). **Tickets** are numbered locally within a bundle (`01`, `02`) —
+`2026-08-11-billing-retries/03` is a sufficient global reference.
 
-IDs come from `work/next-id`, a single counter file holding the next one to give out — sequential, not hashed or content-addressed, because they're allocated before any content exists to address.
-
-Decision records number themselves independently, so `0001` can be both a decision and a work item. In prose, bare IDs always mean work items; decisions are always written out as "decision 0007".
+Decision records keep their own independent numeric sequence (`0001`, `0002`, …), unaffected by
+this — and now unambiguous by format alone, since work items no longer look like bare numbers.
 
 ```bash
-ls work/*/0042-*        # resolve by ID, works from any status directory
+ls work/*/2026-08-11-billing-retries    # resolve by ID, works from either status directory
 ```
 
-- **In repo markdown**: reference by ID in prose, don't link the path. A markdown link is a literal relative path — the glob only helps something that can execute it — so `[0042](../planned/0042-…)` 404s on the first `git mv`. Humans resolve IDs the same way: `t` on GitHub or `Cmd+P` in an editor, then type the ID.
+- **In repo markdown**: reference by ID in prose, don't link the path. A markdown link is a literal relative path — the glob only helps something that can execute it — so `[2026-08-11-billing-retries](../shaped/2026-08-11-billing-retries)` 404s on the first `git mv`. Humans resolve IDs the same way: `t` on GitHub or `Cmd+P` in an editor, then type the slug.
 - **In PR descriptions**: use a GitHub permalink (press `y` to pin the commit SHA). It never breaks, and it points at the spec as it read when the PR was opened — the version the reviewer needs, not whatever it says three moves later. Branch-name URLs (`/blob/main/...`) are the ones that rot.
 - Always `git mv` so `git log --follow` survives the rename.
 
@@ -188,10 +199,9 @@ docs/                           # durable — everything here accumulates and st
 
 work/                           # disposable — in-flight work, at the repo root
   backlog.md                    # one line per unshaped idea — unsorted collection dump
-  next-id                       # ID counter, incremented by the bundle-creating commit
-  shaped/                       # shaped, not started
+  shaped/                       # spec + tickets complete, not started
   active/                       # in progress
-    0042-billing-retries/
+    2026-08-11-billing-retries/
       spec.md
       plan.md                   # only if sequencing rationale exists
       tickets/

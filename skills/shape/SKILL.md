@@ -2,7 +2,7 @@
 name: shape
 description: Write spec.md and the full ticket set from this session's settled understanding — a just-finished interview, a backlog line, or requirements stated directly in chat.
 disable-model-invocation: true
-allowed-tools: Read, Grep, Glob, Write, Edit, Skill(critique *), Bash(skills/shape/scripts/claim-bundle.sh *), Bash(mkdir -p work/planned/*), Bash(git mv *), Bash(git add *), Bash(git commit *)
+allowed-tools: Read, Grep, Glob, Write, Edit, Skill(critique *), Bash(mkdir -p work/shaped/*), Bash(git mv *), Bash(git add *), Bash(git commit *), Bash(git push *)
 hooks:
   PreToolUse:
     - matcher: "Edit|Write"
@@ -13,19 +13,13 @@ hooks:
 
 # Shape
 
-The author role. Input is whatever's in front of you right now: a just-finished interview, a backlog line the human pointed at, or requirements stated directly in this chat — there's no argument to resolve a bundle by, because none exists yet. Output is `spec.md` and the full ticket set, inside a bundle you claim yourself. You are **read-only on code, structurally** — the hook above blocks any `Edit`/`Write` outside `work/candidates/` and `work/planned/`. An agent that can write code will write code and retrofit the spec to it; this removes the option rather than relying on restraint.
+The author role. Input is whatever's in front of you right now: a just-finished interview, a backlog line the human pointed at, or requirements stated directly in this chat — there's no argument to resolve a bundle by, because none exists yet. Output is `spec.md` and the full ticket set, inside a bundle you claim yourself. You are **read-only on code, structurally** — the hook above blocks any `Edit`/`Write` outside `work/shaped/`. An agent that can write code will write code and retrofit the spec to it; this removes the option rather than relying on restraint.
 
-## Claim the bundle
+## Create the bundle
 
-Default: claim a fresh bundle. Derive a short title from the settled understanding — the problem statement in a few words is enough — and run:
+Default: create a fresh bundle. Derive a kebab-slug from the settled understanding's title and check `work/*/$(date +%F)-<slug>` doesn't already exist. Then skim `work/shaped/` and `work/active/` for bundles that look topically related — this is a judgment call, not a string match: two slugs with zero characters in common can still be the same feature. If something looks related, say so and ask the human whether it's the same effort, a follow-up, or unrelated, before going further. Do this before any deep reading — it's the first action, not something to reach after research, and it's cheap precisely because nothing has been written yet (decision 0013).
 
-```
-skills/shape/scripts/claim-bundle.sh "<title>"
-```
-
-It allocates the next id, commits and pushes the claim (retrying on conflict — someone else's successful push is the lock, same protocol as ticket claiming), and creates `work/candidates/<id>-<slug>/`. Everything you write from here goes inside that directory. Do this before any deep reading — it's the first action, not something to reach after research.
-
-**Legacy path**, only when the human explicitly named an existing bundle to continue — a literal id or path, or a yes to `interview`'s "continue that bundle?" check. Topic overlap alone is not that signal: a fresh claim is always safe, since duplication is cheap to catch at reconcile and a wrongly-reused bundle is not. If it's genuinely unclear which one you're in, ask in one line before doing anything else — don't research your way to an answer. On the legacy path, skip claiming and resolve the bundle with Glob (`work/*/<id>-*`) instead; read `brief.md` if present, since it's that bundle's settled understanding, the same role a grilled conversation plays for a freshly claimed one.
+There is no separate claim step and no shared counter. Work locally under `work/shaped/<date>-<slug>/` as you write `spec.md` and the tickets (below); the bundle isn't committed or pushed until it's complete and approved — see Exit.
 
 ## Read before writing
 
@@ -66,4 +60,4 @@ Two checks, both required:
 1. **Every `Open questions` line carries a resolution.** No unresolved lines.
 2. **The human approves the decomposition.** Present the spec and tickets; this is the Plan gate, and it's a human call because bad slicing is cheap to fix in a list and expensive to fix across twelve started tickets.
 
-On approval, two moves in order. First fold each resolved answer into the section it constrains and delete its line — the implementing agent receives a spec whose `Open questions` section is empty or absent (the answer survives in the section it now constrains; git keeps the Q&A trail). Then `git mv` the bundle from `candidates/` to `planned/`. If this bundle came in through the legacy path and still carries a `brief.md`, it freezes here too: from this point `spec.md` is what's being done about the ask, `brief.md` is only the historical record of it, and when they disagree `spec.md` wins.
+On approval, two moves in order. First fold each resolved answer into the section it constrains and delete its line — the implementing agent receives a spec whose `Open questions` section is empty or absent (the answer survives in the section it now constrains; git keeps the Q&A trail). Then commit and push the whole bundle at once: `git add work/shaped/<date>-<slug>/`, commit, push. If the push is rejected, someone else's bundle landed on the same date and slug — `git mv` to a disambiguated slug and retry; this is the only point a collision can still occur, and it costs a rename, not a rewrite. If this bundle came in through the legacy path and still carries a `brief.md`, it freezes here too: from this point `spec.md` is what's being done about the ask, `brief.md` is only the historical record of it, and when they disagree `spec.md` wins.
