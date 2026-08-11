@@ -8,6 +8,7 @@ and meta concerns.
 
 ## Items
 
+- [plugin] Decision 0001 committed this repo to shipping as a Claude Code plugin, but the one required file — .claude-plugin/plugin.json — doesn't exist
 - [docs] [skills] decision + backlog skills contradict docs-structure.md
   - `done/` vs delete-on-ship, `.agents/rules/`, ID scheme (template shape settled by decision 0005)
   - backlog skill's shell preamble hard-fails outside a workspace layout (`ls apps/*/package.json`)
