@@ -8,7 +8,8 @@ and meta concerns.
 
 ## Items
 
-- [plugin] Decision 0001 committed this repo to shipping as a Claude Code plugin, but the one required file — .claude-plugin/plugin.json — doesn't exist
+- [repo] rename the GitHub repo from `agentic-coding` to `agentic-workflow` to match the plugin name
+  - update `plugin.json`'s `repository` field and README references once done
 - [docs] [skills] decision + backlog skills contradict docs-structure.md
   - `done/` vs delete-on-ship, `.agents/rules/`, ID scheme (template shape settled by decision 0005)
   - backlog skill's shell preamble hard-fails outside a workspace layout (`ls apps/*/package.json`)
@@ -30,7 +31,7 @@ and meta concerns.
 - [skills] consistency-sweep skill (`tidy`) — detect drift between backlog, decisions, work items
   - detect and propose only, human applies; don't name it "reconcile" (taken by the per-PR obligation)
 - [skills] shape's write-boundary hook uses `${CLAUDE_PROJECT_DIR}`, not `${CLAUDE_PLUGIN_ROOT}` (decision 0001, rule 4)
-  - no `.claude-plugin/plugin.json` exists yet to make `${CLAUDE_PLUGIN_ROOT}` resolve; migrate once it does
+  - `.claude-plugin/plugin.json` now exists, so `${CLAUDE_PLUGIN_ROOT}` resolves — migrate the hook
 - [skills] recommendation skill — weigh options with pros/cons and give a recommendation
 - [skills] writing-for-agents: micro-test "Phrasing that changes behavior" and "Co-locate" before pruning
   - baseline runs on Sonnet did both unprompted (candidate no-ops); needs 5+ rep micro-tests per references/testing.md before deciding

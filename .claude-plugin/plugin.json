@@ -1,0 +1,9 @@
+{
+  "name": "agentic-workflow",
+  "version": "0.1.0",
+  "description": "Agentic workflow skills: interview, shape, critique, backlog, decision, handoff, writing-for-agents",
+  "repository": "https://github.com/stefnba/agentic-coding",
+  "author": {
+    "name": "Stefan Bauer"
+  }
+}
