@@ -6,7 +6,7 @@ That distinction matters when reading anything here:
 
 - The docs describe conventions for a _real_ product repo (workspace packages, CI gates, feature bundles). None of that infrastructure exists here, so don't expect the layouts they describe to be present in this tree.
 - The skills under `skills/` are meant to be copied into (or eventually installed by) other repos. Their instructions reference paths and structures of a target repo, not this one.
-- The one convention this repo does apply to itself is [work/backlog.md](work/backlog.md), which tracks work on the reference material — partly to have a backlog, partly to dogfood the format.
+- The conventions this repo does apply to itself are [work/backlog.md](work/backlog.md), which tracks work on the reference material, and [GLOSSARY.md](GLOSSARY.md), a near-empty root vocabulary file — partly to have them, partly to dogfood the format.
 
 ## Skills
 
