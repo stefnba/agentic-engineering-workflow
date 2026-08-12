@@ -6,19 +6,11 @@ disable-model-invocation: true
 allowed-tools: Read, Grep, Glob
 ---
 
-# Interview the user
+Start from `$ARGUMENTS` if given, otherwise the ask already in this conversation — or ask what to discuss if neither exists.
 
-The pick-side half of Discover (see `docs/agentic-workflow.md` § Discover) — used when intent needs grilling before it's ready for `shape`: the user brings it directly, or an existing backlog line is too vague to shape as-is. This skill writes nothing — no brief, no file. Its only output is a settled understanding sitting in the conversation, which the human then carries straight into `shape`, invoked with no argument in this same session. `Read`/`Grep`/`Glob` are the only tools granted; there is no `Write`, `Edit`, or `Bash` to remove by convention — this skill is read-only by tool grant.
+Map it as a **design tree** with three branches — **Problem** (what breaks without this; the problem behind a proposed solution is usually more general than the solution), **Constraints** (what's implied but unstated — confirm it, never infer silently), **Motivation** (why now — lets a later reader judge whether a trade-off still serves the original intent). Grill each branch until nothing is left assumed. Stay inside these three: implementation, architecture, and acceptance criteria are `shape`'s job, not this skill's.
 
-## Grill, don't transcribe
-
-Your job is to reach a shared understanding the human would actually recognize as settled, not to write down whatever they say first. Map the ask as a **design tree** with three branches — **Problem**, **Constraints**, **Motivation** — and grill each until nothing is left assumed:
-
-- **Problem**: if the ask is a solution ("add a Redis cache"), ask what breaks without it. The problem behind a proposed solution is usually more general than the solution itself.
-- **Constraints**: surface what's implied but unstated ("it needs to work with the mobile app") and confirm it explicitly — never infer silently.
-- **Motivation**: ask why this matters now. It's what lets a later reader judge whether a trade-off made during shaping still serves the original intent.
-
-Work in **rounds**. The **frontier** is every question whose prerequisites are already settled — the ones you can ask _now_ without guessing at answers you haven't heard yet. Ask the whole frontier in one round, numbered, each with your recommended answer, then wait:
+Work in **rounds**. The **frontier** is every question whose prerequisites are already settled. Ask the whole frontier in one round, numbered, each with your recommended answer, then wait:
 
 ```
 ❓ **Q1** — **<question title>**: <question body>
@@ -26,24 +18,10 @@ Work in **rounds**. The **frontier** is every question whose prerequisites are a
 ➡️ <your recommended answer>
 ```
 
-Each round's answers reshape the tree: settled branches push the frontier outward and unblock questions that depended on them. Recompute the frontier and ask the next round. A question whose answer depends on another still-open question belongs to a _later_ round, not this one.
+Answers reshape the tree — settled branches unblock questions that depended on them. Recompute the frontier each round. A question that depends on another still-open one belongs to a later round.
 
-Stay inside Problem/Constraints/Motivation. Implementation decisions, architecture, and acceptance criteria are `shape`'s job — a grilling round that starts solutioning stopped being an interview.
+**Facts:** the repo can answer — a convention, a colocated README, whether something already exists — are yours to find with `Read`/`Grep`/`Glob`, never the human's to be asked. Don't block the rest of the frontier on one lookup; ask the rest now, fold the answer in once you have it.
 
-## Facts are yours to find, never the human's
+**Too small to interview:** if the conversation converges on something that fits one line, it wasn't worth interviewing — say so and use `backlog` instead.
 
-When a frontier question needs a fact the repo can answer — an existing convention, a colocated README, whether a module already does X — resolve it yourself with `Read`/`Grep`/`Glob` before asking, or inline within the round if it's quick. Don't ask the human something the repo already answers, and don't block the rest of the frontier on a lookup that only one question in the round needs — ask the others now, fold the answer in once you have it.
-
-## When this isn't worth grilling
-
-Running the interview is itself a judgment: it claims the item needs more than a line. If the conversation converges on something that fits one line, it wasn't worth interviewing — say so and use the `backlog` skill instead. A vague idea that resists a one-line summary after a round of grilling is the signal that shaping, not a backlog line, is warranted.
-
-## Check for an existing bundle, once
-
-Before wrapping up, `Glob` `work/shaped/*` and `work/active/*` for a bundle whose slug plausibly overlaps this topic. If one exists, ask the human directly, in one question: continue that bundle, or start a fresh one? Don't infer this from how the conversation feels — it's a one-line question, not a judgment call to reason your way into. If nothing overlaps, skip this and say nothing about it.
-
-## Done
-
-The session is done when the frontier is empty — every branch visited, nothing silently assumed — and the human confirms you've reached a shared understanding. Do not act on it until they do.
-
-Report back in one line: the problem, in the user's framing, is settled. Say the next step is `shape`, invoked right here with no argument — it reads this conversation directly and either creates a fresh bundle or resumes the existing one you already confirmed above. Don't invoke it yourself; the human's decision to carry this conversation into `shape` is the Pick gate (`docs/agentic-workflow.md` § Where the human sits), and that's a call they make, not you.
+**Done** when the frontier is empty and the human confirms the shared understanding — don't act on it before then. Report back in one line that the problem, in the user's framing, is settled, and that the next step is `shape`, invoked here with no argument. Don't invoke it yourself — that's the human's call.
