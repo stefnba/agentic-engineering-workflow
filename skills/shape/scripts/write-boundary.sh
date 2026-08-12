@@ -13,10 +13,13 @@ if [[ -z "$FILE_PATH" ]]; then
   exit 0
 fi
 
-REL_PATH="$FILE_PATH"
-if [[ -n "${CLAUDE_PROJECT_DIR:-}" && "$FILE_PATH" == "$CLAUDE_PROJECT_DIR"/* ]]; then
-  REL_PATH="${FILE_PATH#"$CLAUDE_PROJECT_DIR"/}"
+# The boundary only restricts writes inside this project — a path outside it
+# (e.g. ~/.claude/handoffs/*.md from the handoff skill) is none of shape's business.
+if [[ -z "${CLAUDE_PROJECT_DIR:-}" || "$FILE_PATH" != "$CLAUDE_PROJECT_DIR"/* ]]; then
+  exit 0
 fi
+
+REL_PATH="${FILE_PATH#"$CLAUDE_PROJECT_DIR"/}"
 
 if [[ "$REL_PATH" == work/shaped/* || "$REL_PATH" == work/backlog.md ]]; then
   exit 0

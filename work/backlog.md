@@ -27,8 +27,6 @@ and meta concerns.
 - [docs] AGENTS.md is referenced but never defined or exampled
 - [skills] consistency-sweep skill (`tidy`) — detect drift between backlog, decisions, work items
   - detect and propose only, human applies; don't name it "reconcile" (taken by the per-PR obligation)
-- [skills] shape's write-boundary hook uses `${CLAUDE_PROJECT_DIR}`, not `${CLAUDE_PLUGIN_ROOT}` (decision 0001, rule 4)
-  - `.claude-plugin/plugin.json` now exists, so `${CLAUDE_PLUGIN_ROOT}` resolves — migrate the hook
 - [skills] recommendation skill — weigh options with pros/cons and give a recommendation
 - [skills] writing-for-agents: micro-test "Phrasing that changes behavior" and "Co-locate" before pruning
   - baseline runs on Sonnet did both unprompted (candidate no-ops); needs 5+ rep micro-tests per references/testing.md before deciding
@@ -60,6 +58,4 @@ and meta concerns.
 - [skills] ship skill is unverified — no baseline or with-skill run yet (built without a real bundle to ship)
   - run against the first accepted bundle; check the commits-land-where logic (open PR branch vs default branch) holds, and that the grep-bundle-ID absorb gate is checkable in practice
 - [skills] audit + research skills and researcher agent are unverified — no baseline or with-skill run yet
-  - check the background fork completes, the `${CLAUDE_PLUGIN_ROOT}` write-boundary hook fires (first hook using it — shape's still uses `${CLAUDE_PROJECT_DIR}`), and the backlog-skill preload actually injects the entry format into the agent
-- [skills] shape's write-boundary hook denies writes anywhere outside work/shaped/, including paths outside the repo entirely
-  - blocked writing a handoff doc to ~/.claude/handoffs/; scope the denial to paths inside the repo instead
+  - check the background fork completes, the `${CLAUDE_PLUGIN_ROOT}` write-boundary hook fires, and the backlog-skill preload actually injects the entry format into the agent

@@ -8,7 +8,7 @@ hooks:
     - matcher: "Edit|Write"
       hooks:
         - type: command
-          command: "${CLAUDE_PROJECT_DIR}/skills/shape/scripts/write-boundary.sh"
+          command: "${CLAUDE_PLUGIN_ROOT}/skills/shape/scripts/write-boundary.sh"
 ---
 
 # Shape a feature bundle
