@@ -12,8 +12,8 @@ Rules that apply to the whole document:
   then the code.
 - **Every sentence constrains behavior or gets deleted.**
 - **One name per concept.** Use the codebase's existing names for modules and domain terms —
-  the project glossary, where one exists — never a synonym the code doesn't use: tickets and
-  tests inherit the drift.
+  `GLOSSARY.md`, where one exists, including its _Avoid_ lists — never a synonym the code
+  doesn't use: tickets and tests inherit the drift.
 - **One feature per spec.** Behavioral Requirements that keep growing past a screenful are
   usually two features — split the bundle before writing tickets.
 - **No file paths, no illustrative code.** Paths are short-lived and live in tickets. Two

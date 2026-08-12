@@ -25,7 +25,7 @@ Coverage is part of the attack surface: an acceptance criterion no ticket's done
 - **Testability** — can each ticket's `Done when` actually be checked by a machine? A condition that requires judgment isn't done-when yet.
 - **Scope creep** — does `Out of Scope` actually exclude what it needs to, or does the ticket list wander past what `Behavioral Requirements` describes?
 - **Assumed facts** — statements about how the system behaves today that the code doesn't back. Check each "currently X" claim against the repo; an assumption written as fact misleads every downstream agent.
-- **Naming drift** — terms the codebase spells differently. Grep the spec's key nouns; a synonym the code doesn't use infects tickets and tests. Check the project glossary, where one exists.
+- **Naming drift** — terms the codebase spells differently. Grep the spec's key nouns; a synonym the code doesn't use infects tickets and tests. Check `GLOSSARY.md`, where one exists — a spec or ticket term that conflicts with an entry, or uses a word its _Avoid_ list rejects, is a finding.
 - **Contradicted decisions** — the spec re-litigating a `docs/decisions/` record, or cutting against a convention a touched module's README states. Cite the record or README.
 
 ## What counts as a finding

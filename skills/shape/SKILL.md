@@ -51,6 +51,9 @@ reading anything else: duplicate shaping is cheapest to catch before any work ha
 records for those areas — a spec that contradicts a standing decision re-litigates it by
 accident.
 
+**Read the `GLOSSARY.md` of every domain the change touches** — root plus any domain-specific
+glossary — so the spec inherits existing terms instead of coining synonyms.
+
 **Ground every claim in the real codebase**: the spec must name real modules and observed
 behavior, tickets must cite exact paths — a spec written from memory describes an imaginary
 architecture.

@@ -22,6 +22,8 @@ Answers reshape the tree — settled branches unblock questions that depended on
 
 **Facts:** the repo can answer — a convention, a colocated README, whether something already exists — are yours to find with `Read`/`Grep`/`Glob`, never the human's to be asked. Don't block the rest of the frontier on one lookup; ask the rest now, fold the answer in once you have it.
 
+**Language matters as much as logic.** A term that conflicts with `GLOSSARY.md` gets called out with both readings, never silently picked; fuzzy or overloaded language gets a proposed canonical term. When a term resolves, offer `glossary` to capture it.
+
 **Too small to interview:** if the conversation converges on something that fits one line, it wasn't worth interviewing — say so and use `backlog` instead.
 
 **Done** when the frontier is empty and the human confirms the shared understanding — don't act on it before then. Report back in one line that the problem, in the user's framing, is settled, and that the next step is `shape`, invoked here with no argument. Don't invoke it yourself — that's the human's call.

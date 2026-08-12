@@ -24,6 +24,8 @@ the ones that mattered are lost among the ones that didn't.
   (`api.md`, `web.md`, `domain.md`, `packages.md`)
 - A record of what was built — the work item file in `work/done/`
 - Anything the code already states plainly — nowhere
+- A naming or term choice — `GLOSSARY.md`, via the `glossary` skill — unless it encodes a
+  contested architectural trade-off, in which case it belongs here after all
 
 The `AGENTS.md` files scattered through the repo are **symlinks** into `.agents/rules/`, so a
 single write there reaches Claude, Cursor and Codex at once. Always edit the `.agents/rules/`
