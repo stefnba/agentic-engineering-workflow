@@ -64,7 +64,7 @@ Signing works and is covered by unit tests. Verification is stubbed, so the inte
 
 - `src/auth/token.ts` — signing, new this session
 - `src/middleware/verify.ts` — where the remaining work is
-- `src/middleware/chain.ts` — ordering matters here, see Findings
+- `src/middleware/chain.ts` — ordering matters here, see Decisions and constraints
 - `docs/mobile-auth-notes.md` — source of the unconfirmed expiry assumption
 
 ## Verification

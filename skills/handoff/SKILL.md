@@ -21,7 +21,7 @@ Separate what you verified from what you reasoned your way to but never checked.
 
 Leave things as you found them. Don't commit, stash, or tidy on the way out unless the user asked: they may be mid-thought, and a handoff that rearranges the state it's describing defeats itself.
 
-This applies to the document's own header. You have no reliable sense of the current time — a conversation carries no clock, and anything you produce from memory will be a plausible-looking guess. Run `date '+%Y-%m-%d %H:%M'` and use its output, both in the header and for the filename timestamp. Take the repository name and branch from the environment the same way rather than recalling them.
+This applies to the document's own header. You have no reliable sense of the current time — a conversation carries no clock, and anything you produce from memory will be a plausible-looking guess. Run `date '+%Y-%m-%d %H:%M'` and use its output, both in the header and for the filename timestamp. Take the repository name and branch from `git rev-parse --show-toplevel` and `git branch --show-current` the same way, rather than recalling them. Add a **Worktree** field only when this session ran in an isolated worktree distinct from the repo's primary checkout — most sessions don't need it.
 
 ## What belongs in the document
 
@@ -31,25 +31,25 @@ Content already captured elsewhere — specs, plans, ADRs, issues, commits, diff
 
 ## Structure
 
-Read [example-structure.md](example-structure.md) before you start writing, and follow its section order. Don't reconstruct the shape from memory — the section set is the part of this skill that keeps handoffs comparable to each other.
+The section set below is what keeps handoffs comparable to each other — don't reconstruct it from memory or reorder it. Once you know which sections apply, read [example-structure.md](example-structure.md) for shape and detail level: how much to say per section, how terse to be. It isn't the source for which sections exist or their order — that's here.
 
 ### Sections
 
-Full section list, in order:
+Full section list, in order, each with the question it answers:
 
-- Objective
-- Findings
-- Open questions
-- Ground covered
-- Working tree
-- Current state
-- What's been done
-- Next steps
-- Decisions and constraints
-- Dead ends
-- Key files
-- Verification
-- Suggested skills
+- **Objective** — what the work is trying to accomplish, and what's explicitly out of scope.
+- **Findings** — what you learned that wasn't already known: how the system actually behaves, contra assumptions.
+- **Open questions** — what nobody has decided yet, and who owns the decision if known.
+- **Ground covered** — approaches or areas already explored, so the next agent doesn't re-tread them.
+- **Working tree** — uncommitted files: what each one is, and whether it's deliberate WIP or debris.
+- **Current state** — what currently works, what's stubbed or faked, what to distrust.
+- **What's been done** — commits and completed changes, by SHA or path.
+- **Next steps** — ordered, concrete actions, each ending on a completion criterion.
+- **Decisions and constraints** — choices already made and why, so the next agent doesn't relitigate them.
+- **Dead ends** — approaches tried and abandoned, and why, so they aren't retried.
+- **Key files** — paths worth opening first, with a one-line reason each.
+- **Verification** — commands that confirm the state, and which failures predate this session.
+- **Suggested skills** — skills installed in this environment relevant to what's next.
 
 **Note**: Not every section fits every session. A discovery session may have nothing to say about a working tree; an implementation session may have no open questions. Take the ones that match the work and drop the rest — an empty heading is worse than a missing one, because it implies there was nothing to report.
 
