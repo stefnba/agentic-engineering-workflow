@@ -10,9 +10,8 @@ and meta concerns.
 
 - [repo] rename the GitHub repo from `agentic-coding` to `agentic-workflow` to match the plugin name
   - update `plugin.json`'s `repository` field and README references once done
-- [docs] [skills] decision + backlog skills contradict agentic-workflow.md
+- [docs] [skills] decision skill contradicts agentic-workflow.md
   - `done/` vs delete-on-ship, `.agents/rules/`, ID scheme (template shape settled by decision 0005)
-  - backlog skill's shell preamble hard-fails outside a workspace layout (`ls apps/*/package.json`)
 - [skills] build the workflow skills and subagents mapped in work/skills-build-plan.md
   - one end-to-end first, using the workflow itself
 - [docs] Codex section in tool-setup.md is an empty TODO
@@ -34,6 +33,8 @@ and meta concerns.
 - [skills] recommendation skill — weigh options with pros/cons and give a recommendation
 - [skills] writing-for-agents: micro-test "Phrasing that changes behavior" and "Co-locate" before pruning
   - baseline runs on Sonnet did both unprompted (candidate no-ops); needs 5+ rep micro-tests per references/testing.md before deciding
+- [skills] writing-for-agents: verify judgment-added lines with reruns — the "one instruction per paragraph" bullet, skill-mechanics' "Bundled files" section, and the slot-guidance-in-comments rule
+  - added on judgment (no baseline); candidate no-ops — micro-test per references/testing.md alongside the Phrasing/Co-locate item
 - [repo] scripts/find-by-frontmatter.py is unused — skills stick to grep for flat ticket frontmatter (decision 0004)
   - wire it into a skill (and move it under skills/, shipped tree) only when a real use case appears: array queries (`depends_on`, `areas`) or nested metadata
 - [docs] metadata format inconsistent across plan/ticket/workflow markdown files

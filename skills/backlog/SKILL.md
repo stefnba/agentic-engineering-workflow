@@ -2,7 +2,7 @@
 name: backlog
 description: Read and maintain work/backlog.md — add items, mark them done, promote them to work items, or list what's pending for an area. Use this whenever the user mentions something to handle later, notices a bug they're not fixing right now, says "add to backlog" / "we should eventually" / "remind me to" / "note that down", reports finishing a backlog item, or asks what's outstanding for a given area of the codebase. Use it even when they don't say the word "backlog".
 argument-hint: "[what to add, complete, or look up]"
-allowed-tools: Read, Edit, Glob, Grep, Bash(ls *)
+allowed-tools: Read, Edit, Glob, Grep, Bash(find *), Bash(true)
 ---
 
 # Backlog
@@ -11,13 +11,15 @@ allowed-tools: Read, Edit, Glob, Grep, Bash(ls *)
 
 Every workspace package in the repo, resolved fresh each time this skill runs:
 
-!`ls -1 apps/*/package.json packages/*/package.json`
+!`find . -maxdepth 3 -name package.json -not -path '*/node_modules/*' 2>/dev/null || true`
 
-Each directory name above is a valid tag — `apps/api/package.json` means `[api]`, and so on. This
-list is generated, not written down, so it cannot drift from the tree.
+Each directory name above is a valid tag — `./apps/api/package.json` means `[api]`, whatever
+layout the repo uses. The root `./package.json` is the repo itself, not an area — never a tag.
+This list is generated, not written down, so it cannot drift from the tree.
 
 Some tags own no directory and therefore can't appear above; those are declared in
-`work/backlog.md`'s header. Read them from there.
+`work/backlog.md`'s header. Read them from there. If nothing beyond the root `./package.json`
+shows up, the repo has no workspace packages — the header then declares the whole vocabulary.
 
 `work/backlog.md` is the single list of unshaped ideas for this repo. Unshaped is the point:
 an entry is a pointer to a conversation we'll have later, not the conversation itself. Items
