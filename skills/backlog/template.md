@@ -2,10 +2,9 @@
 
 Unsorted collection dump — order carries no meaning. Tags with no owning directory are declared here.
 
-## Features
+<!-- One line per item: `- [tag] short imperative phrase`, at most two sub-bullets of evidence (not plans). See the backlog skill. -->
 
-- [tag] short imperative phrase
-  - at most two sub-bullets, evidence not plans
+## Features
 
 ## Bugs
 
