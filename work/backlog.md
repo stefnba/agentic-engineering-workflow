@@ -17,6 +17,7 @@ and meta concerns.
 - [docs] Codex section in tool-setup.md is an empty TODO
 - [docs] decide where review findings and verification evidence live
   - PR description/comments vs files in the repo
+  - skills-build-plan's reviewer row preloads an `evidence` block format; implement as built writes prose into the PR body
 - [skills] review could run parallel critics — standards axis vs requirements axis
 - [skills] skill-layer patterns from mattpocock/skills worth evaluating
   - router skill, per-repo setup skill, reference layer, user- vs model-invoked split
