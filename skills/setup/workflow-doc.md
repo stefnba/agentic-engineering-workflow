@@ -17,29 +17,23 @@ review → fix → re-verify ↺            gate: human approves
                                             bundle deleted, main green
 ```
 
-Five stages: verify and reconcile are not stages: verify is Implement's exit gate, reconcile an obligation that fires per ticket before review and again at ship.
+Five stages — verify and reconcile are not among them: **verify** (the repo's checks plus the ticket's done-when pass) is Implement's exit gate, and **reconcile** (fix any drift the change caused in colocated READMEs, `spec.md`, and remaining tickets) is an obligation that fires per ticket before review and again at ship.
 
 ## Stages
 
-| Stage         | Purpose                                                                                                    | Output                            | Exit approved by                   |
-| ------------- | ---------------------------------------------------------------------------------------------------------- | --------------------------------- | ---------------------------------- |
-| **Discover**  | Fill the backlog with candidates for everything an agent gathers, e.g. audit findings, research take-aways | A picked candidate                | Human picks candiate to pursue     |
-| **Shape**     | Turn the picked candidate into a spec and small, verifiable work items (tickets)                           | `spec.md` + the full ticket set   | Critic challenges → human approves |
-| **Implement** | Execute one ticket in a dedicated branch/worktree                                                          | A verified, reconciled change set | Agent (gates pass)                 |
-| **Review**    | Judge the diff: correctness, architecture, security, requirement fit                                       | Findings or approval              | Human approves                     |
-| **Ship**      | Merge/release, absorb docs, delete the bundle, record follow-ups                                           | Shipped outcome                   | — (approved at review)             |
+| Stage         | Purpose                                                                                                                                       | Session                                                                           | Output                                           | Exit approved by                                           |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------ | ---------------------------------------------------------- |
+| **Discover**  | Fill the backlog with everything agents gather — audit findings, research take-aways; an agent never turns its own finding directly into work | any                                                                               | A picked candidate                               | Human picks: a crisp line → shape, a vague one → interview |
+| **Shape**     | Turn the picked candidate into a spec and small, verifiable work items (tickets)                                                              | Fresh author, read-only on code; a separate fresh-context critic attacks the plan | `spec.md` + the full ticket set                  | Open questions resolved → human approves the decomposition |
+| **Implement** | Execute one ticket in a dedicated branch/worktree until its done-when passes                                                                  | Fresh per ticket                                                                  | A verified, reconciled change set                | Agent: verify + reconcile, both in the same PR             |
+| **Review**    | Judge what verify cannot: architecture, requirement fit, security, edge cases — and whether the reconcile half is honest                      | Fresh, no authorship of the diff                                                  | Findings or approval                             | Human approves; affected verification re-run after fixes   |
+| **Ship**      | Absorb what remains of the bundle into the durable docs, delete the bundle (git history keeps it, no `done/`), merge, confirm main green      | —                                                                                 | Shipped outcome; follow-ups become backlog lines | — (approved at review)                                     |
 
-**Shape.** The author writes a fresh bundle (spec & fickets). A separate critic with a fresh context attacks the plan before the human sees it. Exit: every open question resolved, human approves the decomposition.
-
-**Implement.** One ticket per session, fresh context. Works until the done-when conditions pass.The PR carries both halves of the exit gate: **verify** (the repo's checks plus the ticket's done-when pass) and **reconcile** (fix any drifts in colocated READMEs, `spec.md`, and remaining tickets ).
-
-**Review.** Fresh context, no authorship of the diff. Judges what **verify** cannot: architecture, requirement fit, security, edge cases — and whether the **reconcile** half is honest. Implementer-written tests are part of the diff under judgment, not independent verification. After fixes, affected verification is re-run before approval.
-
-**Ship.** Absorb what remains of the work bundle into the durable docs, then delete the bundle — git history keeps it, there is no `done/`. Merge, confirm main is green. Follow-ups become backlog lines, never a lingering half-open bundle.
+Two rules the table can't carry: intent the human brings directly skips the backlog altogether, and implementer-written tests are part of the diff under judgment, not independent verification.
 
 ## Where the human sits
 
-Triggering the stages of the workflow. Then three approvals, and only three — everything between them is agent-crossable on deterministic gates:
+The human triggers every stage. Beyond that, three approvals, and only three — everything between them is agent-crossable on deterministic gates:
 
 1. **Pick** (Discover → Shape): what is worth doing
 2. **Plan** (Shape → Implement): right target state, sliced correctly — per feature
@@ -69,11 +63,13 @@ src/<domain>/README.md          # durable target state, colocated with the code
 
 ## The artifacts
 
-**Bundles** hold one feature's spec and tickets, named `YYYY-MM-DD-<slug>`. A bundle first appears in `work/` when it's complete; for smaller work, it's a single file, above that a directory. The parent directory is the status — never hardcode it, re-resolve with `ls work/*/<id>*`. Reference bundles by ID in prose (paths break on `git mv`), by permalink in PRs; always `git mv`, and in a monorepo keep bundles per-package (`packages/<pkg>/work/`).
+**Bundles** hold one feature's spec and tickets, named `YYYY-MM-DD-<slug>`. A bundle first appears in `work/` when it's complete; for smaller work, it's a single file, above that a directory. Re-resolve with `ls work/*/<id>*`. References follow lifetime: within `work/` artifacts, by ID in prose (never by path — paths break on `git mv`); in PRs, by permalink, which pins a commit and survives the bundle's deletion; in durable docs and code comments, never. Always `git mv`, and in a monorepo keep bundles per-package (`packages/<pkg>/work/`).
 
 **`spec.md`** pins the external behavior the change must exhibit plus only the decisions that constrain it — interior implementation stays open.
 
 **Tickets** are one-agent-session slices with a machine-checkable done-when and `status`/`depends_on` frontmatter.
+
+**Colocated `README.md`s** carry each subsystem's durable target state next to its code. When a README and a spec disagree about the current system, **the README wins** — it describes what is; the spec, what someone intended (the spec still owns what the change should make true). This authority is earned by reconcile: every PR updates the READMEs it made inaccurate, and review sees the README diff beside the code diff — colocation is what makes drift visible.
 
 **`docs/decisions/`** — immutable; supersede with a new record, never edit. For anything durable and expensive to relitigate. Template lives with the `decision` skill.
 
