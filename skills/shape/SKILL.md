@@ -17,7 +17,8 @@ hooks:
 complete spec and ticket set. Synthesize — don't re-interview the human on what's already
 settled; new questions originating from the spec writing follow the judgment-call rule below.
 
-**Read-only on code**: the hook above blocks any `Edit`/`Write` outside `work/shaped/`. Shape
+**Read-only on code**: the hook above blocks any `Edit`/`Write` outside `work/shaped/` — the
+one exception is `work/backlog.md`, for the promoted-line deletion at the final step. Shape
 never writes code — an agent that can will, and retrofit the spec to it.
 
 Two rules apply across every step:
@@ -162,8 +163,11 @@ This is the Plan gate, and it's a human call because bad slicing is
 cheap to fix in a list and expensive to fix across twelve started tickets. **Do not commit
 before the OK.**
 
-**On approval, commit and push the bundle exactly as approved** — no edits between the OK and
-the commit; the approved document and the committed document are the same bytes. `git add` the
-directory or the single file, commit, push. If the push is rejected, someone else's bundle
+**On approval, commit and push the bundle exactly as approved** — no edits to the bundle
+between the OK and the commit; the approved document and the committed document are the same
+bytes. **If the bundle was shaped from a `work/backlog.md` line, delete that line now** and
+include it in the same commit — the bundle replaces it, and the item must live in exactly one
+place at every committed state. `git add` the directory or the single file (plus
+`work/backlog.md` if edited), commit, push. If the push is rejected, someone else's bundle
 landed on the same date and slug — `git mv` to a disambiguated slug and retry; this is the only
 point a collision can still occur, and it costs a rename, not a rewrite.

@@ -52,10 +52,12 @@ heading. Position carries no priority: append, never insert or reshuffle.
 and nobody reads it. If the work produced a choice worth keeping, offer to invoke the
 `decision` skill — that's where reasoning belongs, not here.
 
-**Promote** — delete the line and offer to run `shape` on it, which creates the bundle under
-`work/shaped/` (nothing lands in `work/` until shape commits a complete bundle — decision 0013).
-Either way the item lives in exactly one place — duplicated state between backlog and work files
-is the failure mode this structure exists to avoid.
+**Promote** — offer to run `shape` on the line, and leave the line in place: shape deletes it
+in the same commit that lands the bundle under `work/shaped/` (nothing lands in `work/` until
+shape commits a complete bundle — decision 0013). Deleting here instead would lose the item if
+the shaping session is abandoned; deleting at shape's commit keeps the item in exactly one
+place at every committed state — duplicated state between backlog and work files is the
+failure mode this structure exists to avoid.
 
 **Look up** — grep by tag and show matching lines verbatim. Don't reformat or summarise them.
 
