@@ -101,7 +101,18 @@ Example — change adding JWT-based user authentication:
 feat(auth): implement JWT-based authentication
 ```
 
-**Put slot guidance in comments inside the template.** Annotate each slot with its fill rules and a compact example in comment syntax the output format ignores (`<!-- -->` in markdown), and open the template by instructing the filler to delete comments as it fills — a surviving comment then flags an unfilled slot. Guidance written outside comment syntax lands verbatim in the deliverable.
+**Put slot guidance in comments inside the template.** Annotate each slot with its fill rules and a compact example in comment syntax the output format ignores (`<!-- -->` in markdown), and open the template with the instruction to delete comments while filling — in the surrounding prose when the skeleton is fenced inside an instructional file, as the first comment when the template file stands alone. A surviving comment then flags an unfilled slot. Everything outside comment syntax lands verbatim in the deliverable, so headings and other structure are placeholders, never instructions.
+
+```markdown
+<!-- Fill every section; delete these comments as you fill. -->
+
+# <Incident title>
+
+## Impact
+
+<!-- Who or what was affected, for how long, in numbers. Example:
+Checkout unavailable 14:02–14:19 UTC; ~3,100 sessions dropped. -->
+```
 
 Deterministic, repetitive procedures belong in executable scripts the agent runs, not prose it re-derives each run.
 
