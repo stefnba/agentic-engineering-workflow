@@ -32,6 +32,7 @@ Not stage-bound — they serve any session:
 | -------------------- | ------------------------------ |
 | `setup`              | Installs the workflow          |
 | `backlog`            | Maintains the backlog file     |
+| `glossary`           | Maintains the domain glossary  |
 | `decision`           | Writes decision records        |
 | `handoff`            | Compacts a dying session       |
 | `writing-for-agents` | Reviews agent-facing documents |
