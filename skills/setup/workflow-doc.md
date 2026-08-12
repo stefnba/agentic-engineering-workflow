@@ -1,10 +1,8 @@
-# Agentic Coding Worfklow
+# Agentic Coding Workflow
 
-## Workflow
+How work moves from idea to shipped, and which documents carry it.
 
-How work moves from idea to shipped.
-
-### The loop
+## The loop
 
 ```text
 discover ⇄ shape                      gate: human picks the candidate
@@ -19,192 +17,66 @@ review → fix → re-verify ↺            gate: human approves
                                             bundle deleted, main green
 ```
 
-### Stages
+Five stages: verify and reconcile are not stages: verify is Implement's exit gate, reconcile an obligation that fires per ticket before review and again at ship.
 
-| Stage     | Purpose                                                                          | Output                                                                   | Exit approved by                   |
-| --------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------ | ---------------------------------- |
-| Discover  | Fill the backlog with candidates; pick one to pursue                             | A picked candidate (line, or a settled understanding carried in-session) | Human picks                        |
-| Shape     | Turn the picked candidate into a spec and small, verifiable work items (tickets) | `spec.md` + the full ticket set                                          | Critic challenges → human approves |
-| Implement | Execute one ticket in a dedicated branch/worktree                                | A verified, reconciled change set                                        | Agent (gates pass)                 |
-| Review    | Judge the diff: correctness, architecture, security, requirement fit             | Findings or approval                                                     | Human approves                     |
-| Ship      | Merge/release, absorb docs, delete the bundle, record follow-ups                 | Shipped outcome, traceable record                                        | — (approved at review)             |
+## Stages
 
-#### Discover
+| Stage         | Purpose                                                                                                    | Output                            | Exit approved by                   |
+| ------------- | ---------------------------------------------------------------------------------------------------------- | --------------------------------- | ---------------------------------- |
+| **Discover**  | Fill the backlog with candidates for everything an agent gathers, e.g. audit findings, research take-aways | A picked candidate                | Human picks candiate to pursue     |
+| **Shape**     | Turn the picked candidate into a spec and small, verifiable work items (tickets)                           | `spec.md` + the full ticket set   | Critic challenges → human approves |
+| **Implement** | Execute one ticket in a dedicated branch/worktree                                                          | A verified, reconciled change set | Agent (gates pass)                 |
+| **Review**    | Judge the diff: correctness, architecture, security, requirement fit                                       | Findings or approval              | Human approves                     |
+| **Ship**      | Merge/release, absorb docs, delete the bundle, record follow-ups                                           | Shipped outcome                   | — (approved at review)             |
 
-Two halves:
+**Shape.** The author writes a fresh bundle (spec & fickets). A separate critic with a fresh context attacks the plan before the human sees it. Exit: every open question resolved, human approves the decomposition.
 
-**Gathering** fills the funnel:
+**Implement.** One ticket per session, fresh context. Works until the done-when conditions pass.The PR carries both halves of the exit gate: **verify** (the repo's checks plus the ticket's done-when pass) and **reconcile** (fix any drifts in colocated READMEs, `spec.md`, and remaining tickets ).
 
-- **Audit** — scan the codebase for simplification, quality, reliability, and security opportunities. Findings become backlog lines; evidence worth keeping goes to `research/` (as `audit-*.md`).
-- **Research** — investigate the world: new versions, migration paths, best practices, how another repo solved something. The write-up lands in `research/`; anything actionable it reveals becomes a backlog line pointing at it.
+**Review.** Fresh context, no authorship of the diff. Judges what **verify** cannot: architecture, requirement fit, security, edge cases — and whether the **reconcile** half is honest. Implementer-written tests are part of the diff under judgment, not independent verification. After fixes, affected verification is re-run before approval.
 
-Gathering never chooses. Its candidates enter the funnel like every other idea — the backlog is the single, unsorted collection point, and nothing bypasses it.
+**Ship.** Absorb what remains of the work bundle into the durable docs, then delete the bundle — git history keeps it, there is no `done/`. Merge, confirm main is green. Follow-ups become backlog lines, never a lingering half-open bundle.
 
-**Picking** settles on exactly one candidate:
+## Where the human sits
 
-- **From the backlog** — the human scans the list and picks a line. A crisp line goes straight to shaping; a vague one goes through an interview first.
-- **Interview** — the user brings intent directly. A relentless round-based Q&A challenges vague requirements until problem, constraints, and motivation are settled and a shared understanding has been reached — the problem in the user's framing, not a solution.
-
-#### Shape
-
-Two roles, deliberately separated:
-
-**Author** writes features artifacts:
-
-- Starts from a just-finished interview, a backlog line, or a requirement stated directly in chat.
-- Writes `spec.md` (target state, non-goals, open questions, acceptance criteria) and the full ticket set, inside that bundle — every acceptance criterion covered by some ticket's done-when. Read-only on code: an agent that _can_ write code will write code and retrofit the spec to it.
-
-**Critic** attempts to break the artifacts:
-
-- Separate agent with a fresh context to not inherit the author's blind spots.
-- Attempts to break what the authoring agent wrote: missed states, API contracts, security, performance, testability, scope creep, adherence to repo conventions.
-- Goal is to have a document that would pass a senior staff review.
-
-#### Implement
-
-One ticket per session, fresh context, dedicated branch or worktree. The agent reads the spec and its ticket, respects "Not in this ticket", and works until the ticket's done-when conditions pass.
-
-The exit gate has two halves:
-
-1. **Verify** — the repo's deterministic checks pass — typecheck, lint, unit/integration/e2e tests, build, migrations (up _and_ down) where touched — plus the ticket's own done-when commands, and a manual smoke test when the ticket calls for one. The PR records the exact commands, their output, and any check that was skipped and why: a stated gap is reviewable, an omitted one is a trap. Evidence, not claims.
-2. **Reconcile** — colocated `README.md`s updated if the change made them inaccurate; `spec.md` amended if implementation proved it wrong; remaining tickets amended if the landed change invalidated them. Detail repairs happen here; a _scope_ change is a deviation.
-
-#### Review
-
-Fresh context, no authorship of the diff under review. Judges what verify cannot: architecture fit, requirement fit, regressions, security, UX, edge cases, maintainability — and whether the reconcile half of the PR is honest (does the README diff actually match what the code now does?). Any `spec.md` amendment in the diff gets checked against describe-never-decide — an amendment that smuggled a deviation through as a clarification is a finding, not a nitpick.
-
-The loop: **review → fix findings → re-run affected verification → review again if the fix was material → approve.** Re-verification after fixes is not optional; a fix that breaks a done-when condition is a regression wearing a review-approval costume.
-
-This is the last human gate. Everything after approval is mechanical.
-
-#### Ship
-
-- Absorb what remains of `spec.md` into the durable docs, then **delete the bundle** (git history keeps it)
-- Clean commits, PR summary recording the verification evidence
-- Merge/release; confirm main is green
-- Capture follow-ups as backlog lines — not as a lingering half-open bundle
-
-### Where the human sits
-
-Three approvals, and only three:
+Triggering the stages of the workflow. Then three approvals, and only three — everything between them is agent-crossable on deterministic gates:
 
 1. **Pick** (Discover → Shape): what is worth doing
-2. **Plan** (Shape → Implement): is this the right target state, sliced correctly
-3. **Accept** (Review → Ship): is the change good
+2. **Plan** (Shape → Implement): right target state, sliced correctly — per feature
+3. **Accept** (Review → Ship): is the change good — per PR
 
-Everything between those points is agent-crossable on deterministic gates.
-
----
-
-## Artifacts
-
-This file explains what lives where, why, and the rules that keep it from rotting.
-
-**Precedence.** When a colocated `README.md` and a bundle's `spec.md` disagree, the README wins —
-it describes what the system _is_; the spec describes what someone intended at a point in time.
-
-**Metadata.** A document carries metadata only if something reads it — and where metadata exists, the syntax is always YAML frontmatter, never a prose byline: one syntax means one parser for every query, skill, and sweep. Tickets carry `status`/`depends_on`; decisions carry `status`/`date`/`areas` (+ `supersedes`); research may carry `date`/`source`. `spec.md` carries **none**, deliberately — nothing machine-reads it, the directory owns bundle status, and an unused metadata block is an invitation for a second status owner.
-
-### `work/`
-
-Every work item gets a bundle — there's no bundle-less path. Size is proportional to the work: under
-~3 tickets, a bundle is a single file (`work/shaped/2026-08-11-fix-flaky-test.md`, with `## Target
-state` and `## Increments`); more than that, it's promoted to a directory with `spec.md` + `tickets/`.
-`git mv` when promoting, never delete-and-recreate.
-
-#### `shaped/<bundle>/`
-
-##### IDs and links
-
-**Bundles** are identified by `YYYY-MM-DD-<slug>` — the date claimed, plus a kebab-slug of the title.
-No shared counter and no claim step: before any deep reading, check that the exact path doesn't
-already exist and skim currently open bundles for topical overlap, then write the bundle directly
-(decision 0013). **Tickets** are numbered locally within a bundle (`01`, `02`) —
-`2026-08-11-billing-retries/03` is a sufficient global reference.
-
-Decision records keep their own independent numeric sequence (`0001`, `0002`, …), unaffected by
-this — and now unambiguous by format alone, since work items no longer look like bare numbers.
-
-```bash
-ls work/*/2026-08-11-billing-retries    # resolve by ID, works from either status directory
-```
-
-- **In repo markdown**: reference by ID in prose, don't link the path. A markdown link is a literal relative path — the glob only helps something that can execute it — so `[2026-08-11-billing-retries](../shaped/2026-08-11-billing-retries)` 404s on the first `git mv`. Humans resolve IDs the same way: `t` on GitHub or `Cmd+P` in an editor, then type the slug.
-- **In PR descriptions**: use a GitHub permalink (press `y` to pin the commit SHA). It never breaks, and it points at the spec as it read when the PR was opened — the version the reviewer needs, not whatever it says three moves later. Branch-name URLs (`/blob/main/...`) are the ones that rot.
-- Always `git mv` so `git log --follow` survives the rename.
-
-##### `spec.md`
-
-- **Spec-heavy, design-light.** `Behavioral Requirements` and `Acceptance Criteria` pin down observable behavior first — contracts, outcomes, what a caller or user can see — then `Implementation Decisions` carries only what constrains the work: public interfaces, data models, patterns to follow. Interior implementation stays open on purpose. Over-specifying constrains the agent exactly like it constrains a human, for no benefit; the pseudocode anti-pattern below is this rule's failure mode.
-
-- _Spec_ is used here **with a fixed meaning**, because industry usage is genuinely sloppy: a spec describes the **external behavior the change must exhibit** contracts, observable outcomes, acceptance criteria — plus only the internal decisions that constrain it (public interfaces, data models, patterns to follow). Interior implementation stays deliberately open; see `spec.md` below. Terms still avoided: _design doc_ (promises internal-structure content that belongs in `decisions/` and tickets), _SRD/SRS_ (waterfall artifact, needs a regulated context to earn its weight), _PRD_ (product framing, not ours unless a PM writes one).
-
-##### `plan.md`
-
-- Only written if there is sequencing _rationale_ that a dependency graph can't express (migration).
-
-##### `tickets/NN-*.md`
-
-- **Mandatory, not opt-in**
-- Single work item one agent implements
-- **Does't duplicate the spec's reasoning.** Link to it. Duplicated rationale goes stale and the agent can't tell which copy is current.
-
-**No `done/` folder**: On ship, the bundle and its files get deleted. Git history keeps it.
-
-#### `backlog.md`
-
-One line per unshaped idea. Keep capture friction near zero; a file-per-idea directory raises it just enough that people stop capturing.
-
-The list is an **unsorted collection dump** — order carries no meaning. Ranking happens at pick time, in front of the human, not in the file.
-
-Sub-bullets pointing at docs/research/ files are fine — those paths never move, unlike work items, so the no-path-links rule doesn't apply.
-
-### `docs/decisions/`
-
-Immutable. Superseded, never edited.
-
-Called `decisions/`, not `adr/`, deliberately.
-
-`areas:` recovers any subset when you want it: `rg 'areas:.*server' docs/decisions/`. Taxonomy belongs in a field, not a directory name — directories give you one axis and you'll find the second one later. One folder, one template — never two directories for this.
-
-### `docs/research/`
-
-**Findings from discovery**: benchmarks, spikes, vendor comparisons, prior-art reads, codebase audits.
-
-**Research files are evidence, not commitments**. A doc weighing three options has not chosen one. An agent must not treat the last option described as the decision — if something was decided, there is a record in decisions/.
-
-**Anything actionable a research doc reveals becomes a backlog line pointing at it**. Research feeds the backlog; it never enters the workflow directly — otherwise there are two competing answers to "what might be worth doing".
-
----
-
-### Anti-patterns
-
-- **A spec detailed enough to be pseudocode.** Worse than a vague one.
-- **Reasoning duplicated between spec and ticket.** One copy goes stale.
-- **Keeping shipped feature docs around.** They contradict each other and poison retrieval.
-- **Linking work items by path.** Paths move; use IDs, or permalinks in PRs.
-- **Editing a decision record.** Write a new one that supersedes it.
-- **Skipping reconcile.** Three features is roughly how long the docs stay trustworthy without it.
-
----
+Never hand yourself one of these: priorities, decomposition, and acceptance are human judgments.
 
 ## Layout
 
 ```text
-docs/                           # durable — everything here accumulates and stays current
+docs/                           # durable — accumulates and stays current
   decisions/                    # immutable decision records
-    0001-postgres-over-mongo.md
   research/                     # findings from discovery — evidence, not commitments
   agentic-workflow.md           # this file
 
-work/                           # disposable — in-flight work, at the repo root
+work/                           # disposable — in-flight work
   backlog.md                    # one line per unshaped idea — unsorted collection dump
   shaped/                       # spec + tickets complete, not started
   active/                       # in progress
     2026-08-11-billing-retries/
       spec.md
-      plan.md                   # only if sequencing rationale exists
       tickets/
         01-schema.md
-        02-scheduler.md
+
+src/<domain>/README.md          # durable target state, colocated with the code
 ```
+
+## The artifacts
+
+**Bundles** hold one feature's spec and tickets, named `YYYY-MM-DD-<slug>`. A bundle first appears in `work/` when it's complete; for smaller work, it's a single file, above that a directory. The parent directory is the status — never hardcode it, re-resolve with `ls work/*/<id>*`. Reference bundles by ID in prose (paths break on `git mv`), by permalink in PRs; always `git mv`, and in a monorepo keep bundles per-package (`packages/<pkg>/work/`).
+
+**`spec.md`** pins the external behavior the change must exhibit plus only the decisions that constrain it — interior implementation stays open.
+
+**Tickets** are one-agent-session slices with a machine-checkable done-when and `status`/`depends_on` frontmatter.
+
+**`docs/decisions/`** — immutable; supersede with a new record, never edit. For anything durable and expensive to relitigate. Template lives with the `decision` skill.
+
+**`docs/research/`** — evidence, not commitments. A doc weighing three options has not chosen one; if something was decided, there's a record in `decisions/`. Anything actionable becomes a backlog line pointing at the file.
+
+**`work/backlog.md`** — one line per unshaped idea, the problem rather than a proposed solution. Unsorted; ranking happens at pick time, in front of the human.

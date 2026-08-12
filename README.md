@@ -26,12 +26,13 @@ Stage-bound — each realizes one role of the [workflow](docs/agentic-workflow.m
 
 Not stage-bound — they serve any session:
 
-| Name                 | What it does                                                    |
-| -------------------- | --------------------------------------------------------------- |
-| `backlog`            | Maintains `work/backlog.md` — add, complete, promote, look up   |
-| `decision`           | Writes or supersedes records in `docs/decisions/`               |
-| `handoff`            | Compacts a dying session into a handoff document                |
-| `writing-for-agents` | Writing and reviewing documents an agent will consume or follow |
+| Name                 | What it does                                                                |
+| -------------------- | --------------------------------------------------------------------------- |
+| `setup`              | Installs the workflow into a consuming repo — doc, trees, AGENTS.md pointer |
+| `backlog`            | Maintains `work/backlog.md` — add, complete, promote, look up               |
+| `decision`           | Writes or supersedes records in `docs/decisions/`                           |
+| `handoff`            | Compacts a dying session into a handoff document                            |
+| `writing-for-agents` | Writing and reviewing documents an agent will consume or follow             |
 
 ## Agents
 
