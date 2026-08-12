@@ -52,3 +52,7 @@ and meta concerns.
   - entry format + tag discipline moved behind a references/entry-format.md pointer; check the pointer gets followed on add
 - [skills] decision + shape keep fill-in templates at skill root — route to assets/ per skill-mechanics, as backlog now does
   - decision/template.md, shape/{spec,ticket,work-file}-template.md; check each SKILL.md pointer after moving
+- [skills] glossary skill's trigger reliability is unverified — spec deferred it to a backlog line that was never added
+  - micro-test per writing-for-agents references/testing.md: does it fire on defining/renaming/disambiguating a term without the word "glossary"
+- [skills] shape's write-boundary hook denies writes anywhere outside work/shaped/, including paths outside the repo entirely
+  - blocked writing a handoff doc to ~/.claude/handoffs/; scope the denial to paths inside the repo instead
