@@ -20,6 +20,8 @@ Stage-bound — each realizes one role of the [workflow](docs/agentic-workflow.m
 
 | Name           | Stage     | Purpose                     |
 | -------------- | --------- | --------------------------- |
+| `audit`        | Discover  | Sweeps the repo for drift   |
+| `research`     | Discover  | Investigates one topic      |
 | `interview-me` | Discover  | Grills intent until settled |
 | `shape`        | Shape     | Writes spec and tickets     |
 | `critique`     | Shape     | Attacks the shaped spec     |
@@ -44,10 +46,11 @@ Not stage-bound — they serve any session:
 
 The subagents forked skills run in:
 
-| Name       | Purpose                 |
-| ---------- | ----------------------- |
-| `critic`   | Read-only spec attacker |
-| `reviewer` | Judges a ticket's PR    |
+| Name         | Purpose                      |
+| ------------ | ---------------------------- |
+| `critic`     | Read-only spec attacker      |
+| `reviewer`   | Judges a ticket's PR         |
+| `researcher` | Background evidence gatherer |
 
 ## Tool setup
 

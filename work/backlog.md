@@ -59,5 +59,7 @@ and meta concerns.
   - run against implement's first real PR per writing-for-agents references/testing.md; check the worktree mechanics for re-running checks actually hold
 - [skills] ship skill is unverified — no baseline or with-skill run yet (built without a real bundle to ship)
   - run against the first accepted bundle; check the commits-land-where logic (open PR branch vs default branch) holds, and that the grep-bundle-ID absorb gate is checkable in practice
+- [skills] audit + research skills and researcher agent are unverified — no baseline or with-skill run yet
+  - check the background fork completes, the `${CLAUDE_PLUGIN_ROOT}` write-boundary hook fires (first hook using it — shape's still uses `${CLAUDE_PROJECT_DIR}`), and the backlog-skill preload actually injects the entry format into the agent
 - [skills] shape's write-boundary hook denies writes anywhere outside work/shaped/, including paths outside the repo entirely
   - blocked writing a handoff doc to ~/.claude/handoffs/; scope the denial to paths inside the repo instead
