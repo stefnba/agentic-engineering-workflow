@@ -26,6 +26,7 @@ Look at the current repo to understand its starting state. Read whatever exists;
 4. `work/` — `backlog.md`, `shaped/`, `active/`, or remnants of another issue-tracking convention.
 5. `docs/decisions/` — an existing decision-record tree.
 6. Monorepo signals — a `pnpm-workspace.yaml`, a `workspaces` field in `package.json`, or a populated `packages/*` with its own `src/`. Their absence means single-context, which is most repos.
+7. Root `GLOSSARY.md` — an existing domain-vocabulary artifact; scaffolding never overwrites it.
 
 ### 2. Present findings and ask
 
@@ -62,9 +63,10 @@ Show the exact file list to be written and any lines to be added to existing fil
 ### 4. Write
 
 1. Copy `${CLAUDE_PLUGIN_ROOT}/docs/agentic-workflow.md` verbatim to `docs/agentic-workflow.md`. Don't rewrite its content — it's the canonical doc; local edits belong to the consuming repo afterward.
-2. Copy `${CLAUDE_PLUGIN_ROOT}/skills/backlog/template.md` verbatim to `work/backlog.md` — don't rewrite its header or sections. Also create empty `work/shaped/` and `work/active/` (with `.gitkeep` if the repo tracks empty dirs).
+2. Copy `${CLAUDE_PLUGIN_ROOT}/skills/backlog/assets/template.md` verbatim to `work/backlog.md` — don't rewrite its header or sections. Also create empty `work/shaped/` and `work/active/` (with `.gitkeep` if the repo tracks empty dirs).
 3. Create `docs/decisions/` and `docs/research/` if absent. If the repo already has `docs/adr/`, don't migrate it — note the coexistence and suggest to the human that content should be moved into `docs/decisions/`.
-4. Add to the end of `AGENTS.md` (or `CLAUDE.md` if that's what the repo uses; never both) the exact block from [agents-reference.md](./references/agents-reference.md) — copy it verbatim, don't expand or rewrite it. If a section from a prior run exists, replace it rather than appending a duplicate.
+4. Copy `${CLAUDE_PLUGIN_ROOT}/skills/glossary/assets/template.md` verbatim to root `GLOSSARY.md` — skip this step entirely when one already exists; never overwrite it.
+5. Add to the end of `AGENTS.md` (or `CLAUDE.md` if that's what the repo uses; never both) the exact block from [agents-reference.md](./references/agents-reference.md) — copy it verbatim, don't expand or rewrite it. If a section from a prior run exists, replace it rather than appending a duplicate.
 
 ### 5. Done
 
