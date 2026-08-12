@@ -63,7 +63,7 @@ src/<domain>/README.md          # durable target state, colocated with the code
 
 ## The artifacts
 
-**Bundles** hold one feature's spec and tickets, named `YYYY-MM-DD-<slug>`. A bundle first appears in `work/` when it's complete; for smaller work, it's a single file, above that a directory. Re-resolve with `ls work/*/<id>*`. References follow lifetime: within `work/` artifacts, by ID in prose (never by path — paths break on `git mv`); in PRs, by permalink, which pins a commit and survives the bundle's deletion; in durable docs and code comments, never. Always `git mv`, and in a monorepo keep bundles per-package (`packages/<pkg>/work/`).
+**Bundles** hold one feature's spec and tickets, named `YYYY-MM-DD-<slug>`. A bundle first appears in `work/` when it's complete; for smaller work, it's a single file, above that a directory. Re-resolve with `ls work/*/<id>*`. References follow lifetime: within `work/` artifacts, by ID in prose (never by path — paths break on `git mv`); in PRs, by permalink, which pins a commit and survives the bundle's deletion. **Never reference a bundle from anything durable — no READMEs, no code comments, no `docs/`.** The bundle is deleted at ship; whatever a durable doc needs from it gets absorbed into the doc, not linked. Always `git mv`, and in a monorepo keep bundles per-package (`packages/<pkg>/work/`).
 
 **`spec.md`** pins the external behavior the change must exhibit plus only the decisions that constrain it — interior implementation stays open.
 
