@@ -32,8 +32,8 @@ when an item seems to fit no tag.
 
 **Read `work/backlog.md` in full first.** Its header declares the hand-declared tags, and
 near-duplicate entries are common — sharpen an existing line rather than adding a second. If the
-file doesn't exist, create it from this skill's `template.md` (fill the tag header, drop the
-template's comments), then continue.
+file doesn't exist, create it from this skill's `assets/template.md` (fill the tag header, drop
+the template's comments), then continue.
 
 **Glance at `work/shaped/` and `work/active/` too**, where they exist. If a work file there
 already covers the thing, the backlog is the wrong home — say so and offer to record it in that
