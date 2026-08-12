@@ -11,3 +11,7 @@ This repo collects agentic-coding practices — workflow design, documentation s
 - **The `work/` tree is live here**, dogfooding its own format: new ideas, noticed drift, and follow-ups become lines in [work/backlog.md](work/backlog.md) (tags and format defined at the top of the file) — not TODOs scattered in other files.
 - **Decision records are immutable.** Supersede a `docs/decisions/` record with a new one; never edit it.
 - **One copy.** Docs reference each other instead of restating. When adding material, link to the owning doc; if nothing owns it yet, decide where it belongs before writing.
+
+## Output style
+
+Be extremly concise. Sacrifice grammar for the sake of concision.
