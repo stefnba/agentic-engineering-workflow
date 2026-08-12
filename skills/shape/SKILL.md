@@ -13,7 +13,7 @@ hooks:
 
 # Shape
 
-The author role. Input is whatever's in front of you right now: a just-finished interview, a backlog line the human pointed at, or requirements stated directly in this chat — there's no argument to resolve a bundle by, because none exists yet. Output is `spec.md` and the full ticket set, inside a bundle you claim yourself. You are **read-only on code, structurally** — the hook above blocks any `Edit`/`Write` outside `work/shaped/`. An agent that can write code will write code and retrofit the spec to it; this removes the option rather than relying on restraint.
+The author role. Input is whatever's in front of you right now: a just-finished interview, a backlog line the human pointed at, or requirements stated directly in this chat — there's no argument to resolve a bundle by, because none exists yet. Output is `spec.md` and the full ticket set, inside a bundle you create yourself. You are **read-only on code, structurally** — the hook above blocks any `Edit`/`Write` outside `work/shaped/`. An agent that can write code will write code and retrofit the spec to it; this removes the option rather than relying on restraint.
 
 ## Create the bundle
 
@@ -35,11 +35,11 @@ Before drafting, pick the seams the acceptance tests will attach to — the boun
 
 ## Write spec.md
 
-Start from [spec-template.md](spec-template.md), shipped with this skill — section order, per-section rules, and the `BR-`/`ID-`/`AC-` ID scheme live there, and headings never vary between specs so tickets and tooling can deep-link. `Out of Scope` is the highest-value section: agents wander, and an explicit exclusion list is the cheapest fix. Migration or rollout sequencing that a dependency graph can't express goes in `plan.md`; skip `plan.md` entirely if there's no such rationale — a table that just restates ticket order goes stale invisibly. (`Rollout & Flags` in the spec holds the flag mechanics; `plan.md` holds why this order.)
+Start from [spec-template.md](spec-template.md), shipped with this skill — section order, per-section rules, and the `BR-`/`ID-`/`AC-` ID scheme live there, and headings never vary between specs so tickets and tooling can deep-link. `Out of Scope` is the highest-value section: agents wander, and an explicit exclusion list is the cheapest fix. Sequencing rationale a dependency graph can't express — "03 ships behind a flag so we can measure before 04" — is one line in the spec's `Tickets` section, next to the order it explains; `Rollout & Flags` holds the flag mechanics. There is no separate plan document.
 
 ## Write all the tickets
 
-The full decomposition, every ticket with a concrete `Done when` — writing that check is a test of the spec, and a ticket whose check you can't write yet is a spec hole you just found while it's cheap. Before exit, verify **coverage**: every acceptance criterion maps to some ticket's done-when; a criterion with no ticket is bad slicing. Start from [ticket-template.md](ticket-template.md), shipped with this skill; slicing rules live in [docs/docs-structure.md](../../docs/docs-structure.md), don't restate them here. Later tickets invalidated by landed work get amended at reconcile, not re-shaped — expect that, don't pad against it.
+The full decomposition, every ticket with a concrete `Done when` — writing that check is a test of the spec, and a ticket whose check you can't write yet is a spec hole you just found while it's cheap. Before exit, verify **coverage**: every acceptance criterion maps to some ticket's done-when; a criterion with no ticket is bad slicing. Start from [ticket-template.md](ticket-template.md), shipped with this skill; slicing rules live in [docs/agentic-workflow.md](../../docs/agentic-workflow.md), don't restate them here. Later tickets invalidated by landed work get amended at reconcile, not re-shaped — expect that, don't pad against it.
 
 ## Judgment calls happen inline, not in Open questions
 
@@ -60,4 +60,4 @@ Two checks, both required:
 1. **Every `Open questions` line carries a resolution.** No unresolved lines.
 2. **The human approves the decomposition.** Present the spec and tickets; this is the Plan gate, and it's a human call because bad slicing is cheap to fix in a list and expensive to fix across twelve started tickets.
 
-On approval, two moves in order. First fold each resolved answer into the section it constrains and delete its line — the implementing agent receives a spec whose `Open questions` section is empty or absent (the answer survives in the section it now constrains; git keeps the Q&A trail). Then commit and push the whole bundle at once: `git add work/shaped/<date>-<slug>/`, commit, push. If the push is rejected, someone else's bundle landed on the same date and slug — `git mv` to a disambiguated slug and retry; this is the only point a collision can still occur, and it costs a rename, not a rewrite. If this bundle came in through the legacy path and still carries a `brief.md`, it freezes here too: from this point `spec.md` is what's being done about the ask, `brief.md` is only the historical record of it, and when they disagree `spec.md` wins.
+On approval, two moves in order. First fold each resolved answer into the section it constrains and delete its line — the implementing agent receives a spec whose `Open questions` section is empty or absent (the answer survives in the section it now constrains; git keeps the Q&A trail). Then commit and push the whole bundle at once: `git add work/shaped/<date>-<slug>/`, commit, push. If the push is rejected, someone else's bundle landed on the same date and slug — `git mv` to a disambiguated slug and retry; this is the only point a collision can still occur, and it costs a rename, not a rewrite.

@@ -21,7 +21,8 @@ Some tags own no directory and therefore can't appear above; those are declared 
 
 `work/backlog.md` is the single list of unshaped ideas for this repo. Unshaped is the point:
 an entry is a pointer to a conversation we'll have later, not the conversation itself. Items
-graduate out of it into `work/planned/<slug>.md` once they're worth planning.
+graduate out of it when the human picks one and `shape` turns it into a bundle under
+`work/shaped/`.
 
 Work items are features, bugs, refactors, and migrations alike — the backlog doesn't distinguish,
 and neither does `active/`.
@@ -36,7 +37,7 @@ Read `work/backlog.md` in full before any edit. Two reasons: its header declares
 tag vocabulary, and near-duplicate entries are common — if something similar is already there,
 sharpen the existing line instead of adding a second one.
 
-Before adding, glance at `work/planned/` and `work/active/` too. If a work file there
+Before adding, glance at `work/shaped/` and `work/active/` too. If a work file there
 already covers the thing, the backlog is the wrong home for it — say so, and offer to add it to
 that file's Plan or Open questions instead. A backlog line shadowing a live work item is the
 duplicated state this whole structure exists to avoid, and it's worse than a missing line
@@ -99,7 +100,7 @@ for, and a solution written now will be stale or wrong by the time it's read.
   - Consider a 10s grace window for in-flight requests
 ```
 
-That's a plan. Say so, and offer to create `work/planned/auth-refresh.md` instead.
+That's a plan. Say so, and offer to run `shape` on it instead.
 
 **Too vague:**
 
@@ -126,11 +127,10 @@ insert so concurrent edits conflict trivially, and never reshuffle the list.
 nobody reads it. If the work produced a choice worth keeping, mention it and offer to invoke the
 `decision` skill — that's where reasoning belongs, not here.
 
-**Promote** — delete the line from the backlog and offer to create `work/planned/<slug>.md`.
-Promotion lands in `planned/`, not `active/`: the item now has somewhere to hold a plan but
-nobody has started it, and `active/` is reserved for work actually in flight. The item lives in
-exactly one place either way — duplicated state between backlog and work files is the failure
-mode this structure exists to avoid.
+**Promote** — delete the line and offer to run `shape` on it, which creates the bundle under
+`work/shaped/` (nothing lands in `work/` until shape commits a complete bundle — decision 0013).
+The item lives in exactly one place either way — duplicated state between backlog and work files
+is the failure mode this structure exists to avoid.
 
 **Look up** — grep by tag and show matching lines verbatim. Don't reformat or summarise them.
 

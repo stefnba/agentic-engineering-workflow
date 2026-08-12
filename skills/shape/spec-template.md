@@ -74,7 +74,8 @@ Concrete prohibitions: features not to build, modules not to touch, refactors no
 
 Tickets live in `tickets/`, one file per ticket (`NN-<slug>.md`, zero-padded), following the
 ticket structure reference. This section keeps only an ordered index — `- 01 — <title>
-(depends: —)` — plus the coverage guarantee: every AC is covered by at least one ticket. Each ticket
+(depends: —)` — plus the coverage guarantee: every AC is covered by at least one ticket. When
+the order isn't obvious from the dependency chain, add one line of why this order. Each ticket
 is a vertical slice, independently testable, sized for one agent session. All ticket detail
 (covered ACs, file paths, verification) lives in the ticket file, never here.
 

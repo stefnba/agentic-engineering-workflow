@@ -40,10 +40,10 @@ Running the interview is itself a judgment: it claims the item needs more than a
 
 ## Check for an existing bundle, once
 
-Before wrapping up, `Glob` `work/candidates/*` and `work/planned/*` for a directory whose slug plausibly overlaps this topic. If one exists, ask the human directly, in one question: continue that bundle, or claim a fresh one? Don't infer this from how the conversation feels — it's a one-line question, not a judgment call to reason your way into. If nothing overlaps, skip this and say nothing about it.
+Before wrapping up, `Glob` `work/shaped/*` and `work/active/*` for a bundle whose slug plausibly overlaps this topic. If one exists, ask the human directly, in one question: continue that bundle, or start a fresh one? Don't infer this from how the conversation feels — it's a one-line question, not a judgment call to reason your way into. If nothing overlaps, skip this and say nothing about it.
 
 ## Done
 
 The session is done when the frontier is empty — every branch visited, nothing silently assumed — and the human confirms you've reached a shared understanding. Do not act on it until they do.
 
-Report back in one line: the problem, in the user's framing, is settled. Say the next step is `shape`, invoked right here with no argument — it reads this conversation directly and either claims a fresh bundle or resumes the existing one you already confirmed above. Don't invoke it yourself; the human's decision to carry this conversation into `shape` is the Pick gate (`docs/agentic-workflow.md` § Where the human sits), and that's a call they make, not you.
+Report back in one line: the problem, in the user's framing, is settled. Say the next step is `shape`, invoked right here with no argument — it reads this conversation directly and either creates a fresh bundle or resumes the existing one you already confirmed above. Don't invoke it yourself; the human's decision to carry this conversation into `shape` is the Pick gate (`docs/agentic-workflow.md` § Where the human sits), and that's a call they make, not you.
