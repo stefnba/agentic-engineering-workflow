@@ -25,6 +25,7 @@ Stage-bound — each realizes one role of the [workflow](docs/agentic-workflow.m
 | `critique`     | Shape     | Attacks the shaped spec     |
 | `implement`    | Implement | Executes one ticket to a PR |
 | `review`       | Review    | Judges a ticket's PR        |
+| `ship`         | Ship      | Absorbs and deletes bundle  |
 
 ### Supporting skills
 

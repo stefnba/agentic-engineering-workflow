@@ -7,7 +7,6 @@ Mechanism commitments — invocation, context, agent — for the workflow skills
 | `audit`    | Discover | `/audit`, manual            | fork (background), `agent: researcher` | Autonomous sweep; writes `docs/research/audit-*.md` + backlog lines. `disallowed-tools: AskUserQuestion`.                                                        |
 | `research` | Discover | `/research <topic>`, manual | fork (background), `agent: researcher` | Needs WebSearch/WebFetch; writes `docs/research/*.md` + backlog line.                                                                                            |
 | `pick`     | Discover | `/pick`, manual             | inline                                 | Dialogue — human picks from the backlog; presents candidates neutrally, routes to interview or shape, ends with prune. `backlog` stays the artifact's caretaker. |
-| `ship`     | Ship     | `/ship <id>`, manual        | inline                                 | Absorbs the spec into durable docs, deletes the bundle, merges. Durable-doc writes deserve main-session visibility.                                              |
 
 | Agent           | Serves              | tools                                                | Notes                                                                                    |
 | --------------- | ------------------- | ---------------------------------------------------- | ---------------------------------------------------------------------------------------- |

@@ -57,5 +57,7 @@ and meta concerns.
   - micro-test per writing-for-agents references/testing.md: does it fire on defining/renaming/disambiguating a term without the word "glossary"
 - [skills] review skill + reviewer agent are unverified — no baseline or with-skill run yet (built without a real PR to review)
   - run against implement's first real PR per writing-for-agents references/testing.md; check the worktree mechanics for re-running checks actually hold
+- [skills] ship skill is unverified — no baseline or with-skill run yet (built without a real bundle to ship)
+  - run against the first accepted bundle; check the commits-land-where logic (open PR branch vs default branch) holds, and that the grep-bundle-ID absorb gate is checkable in practice
 - [skills] shape's write-boundary hook denies writes anywhere outside work/shaped/, including paths outside the repo entirely
   - blocked writing a handoff doc to ~/.claude/handoffs/; scope the denial to paths inside the repo instead
