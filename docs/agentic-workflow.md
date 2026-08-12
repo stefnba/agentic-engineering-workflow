@@ -17,7 +17,7 @@ review → fix → re-verify ↺            gate: human approves
                                             bundle deleted, main green
 ```
 
-Five stages — verify and reconcile are not among them: **verify** (the repo's checks plus the ticket's done-when pass) is Implement's exit gate, and **reconcile** (fix any drift the change caused in colocated READMEs, `spec.md`, and remaining tickets) is an obligation that fires per ticket before review and again at ship.
+Five stages — verify and reconcile are not among them: **verify** (the repo's checks plus the ticket's done-when pass) is Implement's exit gate, and **reconcile** (fix any drift the change caused in colocated READMEs, affected glossaries, `spec.md`, and remaining tickets) is an obligation that fires per ticket before review and again at ship.
 
 ## Stages
 
@@ -49,6 +49,8 @@ docs/                           # durable — accumulates and stays current
   research/                     # findings from discovery — evidence, not commitments
   agentic-workflow.md           # this file
 
+GLOSSARY.md                     # durable — canonical domain vocabulary (per-domain in monorepos)
+
 work/                           # disposable — in-flight work
   backlog.md                    # one line per unshaped idea — unsorted collection dump
   shaped/                       # spec + tickets complete, not started
@@ -70,6 +72,22 @@ src/<domain>/README.md          # durable target state, colocated with the code
 **Tickets** are one-agent-session slices with a machine-checkable done-when and `status`/`depends_on` frontmatter.
 
 **Colocated `README.md`s** carry each subsystem's durable target state next to its code. When a README and a spec disagree about the current system, **the README wins** — it describes what is; the spec, what someone intended (the spec still owns what the change should make true). This authority is earned by reconcile: every PR updates the READMEs it made inaccurate, and review sees the README diff beside the code diff — colocation is what makes drift visible.
+
+**`GLOSSARY.md`** — a repo's canonical domain vocabulary: term, a one-to-two-sentence
+definition of what it *is*, and an _Avoid_ list of rejected synonyms; only terms specific to
+the project's domain qualify, general programming concepts are excluded. Agent output — prose
+artifacts and code identifiers alike — uses glossary terms and never an avoided synonym;
+review judges identifier adherence, there is no mechanical gate. A repo without a glossary is
+handled silently, no nagging to create one; a term missing from a glossary that already has
+entries is a signal — either the agent is inventing language or there's a real gap worth
+capturing. A conflict between output and a glossary definition is flagged explicitly, both
+readings named, never silently resolved in either direction. Glossary freshness is part of
+the per-ticket reconcile obligation: a change that renames or redefines a term updates the
+affected glossary in the same PR. In a monorepo, each domain may carry its own `GLOSSARY.md`
+at its root, and the root file holds cross-cutting terms plus a Domains section linking each
+sub-glossary. Unlike decision records, the glossary is mutable — edited in place, history is
+git's; a rename edits the entry and moves the old term to _Avoid_. The `glossary` skill is its
+caretaker.
 
 **`docs/decisions/`** — immutable; supersede with a new record, never edit. For anything durable and expensive to relitigate. Template lives with the `decision` skill.
 
