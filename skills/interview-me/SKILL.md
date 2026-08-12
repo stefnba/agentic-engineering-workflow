@@ -1,12 +1,12 @@
 ---
-name: interview
+name: interview-me
 description: Grill user intent into a settled shared understanding. Use when the user brings a feature or problem to discuss from scratch, or wants to pick up a vague backlog line.
 argument-hint: "[what you want to build or fix]"
 disable-model-invocation: true
 allowed-tools: Read, Grep, Glob
 ---
 
-# Interview
+# Interview the user
 
 The pick-side half of Discover (see `docs/agentic-workflow.md` § Discover) — used when intent needs grilling before it's ready for `shape`: the user brings it directly, or an existing backlog line is too vague to shape as-is. This skill writes nothing — no brief, no file. Its only output is a settled understanding sitting in the conversation, which the human then carries straight into `shape`, invoked with no argument in this same session. `Read`/`Grep`/`Glob` are the only tools granted; there is no `Write`, `Edit`, or `Bash` to remove by convention — this skill is read-only by tool grant.
 
