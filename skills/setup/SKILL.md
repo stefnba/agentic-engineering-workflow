@@ -31,6 +31,30 @@ Look at the current repo to understand its starting state. Read whatever exists;
 
 Report what exists and what would be created, as a short list per write target. Flag conflicts instead of resolving them silently — an existing `docs/adr/` tree, a `work/` directory used for something else, an `AGENTS.md` with its own workflow section. For a monorepo, note that bundles can live per-package (`packages/<pkg>/work/`) and ask whether to scaffold root-only or per-package.
 
+Example output — repo with no existing scaffolding (adapt the specifics to what step 1 actually found):
+
+```text
+Findings
+
+This is a single-context repo with minimal structure:
+
+- ❌ Not a git repository
+- ❌ No AGENTS.md or CLAUDE.md
+- ❌ No existing docs/agentic-workflow.md
+- ❌ No work/, docs/decisions/, or docs/research/ directories
+- ✅ Simple project structure: package.json with Hono, single TypeScript entry point
+
+What I'll create
+
+1. docs/agentic-workflow.md — canonical workflow doc (copy from template, not rewritten)
+2. work/backlog.md — skeleton for issue tracking
+3. work/shaped/ and work/active/ — work tracking directories (with .gitkeep)
+4. docs/decisions/ and docs/research/ — decision records and research notes
+5. CLAUDE.md — new file with agents reference block (since neither AGENTS.md nor CLAUDE.md exists)
+
+Ready to proceed?
+```
+
 ### 3. Confirm
 
 Show the exact file list to be written and any lines to be added to existing files. Wait for a yes. Nothing is written before this point.
@@ -38,7 +62,7 @@ Show the exact file list to be written and any lines to be added to existing fil
 ### 4. Write
 
 1. Copy `${CLAUDE_PLUGIN_ROOT}/docs/agentic-workflow.md` verbatim to `docs/agentic-workflow.md`. Don't rewrite its content — it's the canonical doc; local edits belong to the consuming repo afterward.
-2. Create `work/backlog.md` (skeleton from the `backlog` skill's template), plus empty `work/shaped/` and `work/active/` (with `.gitkeep` if the repo tracks empty dirs).
+2. Copy `${CLAUDE_PLUGIN_ROOT}/skills/backlog/template.md` verbatim to `work/backlog.md` — don't rewrite its header or sections. Also create empty `work/shaped/` and `work/active/` (with `.gitkeep` if the repo tracks empty dirs).
 3. Create `docs/decisions/` and `docs/research/` if absent. If the repo already has `docs/adr/`, don't migrate it — note the coexistence and suggest to the human that content should be moved into `docs/decisions/`.
 4. Add to the end of `AGENTS.md` (or `CLAUDE.md` if that's what the repo uses; never both) the exact block from [agents-reference.md](./references/agents-reference.md) — copy it verbatim, don't expand or rewrite it. If a section from a prior run exists, replace it rather than appending a duplicate.
 
