@@ -17,7 +17,7 @@ and meta concerns.
 - [docs] Codex section in tool-setup.md is an empty TODO
 - [docs] decide where review findings and verification evidence live
   - PR description/comments vs files in the repo
-  - skills-build-plan's reviewer row preloads an `evidence` block format; implement as built writes prose into the PR body
+  - as built: implement writes verify/reconcile prose into the PR body, reviewer reads it there and returns findings as its final message — no `evidence` skill exists
 - [skills] review could run parallel critics — standards axis vs requirements axis
 - [skills] skill-layer patterns from mattpocock/skills worth evaluating
   - router skill, per-repo setup skill, reference layer, user- vs model-invoked split
@@ -55,5 +55,7 @@ and meta concerns.
   - decision/template.md, shape/{spec,ticket,work-file}-template.md; check each SKILL.md pointer after moving
 - [skills] glossary skill's trigger reliability is unverified — spec deferred it to a backlog line that was never added
   - micro-test per writing-for-agents references/testing.md: does it fire on defining/renaming/disambiguating a term without the word "glossary"
+- [skills] review skill + reviewer agent are unverified — no baseline or with-skill run yet (built without a real PR to review)
+  - run against implement's first real PR per writing-for-agents references/testing.md; check the worktree mechanics for re-running checks actually hold
 - [skills] shape's write-boundary hook denies writes anywhere outside work/shaped/, including paths outside the repo entirely
   - blocked writing a handoff doc to ~/.claude/handoffs/; scope the denial to paths inside the repo instead
