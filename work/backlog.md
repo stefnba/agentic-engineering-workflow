@@ -10,20 +10,19 @@ and meta concerns.
 
 - [repo] rename the GitHub repo from `agentic-coding` to `agentic-workflow` to match the plugin name
   - update `plugin.json`'s `repository` field and README references once done
-- [docs] [skills] decision + backlog skills contradict docs-structure.md
+- [docs] [skills] decision + backlog skills contradict agentic-workflow.md
   - `done/` vs delete-on-ship, `.agents/rules/`, ID scheme (template shape settled by decision 0005)
   - backlog skill's shell preamble hard-fails outside a workspace layout (`ls apps/*/package.json`)
 - [skills] build the workflow skills and subagents mapped in docs/skills.md (Build plan)
   - one end-to-end first, using the workflow itself
-- [docs] Codex section in setup-claude-code.md is an empty TODO
+- [docs] Codex section in tool-setup.md is an empty TODO
 - [docs] decide where review findings and verification evidence live
   - PR description/comments vs files in the repo
-- [docs] no home for domain language / glossary in docs-structure
+- [docs] no home for domain language / glossary in agentic-workflow.md
   - see mattpocock/skills CONTEXT.md — shared language fights misalignment
 - [skills] review could run parallel critics — standards axis vs requirements axis
 - [skills] skill-layer patterns from mattpocock/skills worth evaluating
   - router skill, per-repo setup skill, reference layer, user- vs model-invoked split
-- [docs] the bundle-less 80% path is undefined — which stages and gates still apply
 - [docs] verify evidence is self-reported — CI ownership of the gate unstated
 - [docs] failure paths undefined — rejected review, abandoned ticket, cancelled bundle
 - [docs] gather has no trigger — audit/research/prune cadence undefined
@@ -43,10 +42,11 @@ and meta concerns.
   - the fidelity assertion in evals/evals.json (eval 0) was added after iteration 1; no with-skill run has tested it yet
 - [skills] writing-for-agents: run skill-creator's description-trigger optimization on the frontmatter description
 - [repo] verify the AGENTS.md prunes with a rerun (tie-break routing sentence removed, reference-repo caveat merged)
-  - restore the tie-break line if agents mis-route between docs-structure.md and agentic-workflow.md
+  - docs-structure.md has since been merged into agentic-workflow.md — the two-doc tie-break no longer applies
 - [repo] bundles 0001, 0003, 0004 predate the skills/README.md + agents/README.md → docs/skills.md move
   - 0003's spec shaped the opposite resolution (fold agents/README.md into skills/README.md, colocation-exception decision) — reconcile or re-shape before implementing; 0001 and 0004 only need their references re-pointed
 - [docs] record a decision for skills/agents docs moving central to docs/skills.md
   - supersedes the colocation expectation for plugin payload trees; driver is the plugin agent scanner (no README carve-out) plus the derived-view cleanup
-- [repo] bundle 0001's spec describes the pre-0012 interview (writes `brief.md`) — one more reference to re-point alongside the skills/README.md move already noted above
-  - `work/candidates/0002-glossary-home` and `work/candidates/0004-implement-skill` still carry `brief.md` from before decision 0012; `shape`'s legacy path handles them, no migration needed
+- [docs] decision 0003's spec heading set (`Problem / Target state / Non-goals / …`) contradicts the eight-heading format in agentic-workflow.md — supersede if the drift matters
+- [docs] decisions 0002 and 0012 carry stale mechanism details (`next-id`, `claim-bundle.sh`, `candidates/`) after decision 0013 — flagged in 0013's Costs, catch in a reconciliation sweep
+- [skills] `skills/glossary/` is an empty directory — fill it or remove it
