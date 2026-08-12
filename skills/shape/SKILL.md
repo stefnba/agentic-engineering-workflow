@@ -15,23 +15,25 @@ hooks:
 
 **Author role**: take the current conversation context and codebase understanding and produce a
 complete spec and ticket set. Synthesize — don't re-interview the human on what's already
-settled; new questions follow the judgment-call rule below.
+settled; new questions originating from the spec writing follow the judgment-call rule below.
 
 **Read-only on code**: the hook above blocks any `Edit`/`Write` outside `work/shaped/`. Shape
 never writes code — an agent that can will, and retrofit the spec to it.
 
-Two rules apply across every step below:
+The two rules below apply across every step below:
 
-- **Ask judgment calls inline, immediately.** You're running with the human in the
-  conversation. The moment a question surfaces that the repo can't answer, ask it and get the
-  answer before continuing; record it on the spot as `- [resolved] <question>? → <answer>`.
-  Questions the repo already answers, resolve yourself, citing the file. If two or three
-  questions pile up before you've written anything, stop and ask them rather than reading
-  further hoping one resolves itself.
-- **Surface drift, don't route around it.** What you're reading — a legacy brief, an old
-  backlog line, this conversation — may reference something since moved, renamed, or never
-  built. Say what you found and ask the human how to handle it. Don't invent the missing piece
-  and don't fold designing it into this bundle's scope.
+**Ask judgment calls inline, immediately.** You're running with the human in the
+conversation. The moment a new question surfaces that the repo can't answer or there are different viable options, ask it and get the
+answer before continuing; once the spec exists, the answer is written directly into the
+section it constrains — there is no _Open Questions_ section to park it in. Questions the repo
+already answers, resolve yourself, citing the file. If two or three questions pile up before
+you've written anything, stop and ask them rather than reading further hoping one resolves
+itself.
+
+**Surface drift, don't route around it.** What you're reading — a legacy brief, an old
+backlog line, this conversation — may reference something since moved, renamed, or never
+built. Say what you found and ask the human how to handle it. Don't invent the missing piece
+and don't fold designing it into this bundle's scope.
 
 ## Process
 
@@ -61,11 +63,11 @@ drafting; the answer lands in the spec's `Testing Decisions` section.
 
 ### 4. Create the bundle
 
-Decide the form — the size is known now: if the whole change fits one agent session, the
-bundle is a **single file** `work/shaped/<date>-<slug>.md` — the spec plus the ticket's
-operational parts in one document (the single-file variant in spec-template.md); skip the
-tickets step. Anything larger is a directory `work/shaped/<date>-<slug>/` with `spec.md` and
-`tickets/`.
+Decide the form — the size is known now: if the whole change fits one agent implementation session, the
+bundle is a **single file** `work/shaped/<date>-<slug>.md` (spec and ticket merged into one
+document). Anything larger is a directory `work/shaped/<date>-<slug>/` with `spec.md` and
+`tickets/`. The form decision is revisable while writing: a work file whose sections start
+straining — decisions gaining numbering, `Done when` sprawling — becomes a directory bundle.
 
 Derive the kebab-slug from the title and check nothing matches `work/*/$(date +%F)-<slug>*` —
 an existing bundle could be a directory or a single file. Everything stays local; nothing is
@@ -73,44 +75,61 @@ committed or pushed before the human approves at Exit.
 
 ### 5. Write the spec
 
-Copy the skeleton from [spec-template.md](spec-template.md) and fill it — section rules and
-the `BR-`/`ID-`/`AC-` ID scheme live there. `Out of Scope` is the highest-value section:
-agents wander, and an explicit exclusion list is the cheapest fix. There is no separate plan
-document.
+- **Directory bundle**: copy the skeleton from [spec-template.md](spec-template.md) and fill it —
+  section rules and the `BR-`/`ID-`/`AC-` ID scheme live there.
+- **Single file**: copy [work-file-template.md](work-file-template.md) instead — spec and ticket in one document, then
+  skip the tickets step.
 
-Done when every required section is filled and every sentence constrains behavior — nothing
+Either way, `Out of Scope` / `Not in this` is the **highest-value section**: agents wander, and an explicit exclusion list is the cheapest fix. There is no separate plan document.
+
+**Done when** every required section is filled and every sentence constrains behavior — nothing
 restates what a reader could look up elsewhere.
 
 ### 6. Write the tickets (directory bundles only)
 
-Full decomposition, every ticket with a concrete `Done when` — writing that check is a test of
+**Copy the skeleton** from [ticket-template.md](ticket-template.md) per ticket.
+
+**Full decomposition, every ticket with a concrete `Done when`**: writing that check is a test of
 the spec, and a ticket whose check you can't write yet is a spec hole found while it's still
-cheap to fix. Copy the skeleton from [ticket-template.md](ticket-template.md) per ticket:
-**each ticket is a vertical slice**, independently testable, sized for one agent session.
-Enabling work comes first — make the change easy, then make the easy change. Wide refactors are
+cheap to fix.
+
+**Each ticket is a vertical slice**: independently testable, sized for one agent session. Wide refactors are
 the one exception to vertical slicing: sequence them expand → migrate → contract (add the new
-form, migrate in batches, delete the old form). Later tickets invalidated by landed work get
+form, migrate in batches, delete the old form)
+
+**Enabling work comes first**: make the change easy, then make the easy change. . Later tickets invalidated by landed work get
 amended at reconcile, not re-shaped — expect that, don't pad against it.
 
-Done when every acceptance criterion maps to at least one ticket's done-when; a criterion with
-no ticket is bad slicing and must be fixed before moving on. (For a single-file bundle this
-check collapses into its `Done when` section: every AC listed there.)
+**Done when** every acceptance criterion maps to at least one ticket's done-when; a criterion with
+no ticket is bad slicing and must be fixed before moving on.
 
-### 7. Critique and fix
+### 7. Clarify the holes
 
-Invoke the `critique` skill with this bundle's ID and wait for findings (it blocks — that's the
-point of asking before the human sees the plan). Findings are attacks, not fixes: triage each
-one, revise the spec where it's right, and say plainly where you're not acting on one and why.
+With the full draft in front of you, the plan's holes are visible — assumptions you wrote down
+without a source, sections that went vague, decisions that could go two ways. Put them to the
+human as one batch and loop until none remain, folding each answer into the section it
+constrains as you get it.
 
-### 8. Check
+Don't carry a question forward: an unanswered question handed to an
+implementing agent gets resolved silently and arbitrarily.
+
+### 8. Critique and fix
+
+Invoke the `critique` skill with this bundle's ID and wait for findings (it blocks — that's the point of asking before the human sees the plan).
+
+**Findings are attacks, not fixes**: triage each one, revise the spec where it's right, and say plainly where you're not acting on one and why.
+
+A finding that needs a human call goes back through the clarify loop, not into a guess.
+
+### 9. Check
 
 Self-verification before anything is presented:
 
-- Every `Open questions` line carries a resolution — no unresolved lines.
-- AC coverage still holds after critique revisions.
-- No skeleton guidance comments survive in the spec or tickets.
+- [ ] No open questions, TODOs, or placeholders survive anywhere in the bundle.
+- [ ] AC coverage still holds after critique revisions.
+- [ ] No skeleton guidance comments survive in the spec or tickets.
 
-### 9. Exit — present for approval
+### 10. Present for approval
 
 Present the decomposition for the human's OK — one numbered line per ticket:
 
@@ -119,15 +138,16 @@ Present the decomposition for the human's OK — one numbered line per ticket:
 ```
 
 plus the spec's key parts — solution, seam, out of scope — and how each critique finding was
-dispositioned. Then ask three things: is the granularity right, are the blocking edges correct,
+dispositioned. (Single-file bundle: present its Change and Done when sections instead of a
+ticket list.)
+
+Then ask three things: is the granularity right, are the blocking edges correct,
 should any ticket merge or split. This is the Plan gate, and it's a human call because bad
 slicing is cheap to fix in a list and expensive to fix across twelve started tickets. **Do not
 commit before the OK.**
 
-On approval: fold each resolved answer into the section it constrains and delete its line — the
-implementing agent must receive a spec whose `Open questions` section is empty or absent (the
-answer survives in the section it now constrains; git keeps the Q&A trail). Then commit and push
-the whole bundle at once — `git add` the directory or the single file — commit, push. If the push is
-rejected, someone else's bundle landed on the same date and slug — `git mv` to a disambiguated
-slug and retry; this is the only point a collision can still occur, and it costs a rename, not a
-rewrite.
+On approval, commit and push the bundle exactly as approved — no edits between the OK and the
+commit; the approved document and the committed document are the same bytes. `git add` the
+directory or the single file, commit, push. If the push is rejected, someone else's bundle
+landed on the same date and slug — `git mv` to a disambiguated slug and retry; this is the only
+point a collision can still occur, and it costs a rename, not a rewrite.
