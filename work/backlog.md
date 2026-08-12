@@ -50,6 +50,7 @@ and meta concerns.
   - supersedes the colocation expectation for plugin payload trees; driver is the plugin agent scanner (no README carve-out) plus the derived-view cleanup
 - [docs] decision 0003's spec heading set (`Problem / Target state / Non-goals / …`) contradicts the eight-heading format in agentic-workflow.md — supersede if the drift matters
 - [docs] decisions 0002 and 0012 carry stale mechanism details (`next-id`, `claim-bundle.sh`, `candidates/`) after decision 0013 — flagged in 0013's Costs, catch in a reconciliation sweep
-- [skills] `skills/glossary/` is an empty directory — fill it or remove it
 - [skills] backlog skill restructure is unverified — rerun add prompts per writing-for-agents references/testing.md
   - entry format + tag discipline moved behind a references/entry-format.md pointer; check the pointer gets followed on add
+- [skills] decision + shape keep fill-in templates at skill root — route to assets/ per skill-mechanics, as backlog now does
+  - decision/template.md, shape/{spec,ticket,work-file}-template.md; check each SKILL.md pointer after moving

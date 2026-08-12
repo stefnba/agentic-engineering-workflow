@@ -18,8 +18,8 @@ Coverage is part of the attack surface: an acceptance criterion no ticket's done
 
 ## What to attack
 
-- **Missed states** — errors, empty results, concurrent access, partial failure. A spec that only describes the happy path has an implicit gap `Out of Scope` never states.
-- **API/contract gaps** — inputs, outputs, and failure modes the spec promises but `Behavioral Requirements`/`Implementation Decisions` don't actually pin down.
+- **Missed states** — walk every input the system consumes and every behavioral requirement, asking: what happens when it's malformed, missing, or fails halfway? Errors, empty results, concurrent access, partial failure. A spec that only describes the happy path has an implicit gap `Out of Scope` never states.
+- **API/contract gaps** — inputs, outputs, and failure modes the spec promises but `Behavioral Requirements`/`Implementation Decisions` don't actually pin down. A promised quality with no pinned shape — "machine-readable", "fast", "safe" — is a contract gap, not a detail.
 - **Security** — auth boundaries, injected input, secrets, anything the spec hand-waves as "obviously fine."
 - **Performance** — where the `Implementation Decisions` approach degrades, and whether the spec says so.
 - **Testability** — can each ticket's `Done when` actually be checked by a machine? A condition that requires judgment isn't done-when yet.
