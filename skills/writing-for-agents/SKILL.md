@@ -75,6 +75,7 @@ Refer to other steps by name — "the tag-and-push step", not "step 7". Numbered
 ## Phrasing that changes behavior
 
 - **Imperative voice**, and give the reason when it changes behavior: "Don't edit `dist/` — it's regenerated on every build" generalizes to cases you didn't list; a bare NEVER covers only the listed ones.
+- **One instruction per paragraph, bold imperative lead-in.** An instruction buried mid-paragraph competes with everything around it; the bold opening is the handle the agent acts from. Split any paragraph carrying two instructions.
 - **Prompt the positive.** Prohibition drags the forbidden behavior into context and makes it more available ("don't think of an elephant"). State the target behavior instead: "write one-line comments" beats "don't write long comments". Reserve prohibitions for hard guardrails you can't phrase positively, and even then pair them with the positive target.
 - **Match the form to the failure** you're fixing:
 
@@ -99,6 +100,8 @@ Skeleton: type(scope): summary in imperative, ≤72 chars
 Example — change adding JWT-based user authentication:
 feat(auth): implement JWT-based authentication
 ```
+
+**Put slot guidance in comments inside the template.** Annotate each slot with its fill rules and a compact example in comment syntax the output format ignores (`<!-- -->` in markdown), and open the template by instructing the filler to delete comments as it fills — a surviving comment then flags an unfilled slot. Guidance written outside comment syntax lands verbatim in the deliverable.
 
 Deterministic, repetitive procedures belong in executable scripts the agent runs, not prose it re-derives each run.
 
