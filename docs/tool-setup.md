@@ -1,4 +1,4 @@
-# Agentic Coding
+# Tool setup
 
 ## Claude Code
 

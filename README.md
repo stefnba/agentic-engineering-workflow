@@ -12,35 +12,41 @@ That distinction matters when reading anything here:
 
 What exists today. The conventions they follow — and the build plan for the unbuilt rest — live in [docs/skills.md](docs/skills.md).
 
+Each name is a pointer — the authoritative description lives in that skill's `SKILL.md` frontmatter.
+
 ### Workflow skills
 
 Stage-bound — each realizes one role of the [workflow](docs/agentic-workflow.md):
 
-| Name        | Stage    | What it does                                                                |
-| ----------- | -------- | --------------------------------------------------------------------------- |
-| `interview` | Discover | Grills user intent into a settled understanding                             |
-| `shape`     | Shape    | Claims a bundle from the session and writes `spec.md` + its full ticket set |
-| `critique`  | Shape    | Attacks a shaped spec in a fresh context; forks into the `critic` agent     |
+| Name        | Stage    | Purpose                     |
+| ----------- | -------- | --------------------------- |
+| `interview` | Discover | Grills intent until settled |
+| `shape`     | Shape    | Writes spec and tickets     |
+| `critique`  | Shape    | Attacks the shaped spec     |
 
 ### Supporting skills
 
 Not stage-bound — they serve any session:
 
-| Name                 | What it does                                                                |
-| -------------------- | --------------------------------------------------------------------------- |
-| `setup`              | Installs the workflow into a consuming repo — doc, trees, AGENTS.md pointer |
-| `backlog`            | Maintains `work/backlog.md` — add, complete, promote, look up               |
-| `decision`           | Writes or supersedes records in `docs/decisions/`                           |
-| `handoff`            | Compacts a dying session into a handoff document                            |
-| `writing-for-agents` | Writing and reviewing documents an agent will consume or follow             |
+| Name                 | Purpose                        |
+| -------------------- | ------------------------------ |
+| `setup`              | Installs the workflow          |
+| `backlog`            | Maintains the backlog file     |
+| `decision`           | Writes decision records        |
+| `handoff`            | Compacts a dying session       |
+| `writing-for-agents` | Reviews agent-facing documents |
 
 ## Agents
 
 The subagents forked skills run in:
 
-| Name     | What it does                                            |
-| -------- | ------------------------------------------------------- |
-| `critic` | Read-only spec attacker the `critique` skill forks into |
+| Name     | Purpose                 |
+| -------- | ----------------------- |
+| `critic` | Read-only spec attacker |
+
+## Tool setup
+
+[docs/tool-setup.md](docs/tool-setup.md) — configuring Claude Code for a consuming repo: trimming the default system prompt and toolset, protecting secrets, MCP servers, output styles. (Codex section is still a TODO.)
 
 ## Status
 
