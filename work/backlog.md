@@ -13,7 +13,7 @@ and meta concerns.
 - [docs] [skills] decision + backlog skills contradict agentic-workflow.md
   - `done/` vs delete-on-ship, `.agents/rules/`, ID scheme (template shape settled by decision 0005)
   - backlog skill's shell preamble hard-fails outside a workspace layout (`ls apps/*/package.json`)
-- [skills] build the workflow skills and subagents mapped in docs/skills.md (Build plan)
+- [skills] build the workflow skills and subagents mapped in work/skills-build-plan.md
   - one end-to-end first, using the workflow itself
 - [docs] Codex section in tool-setup.md is an empty TODO
 - [docs] decide where review findings and verification evidence live

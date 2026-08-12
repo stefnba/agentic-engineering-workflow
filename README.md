@@ -10,7 +10,7 @@ That distinction matters when reading anything here:
 
 ## Skills
 
-What exists today. The conventions they follow — and the build plan for the unbuilt rest — live in [docs/skills.md](docs/skills.md).
+What exists today. The conventions they follow live in [docs/skills.md](docs/skills.md); the build plan for the unbuilt rest in [work/skills-build-plan.md](work/skills-build-plan.md).
 
 Each name is a pointer — the authoritative description lives in that skill's `SKILL.md` frontmatter.
 
