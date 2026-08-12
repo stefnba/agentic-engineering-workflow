@@ -35,13 +35,13 @@ Report what exists and what would be created, as a short list per write target. 
 
 Show the exact file list to be written and any lines to be added to existing files. Wait for a yes. Nothing is written before this point.
 
-#### 4. Write
+### 4. Write
 
-1. Copy `${CLAUDE_PLUGIN_ROOT}/docs/agentic-workflow.md` to `docs/agentic-workflow.md`. Don't rewrite its content — it's the canonical doc; local edits belong to the consuming repo afterward.
+1. Copy `${CLAUDE_PLUGIN_ROOT}/docs/agentic-workflow.md` verbatim to `docs/agentic-workflow.md`. Don't rewrite its content — it's the canonical doc; local edits belong to the consuming repo afterward.
 2. Create `work/backlog.md` (skeleton from the `backlog` skill's template), plus empty `work/shaped/` and `work/active/` (with `.gitkeep` if the repo tracks empty dirs).
 3. Create `docs/decisions/` and `docs/research/` if absent. If the repo already has `docs/adr/`, don't migrate it — note the coexistence and suggest to the human that content should be moved into `docs/decisions/`.
-4. Add to the end of `AGENTS.md` (or `CLAUDE.md` if that's what the repo uses; never both) this short section on [Agents Reference](./references/agents-reference.md). If a section from a prior run exists, replace it rather than appending a duplicate.
+4. Add to the end of `AGENTS.md` (or `CLAUDE.md` if that's what the repo uses; never both) the exact block from [agents-reference.md](./references/agents-reference.md) — copy it verbatim, don't expand or rewrite it. If a section from a prior run exists, replace it rather than appending a duplicate.
 
-#### 5. Done
+### 5. Done
 
 Tell the user setup is complete. They can edit the doc directly — it's their copy; re-running this skill only refreshes scaffolding, it won't overwrite an existing `docs/agentic-workflow.md` without asking.
