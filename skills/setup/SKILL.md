@@ -1,40 +1,47 @@
 ---
 name: setup
-description: "Setup the agentic coding workflow inside your repo."
+description: "Set up the agentic coding workflow inside your repo: install the workflow doc, scaffold the work/ and docs/ trees, and wire AGENTS.md."
 disable-model-invocation: true
 ---
 
 # Setup Agentic Coding Workflow
 
-Scaffold the per-repo configuration that the agentic workflow skills assume:
+Scaffold the per-repo structure the workflow skills assume:
 
-- **Domain docs** — where `CONTEXT.md` and ADRs live, and the consumer rules for reading them
+- the workflow doc (`docs/agentic-workflow.md`)
+- the artifact trees (`work/`, `docs/decisions/`, `docs/research/`)
+- a pointer in the repo's agent instructions.
 
 This is a prompt-driven skill, not a deterministic script. Explore, present what you found, confirm with the user, then write.
 
-## Process
+## Follow this process
 
 ### 1. Explore
 
 Look at the current repo to understand its starting state. Read whatever exists; don't assume:
 
-- `git remote -v` and `.git/config` — is this a GitHub repo? Which one?
-- `AGENTS.md` and `CLAUDE.md` at the repo root — does either exist? Is there already an `## Agent skills` section in either?
-- `CONTEXT.md` and `CONTEXT-MAP.md` at the repo root
-- `docs/adr/` and any `src/*/docs/adr/` directories
-- `docs/agents/` — does this skill's prior output already exist?
-- `.scratch/` — sign that a local-markdown issue tracker convention is already in use
-- Monorepo signals — a `pnpm-workspace.yaml`, a `workspaces` field in `package.json`, or a populated `packages/*` with its own `src/`. Present only in a genuinely large multi-package repo; their absence means single-context, which is almost every repo.
+1. `git remote -v` — is this a GitHub repo? (PR permalinks and the ticket-claiming protocol assume one.)
+2. `AGENTS.md` and `CLAUDE.md` at the repo root — does either exist? Does one already reference `docs/agentic-workflow.md`?
+3. `docs/agentic-workflow.md` — this skill's prior output; if present, this is a re-run.
+4. `work/` — `backlog.md`, `shaped/`, `active/`, or remnants of another issue-tracking convention.
+5. `docs/decisions/` — an existing decision-record tree.
+6. Monorepo signals — a `pnpm-workspace.yaml`, a `workspaces` field in `package.json`, or a populated `packages/*` with its own `src/`. Their absence means single-context, which is most repos.
 
 ### 2. Present findings and ask
 
+Report what exists and what would be created, as a short list per write target. Flag conflicts instead of resolving them silently — an existing `docs/adr/` tree, a `work/` directory used for something else, an `AGENTS.md` with its own workflow section. For a monorepo, note that bundles can live per-package (`packages/<pkg>/work/`) and ask whether to scaffold root-only or per-package.
+
 ### 3. Confirm
 
-### 4. Write
+Show the exact file list to be written and any lines to be added to existing files. Wait for a yes. Nothing is written before this point.
 
-1. Move [workflow-doc](./workflow-doc.md) into `docs/agentic-workflow.md` and update its links to the new locations of the skills and artifacts.
-2.
+#### 4. Write
 
-### 5. Done
+1. Copy `${CLAUDE_PLUGIN_ROOT}/docs/agentic-workflow.md` to `docs/agentic-workflow.md`. Don't rewrite its content — it's the canonical doc; local edits belong to the consuming repo afterward.
+2. Create `work/backlog.md` (skeleton from the `backlog` skill's template), plus empty `work/shaped/` and `work/active/` (with `.gitkeep` if the repo tracks empty dirs).
+3. Create `docs/decisions/` and `docs/research/` if absent. If the repo already has `docs/adr/`, don't migrate it — note the coexistence and suggest to the human that content should be moved into `docs/decisions/`.
+4. Add to the end of `AGENTS.md` (or `CLAUDE.md` if that's what the repo uses; never both) this short section on [Agents Reference](./references/agents-reference.md). If a section from a prior run exists, replace it rather than appending a duplicate.
 
-Tell the user the setup is complete and which engineering skills will now read from these files. Mention they can edit `docs/agents/*.md` directly later — re-running this skill is only necessary if they want to switch issue trackers or restart from scratch.
+#### 5. Done
+
+Tell the user setup is complete. They can edit the doc directly — it's their copy; re-running this skill only refreshes scaffolding, it won't overwrite an existing `docs/agentic-workflow.md` without asking.
