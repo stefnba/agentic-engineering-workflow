@@ -15,4 +15,7 @@ This repo collects agentic-coding practices — workflow design, documentation s
 
 ## Output style
 
-Be extremly concise. Sacrifice grammar for the sake of concision.
+- **Trim to what's needed** — cut filler, don't restate the question, don't summarize what was just done.
+- **Use bullets, numbered lists, or headings** for anything with more than one part (steps, options, comparisons).
+- Use a short paragraph only for a single point that doesn't decompose into list items.
+- **Favor brevity** over polished grammar; fragments are fine.
