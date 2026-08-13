@@ -49,9 +49,20 @@ to reshuffle.
 **Move a fresh bundle to active**: if the bundle still sits under `work/shaped/`, `git mv` it
 to `work/active/` — starting its first ticket is what "in progress" means.
 
-**Create the ticket's branch** off the default branch: `<bundle-id>/NN-<slug>` (single-file
-bundle: `<bundle-id>`). One ticket, one branch, one session — parallel tickets belong in
-separate sessions on separate branches.
+**Read `docs/agents/git.md` and take the branch strategy it declares.** A missing file or
+absent declaration line means `trunk`. A single-file bundle takes the `trunk` path in
+either mode — its one PR already lands whole.
+
+**Under `bundle-branch`, sync the bundle's integration branch before branching**: the
+branch is `<bundle-id>/integration`, created from the default branch's head when the
+bundle's first ticket starts; whenever it has fallen behind the default branch, merge the
+default branch into it, so drift is paid per ticket rather than all at once at ship. A
+conflict in that merge is decision drift: stop and put it to the human.
+
+**Create the ticket's branch** — `<bundle-id>/NN-<slug>` (single-file bundle:
+`<bundle-id>`) — off the default branch's head under `trunk`, off
+`<bundle-id>/integration` under `bundle-branch`. One ticket, one branch, one session —
+parallel tickets belong in separate sessions on separate branches.
 
 **Set the ticket's `status: doing`.** Done when: you are on a fresh branch and the ticket
 frontmatter says `doing`.
@@ -104,7 +115,10 @@ mislead the next session. Done when: no document in the repo describes the pre-c
 
 **Set `status: done`** — legitimate only while every `Done when` line holds.
 
-**Commit, push the branch, open the PR.** Reference the bundle by permalink, never bare path —
+**Commit, push the branch, open the PR** — commit messages and the PR title both follow
+the conventions in `docs/agents/git.md`, and the PR targets the declared mode's branch:
+the default branch under `trunk`, `<bundle-id>/integration` under `bundle-branch`
+(single-file bundle: the default branch either way). Reference the bundle by permalink, never bare path —
 the bundle dies at ship; the permalink survives it. The PR body carries the verify results and
 names what reconcile touched, so review can judge the reconcile half's honesty.
 
