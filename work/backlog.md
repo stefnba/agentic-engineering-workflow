@@ -10,8 +10,6 @@ and meta concerns.
 
 - [repo] rename the GitHub repo from `agentic-coding` to `agentic-workflow` to match the plugin name
   - update `plugin.json`'s `repository` field and README references once done
-- [docs] [skills] decision skill contradicts agentic-workflow.md
-  - `done/` vs delete-on-ship, `.agents/rules/`, ID scheme (template shape settled by decision 0005)
 - [skills] build the workflow skills and subagents mapped in work/skills-build-plan.md
   - one end-to-end first, using the workflow itself
 - [docs] Codex section in tool-setup.md is an empty TODO
@@ -26,7 +24,8 @@ and meta concerns.
 - [docs] gather has no trigger — audit/research/prune cadence undefined
 - [skills] consistency-sweep skill (`tidy`) — detect drift between backlog, decisions, work items
   - detect and propose only, human applies; don't name it "reconcile" (taken by the per-PR obligation)
-- [skills] recommendation skill — weigh options with pros/cons and give a recommendation
+- [skills] judge: verify the anchoring fix with reruns — drafted from the user-reported failure (over-anchoring on repo conventions), no baseline per writing-for-agents references/testing.md yet
+  - test both modes: does pass 1 actually stay out of repo files, and does the divergence report cite real paths
 - [skills] writing-for-agents: micro-test "Phrasing that changes behavior" and "Co-locate" before pruning
   - baseline runs on Sonnet did both unprompted (candidate no-ops); needs 5+ rep micro-tests per references/testing.md before deciding
 - [skills] writing-for-agents: verify judgment-added lines with reruns — the "one instruction per paragraph" bullet, skill-mechanics' "Bundled files" section, and the slot-guidance-in-comments rule
@@ -58,3 +57,7 @@ and meta concerns.
   - run against the first accepted bundle; check the commits-land-where logic (open PR branch vs default branch) holds, and that the grep-bundle-ID absorb gate is checkable in practice
 - [skills] audit + research skills and researcher agent are unverified — no baseline or with-skill run yet
   - check the background fork completes, the `${CLAUDE_PLUGIN_ROOT}` write-boundary hook fires, and the backlog-skill preload actually injects the entry format into the agent
+- [skills] shape sequences only refactor tickets — nothing keeps half-built features dark on main
+  - judge ruling 2026-08-13: expose-last (internals first, user-visible wiring as the final ticket)
+- [docs] branch topology (per-ticket PRs to main) is implied by skill text, never decided
+  - judge ruling 2026-08-13 picked trunk-based; record the decision once accepted
