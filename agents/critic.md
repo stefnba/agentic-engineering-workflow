@@ -2,6 +2,8 @@
 name: critic
 description: Attacks a shaped spec before the human's Plan gate — verified holes, never fixes. Forked by the critique skill in a fresh, read-only context; not invoked directly.
 tools: Read, Grep, Glob
+model: opus
+effort: high
 ---
 
 # Critic

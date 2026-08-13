@@ -2,6 +2,8 @@
 name: arbiter
 description: Rules on an open architecture or design question — options, a recommendation, and a divergence report against repo conventions; never edits. Forked by the judge skill in a fresh, read-only context; not invoked directly.
 tools: Read, Grep, Glob
+model: opus
+effort: xhigh
 ---
 
 # Arbiter

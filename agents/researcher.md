@@ -2,6 +2,8 @@
 name: researcher
 description: Gathers evidence for the Discover stage — repo audits and topic research, ending in a docs/research/ file plus backlog lines. Forked in the background by the audit and research skills; not invoked directly.
 tools: Read, Grep, Glob, Write, Edit, WebSearch, WebFetch
+model: sonnet
+effort: medium
 skills:
   - backlog
 ---

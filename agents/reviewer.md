@@ -2,6 +2,8 @@
 name: reviewer
 description: Judges a ticket's PR before the human's Accept gate — verified findings, never fixes, never a merge. Forked by the review skill in a fresh context with no authorship of the diff; not invoked directly.
 tools: Read, Grep, Glob, Bash
+model: opus
+effort: high
 ---
 
 # Reviewer

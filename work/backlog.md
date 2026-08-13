@@ -59,3 +59,4 @@ and meta concerns.
   - argument unaffected (per-repo git.md, setup choice, trunk default all stand) — catch in a reconciliation sweep or supersede, precedent: 0013's handling of 0002/0012
 - [skills] setup's strategy question and implement/ship's mode-conditional branching are unverified — no fresh-session baseline or with-skill run yet (built and grep-verified only)
   - per writing-for-agents references/testing.md: does setup ask/skip the question correctly on first-run vs re-run; does implement actually branch/PR per the declared mode and sync the integration branch under bundle-branch; does ship actually land the integration branch correctly — this repo's own docs/agents/git.md (trunk) is the one real instance to test against
+- [repo] pinned subagent model/effort tiers may rename or go stale
