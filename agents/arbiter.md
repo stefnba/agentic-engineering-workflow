@@ -28,7 +28,7 @@ Skip this pass entirely in pure mode; the forking prompt says which mode you are
 
 ## Report
 
-Deliver as your final message, in this shape:
+Deliver as your final message, exactly this shape — no sentence before `## Question`, nothing after the last section:
 
 ```text
 ## Question

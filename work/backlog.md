@@ -24,8 +24,8 @@ and meta concerns.
 - [docs] gather has no trigger — audit/research/prune cadence undefined
 - [skills] consistency-sweep skill (`tidy`) — detect drift between backlog, decisions, work items
   - detect and propose only, human applies; don't name it "reconcile" (taken by the per-PR obligation)
-- [skills] judge: verify the anchoring fix with reruns — drafted from the user-reported failure (over-anchoring on repo conventions), no baseline per writing-for-agents references/testing.md yet
-  - test both modes: does pass 1 actually stay out of repo files, and does the divergence report cite real paths
+- [skills] judge: 5 test rounds confirm decidability bail-out, pure mode, pass-1 discipline (reasons from general practice, no repo leakage into first-principles section), and divergence citations are real and correctly grounded (path+line verified) — fixed one template deviation (stray preamble sentence before `## Question`)
+  - still unexercised: a genuine collision where reconciliation actually changes the pick — 3/3 default-mode test questions found the repo's convention already matched; needs a real mismatch case, not a contrived one
 - [skills] writing-for-agents: micro-test "Phrasing that changes behavior" and "Co-locate" before pruning
   - baseline runs on Sonnet did both unprompted (candidate no-ops); needs 5+ rep micro-tests per references/testing.md before deciding
 - [skills] writing-for-agents: verify judgment-added lines with reruns — the "one instruction per paragraph" bullet, skill-mechanics' "Bundled files" section, and the slot-guidance-in-comments rule
