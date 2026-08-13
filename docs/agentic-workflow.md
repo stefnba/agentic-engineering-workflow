@@ -50,6 +50,7 @@ docs/                           # durable — accumulates and stays current
   agentic-workflow.md           # this file
 
 GLOSSARY.md                     # durable — canonical domain vocabulary (per-domain in monorepos)
+AGENTS.md                       # durable — canonical agent conventions (packages/<pkg>/AGENTS.md in monorepos)
 
 work/                           # disposable — in-flight work
   backlog.md                    # one line per unshaped idea — unsorted collection dump
@@ -88,6 +89,10 @@ at its root, and the root file holds cross-cutting terms plus a Domains section 
 sub-glossary. Unlike decision records, the glossary is mutable — edited in place, history is
 git's; a rename edits the entry and moves the old term to _Avoid_. The `glossary` skill is its
 caretaker.
+
+**`AGENTS.md`** — canonical for repo-wide conventions and gotchas, for every agentic tool;
+`CLAUDE.md`, where a repo uses one, references it rather than duplicating it (never both). A
+monorepo gets one per-package too, at `packages/<pkg>/AGENTS.md`, for area-specific content.
 
 **`docs/decisions/`** — immutable; supersede with a new record, never edit. For anything durable and expensive to relitigate. Template lives with the `decision` skill.
 
