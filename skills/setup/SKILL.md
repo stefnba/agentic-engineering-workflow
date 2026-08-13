@@ -10,6 +10,7 @@ Scaffold the per-repo structure the workflow skills assume:
 
 - the workflow doc (`docs/agentic-workflow.md`)
 - the artifact trees (`work/`, `docs/decisions/`, `docs/research/`)
+- the git conventions file (`docs/agents/git.md`), with the repo's chosen branch strategy
 - a pointer in the repo's agent instructions.
 
 This is a prompt-driven skill, not a deterministic script. Explore, present what you found, confirm with the user, then write.
@@ -27,10 +28,18 @@ Look at the current repo to understand its starting state. Read whatever exists;
 5. `docs/decisions/` — an existing decision-record tree.
 6. Monorepo signals — a `pnpm-workspace.yaml`, a `workspaces` field in `package.json`, or a populated `packages/*` with its own `src/`. Their absence means single-context, which is most repos.
 7. Root `GLOSSARY.md` — an existing domain-vocabulary artifact; scaffolding never overwrites it.
+8. `docs/agents/git.md` — this skill's prior output too; if present, read its `Branch strategy:` line so step 2 can report the declaration instead of re-asking. If the line is missing or doesn't match a known value, treat the declaration as absent — there's nothing valid for step 2 to report.
 
 ### 2. Present findings and ask
 
 Report what exists and what would be created, as a short list per write target. Flag conflicts instead of resolving them silently — an existing `docs/adr/` tree, a `work/` directory used for something else, an `AGENTS.md` with its own workflow section. For a monorepo, note that bundles can live per-package (`packages/<pkg>/work/`) and ask whether to scaffold root-only or per-package.
+
+Then ask the branch-strategy question for `docs/agents/git.md` — unless the file already exists with a valid declaration: then report the declaration explore found and skip the question entirely; never solicit an answer you'd discard. If the file exists but step 1 found no valid `Branch strategy:` line (missing or malformed), ask the question as normal and note the file will be repaired — there's no existing answer to discard. Present both options; accepting the default needs no further input:
+
+- **`trunk` (recommended)** — per-ticket PRs land on the default branch as they pass review.
+  Cost: a repo that deploys that branch's head on merge shows unfinished features unless user-visible wiring lands last.
+- **`bundle-branch`** — the default branch only receives whole features, merged once per bundle.
+  Cost: integration drift accrues on a long-lived branch, and every open bundle adds one to keep in sync.
 
 Example output — repo with no existing scaffolding (adapt the specifics to what step 1 actually found):
 
@@ -51,7 +60,8 @@ What I'll create
 2. work/backlog.md — skeleton for issue tracking
 3. work/shaped/ and work/active/ — work tracking directories (with .gitkeep)
 4. docs/decisions/ and docs/research/ — decision records and research notes
-5. CLAUDE.md — new file with agents reference block (since neither AGENTS.md nor CLAUDE.md exists)
+5. docs/agents/git.md — git conventions, declaring the branch strategy chosen above
+6. CLAUDE.md — new file with agents reference block (since neither AGENTS.md nor CLAUDE.md exists)
 
 Ready to proceed?
 ```
@@ -66,7 +76,8 @@ Show the exact file list to be written and any lines to be added to existing fil
 2. Copy `${CLAUDE_PLUGIN_ROOT}/skills/backlog/assets/template.md` verbatim to `work/backlog.md` — don't rewrite its header or sections. Also create empty `work/shaped/` and `work/active/` (with `.gitkeep` if the repo tracks empty dirs).
 3. Create `docs/decisions/` and `docs/research/` if absent. If the repo already has `docs/adr/`, don't migrate it — note the coexistence and suggest to the human that content should be moved into `docs/decisions/`.
 4. Copy `${CLAUDE_PLUGIN_ROOT}/skills/glossary/assets/template.md` verbatim to root `GLOSSARY.md` — skip this step entirely when one already exists; never overwrite it.
-5. Add to the end of `AGENTS.md` (or `CLAUDE.md` if that's what the repo uses; never both) the exact block from [agents-reference.md](./references/agents-reference.md) — copy it verbatim, don't expand or rewrite it. If a section from a prior run exists, replace it rather than appending a duplicate.
+5. Copy `${CLAUDE_PLUGIN_ROOT}/skills/setup/assets/git-template.md` to `docs/agents/git.md` and set its declaration line to the strategy chosen in step 2 (the template ships `trunk`; touch nothing else in it) — skip this step entirely when one already exists with a valid declaration; never overwrite it. When one exists without a valid declaration, this write repairs it: overwrite with the template and the chosen strategy.
+6. Add to the end of `AGENTS.md` (or `CLAUDE.md` if that's what the repo uses; never both) the exact block from [agents-reference.md](./references/agents-reference.md) — copy it verbatim, don't expand or rewrite it. If a section from a prior run exists, replace it rather than appending a duplicate.
 
 ### 5. Done
 
