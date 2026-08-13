@@ -64,12 +64,23 @@ explicitly asks for one, and label it as yours.
 ## 3. Route the pick
 
 Wait for the human to name a line or number, then judge one thing only — is it crisp enough
-to shape from?
+to shape from? — and hand off in this shape:
 
-- **Crisp** — problem and rough scope would support writing a spec: say the next step is
-  `shape`, and quote the picked line so it's in context for that invocation.
-- **Vague** — the problem behind the line still needs grilling: say the next step is
-  `interview-me` with the line as its argument.
+```markdown
+Picked: `[server] no transaction support — repository ops can't run atomically`
+
+Crisp — problem and rough scope would support a spec. Next: invoke `shape` here, no
+argument needed; the line above is its input.
+```
+
+A vague line swaps the second sentence: name what's still unsettled, and point to
+`interview-me` with the line as its argument. The verbatim quote is load-bearing — `shape`
+and `interview-me` read their input from this conversation, and the handoff block is what
+they receive.
+
+**A pick that isn't on the list is direct intent** — the human naming new work mid-dialogue
+skips the backlog by design. Route it through the same verdict; no backlog line exists, so
+there is nothing for shape to delete later.
 
 **Leave the invocation to the human** — `shape` and `interview-me` are manual-only because
 invoking them is the act of approval that closes this gate.
@@ -80,6 +91,17 @@ lands the bundle; the `backlog` skill's promote rule owns the reasoning.
 ## 4. Prune
 
 **Before ending, flag lines that look dead** — obsoleted by shipped work, superseded by a
-newer line, or shadowing a live bundle — each with its evidence, and ask which to drop.
-REQUIRED: confirmed deletions go through the `backlog` skill; this skill never edits the
-file itself. Nothing looks dead: end without a prune round.
+newer line, or shadowing a live bundle — numbered, each with its evidence, and ask:
+
+```markdown
+Possibly dead:
+
+1. `[server] add request logging` — shipped in 2026-08-02-observability
+2. `[ui] dark mode toggle` — shadows the shaped bundle 2026-08-12-theming
+
+Drop which?
+```
+
+REQUIRED: confirmed deletions go through the `backlog` skill — this skill never edits the
+file itself, and the backlog skill's diff report is the prune's closing output. Nothing
+looks dead: end without a prune round.
