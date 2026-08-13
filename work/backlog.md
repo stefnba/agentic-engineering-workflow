@@ -13,14 +13,11 @@ and meta concerns.
 - [skills] build the workflow skills and subagents mapped in work/skills-build-plan.md
   - one end-to-end first, using the workflow itself
 - [docs] Codex section in tool-setup.md is an empty TODO
-- [docs] decide where review findings and verification evidence live
-  - PR description/comments vs files in the repo
-  - as built: implement writes verify/reconcile prose into the PR body, reviewer reads it there and returns findings as its final message — no `evidence` skill exists
 - [skills] review could run parallel critics — standards axis vs requirements axis
 - [skills] skill-layer patterns from mattpocock/skills worth evaluating
   - router skill, per-repo setup skill, reference layer, user- vs model-invoked split
 - [docs] verify evidence is self-reported — CI ownership of the gate unstated
-- [docs] failure paths undefined — rejected review, abandoned ticket, cancelled bundle
+- [docs] failure paths undefined — abandoned ticket, cancelled bundle (rejected review is shaped: 2026-08-13-review-fix-loop)
 - [docs] gather has no trigger — audit/research/prune cadence undefined
 - [skills] consistency-sweep skill (`tidy`) — detect drift between backlog, decisions, work items
   - detect and propose only, human applies; don't name it "reconcile" (taken by the per-PR obligation)
