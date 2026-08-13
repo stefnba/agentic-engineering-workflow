@@ -40,6 +40,7 @@ Not stage-bound — they serve any session:
 | `backlog`            | Maintains the backlog file     |
 | `glossary`           | Maintains the domain glossary  |
 | `decision`           | Writes decision records        |
+| `judge`              | Rules on open design questions |
 | `handoff`            | Compacts a dying session       |
 | `writing-for-agents` | Reviews agent-facing documents |
 
@@ -47,11 +48,12 @@ Not stage-bound — they serve any session:
 
 The subagents forked skills run in:
 
-| Name         | Purpose                      |
-| ------------ | ---------------------------- |
-| `critic`     | Read-only spec attacker      |
-| `reviewer`   | Judges a ticket's PR         |
-| `researcher` | Background evidence gatherer |
+| Name         | Purpose                         |
+| ------------ | ------------------------------- |
+| `arbiter`    | First-principles design arbiter |
+| `critic`     | Read-only spec attacker         |
+| `reviewer`   | Judges a ticket's PR            |
+| `researcher` | Background evidence gatherer    |
 
 ## Tool setup
 
