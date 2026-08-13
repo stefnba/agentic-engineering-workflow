@@ -18,16 +18,17 @@ Each name is a pointer — the authoritative description lives in that skill's `
 
 Stage-bound — each realizes one role of the [workflow](docs/agentic-workflow.md):
 
-| Name           | Stage     | Purpose                     |
-| -------------- | --------- | --------------------------- |
-| `audit`        | Discover  | Sweeps the repo for drift   |
-| `research`     | Discover  | Investigates one topic      |
-| `interview-me` | Discover  | Grills intent until settled |
-| `shape`        | Shape     | Writes spec and tickets     |
-| `critique`     | Shape     | Attacks the shaped spec     |
-| `implement`    | Implement | Executes one ticket to a PR |
-| `review`       | Review    | Judges a ticket's PR        |
-| `ship`         | Ship      | Absorbs and deletes bundle  |
+| Name           | Stage     | Purpose                              |
+| -------------- | --------- | ------------------------------------ |
+| `audit`        | Discover  | Sweeps the repo for drift            |
+| `research`     | Discover  | Investigates one topic               |
+| `interview-me` | Discover  | Grills intent until settled          |
+| `pick`         | Discover  | Presents candidates; the human picks |
+| `shape`        | Shape     | Writes spec and tickets              |
+| `critique`     | Shape     | Attacks the shaped spec              |
+| `implement`    | Implement | Executes one ticket to a PR          |
+| `review`       | Review    | Judges a ticket's PR                 |
+| `ship`         | Ship      | Absorbs and deletes bundle           |
 
 ### Supporting skills
 
