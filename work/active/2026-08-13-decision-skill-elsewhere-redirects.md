@@ -1,5 +1,5 @@
 ---
-status: todo # todo | doing | done — done requires every "Done when" line to hold
+status: done # todo | doing | done — done requires every "Done when" line to hold
 ---
 
 # 2026-08-13-decision-skill-elsewhere-redirects — Fix decision skill's stale "elsewhere" redirects

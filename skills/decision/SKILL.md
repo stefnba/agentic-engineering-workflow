@@ -19,18 +19,14 @@ the ones that mattered are lost among the ones that didn't.
 
 ## What goes elsewhere
 
-- Conventions and style — `.agents/rules/general.md`
-- Gotchas specific to one area of the code — that area's file in `.agents/rules/`
-  (`api.md`, `web.md`, `domain.md`, `packages.md`)
-- A record of what was built — the work item file in `work/done/`
+- Conventions and style — `AGENTS.md` (or `CLAUDE.md` if that's what the repo uses; never both)
+- Gotchas specific to one area of the code — that area's own `AGENTS.md`: root `AGENTS.md`, or
+  `packages/<pkg>/AGENTS.md` in a monorepo
+- A record of what was built — nowhere dedicated; ship absorbs it into the durable docs it
+  affects and deletes the bundle, git history keeps the rest (decision 0008)
 - Anything the code already states plainly — nowhere
 - A naming or term choice — `GLOSSARY.md`, via the `glossary` skill — unless it encodes a
   contested architectural trade-off, in which case it belongs here after all
-
-The `AGENTS.md` files scattered through the repo are **symlinks** into `.agents/rules/`, so a
-single write there reaches Claude, Cursor and Codex at once. Always edit the `.agents/rules/`
-file directly; writing through a symlink path works but hides which file you actually changed,
-and the next reader can't tell the rule is shared.
 
 ## Interview before writing
 
