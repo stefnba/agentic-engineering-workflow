@@ -12,6 +12,7 @@ This repo collects agentic-coding practices — workflow design, documentation s
 - **[GLOSSARY.md](GLOSSARY.md) is live here too**, near-empty by design — only terms no owning doc already defines; artifact terms (bundle, spec, ticket, backlog) stay owned by [docs/agentic-workflow.md](docs/agentic-workflow.md).
 - **Decision records are immutable.** Supersede a `docs/decisions/` record with a new one; never edit it.
 - **One copy.** Docs reference each other instead of restating. When adding material, link to the owning doc; if nothing owns it yet, decide where it belongs before writing.
+- Read [docs/agents/git.md](docs/agents/git.md) before any git operation — it declares the branch strategy and the commit and PR conventions.
 
 ## Output style
 
