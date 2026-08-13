@@ -24,7 +24,6 @@ and meta concerns.
 - [docs] verify evidence is self-reported — CI ownership of the gate unstated
 - [docs] failure paths undefined — rejected review, abandoned ticket, cancelled bundle
 - [docs] gather has no trigger — audit/research/prune cadence undefined
-- [docs] AGENTS.md is referenced but never defined or exampled
 - [skills] consistency-sweep skill (`tidy`) — detect drift between backlog, decisions, work items
   - detect and propose only, human applies; don't name it "reconcile" (taken by the per-PR obligation)
 - [skills] recommendation skill — weigh options with pros/cons and give a recommendation
