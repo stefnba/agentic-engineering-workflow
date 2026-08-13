@@ -44,7 +44,7 @@ and meta concerns.
 - [docs] record a decision for skills/agents docs moving central to docs/skills.md
   - supersedes the colocation expectation for plugin payload trees; driver is the plugin agent scanner (no README carve-out) plus the derived-view cleanup
 - [docs] decision 0003's spec heading set (`Problem / Target state / Non-goals / …`) contradicts the eight-heading format in agentic-workflow.md — supersede if the drift matters
-- [docs] decisions 0002 and 0012 carry stale mechanism details (`next-id`, `claim-bundle.sh`, `candidates/`) after decision 0013 — flagged in 0013's Costs, catch in a reconciliation sweep
+- [docs] decisions 0002, 0004, and 0012 carry stale mechanism details (`next-id`, `claim-bundle.sh`, `candidates/`/`planned/`) after decision 0013 — 0013's Costs names only 0002 and 0012, but 0004's Context also states the superseded three-tier `candidates/ → planned/ → active/` scheme; catch all three in a reconciliation sweep
 - [skills] backlog skill restructure is unverified — rerun add prompts per writing-for-agents references/testing.md
   - entry format + tag discipline moved behind a references/entry-format.md pointer; check the pointer gets followed on add
 - [skills] decision + shape keep fill-in templates at skill root — route to assets/ per skill-mechanics, as backlog now does
@@ -59,3 +59,6 @@ and meta concerns.
   - judge ruling 2026-08-13 picked trunk-based; record the decision once accepted
 - [skills] shape's backlog commit overwrites the whole file, clobbering concurrent edits
   - should stage/commit only the lines it touched, not the full file — happened during this session
+- [docs] docs/skills.md's namespacing example (`/agentic-coding:shape`) is stale — plugin.json's `name` is now `agentic-workflow`; see docs/research/audit-2026-08-repo-sweep.md
+- [docs] docs/skills.md's manual-invocation rule ("crosses a human gate" → `disable-model-invocation: true`) doesn't match the actual pattern — audit, research, handoff, and setup are all manual without crossing Pick/Plan/Accept; see docs/research/audit-2026-08-repo-sweep.md
+- [docs] docs/skills.md claims agent-preloaded skills are hidden via `user-invocable: false`, but backlog (the one real preloaded skill, via agents/researcher.md) has no such field and is also directly user-facing; see docs/research/audit-2026-08-repo-sweep.md
