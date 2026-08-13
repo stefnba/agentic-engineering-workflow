@@ -61,3 +61,5 @@ and meta concerns.
   - judge ruling 2026-08-13: expose-last (internals first, user-visible wiring as the final ticket)
 - [docs] branch topology (per-ticket PRs to main) is implied by skill text, never decided
   - judge ruling 2026-08-13 picked trunk-based; record the decision once accepted
+- [skills] shape's backlog commit overwrites the whole file, clobbering concurrent edits
+  - should stage/commit only the lines it touched, not the full file — happened during this session
