@@ -107,6 +107,10 @@ cheap to fix.
 refactors are the one exception: sequence them expand → migrate → contract (add the new form,
 migrate in batches, delete the old form).
 
+**Sequence feature bundles expose-last**: internals in the earlier tickets, the user-visible
+wiring in the final one — so a continuously deployed default branch never shows a half-finished
+feature.
+
 **Enabling work comes first**: make the change easy, then make the easy change.
 
 **Don't pad against landed work**: later tickets invalidated by what has already shipped get
@@ -168,6 +172,7 @@ between the OK and the commit; the approved document and the committed document 
 bytes. **If the bundle was shaped from a `work/backlog.md` line, delete that line now** and
 include it in the same commit — the bundle replaces it, and the item must live in exactly one
 place at every committed state. `git add` the directory or the single file (plus
-`work/backlog.md` if edited), commit, push. If the push is rejected, someone else's bundle
+`work/backlog.md` if edited), commit, push — the commit message follows the commit convention
+in `docs/agents/git.md`. If the push is rejected, someone else's bundle
 landed on the same date and slug — `git mv` to a disambiguated slug and retry; this is the only
 point a collision can still occur, and it costs a rename, not a rewrite.
