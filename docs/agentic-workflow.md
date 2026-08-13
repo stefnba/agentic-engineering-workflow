@@ -47,6 +47,7 @@ Never hand yourself one of these: priorities, decomposition, and acceptance are 
 docs/                           # durable — accumulates and stays current
   decisions/                    # immutable decision records
   research/                     # findings from discovery — evidence, not commitments
+  agents/git.md                 # branch strategy + commit and PR conventions, scaffolded at setup
   agentic-workflow.md           # this file
 
 GLOSSARY.md                     # durable — canonical domain vocabulary (per-domain in monorepos)
@@ -93,6 +94,9 @@ caretaker.
 **`AGENTS.md`** — canonical for repo-wide conventions and gotchas, for every agentic tool;
 `CLAUDE.md`, where a repo uses one, references it rather than duplicating it (never both). A
 monorepo gets one per-package too, at `packages/<pkg>/AGENTS.md`, for area-specific content.
+
+**`docs/agents/git.md`** — the repo's agent-facing git conventions, including the declared
+branch strategy, commit-message convention, PR conventions, release promotion.
 
 **`docs/decisions/`** — immutable; supersede with a new record, never edit. For anything durable and expensive to relitigate. Template lives with the `decision` skill.
 

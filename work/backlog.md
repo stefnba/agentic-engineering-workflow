@@ -58,3 +58,5 @@ and meta concerns.
 - [docs] docs/skills.md's namespacing example (`/agentic-coding:shape`) is stale — plugin.json's `name` is now `agentic-workflow`; see docs/research/audit-2026-08-repo-sweep.md
 - [docs] docs/skills.md's manual-invocation rule ("crosses a human gate" → `disable-model-invocation: true`) doesn't match the actual pattern — audit, research, handoff, and setup are all manual without crossing Pick/Plan/Accept; see docs/research/audit-2026-08-repo-sweep.md
 - [docs] docs/skills.md claims agent-preloaded skills are hidden via `user-invocable: false`, but backlog (the one real preloaded skill, via agents/researcher.md) has no such field and is also directly user-facing; see docs/research/audit-2026-08-repo-sweep.md
+- [docs] decision 0015 carries one stale ownership sentence ("workflow doc describes both strategies generically") after the in-flight ID-6 amendment
+  - argument unaffected (per-repo git.md, setup choice, trunk default all stand) — catch in a reconciliation sweep or supersede, precedent: 0013's handling of 0002/0012

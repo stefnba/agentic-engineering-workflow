@@ -8,8 +8,9 @@ depends_on: [01]
 ## Scope
 
 Three files in `skills/setup/`: a new asset `assets/git-template.md` (bare scaffold per
-ID-4/ID-5 — declaration line, Conventional Commits types and brevity rules, PR-conventions
-and release-promotion slots as HTML-comment guidance); `SKILL.md` explore/ask/write steps
+ID-4/ID-5 — declaration line whose comment guidance owns the literal format
+`Branch strategy: (trunk|bundle-branch)` per ID-6, Conventional Commits types and brevity
+rules, PR-conventions and release-promotion slots as HTML-comment guidance); `SKILL.md` explore/ask/write steps
 extended per BR-1/BR-2 (detect an existing `docs/agents/git.md` at explore; ask the
 two-option strategy question with costs and the `trunk` default — skipped with the
 existing declaration reported when the file is already present, per BR-2's re-run rule;

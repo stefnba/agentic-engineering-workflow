@@ -15,8 +15,9 @@ the PR per mode; commit messages follow git.md's convention by pointer (no resta
 BR-8). `skills/ship/SKILL.md`: the resolve and land steps handle `bundle-branch` mode per
 ID-7 — absorb/delete on the integration branch, land via a PR to the default branch
 merged immediately (mechanical, not a review object; conflict = stop), green check on the
-default branch unchanged; ship's own commits point to git.md's convention. Both skills
-reference the workflow doc's definitions by name only.
+default branch unchanged; ship's own commits point to git.md's convention. Mode procedures live here as steps per
+ID-6 — the workflow doc holds only the artifact pointer; neither skill defines the commit
+vocabulary.
 
 ## Done when
 

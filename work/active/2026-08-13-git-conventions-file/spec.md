@@ -48,11 +48,15 @@ BR-7: Shape orders a feature bundle's tickets so user-visible wiring lands in th
 ticket (expose-last); under `trunk`, this is what keeps unfinished features invisible to
 users of a continuously deployed default branch.
 
-BR-8: The strategy definitions, the declaration-line format, and the commit-type vocabulary
-each live in exactly one shipped document; every other skill or template points instead of
-restating. Instantiated per-repo copies of the template — including this repo's dogfood
-`docs/agents/git.md` — are instances, not second owners, and are exempt from the
-one-copy checks.
+BR-8: Every owned concept has exactly one home, per ID-6's ownership split: the
+declaration-line format and commit-type vocabulary in the template, branching procedures
+in the implement skill, landing procedures in the ship skill, the expose-last rationale in
+the shape skill, the artifact entry in the workflow doc; everything else points instead of
+restating. The mode tokens and the `trunk` fallback are shared keys, not owned concepts —
+each skill states them where its steps branch on them (AC-4 requires this), and one-home
+applies to definitions and procedures only. Instantiated per-repo
+copies of the template — including this repo's dogfood `docs/agents/git.md` — are
+instances, not second owners, and are exempt from the one-copy checks.
 
 BR-9: This repo dogfoods the artifact: its own `docs/agents/git.md` declares `trunk` and
 Conventional Commits, and its AGENTS.md carries the pointer.
@@ -80,10 +84,13 @@ ID-5: The template ships as a setup asset, bare scaffold with slot guidance in H
 comments per the skill-mechanics asset rules — no preamble, nothing outside comments that
 can't land verbatim in a consuming repo.
 
-ID-6: Ownership split: the workflow doc defines both strategies, the declaration format,
-and the expose-last rationale; `git.md` holds the repo's choice plus repo-specific
-mechanics (release promotion, merge method); the AGENTS.md pointer names the read trigger.
-Skills reference, never restate.
+ID-6: Ownership split: the workflow doc carries a one-sentence artifact entry naming the
+file and its four content areas, nothing more; the AGENTS.md pointer owns the
+read-before-git-operations trigger; the template owns the declaration format and the
+commit vocabulary; mode tokens, procedures (branch sources, PR targets, integration
+naming, the single-file exemption), and the missing-file `trunk` fallback live as steps
+in the implement/ship skills; `git.md` instances hold the repo's choice plus
+repo-specific mechanics. Skills reference, never restate.
 
 ID-7: Ship in `bundle-branch` mode runs absorb and delete on the integration branch, then
 lands it by opening a PR from the integration branch to the default branch and merging that
@@ -118,11 +125,10 @@ else (BR-8); prior art for a grep gate: the ship skill's bundle-ID absorb check.
 
 ## 6. Acceptance Criteria
 
-AC-1 (BR-8, BR-4): Given `docs/agentic-workflow.md`, when grepped, then one section
-contains both mode tokens, the literal declaration format `Branch strategy:
-(trunk|bundle-branch)`, and the missing-file `trunk` fallback — and that literal format
-string appears nowhere else in `skills/` or `docs/` except the template's comment
-guidance.
+AC-1 (BR-8, BR-4): Given `docs/agentic-workflow.md`, when read, then its git.md artifact
+entry is one sentence naming the file and its four content areas — no mode tokens, no
+declaration format, no fallback; those appear only in the implement/ship skills and the
+template per ID-6.
 
 AC-2 (BR-1, BR-2): Given `skills/setup/SKILL.md`, when reading its ask and write steps,
 then the strategy question appears with both options, two-line costs, and `trunk` marked
@@ -144,9 +150,9 @@ step contains the integration-branch PR-merge and conflict-stop of ID-7; and `fe
 commit-type list's first token) appears in neither skill.
 
 AC-5 (BR-7, BR-3): Given `skills/shape/SKILL.md`, when grepped, then the ticket-writing
-step contains the expose-last ordering (user-visible wiring in the final ticket) with a
-pointer to the workflow doc and no rationale of its own, and the commit-and-push step
-contains a `docs/agents/git.md` pointer for its commit messages.
+step owns the expose-last ordering (user-visible wiring in the final ticket) with its
+one-sentence rationale, and the commit-and-push step contains a `docs/agents/git.md`
+pointer for its commit messages.
 
 AC-6 (BR-9): Given this repo, when checked, then `docs/agents/git.md` exists with
 `Branch strategy: trunk` and the Conventional Commits convention, and `AGENTS.md` contains
@@ -161,6 +167,6 @@ the pointer line.
 - Migration tooling for consuming repos that already ran setup — a re-run of setup is the
   path; build nothing else.
 - No changes to the review, critique, or backlog skills.
-- No GLOSSARY.md entries — the workflow doc owns `trunk` and `bundle-branch` once this
-  ships.
+- No GLOSSARY.md entries — `trunk` and `bundle-branch` are declaration keys defined where
+  the skills use them (ID-6), not domain vocabulary.
 - Don't restructure the agents-reference block beyond adding the one pointer line.

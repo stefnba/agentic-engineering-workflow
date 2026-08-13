@@ -71,7 +71,7 @@
 "includeGitInstructions": false
 ```
 
-Removes the built-in commit/PR workflow instructions and the automatic git status snapshot from the system prompt. Worth adding _only_ if the repo documents its own git conventions (in `CLAUDE.md` or a skill) — Claude still has full Bash access either way and can run `git diff`/`git status`/`git branch` itself, it just won't have that context pre-loaded for free every turn. ([Available settings](https://code.claude.com/docs/en/settings#available-settings))
+Removes the built-in commit/PR workflow instructions and the automatic git status snapshot from the system prompt. Worth adding _only_ if the repo documents its own git conventions (in `docs/agents/git.md`) — Claude still has full Bash access either way and can run `git diff`/`git status`/`git branch` itself, it just won't have that context pre-loaded for free every turn. ([Available settings](https://code.claude.com/docs/en/settings#available-settings))
 
 ### Protecting secrets
 
