@@ -36,10 +36,10 @@ Report what exists and what would be created, as a short list per write target. 
 
 Then ask the branch-strategy question for `docs/agents/git.md` — unless the file already exists with a valid declaration: then report the declaration explore found and skip the question entirely; never solicit an answer you'd discard. If the file exists but step 1 found no valid `Branch strategy:` line (missing or malformed), ask the question as normal and note the file will be repaired — there's no existing answer to discard. Present both options; accepting the default needs no further input:
 
-- **`trunk` (recommended)** — per-ticket PRs land on the default branch as they pass review.
-  Cost: a repo that deploys that branch's head on merge shows unfinished features unless user-visible wiring lands last.
-- **`bundle-branch`** — the default branch only receives whole features, merged once per bundle.
+- **`bundle-branch` (recommended)** — the default branch only receives whole features, merged once per bundle, so a redirected or reverted bundle is one commit (decision 0016).
   Cost: integration drift accrues on a long-lived branch, and every open bundle adds one to keep in sync.
+- **`trunk`** — per-ticket PRs land on the default branch as they pass review.
+  Cost: a repo that deploys that branch's head on merge shows unfinished features unless user-visible wiring lands last, and abandoning a half-merged bundle means reverting individual commits out of shared history.
 
 Example output — repo with no existing scaffolding (adapt the specifics to what step 1 actually found):
 
@@ -73,10 +73,15 @@ Show the exact file list to be written and any lines to be added to existing fil
 ### 4. Write
 
 1. Copy `${CLAUDE_PLUGIN_ROOT}/docs/agentic-workflow.md` verbatim to `docs/agentic-workflow.md`. Don't rewrite its content — it's the canonical doc; local edits belong to the consuming repo afterward.
+
 2. Copy `${CLAUDE_PLUGIN_ROOT}/skills/backlog/assets/template.md` verbatim to `work/backlog.md` — don't rewrite its header or sections. Also create empty `work/shaped/` and `work/active/` (with `.gitkeep` if the repo tracks empty dirs).
+
 3. Create `docs/decisions/` and `docs/research/` if absent. If the repo already has `docs/adr/`, don't migrate it — note the coexistence and suggest to the human that content should be moved into `docs/decisions/`.
+
 4. Copy `${CLAUDE_PLUGIN_ROOT}/skills/glossary/assets/template.md` verbatim to root `GLOSSARY.md` — skip this step entirely when one already exists; never overwrite it.
-5. Copy `${CLAUDE_PLUGIN_ROOT}/skills/setup/assets/git-template.md` to `docs/agents/git.md` and set its declaration line to the strategy chosen in step 2 (the template ships `trunk`; touch nothing else in it) — skip this step entirely when one already exists with a valid declaration; never overwrite it. When one exists without a valid declaration, this write repairs it: overwrite with the template and the chosen strategy.
+
+5. Copy `${CLAUDE_PLUGIN_ROOT}/skills/setup/assets/git-template.md` to `docs/agents/git.md` and set its declaration line to the strategy trunk|bundle-branch chosen in step 2. When one exists without a valid declaration, this write repairs it: overwrite with the template and the chosen strategy.
+
 6. Add to the end of `AGENTS.md` (or `CLAUDE.md` if that's what the repo uses; never both) the exact block from [agents-reference.md](./references/agents-reference.md) — copy it verbatim, don't expand or rewrite it. If a section from a prior run exists, replace it rather than appending a duplicate.
 
 ### 5. Done

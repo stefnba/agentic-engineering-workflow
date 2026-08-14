@@ -4,7 +4,7 @@ must match `Branch strategy: (trunk|bundle-branch)` exactly — one line, no oth
 
 # Git conventions
 
-Branch strategy: trunk
+Branch strategy: bundle-branch
 
 ## Commit messages
 
@@ -17,14 +17,24 @@ Conventional Commits — `type(scope): subject`.
 
 ## PR conventions
 
-- Title: same shape as a commit subject — `type(scope): summary`, imperative,
+- **Title**: same shape as a commit subject — `type(scope): summary`, imperative,
   ≤ 72 characters. Squash merge turns the title into the target branch's commit message,
   so this keeps history in one convention rather than two.
-- Merge method: squash — one commit per ticket on the target branch.
+- **Merge method**: squash — one commit per PR on its target branch.
 
 <!-- Repo-specific additions only (title format, labels, review requirements). The
 workflow-mandated PR body sections stay owned by the implement skill — don't restate them
 here. -->
+
+## Worktrees
+
+**Location**: `.claude/worktrees/`
+
+**Always create with plain git** — no WorktreeCreate hooks.
+
+```bash
+git worktree add -b <name> .claude/worktrees/<name> main
+```
 
 ## Release promotion
 

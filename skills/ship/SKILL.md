@@ -76,5 +76,10 @@ lint, typecheck, whatever the repo's CI runs. Done when: every check passes
 on the default branch. A red default branch is this session's to surface immediately — tell
 the human what broke before touching anything else.
 
+**Then clean up merged trees and branches** per the naming in `docs/agents/git.md`:
+`git worktree remove` the bundle's worktree and any of its ticket worktrees still present,
+delete the bundle's branches locally and on the remote, then `git worktree prune`. Skip
+what's already gone — ticket-level cleanup normally happened at each ticket merge.
+
 **Route follow-ups noticed while shipping to the backlog skill** — the bundle's work ends
 at ship; new work starts as a backlog line, not as commits here.
