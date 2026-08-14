@@ -40,9 +40,13 @@ source: <!-- what produced this: the sweep's scope, or the topic plus where you 
 
 ## <one section per finding or sub-question>
 
-<!-- The claim, then its evidence: the file path you opened or the URL you fetched.
-Weigh options without choosing one — a doc that picks a winner has crossed into
-deciding, which belongs to the human at the Pick gate and to decisions/ after. -->
+**<The claim, one sentence.>**
+
+- `<path opened or URL fetched>` — <what it shows, one line>
+
+<!-- One evidence bullet per source actually opened. Real alternatives get a second
+bullet list, `<option> — <trade-off, one line>`, weighed without choosing — picking a
+winner belongs to the human at the Pick gate and to decisions/ after. -->
 
 ## Open questions
 
@@ -50,6 +54,10 @@ deciding, which belongs to the human at the Pick gate and to decisions/ after. -
 Mark every assumption as an assumption — a fabricated fact reads exactly as
 authoritative as a real one. -->
 ```
+
+**Write for a scanner, not a reader**: the bold claim lines and bullets carry the whole
+doc. Turn anything with more than one part into bullets; a paragraph is the exception and
+never exceeds two sentences.
 
 **Back every claim with something you actually opened** — a repo path or a fetched URL. A
 statement about how the system behaves today that no file backs is an assumption; label it
