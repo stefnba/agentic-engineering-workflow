@@ -55,13 +55,13 @@ requires `close` first, then the rename, then a fresh `open`.
 
 ### Classification table
 
-| Class       | Test                                                 | `open` reacts                                                                                       | `close` reacts |
-| ----------- | ---------------------------------------------------- | --------------------------------------------------------------------------------------------------- | -------------- |
-| `merged`    | fully merged into its base, PR closed                | sweep: delete branch + tree                                                                         | sweep          |
-| `open-pr`   | an open PR on the branch                             | leave it                                                                                            | **halt**       |
-| `in-flight` | uncommitted changes, or commits with no PR           | leave a sibling ticket's — parallel tickets run in sibling worktrees; **halt** on this ticket's own | **halt**       |
-| `poisoned`  | a bare `<bundle-id>` ref beside a directory bundle   | **halt**                                                                                            | **halt**       |
-| `orphan`    | no matching ticket file though the bundle dir exists | **halt**                                                                                            | **halt**       |
+| Class       | Test                                                                                                                                                                | `open` reacts                                                                                                                      | `close` reacts |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | -------------- |
+| `merged`    | its PR into its base is merged — check `gh pr list --head <branch> --state merged`; squash landing leaves no merge ancestry, so `git branch --merged` cannot see it | sweep: remove tree, `git branch -D` — `-d` refuses squash-landed branches for the same ancestry reason; the PR check is the safety | sweep          |
+| `open-pr`   | an open PR on the branch                                                                                                                                            | leave it                                                                                                                           | **halt**       |
+| `in-flight` | uncommitted changes, or commits with no PR                                                                                                                          | leave a sibling ticket's — parallel tickets run in sibling worktrees; **halt** on this ticket's own                                | **halt**       |
+| `poisoned`  | a bare `<bundle-id>` ref beside a directory bundle                                                                                                                  | **halt**                                                                                                                           | **halt**       |
+| `orphan`    | no matching ticket file though the bundle dir exists                                                                                                                | **halt**                                                                                                                           | **halt**       |
 
 `check` reacts to nothing — it only reports (see Exit).
 
@@ -89,9 +89,10 @@ Done when: the ticket's worktree exists on a fresh branch.
 
 ### close <bundle-id> — ship's exit, after the bundle has landed
 
-1. **Verify everything is `merged`** — ticket branches into their base, the bundle
-   branch into the default branch. Anything else halts; at ship that is the human's to
-   resolve, immediately.
+1. **Verify everything is `merged`** — every ticket branch's PR into its base, and the
+   bundle branch's landing PR into the default branch, checked via `gh` per the
+   classification table, never via ancestry — squash merges leave none. Anything else
+   halts; at ship that is the human's to resolve, immediately.
 2. **Tear down**: `git worktree remove` each of the bundle's trees, delete each branch
    locally and on the remote, `git worktree prune`. Skip what's already gone.
 
