@@ -37,6 +37,7 @@ Not stage-bound — they serve any session:
 | Name                 | Purpose                        |
 | -------------------- | ------------------------------ |
 | `setup`              | Installs the workflow          |
+| `bundle-git`         | Tends bundle branches/worktrees |
 | `backlog`            | Maintains the backlog file     |
 | `glossary`           | Maintains the domain glossary  |
 | `decision`           | Writes decision records        |

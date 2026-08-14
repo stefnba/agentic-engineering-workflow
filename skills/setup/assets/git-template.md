@@ -1,6 +1,4 @@
-<!-- Scaffolded by the setup skill; this copy belongs to the repo — edit freely. Only the
-declaration line's format is fixed: skills key on it and nothing else in this file, and it
-must match `Branch strategy: (trunk|bundle-branch)` exactly — one line, no other wording. -->
+<!-- Scaffolded by the setup skill; this copy belongs to the repo — edit freely. Two lines have fixed formats that skills key on, nothing else in this file: the declaration line, matching `Branch strategy: (trunk|bundle-branch)` exactly — one line, no other wording — and the Worktrees section's `**Location**:` line. -->
 
 # Git conventions
 
@@ -28,14 +26,13 @@ here. -->
 
 ## Worktrees
 
-**Location**: `.claude/worktrees/`
+**Location**: `.claude/worktrees/` — the path under it mirrors the branch name.
 
-**Always create with plain git** — no WorktreeCreate hooks. The worktree path mirrors the
-branch name; `<base-branch>` is the branch the work will PR into.
+**Base rule**: a branch is cut from the branch its work will PR into — for bundle work the `bundle-git` skill derives that target; outside a bundle it is the default branch (unless an optional Release promotion section below says otherwise).
 
-```bash
-git worktree add -b <branch> .claude/worktrees/<branch> <base-branch>
-```
+**Always create with plain git** — never a WorktreeCreate hook, for any worktree: a hook replaces creation globally and silently disables `.worktreeinclude`.
+
+**Bundle branches and worktrees go through the `bundle-git` skill** — it owns their creation, sync, and cleanup, deriving every name from the strategy and location declared here. Worktrees outside a bundle follow the rules above directly.
 
 ## Release promotion
 
