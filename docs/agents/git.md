@@ -22,8 +22,9 @@ Conventional Commits — `type(scope): subject`.
 
 **Location**: `.claude/worktrees/`
 
-**Always create with plain git** — no WorktreeCreate hooks.
+**Always create with plain git** — no WorktreeCreate hooks. The worktree path mirrors the
+branch name; `<base-branch>` is the branch the work will PR into.
 
 ```bash
-git worktree add -b <name> .claude/worktrees/<name> main
+git worktree add -b <branch> .claude/worktrees/<branch> <base-branch>
 ```

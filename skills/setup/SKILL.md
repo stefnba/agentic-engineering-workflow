@@ -80,7 +80,7 @@ Show the exact file list to be written and any lines to be added to existing fil
 
 4. Copy `${CLAUDE_PLUGIN_ROOT}/skills/glossary/assets/template.md` verbatim to root `GLOSSARY.md` — skip this step entirely when one already exists; never overwrite it.
 
-5. Copy `${CLAUDE_PLUGIN_ROOT}/skills/setup/assets/git-template.md` to `docs/agents/git.md` and set its declaration line to the strategy trunk|bundle-branch chosen in step 2. When one exists without a valid declaration, this write repairs it: overwrite with the template and the chosen strategy.
+5. Copy `${CLAUDE_PLUGIN_ROOT}/skills/setup/assets/git-template.md` to `docs/agents/git.md` and set its declaration line to the strategy chosen in step 2. Skip this step entirely when a `docs/agents/git.md` already exists with a valid declaration; never overwrite it. When one exists without a valid declaration, this write repairs it: overwrite with the template and the chosen strategy.
 
 6. Add to the end of `AGENTS.md` (or `CLAUDE.md` if that's what the repo uses; never both) the exact block from [agents-reference.md](./references/agents-reference.md) — copy it verbatim, don't expand or rewrite it. If a section from a prior run exists, replace it rather than appending a duplicate.
 
