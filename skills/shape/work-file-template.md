@@ -14,12 +14,12 @@ status: todo # todo | doing | done — done requires every "Done when" line to h
 
 ## Problem
 
-<!-- 1–2 sentences, the user's perspective. No solution language. -->
+<!-- 1–2 sentences, the user's perspective. No solution language. Be conscise -->
 
 ## Change
 
 <!-- What the user can now do, plus the few decisions that constrain how — public contracts
-written exactly, not as prose. Present tense. -->
+written exactly, not as prose. Present tense. Be conscise and to the point -->
 
 ## Done when
 

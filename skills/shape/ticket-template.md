@@ -19,10 +19,16 @@ depends_on: [] # ticket numbers ([01, 02]) that must be done first
 
 ## Scope
 
-<!-- One paragraph, what changes. Exact file paths belong here (short-lived at ticket level,
-banned from the spec). Reference spec decisions by ID (`per ID-2, ID-4`) instead of restating
-them. When this ticket's position in the order isn't explained by depends_on, add the one
-line of why here ("ships behind a flag so we can measure before 04"). -->
+<!-- What changes, as a bullet list grouped by file — one change per line. A ticket carrying a
+single change may use one sentence instead. Exact file paths belong here (short-lived at
+ticket level, banned from the spec). Reference spec decisions by ID (`per ID-2, ID-4`)
+instead of restating them. When this ticket's position in the order isn't explained by
+depends_on, add the one line of why here ("ships behind a flag so we can measure before 04").
+
+Example:
+- `src/billing/retry.ts` — exponential backoff on 429/503 per ID-2
+- `src/billing/client.ts` — route retryable errors through the new policy
+-->
 
 ## Done when
 

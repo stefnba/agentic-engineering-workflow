@@ -35,17 +35,18 @@ Rules that apply to the whole document:
 
 ## 3. Behavioral Requirements
 
-<!-- Numbered, testable statements about externally observable behavior. Direct declarative
-sentences — no "As a user, I want..." wrappers. Merge near-duplicates; coverage is the goal,
-length is not. Complete when it covers (where relevant): happy paths, error/failure behavior,
-empty/zero/boundary states, permissions, concurrent or repeated actions, backward
-compatibility. -->
+<!--
+Numbered, testable statements about externally observable behavior. Direct declarative sentences — no "As a user, I want..." wrappers.
 
-BR-1: ...
+One independently testable claim per BR: an "and" joining two observable behaviors is two BRs, and a BR you can't write a single AC
+against is already two — branches of one condition stay together. Merge near-duplicates.
 
-<!-- Example:
+Complete when it covers (where relevant): happy paths, error/failure behavior, empty/zero/boundary states, permissions, concurrent or repeated actions, backward compatibility.
+
+Example:
 BR-4: If the balance service is unreachable, the screen shows the last fetched balance
 marked stale with its timestamp; if none exists, a retryable error state for that account only.
+
 -->
 
 ## 4. Implementation Decisions
@@ -53,11 +54,10 @@ marked stale with its timestamp; if none exists, a retryable error state for tha
 <!-- Numbered decisions, not a design narrative: modules built/modified, architecture, schema
 changes, API contracts, flag mechanics if the change is flagged, directives that override the
 conventions file ("reuse the existing PaymentClient; no new dependencies"). Performance and
-security only if real, measurable requirements. Interior implementation stays open. -->
+security only if real, measurable requirements. Interior implementation stays open.
 
-ID-1: ...
-
-<!-- Example — a public contract, written exactly:
+Example:
+— a public contract, written exactly:
 ID-2: `GET /v2/accounts/balances` → 200 `{ "accounts": [{ "accountId": string,
 "balance": string /* decimal */, "currency": string /* ISO 4217 */, "asOf": string
 /* RFC 3339 */, "stale": boolean }] }`. Balances are strings, never floats.

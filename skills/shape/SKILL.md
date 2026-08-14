@@ -145,6 +145,7 @@ plainly where you're not acting on one and why.
 Self-verification before anything is presented:
 
 - [ ] No open questions, TODOs, or placeholders survive anywhere in the bundle.
+- [ ] No BR carries two independently testable claims; no ticket `Scope` line carries two changes.
 - [ ] AC coverage still holds after critique revisions.
 - [ ] No skeleton guidance comments survive in the spec or tickets.
 
