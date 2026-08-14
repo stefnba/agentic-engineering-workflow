@@ -1,7 +1,7 @@
 ---
 name: decision
 description: Write or supersede a decision record in docs/decisions/. Use when the user has made an architectural or design choice they want captured, says "document this decision" / "write this down" / "let's record why", asks why something was built a certain way, or is wrapping up a work item that involved a contested call. Also use when a new choice overturns an existing decision record.
-argument-hint: '[the decision, or the number to supersede]'
+argument-hint: "[the decision, or the number to supersede]"
 allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 
@@ -30,39 +30,27 @@ the ones that mattered are lost among the ones that didn't.
 
 ## Interview before writing
 
-Do not draft a decision record from inference. The section that gives these files their value is
-**Rejected**, and a fabricated alternative is worse than an absent one: it invents a debate that
-never happened, and future readers — human or agent — will treat it as settled history.
+Do not draft a decision record from inference.
+
+The section that gives these files their value is **Rejected**, and a fabricated alternative is worse than an absent one: it invents a debate that never happened, and future readers — human or agent — will treat it as settled history.
 
 Before writing, establish from the user:
 
-1. What alternatives were actually considered, and why each was set aside.
+1. What alternatives were actually considered, and why each was set aside?
 2. What this costs — every real decision has a downside, and one with no stated cost usually means
-   the tradeoff hasn't been found yet.
-3. Under what conditions it should be reconsidered.
-   If the user can't name a rejected alternative, that's the signal it wasn't a decision — it was the
-   default. Say so plainly and suggest the convention or area doc instead. Declining to write the
-   file is the correct outcome more often than not.
+   the tradeoff hasn't been found yet?
+3. Under what conditions it should be reconsidered?
 
-## Numbering
+If the user can't name a rejected alternative, that's the signal it wasn't a decision — it was the
+default. Say so plainly and suggest the convention or area doc instead. Declining to write the
+file is the correct outcome more often than not.
 
-List `docs/decisions/`, take the highest existing number, add one. Zero-pad to four digits.
-Filename is the number plus a kebab-case slug of the decision itself:
-`0003-rotate-refresh-tokens-on-use.md`.
+## Style and structure
 
-While listing the directory, read the two most recent records. They are the style exemplar — match
-their length, their level of detail, and how directly they state things. Written records drift
-toward whatever the repo has actually settled on, and that's more accurate than the template
-below. If the directory is empty, follow the template as written.
-
-## Template
-
-Keep it under a page. If it runs longer, the decision is probably several decisions.
-
-Start from [template.md](template.md), shipped with this skill — each section carries its own guidance in place.
-
-Title the file with the decision, not the subject area. `0003 Rotate refresh tokens on use` tells a
-reader scanning the folder what was decided. `0003 Token handling` makes them open the file.
+- Be extremely concise and to the point - the file is a reference, not a narrative.
+- Prefer bullet points for clarity.
+- Use [template.md](template.md) as the starting template. Each section carries its
+  guidance in `<!-- -->` comments; delete them as you fill.
 
 ## Immutability
 
@@ -79,7 +67,13 @@ codebase, and editing them in place destroys the only thing that made them worth
 
 When superseding, the new record's Context should say briefly what changed since the original.
 
-## After writing
+# Destination: `docs/decisions/NNNN-kebab-slug.md`
 
-Report the path and the one-line decision statement. Don't summarise the file back — the user just
+1. List `docs/decisions/`
+2. Take the highest existing number, add one. Zero-pad to four digits.
+3. Create the filename: it is the number plus a kebab-case slug of the decision itself, e.g. `0003-rotate-refresh-tokens-on-use.md`.
+
+## Exit
+
+Report the path and the one-line decision statement. Don't summarize the file back — the user just
 answered every question in it.
