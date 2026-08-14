@@ -1,0 +1,28 @@
+# macOS
+.DS_Store
+.AppleDouble
+._*
+
+# Editors
+.idea/
+*.swp
+
+# Claude Code local state (settings.json and the skills/agents symlinks stay tracked)
+.claude/worktrees
+.claude/settings.local.json
+.claude/*.local.json
+
+# Python (scripts/)
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Node (markdownlint et al. run via npx)
+node_modules/
+npm-debug.log*
+
+# Secrets
+.env
+.env.*
+!.env.example
