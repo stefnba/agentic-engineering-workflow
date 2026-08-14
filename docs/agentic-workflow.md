@@ -65,6 +65,41 @@ work/                           # disposable — in-flight work
 src/<domain>/README.md          # durable target state, colocated with the code
 ```
 
+## The git surface
+
+How a bundle exists in git. `docs/agents/git.md` declares which strategy the repo runs;
+the mechanics are executed by the `bundle-git` skill.
+
+Every work branch gets its own worktree; the main checkout is never a work
+surface.
+
+### Under `bundle-branch`
+
+The bundle branch is created when the bundle's first ticket starts. Every ticket PR
+merges into it; only at ship does the whole bundle land on the default branch, squashed
+to one revertable commit. Mid-flight the bundle branch is therefore the truth for
+`work/` — the default branch's copy lags until ship.
+
+Note: A single-file bundle takes one `<id>` branch straight to the default branch.
+
+```text
+default branch ─┬─────────────────────────────▲─ ship squash-lands the bundle once,
+   shape lands  │                             │  then every branch + worktree deleted
+   the bundle   └▶ <id>/bundle ─┬──────▲──────┘
+                 (first ticket) └▶ <id>/ticket/<NN-slug> ─ one PR per ticket
+```
+
+### Under `trunk`
+
+No bundle branch. Each ticket lands on the default branch, so `work/` there stays
+current.
+
+```text
+default branch ─┬──────▲──────▲─ one squash PR per ticket, straight to default;
+   shape lands  │      │      │  ship deletes the bundle and confirms green
+   the bundle   └▶ <id>/ticket/<NN-slug>
+```
+
 ## The artifacts
 
 **Bundles** hold one feature's spec and tickets, named `YYYY-MM-DD-<slug>`. A bundle first appears in `work/` when it's complete; for smaller work, it's a single file, above that a directory. Re-resolve with `ls work/*/<id>*`. References follow lifetime: within `work/` artifacts, by ID in prose (never by path — paths break on `git mv`); in PRs, by permalink, which pins a commit and survives the bundle's deletion. **Never reference a bundle from anything durable — no READMEs, no code comments, no `docs/`.** The bundle is deleted at ship; whatever a durable doc needs from it gets absorbed into the doc, not linked. Always `git mv`, and in a monorepo keep bundles per-package (`packages/<pkg>/work/`).
@@ -76,7 +111,7 @@ src/<domain>/README.md          # durable target state, colocated with the code
 **Colocated `README.md`s** carry each subsystem's durable target state next to its code. When a README and a spec disagree about the current system, **the README wins** — it describes what is; the spec, what someone intended (the spec still owns what the change should make true). This authority is earned by reconcile: every PR updates the READMEs it made inaccurate, and review sees the README diff beside the code diff — colocation is what makes drift visible.
 
 **`GLOSSARY.md`** — a repo's canonical domain vocabulary: term, a one-to-two-sentence
-definition of what it *is*, and an _Avoid_ list of rejected synonyms; only terms specific to
+definition of what it _is_, and an _Avoid_ list of rejected synonyms; only terms specific to
 the project's domain qualify, general programming concepts are excluded. Agent output — prose
 artifacts and code identifiers alike — uses glossary terms and never an avoided synonym;
 review judges identifier adherence, there is no mechanical gate. A repo without a glossary is
