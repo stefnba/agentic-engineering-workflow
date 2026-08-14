@@ -22,18 +22,20 @@ in a report at the end.
 bundle; a directory holds `spec.md` and `tickets/`. No match or two bundles matching — ask,
 don't guess.
 
-**Confirm every ticket's frontmatter says `status: done`** (single-file bundle: its own
-`status`). A ticket still `todo` or `doing` means ship is premature — stop and report which;
-ship fires once per bundle, after its last PR passed the Accept gate.
-
-**Find where ship's commits land**: read `docs/agents/git.md` for the branch strategy — a
-missing file or absent declaration line means `trunk` — and list open PRs on the bundle's
-branches (`<bundle-id>/NN-<slug>`, single-file: `<bundle-id>`). One open, accepted PR —
+**Find where ship's commits land**: invoke the `bundle-git` skill — `check <bundle-id>` —
+for the declared strategy and the bundle's branch map (a halt-worthy anomaly in its report
+stops ship here), then list open PRs on those branches. One open, accepted PR —
 work on its branch and merge it at the land step. Everything already merged — absorb and
 delete on the default branch under `trunk` (single-file bundles are always this case);
-under `bundle-branch`, on `<bundle-id>/integration`, where the ticket PRs landed. An open
+under `bundle-branch`, on the bundle branch from check's map, where the ticket PRs
+landed. An open
 PR that hasn't been reviewed — stop; ship comes after Accept, and review is not yours to
 skip.
+
+**Confirm every ticket's frontmatter says `status: done` — read on the branch ship works
+on, just found above; the default branch's copy lags until ship lands** (single-file
+bundle: its own `status`). A ticket still `todo` or `doing` means ship is premature — stop
+and report which; ship fires once per bundle, after its last PR passed the Accept gate.
 
 ### 2. Absorb
 
@@ -64,8 +66,8 @@ no tombstone file.
 branch — just push); ship's own commits follow the commit convention in
 `docs/agents/git.md`.
 
-**Under `bundle-branch` — except for a single-file bundle, which has no integration branch
-to land — then land the integration branch**: open a PR from `<bundle-id>/integration` to
+**Under `bundle-branch` — except for a single-file bundle, which has no bundle branch
+to land — then land the bundle branch**: open a PR from it to
 the default branch and merge it immediately. That PR is mechanical, not a review object —
 every ticket PR already passed the Accept gate individually; the PR form exists to satisfy
 protected-branch rules a direct push would violate. A merge conflict in that landing stops
@@ -76,10 +78,10 @@ lint, typecheck, whatever the repo's CI runs. Done when: every check passes
 on the default branch. A red default branch is this session's to surface immediately — tell
 the human what broke before touching anything else.
 
-**Then clean up merged trees and branches** per the naming in `docs/agents/git.md`:
-`git worktree remove` the bundle's worktree and any of its ticket worktrees still present,
-delete the bundle's branches locally and on the remote, then `git worktree prune`. Skip
-what's already gone — ticket-level cleanup normally happened at each ticket merge.
+**Then invoke the `bundle-git` skill — `close <bundle-id>` — to tear down the bundle's
+branches and worktrees.** It deletes only fully merged state; a halt on anything dirty
+or unmerged is the human's to resolve — surface it immediately, don't force the
+deletion.
 
 **Route follow-ups noticed while shipping to the backlog skill** — the bundle's work ends
 at ship; new work starts as a backlog line, not as commits here.

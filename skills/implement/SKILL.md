@@ -36,36 +36,39 @@ disagreement decides the move:
 ### 1. Resolve the bundle and pick the ticket
 
 **Resolve the bundle** with `ls work/*/$ARGUMENTS*`. A single `.md` file is the whole bundle —
-spec and ticket merged; its `Done when` is the ticket. A directory bundle: read `spec.md` in
-full, then the ticket. No match or two bundles matching — ask, don't guess.
+spec and ticket merged; its `Done when` is the ticket. A directory bundle holds `spec.md` and
+`tickets/` — read them at the activate step, in the worktree, not from the main checkout. No
+match or two bundles matching — ask, don't guess.
 
 **Pick the ticket**: the one named in the invocation, otherwise the lowest-numbered ticket with
-`status: todo` whose `depends_on` entries are all `done`. If the named ticket has an unmet
-dependency, stop and report it — ticket order is part of the approved decomposition, not yours
-to reshuffle.
+`status: todo` whose `depends_on` entries are all `done`. The main checkout's frontmatter lags
+once earlier tickets have merged — confirm the pick against `bundle-git check`: a ticket whose
+PR is `merged` is done regardless of what its stale frontmatter says. If the named ticket has
+an unmet dependency, stop and report it — ticket order is part of the approved decomposition,
+not yours to reshuffle.
 
 ### 2. Activate
 
-**Move a fresh bundle to active**: if the bundle still sits under `work/shaped/`, `git mv` it
-to `work/active/` — starting its first ticket is what "in progress" means.
+**REQUIRED: invoke the `bundle-git` skill — `open <bundle-id> [ticket NN]` — and take the
+worktree path and base branch it reports.** If it halts, surface its report to the human and
+stop — working around a halt deletes or buries another session's state.
 
-**Read `docs/agents/git.md` and take the branch strategy it declares.** A missing file or
-absent declaration line means `trunk`. A single-file bundle takes the `trunk` path in
-either mode — its one PR already lands whole.
+**Work in the reported worktree; the main checkout stays on the default branch.** One
+ticket, one branch, one worktree, one session — parallel tickets belong in separate
+sessions on separate worktrees.
 
-**Under `bundle-branch`, sync the bundle's integration branch before branching**: the
-branch is `<bundle-id>/integration`, created from the default branch's head when the
-bundle's first ticket starts; whenever it has fallen behind the default branch, merge the
-default branch into it, so drift is paid per ticket rather than all at once at ship. A
-conflict in that merge is decision drift: stop and put it to the human.
+**Read the spec in full, then the ticket, in this worktree** — it carries the bundle branch's
+state: reconcile amendments and status flips from earlier tickets that the default branch
+won't see until ship.
 
-**Create the ticket's branch** — `<bundle-id>/NN-<slug>` (single-file bundle:
-`<bundle-id>`) — off the default branch's head under `trunk`, off
-`<bundle-id>/integration` under `bundle-branch`. One ticket, one branch, one session —
-parallel tickets belong in separate sessions on separate branches.
+**Move a fresh bundle to active — in the ticket's worktree**: if the bundle still sits
+under `work/shaped/`, `git mv` it to `work/active/` and commit that as the ticket's first
+commit — starting its first ticket is what "in progress" means, and the mv reaches the
+default branch when the bundle ships. Parallel first tickets committing the identical mv
+merge cleanly.
 
-**Set the ticket's `status: doing`.** Done when: you are on a fresh branch and the ticket
-frontmatter says `doing`.
+**Set the ticket's `status: doing`.** Done when: you are in the worktree `bundle-git`
+reported and the ticket frontmatter says `doing`.
 
 ### 3. Read the code
 
@@ -116,9 +119,8 @@ mislead the next session. Done when: no document in the repo describes the pre-c
 **Set `status: done`** — legitimate only while every `Done when` line holds.
 
 **Commit, push the branch, open the PR** — commit messages and the PR title both follow
-the conventions in `docs/agents/git.md`, and the PR targets the declared mode's branch:
-the default branch under `trunk`, `<bundle-id>/integration` under `bundle-branch`
-(single-file bundle: the default branch either way). Reference the bundle by permalink, never bare path —
+the conventions in `docs/agents/git.md`, and the PR targets the base branch `bundle-git`
+reported at the activate step. Reference the bundle by permalink, never bare path —
 the bundle dies at ship; the permalink survives it. The PR body carries the verify results and
 names what reconcile touched, so review can judge the reconcile half's honesty.
 
