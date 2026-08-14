@@ -4,4 +4,7 @@
       "path": ".",
     },
   ],
+  "settings": {
+    "git.detectWorktrees": true,
+  },
 }
