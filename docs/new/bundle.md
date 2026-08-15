@@ -1,382 +1,175 @@
 # Work bundles
 
-- Spec = what/why/constraints.
-- Engineering plan = decomposition decisions.
-- Tickets = independently executable slices of work, ideally thin vertical slices
+A bundle is the disposable planning and execution record for one coherent outcome. Read
+[Artifacts](./artifacts.md) for authority, precedence, status, and lifetime; read
+[Workflow](./workflow.md) for stages and gates. This document owns how intent, plan, and tickets
+cooperate inside Shape and execution.
 
-Read [Artifacts](./artifacts.md) when deciding what a bundle contains or resolving an artifact
-conflict—it owns artifact authority and lifetime. This document owns how spec, plan, and tickets
-work together while shaping and executing a bundle.
+Use the literal formats in [`templates/`](./templates/). Do not embed second copies of templates in
+this document.
 
-```text
-                    ┌──────────────┐
-                    │    SPEC      │
-                    │  Why + What  │
-                    └──────┬───────┘
-                           │
-                    requirements
-                           │
-                    ┌──────▼───────┐
-                    │     PLAN     │
-                    │ decomposition        │
-                    │ how to break it down |
-                    └──────┬───────┘
-                           │
-                    ┌──────▼───────┐
-                    │ WORK ITEMS   │
-                    │  executable work units  │
-                    └──────┬───────┘
-                           │
-                       agents
-                           │
-                    ┌──────▼───────┐
-                    │ CODE + TESTS │
-                    └──────┬───────┘
-                           │
-                       evidence
-                           │
-                    ┌──────▼───────┐
-                    │    DONE      │
-                    └──────────────┘
+## Adaptive contents
 
-```
+Choose the lightest bundle that makes implementation reliable:
 
-## Loop
+| Work shape                                          | Bundle contents                                   |
+| --------------------------------------------------- | ------------------------------------------------- |
+| Small, known, low-impact                            | One ticket containing complete intent             |
+| Behaviorally significant with obvious decomposition | Spec plus ticket(s)                               |
+| Non-obvious architecture or decomposition           | Spec, engineering plan, and tickets               |
+| Refactor or migration                               | Target architecture/invariants, plan, and tickets |
 
-But there should be a feedback loop. The important nuance is that writing the plan and tickets will often expose problems in the spec.
+The detailed routing guidance lives in [Tailor bundles by uncertainty and impact](./bundles-by-size.md).
 
-For example:
+## Shape feedback loop
+
+Spec, planning, and ticket generation are feedback substeps inside Shape:
 
 ```text
-Spec
- ↓
-Plan
- ↓
-"We need a migration strategy here."
- ↓
-Spec doesn't define migration behavior
- ↓
-Update spec
- ↓
-Plan
- ↓
-Tickets
+intent/spec → plan when needed → tickets
+      ▲              │              │
+      └──────── missing decision ────┘
 ```
 
-Treat these as feedback substeps inside Shape, not as lifecycle stages. The bundle is shaped only
-when the selected substeps have converged and passed critique plus human approval.
+Planning is repository-grounded. It may reveal a migration decision, compatibility constraint,
+failure behavior, or invariant absent from intent. Resolve that gap in the owning artifact before
+continuing; never let a ticket silently decide it.
 
-### Shape substep 1 — Spec
+Shape is complete only after:
 
-Create enough of the spec to establish:
+1. Every material question is resolved.
+2. The full bounded ticket set exists with concrete done-when evidence.
+3. Every acceptance criterion or invariant maps to at least one ticket.
+4. Dependencies and parallel claims are credible.
+5. A fresh-context Critic has attacked the bundle.
+6. The human has passed the Plan gate.
 
-problem
-goals/non-goals
-desired behavior
-requirements
-constraints
-acceptance criteria
-important edge cases
+## Intent/spec
 
-Don't worry yet about every implementation detail.
+The intent artifact answers:
 
-### Shape substep 2 — Engineering plan
+> If two competent implementations differed internally, what must still be identical?
 
-An architect/human/agent **analyzes the repository** and produces:
+It owns the problem, approved outcome, scope, externally observable behavior, public contracts,
+binding constraints, invariants, acceptance criteria, and risk-specific test intent.
 
-proposed architecture
-technical approach
-dependencies
-migration considerations
-risks
-work breakdown
-parallelization opportunities
+It does not own current repository facts, file lists, task order, transient status, or interior
+implementation choices. Those belong to the plan, ticket, repository, or PR/CI.
 
-This is where repository exploration becomes important. The plan shouldn't be created in a vacuum from the product spec.
+Write target behavior in present tense. Remove all open questions before Plan approval. A bounded
+local choice belongs under ticket autonomy, not under unresolved intent.
 
-### Shape substep 3 — Ticket generation
+## Engineering plan
 
-Turn the plan into executable work items.
+Use a plan only when the technical approach or decomposition is non-obvious. The plan answers:
 
-Each ticket gets:
+> Given the approved intent and this repository, what approach and decomposition minimize risk?
 
-objective
-scope
-dependencies
-requirements addressed
-acceptance criteria
-verification requirements
-constraints
+Ground it in actual code, tests, durable docs, conventions, and decisions. It owns:
 
-At this point, tickets should be executable by an implementation agent. Human approval promotes
-the completed bundle into the shaped state.
+- repository evidence and relevant extension points
+- architecture and data flow
+- migration, compatibility, rollout, and rollback mechanics
+- consequential technical choices and rejected alternatives
+- vertical slices, dependencies, sequencing, and safe parallelization
+- risks and their containment
 
-## Tailor to size of work bundles
+The plan cannot add behavior absent from intent. Do not turn it into file-by-file pseudocode that an
+Implementer can infer more accurately from current code.
 
-See [Tailor to size of work bundles](./bundes-by-size.md)
+## Tickets
 
----
+A ticket is one independently reviewable outcome for one fresh implementation session and one PR.
+It owns:
 
-## Spec
+- the slice outcome and approved references it satisfies
+- bounded scope and expected touch points
+- dependencies
+- explicit autonomy boundaries
+- concrete done-when evidence and commands
+- adjacent work excluded from the ticket
+- escalation conditions
 
-spec relatively stable and not turning it into a task checklist.
+A ticket never introduces intent or cross-ticket architecture. If several tiny steps are too coupled
+to review independently, combine them into one ticket during Shape. Do not create several tickets
+that later share a PR.
 
-The spec should answer:
+## Bundle sizing
 
-"If two competent engineers implemented this independently, what must they agree on?"
+Shape the complete ticket set upfront, but keep the bundle small enough that doing so is honest.
+Split the work into sequential bundles when any of these is true:
 
-It shouldn't answer:
+- a later ticket cannot yet name exact done-when evidence
+- later tickets depend on an architectural assumption the first slice must validate
+- the bundle contains independently useful outcomes that can be planned and accepted separately
+- the dependency graph is dominated by speculative edges
+- parallel work would keep the integration branch open long enough for drift to dominate
+- the human cannot meaningfully approve the whole decomposition in one Plan gate
 
-"First edit this file, then create this class, then run this command."
+The earlier bundle must leave the repository in a supported state. Its result may inform the next
+bundle, whose own Shape stage and Plan gate remain mandatory.
 
-## Engineering Plan
+## Vertical slicing
 
-- The engineering plan is optional for very small features but extremely useful for larger ones.
-- Don't put implementation plans in the behavioral spec. Agents are much better at discovering
-  where a change belongs from a repository-grounded plan than from design detail mixed into intent.
+Default to a thin vertical slice that is demonstrable, behaviorally testable, independently
+reviewable, and independently revertible where practical. A valid slice may cross persistence,
+domain, API, and UI layers; few files is not the goal.
 
-### Why plan before tickets?
+Horizontal foundation work is an exception. Use it only when a vertical slice cannot be built
+safely first. The ticket must name the later slice it enables and carry independent verification.
+For refactors and migrations, use expand → migrate → contract while keeping each intermediate state
+supported. When the approved outcome is "behavior unchanged", the plan mandates characterization
+tests that pin current behavior, and the ticket that adds them precedes every refactoring ticket.
 
-**important one**: grounding the plan in actual repository exploration. Plans written from the product spec alone consistently produce tickets that reference files that don't exist, miss existing utilities, or propose architectures that fight the codebase's conventions. Having the planning agent read the code first is what makes the ticket-generation substep executable rather than aspirational.
+## Dependencies and parallelization
 
-The plan answers:
+Record only real blocking edges. A ticket depends on another when it cannot satisfy its done-when
+against the earlier repository state—not merely because the numbered order looks natural.
 
-"Given this spec, what is the sensible engineering decomposition?"
+Parallel-safe means more than “no dependency”: expected code ownership, migrations, shared schemas,
+generated artifacts, and integration tests must not create an unsafe collision. The plan owns this
+judgment; `depends_on` owns only hard execution order.
 
-The tickets answer:
+## Autonomy and escalation
 
-"What are the independently executable units produced by that decomposition?"
+Every ticket states what the Implementer may decide and what it must preserve. Local refactoring and
+helper design may be delegated within the ticket's scope.
 
-So the natural flow is:
+Escalate to the human when implementation would change approved behavior, scope, public contracts,
+security, migration, compatibility, cross-ticket architecture, or acceptance criteria. Factual
+drift that preserves intent is corrected visibly in the PR; material drift returns to the Plan gate.
 
-### Thin vertical slices
+## Git and pull requests
 
-Plan does vertical slicing the default.
+The repository declares `bundle-branch` or `trunk`; bundle size determines which topology is needed.
 
-Each slice is:
+### Single-ticket bundle
 
-- small
-- demonstrable
-- testable
-- independently reviewable
-- independently revertible where possible
+Create one ticket branch and worktree based on the configured integration target. Open one PR into
+that target. Do not create a bundle integration branch with one child.
 
-Feature → Vertical Slice → Ticket.
+### Multi-ticket bundle under `bundle-branch`
 
-A slice can simply be a grouping/concept in the plan.
+Create one bundle integration branch from the default branch. Each ticket gets one branch,
+worktree, and PR into the bundle branch. After every ticket is accepted and merged, Ship lands the
+bundle branch on the default branch and removes all bundle branches and worktrees.
 
-```markdown
-## Vertical slices
+### Multi-ticket bundle under `trunk`
 
-### Slice 1 — Create document
+Each ticket gets one branch, worktree, and PR into the default branch. Ship performs final durable
+reconciliation and bundle deletion; there is no bundle integration branch.
 
-User can create a document and see it in their document list.
+### Incident or hotfix
 
-Touches:
+Use the repository's emergency integration and release policy. A shorter shaping route does not by
+itself waive verification, independent Review, or human acceptance.
 
-- database
-- domain
-- API
-- frontend
+### Identity rules
 
-Tickets:
+- Ticket: unit of approved work and implementation session.
+- PR: unit of independent Review and human Accept.
+- Commit: implementation history within the PR.
+- Bundle: unit of coherent outcome and final Ship.
 
-- DOC-001
-
-### Slice 2 — Edit document
-
-User can open and edit an existing document.
-
-Touches:
-
-- API
-- domain
-- frontend
-
-Tickets:
-
-- DOC-002
-```
-
-## Ticket
-
-should be agent-sized
-One agent should be able to take the ticket, inspect the repository, implement it, test it, and determine whether it is done without needing a human to decompose it further.
-
-A great agent ticket generally has:
-
-- one objective
-- one coherent change
-- clear boundaries
-- few dependencies
-- testable acceptance criteria
-- limited files/modules
-
-Give agents explicit autonomy boundaries
-
-```markdown
-## Constraints
-
-### Must
-
-- Follow existing repository conventions.
-- Preserve backwards compatibility.
-- Add tests for changed behavior.
-- Do not modify public API contracts outside this ticket.
-
-### May
-
-- Refactor local implementation if necessary.
-- Add helper functions/classes within the affected module.
-- Improve tests around the affected behavior.
-
-### Must not
-
-- Change unrelated modules.
-- Add dependencies without justification.
-- Modify infrastructure outside this feature.
-- Change the spec's requirements.
-```
-
-Don't make agents infer the entire dependency graph from prose.
-
-```markdown
-## Dependencies
-
-Depends on:
-
-- FEAT-001
-- FEAT-002
-
-Blocks:
-
-- FEAT-006
-```
-
-### Status of tickets
-
-Persist only status that the ticket file uniquely owns:
-
-- `todo` — approved in a shaped bundle and not yet claimed.
-- `doing` — claimed; remains `doing` through implementation, verification, review, and fixes.
-- `done` — accepted and merged into the ticket's integration target.
-
-Other states already have better owners:
-
-- Draft versus approved belongs to the bundle: an unapproved draft stays local; approval places the
-  bundle under `work/shaped/`.
-- Implemented, checks running, checks passed, review requested, and changes requested belong to the
-  PR and CI system.
-- An unmet ticket dependency is derived from `depends_on`; do not copy it into status.
-- An external blocker is optional `blocked_reason` metadata while status remains `todo` or `doing`.
-
-```markdown
-bundle: local draft → work/shaped → work/active → shipped and deleted
-ticket: todo → doing → done
-PR/CI: implementation and verification detail
-```
-
-## Git and Pull Request
-
-## Branch strategy
-
-The repository declares its branch strategy; bundle size determines which parts of that strategy are
-needed.
-
-- **Single-ticket bundle or direct ticket:** create one ticket branch and PR directly into the
-  repository's configured integration target. Do not create a bundle integration branch that has
-  only one child.
-- **Multi-ticket bundle under bundle-branch:** create one bundle integration branch. Each ticket gets
-  its own branch and PR into the bundle branch. Ship lands the complete bundle branch on the default
-  branch, then removes the bundle branch and worktrees.
-- **Multi-ticket bundle under trunk:** each ticket branch and PR targets the default branch. Ship
-  performs final reconciliation and bundle deletion; there is no bundle integration branch.
-- **Incident or hotfix:** use the repository's emergency target and release policy. The abbreviated
-  artifact route does not by itself waive verification or human acceptance.
-
-Every working branch gets its own worktree. A ticket branch is based on the branch its PR targets.
-
-## PR
-
-Ticket = unit of intent/work
-
-PR = unit of review/integration
-
-Commit = unit of implementation history
-
-- Should one ticket equal one PR? -> Default: yes. But don't force it.
-
-### Multiple tiny tickets → one PR as the exception
-
-These may be separate work items because they represent separate implementation steps, but reviewing three tiny PRs would be annoying.
-
-```text
-AUTH-101 Add UserRole enum
-AUTH-102 Add role to User
-AUTH-103 Add role serializer
-```
-
-You could have:
-
-```text
-AUTH-101 ─┐
-AUTH-102 ─┼──→ PR #456
-AUTH-103 ─┘
-```
-
-The PR description should list all included tickets.
-
-I'd do this when the tickets:
-
-are tightly coupled
-don't make sense to review independently
-are very small
-have the same owner/agent
-form one coherent change
-
-## Concepts
-
-| Concept              | Default                                |
-| -------------------- | -------------------------------------- |
-| Feature              | Spec                                   |
-| Complex feature      | Spec → Plan                            |
-| Plan                 | Decompose into **vertical slices**     |
-| Slice                | One or more tickets                    |
-| Ticket               | Prefer independently executable        |
-| Ticket               | Usually one PR                         |
-| Tiny related tickets | Can share one PR                       |
-| Large ticket         | Split into child tickets               |
-| Foundation           | Horizontal is okay                     |
-| Agent                | Owns implementation + tests + evidence |
-| PR                   | Review/integration boundary            |
-| Merge                | Prefer small, incremental changes      |
-
-## Model
-
-```text
-                    FEATURE
-                       │
-                       ▼
-                SPEC / INTENT
-                       │
-                       ▼
-               ENGINEERING PLAN
-                       │
-             ┌─────────┴─────────┐
-             ▼                   ▼
-       FOUNDATION WORK      VERTICAL SLICES
-             │                   │
-             │            ┌──────┼──────┐
-             │            ▼      ▼      ▼
-             │          TICKET TICKET TICKET
-             │            │      │      │
-             └────────────┴──────┴──────┘
-                            │
-                          IMPLEMENT
-                            │
-                         PR(s)
-                            │
-                         REVIEW <> FIX
-                            │
-                          MERGE
-```
+Default and rule: one ticket equals one PR. If that produces meaningless PRs, the decomposition is
+wrong; merge the steps into one ticket before implementation.
