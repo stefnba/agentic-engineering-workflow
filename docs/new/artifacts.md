@@ -44,15 +44,9 @@ criteria returns to the Plan gate.
 
 ## Bundle contents
 
-A bundle is the disposable container for one coherent approved outcome:
-
-```text
-small known change        ticket containing complete intent
-small feature             spec + ticket
-larger bounded feature    spec + plan + tickets
-refactor or migration     target/invariants + plan + tickets
-unknown problem           discovery evidence first; no bundle until its route is known
-```
+A bundle is the disposable container for one coherent approved outcome. [Tailor bundles by
+uncertainty and impact](./bundles-by-size.md) exclusively owns which artifacts a work shape requires
+and when to split sequential bundles.
 
 Every bundle is fully shaped before implementation: all of its tickets exist, have concrete
 done-when evidence, and passed the Plan gate. If that is not credible because later work depends on
@@ -73,7 +67,7 @@ PR/CI: implementation, checks, review, and merge state
 ```
 
 - `todo`: approved and not claimed.
-- `doing`: claimed; remains `doing` through Implement, Review, and fixes.
+- `doing`: claimed; remains `doing` through Implement, Review, fixes, human review, and merge pending.
 - `done`: human-accepted and merged into the configured integration target.
 
 Do not persist `ready`, `implemented`, `verifying`, `blocked`, or `changes_requested` in ticket
