@@ -84,17 +84,20 @@ BR-9: The loop caps at 3 fix rounds per PR. Entry into a fourth is refused: the 
 session reports the unresolved findings and what each round tried, and the human takes over.
 The cap never triggers a merge and is never silently continued past.
 
-BR-10: Both dispatch skills resolve their target without arguments: from the current branch
-first — the bundle, ticket, and PR are derivable from a ticket branch's name — falling back
-to the single in-progress bundle, and asking when neither resolves. Mode follows state — for implement: `fixes-pending` → fix
-round, otherwise the next unblocked ticket; for review: `needs-review` → full review,
-`needs-re-review` → scoped re-review, `fixes-pending` and `awaiting-accept` → the no-op of
-BR-11. An inferred mode is echoed before acting; explicit arguments always override
-inference.
+BR-10: All three dispatch skills (implement, fix, review) resolve their target without
+arguments: from the current branch first — the bundle, ticket, and PR are derivable from a
+ticket branch's name — falling back to the single in-progress bundle, and asking when neither
+resolves. Mode follows state — for implement: `fixes-pending` → the no-op of BR-11 pointing
+at `fix`, otherwise the next unblocked ticket; for fix: `fixes-pending` → a fix round,
+`needs-review`, `needs-re-review`, and `awaiting-accept` → the no-op of BR-11 pointing at
+`review`; for review: `needs-review` → full review, `needs-re-review` → scoped re-review,
+`fixes-pending` and `awaiting-accept` → the no-op of BR-11. An inferred mode is echoed before
+acting; explicit arguments always override inference.
 
 BR-11: Every stage close-out prints the fully-qualified next command. Invoking a stage whose
-state doesn't call for it — review on an already-reviewed head, a fix round with nothing
-pending — reports the state and the right next command and exits without side effects.
+state doesn't call for it — review on an already-reviewed head, implement on a PR awaiting
+fixes, a fix round with nothing pending — reports the state and the right next command and
+exits without side effects.
 
 BR-12: A verdict marker present with a block that doesn't parse, or that lacks a required
 field, fails loud: the session reports what it could not parse and stops. The absence of any
@@ -120,26 +123,27 @@ pointing file may state where its steps branch on them.
 ## 4. Implementation Decisions
 
 ID-1: The protocol reference lives at `skills/review/references/protocol.md` — review writes
-these artifacts, so the review skill owns their definition; the implement skill's fix mode
-and the reviewer agent point at it.
+these artifacts, so the review skill owns their definition; the implement skill's dispatch,
+the fix skill, and the reviewer agent all point at it.
 
 ID-2: The verdict contract, exact. The review body ends with:
 
 ````markdown
 <!-- agentic:verdict -->
+
 ```yaml
-round: 2                 # increments per verdict on this PR, starting at 1
+round: 2 # increments per verdict on this PR, starting at 1
 sha: <full head SHA reviewed>
 blockers: 1
 concerns: 1
 nits: 0
 findings:
-  - id: F5               # stable for the finding's life; an ID is never reused on this PR
-    tier: blocker        # blocker | concern | nit
-    class: mechanical    # mechanical | decision
-    at: src/retry.ts:42  # path:line, or "PR body"
+  - id: F5 # stable for the finding's life; an ID is never reused on this PR
+    tier: blocker # blocker | concern | nit
+    class: mechanical # mechanical | decision
+    at: src/retry.ts:42 # path:line, or "PR body"
     title: <at most 15 words>
-backlog:                 # optional — pre-existing defects outside this change, one line each,
+backlog: # optional — pre-existing defects outside this change, one line each,
   - "[skills] <one line>" # in the consuming repo's backlog entry format
 ```
 ````
@@ -148,8 +152,9 @@ ID-3: The fix-round contract, exact. Posted as one PR comment:
 
 ````markdown
 <!-- agentic:fix-round -->
+
 ```yaml
-round: 2                 # the verdict round this answers
+round: 2 # the verdict round this answers
 sha: <full head SHA after the fixes>
 findings:
   F5: { status: fixed, commit: <sha> }
@@ -169,16 +174,18 @@ ID-5: Line-anchored comments post in the same review call (`gh api` review with 
 array — path, line, side). A finding whose subject line isn't in the diff keeps its detail in
 the review body under its ID.
 
-ID-6: Fix mode is part of the implement skill, not a new skill. Explicit form:
-`/implement fix <PR> [F<id> ...]` — trailing finding IDs direct the round at named concerns
-or nits beyond the default blocker set. The cap check (BR-9) runs at fix-mode entry.
+ID-6: Fix is its own skill, `skills/fix/SKILL.md`, run like `implement` (no fork, no
+dedicated agent — it edits code on the branch, the same posture as authoring). Explicit form:
+`/fix <PR> [F<id> ...]` — trailing finding IDs direct the round at named concerns or nits
+beyond the default blocker set. The cap check (BR-9) runs at fix entry.
 
-ID-7: Branch-first resolution: a current branch matching `<bundle-id>/NN-<slug>` (single-file
-bundle: `<bundle-id>`) names the bundle and ticket, and the branch's open PR is the PR. On
-the default branch, resolve the bundle first — exactly one in the in-progress tree, else
-exactly one shaped, else ask — then the PR: exactly one open PR on the bundle's branches
-drives mode inference; several → ask, listing each with its state; none → the next unblocked
-ticket.
+ID-7: Branch-first resolution, shared by all three dispatch skills: a current branch matching
+`<bundle-id>/NN-<slug>` (single-file bundle: `<bundle-id>`) names the bundle and ticket, and
+the branch's open PR is the PR. On the default branch, resolve the bundle first — exactly one
+in the in-progress tree, else exactly one shaped, else ask — then the PR: exactly one open PR
+on the bundle's branches drives mode inference; several → ask, listing each with its state;
+none → each skill's own fallback (implement: the next unblocked ticket; fix: report nothing
+pending and stop; review: report nothing to review and stop).
 
 ID-8: The verdict review's event: request-changes when posted by a non-author account with
 blockers above zero, comment in every other case; same body, same block, one artifact per
@@ -204,7 +211,7 @@ settled at shaping).
 
 ## 5. Testing Decisions
 
-Seam: the document text of the protocol reference, the two skills, the reviewer agent, the
+Seam: the document text of the protocol reference, the three skills, the reviewer agent, the
 workflow doc, and the git conventions template — every acceptance criterion is a
 grep-checkable assertion against these files at rest.
 
@@ -235,14 +242,14 @@ AC-4 (BR-4): Given the protocol reference, when read, then both budget levels ar
 one-line verification result with only failures itemized, non-anchored details, verdict
 block — nothing else).
 
-AC-5 (BR-6, BR-7, BR-9, ID-6): Given the implement skill, when read, then it contains a
-fix-mode section that points at the protocol reference, refuses a fourth fix round, and
-requires escalation rulings recorded in the bundle or a decision record before continuing.
+AC-5 (BR-6, BR-7, BR-9, ID-6): Given the fix skill, when read, then it points at the protocol
+reference, refuses a fourth fix round, and requires escalation rulings recorded in the bundle
+or a decision record before continuing.
 
-AC-6 (BR-10, BR-11, BR-12): Given each dispatch skill, when read, then it states branch-first
-zero-argument resolution, the echo of an inferred mode before acting, the next-command
-close-out, the no-op behavior for a state that doesn't call for it, and the stop on a
-malformed verdict block.
+AC-6 (BR-10, BR-11, BR-12): Given each of the three dispatch skills (implement, fix, review),
+when read, then it states branch-first zero-argument resolution, the echo of an inferred mode
+before acting, the next-command close-out, the no-op behavior for a state that doesn't call
+for it, and the stop on a malformed verdict block.
 
 AC-7 (BR-8): Given the review skill and reviewer agent, when read, then re-review is scoped
 as: verify claimed fixes, review only the delta commits, restate open findings under original
@@ -275,3 +282,6 @@ PR-hosted findings, and `grep -c "agentic:verdict"` over it returns 0.
 - No findings files in the repo and no mirroring of findings into `work/` — the PR is the
   only findings home.
 - No edits to decision 0015 or to the 2026-08-13-git-conventions-file bundle.
+- No worktree isolation for implement or fix — an orthogonal concern owned by the future
+  `ticket-runner` bundle (parallel ticket execution, tracked in
+  `work/skills-build-plan.md`).

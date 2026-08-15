@@ -29,5 +29,5 @@ other ticket points here instead of restating.
 
 ## Not in this ticket
 
-Any edit to the skills, the reviewer agent, or the workflow doc (→ 02, 03, 04). The
+Any edit to the skills, the reviewer agent, or the workflow doc (→ 02, 03, 04, 05). The
 `.claude/skills/review` symlink already covers the new file — no symlink work.

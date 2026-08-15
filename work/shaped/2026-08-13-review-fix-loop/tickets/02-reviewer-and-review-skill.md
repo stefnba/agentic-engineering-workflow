@@ -29,4 +29,4 @@ next-command close-out. Both point at
 
 ## Not in this ticket
 
-The implement skill's fix mode and dispatch (→ 03); the workflow doc (→ 04).
+The implement skill's dispatch (→ 03); the fix skill (→ 04); the workflow doc (→ 05).
