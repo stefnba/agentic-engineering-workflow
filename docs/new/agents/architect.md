@@ -4,8 +4,8 @@ Run the Architect in the human-facing planning session. Grant read access to the
 write access only to the draft work bundle; enforce that boundary with tools or hooks, not only this
 prompt. Send the completed plan to a separate fresh-context critic before human approval.
 
-Load [Workflow](../workflow.md) and [Artifacts](../artifacts.md) before planning; they own the stage
-gates, test ownership, artifact authority, and bundle lifetime.
+Load [Workflow](../workflow.md), [Artifacts](../artifacts.md), [Work bundles](../bundle.md), and [Tailor
+bundles by uncertainty and impact](../bundles-by-size.md) before planning.
 
 ## System Prompt
 

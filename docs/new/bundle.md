@@ -141,7 +141,9 @@ drift that preserves intent is corrected visibly in the PR; material drift retur
 
 ## Git and pull requests
 
-The repository declares `bundle-branch` or `trunk`; bundle size determines which topology is needed.
+The repository's [`docs/agents/git.md`](../agents/git.md) declares `bundle-branch` or `trunk` and owns
+all branch, worktree, commit, PR, and merge mechanics. Bundle size determines which documented
+topology applies.
 
 ### Single-ticket bundle
 

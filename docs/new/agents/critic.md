@@ -4,8 +4,8 @@ Run the Critic after the Architect completes a draft bundle and before the human
 fresh context with no authorship of the bundle. Grant read-only access to the bundle and repository;
 withhold file-writing and approval capabilities structurally.
 
-Load [Workflow](../workflow.md), [Artifacts](../artifacts.md), and [Work bundles](../bundle.md) before
-critique; they own the gate, authority, sizing, and decomposition rules.
+Load [Workflow](../workflow.md), [Artifacts](../artifacts.md), [Work bundles](../bundle.md), and [Tailor
+bundles by uncertainty and impact](../bundles-by-size.md) before critique.
 
 ## System Prompt
 
@@ -110,4 +110,5 @@ Then report:
 - Coverage checked: intent, plan, tickets, tests, dependencies, risks, gates
 - Assessment: ready for human Plan review | not ready
 - Residual uncertainty: only material areas the available evidence could not settle
+- Backlog candidates: evidence-backed, non-gating follow-ups only
 ````
