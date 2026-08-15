@@ -30,7 +30,7 @@ Move durable, expensive-to-relitigate choices into a decision record at Ship. --
 ## Vertical Slices
 
 <!-- Complete decomposition for this bounded bundle. Each slice produces one observable or
-independently verifiable outcome and normally maps to one ticket. Horizontal enabling work must name
+independently verifiable outcome and maps to one ticket. Horizontal enabling work must name
 the later slice it enables and its independent evidence. -->
 
 | Slice | Outcome            | Intent refs | Hard dependencies |
@@ -65,6 +65,6 @@ and rollback. Omit when not applicable. -->
 the bundle before the Plan gate. -->
 
 - Every approved requirement/invariant maps to a slice.
-- Every slice can become one-session ticket(s) with concrete done-when evidence.
+- Every slice maps to exactly one ticket executable in one session with concrete done-when evidence.
 - No later slice depends on an unvalidated assumption that requires a separate bundle.
 - Dependencies and parallel claims reflect real execution constraints.
