@@ -1,105 +1,205 @@
 # Workflow
 
-The workflow has four lifecycle stages. They are stable regardless of work size; adaptive sizing
-changes the work performed inside a stage, not the stages themselves.
+The workflow has five lifecycle stages. A stage exists when purpose, actor or context, permissions,
+output, or exit authority changes materially.
 
 ```text
-Discover → Shape → Implement + Review → Ship
-   │         │              │            │
-   ▼         ▼              ▼            ▼
- Pick       Plan          Accept       shipped
- human      human          human       outcome
+Discover ──Pick──▶ Shape ──Plan──▶ Implement ──verify + reconcile──▶ Review
+   ▲                  │                 ▲                              │
+   └──── clarify ─────┘                 └──────── fix request ─────────┘
+                                                                        │
+                                                                     Accept
+                                                                        ▼
+                                                         next ticket or Ship
 ```
 
-The uncertainty model is a readiness model inside this lifecycle:
+The stages stay fixed for every kind and size of work. Adaptive sizing changes the route and
+artifacts inside Discover and Shape, not the lifecycle.
 
-```text
-UNKNOWN ──Discover──▶ KNOWN ──Shape──▶ EXECUTABLE
-                                         │
-                              Implement + Review
-                                         ▼
-                              VERIFIED + ACCEPTED
-                                         │
-                                        Ship
-                                         ▼
-                                      SHIPPED
-```
+| Stage     | Readiness movement                            | Primary output                       | Exit authority       |
+| --------- | --------------------------------------------- | ------------------------------------ | -------------------- |
+| Discover  | unknown or unselected → understood and picked | picked intent or evidence            | human Pick gate      |
+| Shape     | picked → approved and executable              | complete bounded bundle              | human Plan gate      |
+| Implement | executable ticket → verified and reconciled   | implementation PR                    | deterministic checks |
+| Review    | verified → independently judged and accepted  | findings or accepted change          | human Accept gate    |
+| Ship      | accepted bundle → durable shipped outcome     | default branch green; bundle deleted | prior Accept gates   |
 
-Work may enter at the readiness level it already has. A well-understood request can pass through
-Discover as a direct human pick; a high-uncertainty request may need research or a spike before it
-is ready for Shape. No stage manufactures an artifact solely to prove the stage happened.
+Work may enter at the readiness level it already has. A settled human request can pass through
+Discover as a direct pick; uncertain work may need research or a spike. No stage creates an artifact
+solely to prove that the stage happened.
 
 ## 1. Discover
 
 **Objective:** reduce enough uncertainty for the human to decide whether the work is worth shaping.
 
 Discovery may include intake, repository inspection, research, reproduction, investigation, or a
-time-boxed spike. Its output is settled intent or evidence, not an implementation plan.
+time-boxed spike. Evidence is not commitment: an agent may add a finding to the backlog, but it may
+not promote its own finding into Shape.
 
-**Pick gate:** the human chooses the candidate. An explicit, already-settled human request satisfies
-this gate directly; an agent never promotes its own finding into work.
+**Pick gate:** the human selects the problem or outcome. A direct, settled human request satisfies
+the gate without first becoming a backlog item.
 
-Done when the human has picked a problem or outcome whose remaining uncertainty can be resolved in
-Shape.
+Done when the human has picked work whose remaining product and technical uncertainty can be
+resolved during Shape.
 
 ## 2. Shape
 
-**Objective:** create one approved work bundle that is executable without silent product or
-cross-cutting design decisions.
+**Objective:** create one critic-reviewed, human-approved bundle that every assigned agent can
+execute without silently making product or cross-ticket design decisions.
 
-Choose the lightest artifact set that makes implementation reliable:
+Choose the lightest shaping route that makes implementation reliable:
 
-- Direct, low-impact work: one ticket.
+- Direct, low-impact work: one ticket containing its complete intent.
 - Behaviorally significant work with obvious decomposition: intent/spec plus ticket(s).
 - High-impact or non-obvious decomposition: intent/spec, engineering plan, then tickets.
-- Refactor or migration: target architecture or invariants, plan, then tickets.
+- Refactor or migration: target architecture or invariants, engineering plan, then tickets.
 
-Spec, plan, and ticket generation form a feedback loop. Planning or decomposition that exposes a
-missing behavioral decision returns to the intent artifact before proceeding.
+Intent, planning, and ticket generation are feedback substeps, not stages. A plan or ticket that
+exposes a missing behavioral decision returns to the intent artifact before Shape continues.
 
-**Critique is mandatory before approval:** a fresh-context, read-only critic attacks requirement
-coverage, architecture, slicing, dependencies, risks, and testability. The Architect resolves valid
-findings and returns human judgment calls to the human. The author and critic cannot approve the
-bundle.
+**Keep bundles bounded:** Shape creates the complete executable ticket set for one coherent outcome.
+If later tickets depend on unvalidated architecture, cannot yet carry concrete done-when evidence,
+or describe independently useful outcomes, split the work into sequential bundles. Do not create a
+large speculative ticket backlog inside one bundle.
 
-**Plan gate:** after critique, the human approves the target outcome, technical direction when one
-exists, ticket decomposition, dependency graph, and test strategy. Material unresolved questions
-block approval.
+**Critique is mandatory before approval:** a fresh-context, read-only Critic attacks requirement
+coverage, architecture, slicing, dependencies, risk, and testability. The Architect owns revisions;
+the Critic supplies findings, never fixes or approval.
 
-Done when the approved bundle contains the minimum artifacts needed for every ticket to be executed
-and verified independently.
+**Plan gate:** after critique, the human approves the outcome, binding constraints, technical
+direction when present, complete ticket decomposition, dependency graph, and test strategy. Material
+open questions block approval.
 
-## 3. Implement + Review
+Done when every approved ticket is executable in one agent session, has objective done-when
+evidence, and introduces no requirement or cross-ticket decision absent from approved intent.
 
-**Objective:** turn each approved ticket into an independently verified and human-accepted change.
+## 3. Implement
 
-For each ticket:
+**Objective:** turn one approved ticket into a verified and reconciled implementation PR.
+
+The Implementer works in a fresh session on one ticket, branch, and worktree. It reads the approved
+intent, optional plan, ticket, relevant durable docs, and repository conventions before editing.
+
+Implementation includes:
+
+1. Claim the next unblocked `todo` ticket and set it to `doing`.
+2. Write the required behavior test and observe it fail, unless Shape supplied a locked test.
+3. Implement only the approved ticket and bounded local support work.
+4. Run every ticket done-when command plus canonical repository checks.
+5. Reconcile affected durable docs, terminology, intent corrections, and remaining tickets in the
+   same PR.
+6. Open the PR using the handoff contract below; leave the ticket `doing` while Review is pending.
+
+A factual correction that preserves approved intent is made visible in the PR. A change to behavior,
+binding architecture, decomposition, security, migration, compatibility, or acceptance criteria
+returns to the Plan gate.
+
+### PR handoff contract
+
+The PR is the main implementation and review surface, but not the source of approved intent. Its
+body must contain:
+
+- immutable commit permalinks to the complete approved bundle and exact implemented ticket
+- the delivered scope
+- verification commands and results from the current PR head
+- reconciliation performed
+- known limitations or residual risk
+
+Do not use branch-relative bundle or ticket links. Keep the body current when the head or verification
+evidence changes; if the Plan gate is repeated, replace the planning links with permalinks to the new
+approved version.
+
+Done when every required check passes at the PR head and the change plus reconciliation is ready for
+an independent Reviewer.
+
+## 4. Review
+
+**Objective:** independently judge what implementation and deterministic verification cannot.
+
+Review runs in a fresh context with no authorship of the diff. The Reviewer is structurally
+read-only, reruns required checks, reads changed code in context, and judges requirement fit,
+correctness, architecture, public contracts, security, realistic performance risk, test honesty,
+and reconciliation.
 
 ```text
-implement → verify → review → fix → re-verify → review ↺ → human accept
+Implement → verify + reconcile → open PR
+                                      │
+                                      ▼
+                                Review round
+                         ┌───────────┴───────────┐
+                         ▼                       ▼
+                     findings                  clear
+                         │                       │
+                         ▼                       ▼
+           fresh Implementer (fix mode)   final review summary
+                         │                       │
+                         ▼                       ▼
+             verify + PR response          human Accept
+                         │                       │
+                         └──────► next Review        merge + complete
 ```
 
-The Implementer works one ticket in one session and reconciles affected temporary and durable
-documentation in the same change. A fresh-context, read-only Reviewer independently reruns required
-checks and reports evidence-backed findings. Reviewer findings return to the Implementer; a fix that
-changes approved intent or decomposition returns to the Plan gate.
+Each Reviewer starts in fresh context and reviews the complete PR at its exact head SHA. It posts one
+structured round summary to the PR and uses inline comments only where a precise code location adds
+evidence. Findings receive stable IDs such as `R1-F1`; later rounds preserve those IDs when recording
+their disposition.
 
-**Accept gate:** the human accepts each reviewed ticket change. Neither Implementer nor Reviewer may
-approve or merge their own work.
+A fix request starts a fresh Implementer context in fix mode and returns the ticket to Implement
+without changing its `doing` status. The Implementer checks every finding against the approved
+intent, plan, and ticket rather than blindly following the comment. It fixes the finding, rebuts it
+with evidence, or escalates it because resolution requires a material planning decision. After
+rerunning all required checks, it posts one PR response mapping every finding ID to its disposition,
+changes, verification results, and new head SHA.
 
-Done when every ticket is accepted and merged into its configured integration target.
+The next Reviewer checks every prior disposition and reviews the complete PR again, not only the
+latest patch. New findings are limited to material issues introduced by the fix or genuinely missed
+earlier; a later round must not move the goalposts to personal preferences. Review never edits,
+approves, or merges the change.
 
-## 4. Ship
+### Convergence and round limit
 
-**Objective:** land the complete outcome and remove its temporary planning record.
+One Reviewer run is one review round. Three rounds are the normal maximum. Failure to converge by the
+third round usually signals unclear intent, architectural disagreement, unstable verification, or a
+change that should be reshaped; report that diagnosis to the human. A fourth or fifth round requires
+explicit human direction. Five is the absolute maximum without returning to Shape or otherwise
+changing the workflow.
 
-Absorb still-relevant bundle knowledge into durable system documentation, terminology, and decision
-records. Land the bundle on the default branch according to the repository's branch strategy,
-confirm the default branch is green, convert follow-ups into backlog entries, then delete the entire
-bundle. Git history preserves the work record; there is no shipped-bundle archive.
+The limit is an escalation condition, never an acceptance condition. Reaching it cannot waive a
+blocker or major concern. A PR is ready for human review only when every finding is fixed, closed by
+the Reviewer after an evidence-backed rebuttal, or resolved through an explicit human planning
+decision, and no blocker or unresolved major concern remains.
 
-Done when the outcome is on the default branch, required checks pass, durable documentation is
-current, and the bundle no longer exists in the working tree.
+The final Reviewer comment is tied to the reviewed head SHA and states:
+
+- ready for human review
+- independent verification commands and results
+- every finding ID and final disposition
+- remaining limitations or material areas that could not be verified
+
+**Accept gate:** the human accepts the independently reviewed PR. Acceptance authorizes integration;
+the workflow coordinator or automation marks the ticket `done` only when the PR has merged into its
+configured target.
+
+A review round ends with either findings returned to Implement or a final summary for the human. The
+Review stage ends only when the human accepts the change and it merges.
+
+## 5. Ship
+
+**Objective:** land the complete accepted outcome and remove its temporary planning record.
+
+Ship begins only when every ticket is `done`. It:
+
+1. Reconciles remaining bundle knowledge into durable system docs, terminology, and decision
+   records.
+2. Lands the bundle on the default branch according to the repository's branch strategy.
+3. Confirms canonical checks pass on the default branch.
+4. Converts unfinished or newly discovered work into backlog entries.
+5. Deletes the complete bundle and all bundle branches and worktrees.
+
+Git history preserves the work record; there is no shipped-bundle archive.
+
+Done when the outcome is on the default branch, canonical checks pass there, durable documentation
+is current, and no bundle artifact, branch, or worktree remains.
 
 ## Human authority
 
@@ -110,23 +210,24 @@ Only the human may pass these gates:
 3. **Accept:** this implementation is acceptable.
 
 Agents may cross deterministic checks between gates. They may not infer, self-grant, or bypass a
-human gate.
+human gate. Ship adds no fourth approval; it executes the outcome already accepted ticket by ticket.
 
 ## Test ownership
 
-- **Architect/Shape owns test intent:** observable acceptance criteria, the test seam, required
-  test levels, and risk-specific cases. It does not normally author test code.
-- **Critic owns pre-implementation challenge:** coverage gaps, untestable criteria, weak seams, and
-  missing failure or boundary cases.
-- **Ticket owns required evidence:** acceptance criteria addressed plus exact verification commands
-  and expected outcomes.
-- **Implementer owns test code by default:** write the behavior test first, observe it fail, implement
-  the change, and add honest supporting tests.
+- **Architect/Shape owns test intent:** observable acceptance criteria, the test seam, required test
+  levels, and risk-specific cases. It does not normally author test code.
+- **Critic owns pre-implementation challenge:** identify coverage gaps, untestable criteria, weak
+  seams, and missing failure or boundary cases.
+- **Ticket owns required evidence:** map the behavior it delivers to exact verification commands and
+  expected outcomes.
+- **Implementer owns test code by default:** write the behavior test first, observe it fail, then
+  implement and add honest supporting tests.
 - **Reviewer owns independent judgment:** rerun required evidence and judge whether author-written
-  tests actually constrain the required behavior. Passing tests are evidence, not self-approval.
-- **Repository CI owns global gates:** existing test, lint, type, build, and policy checks remain the
-  canonical commands rather than being copied differently into every spec.
+  tests constrain the approved behavior. Passing tests are evidence, not self-approval.
+- **Repository CI owns global gates:** existing test, lint, type, build, and policy commands remain
+  canonical rather than being copied differently into each spec.
 
-For a high-risk contract or regression, Shape may require separately authored, locked black-box
-acceptance tests. A verifier independent of the Implementer writes them before implementation; the
-Implementer may run but not modify them. This is an explicit exception, not the default.
+For a high-risk contract, security boundary, or regression, Shape may require separately authored,
+locked black-box acceptance tests. A verifier independent of the Implementer writes them before
+implementation; the Implementer may run but not modify them. This is an explicit exception, not the
+default.

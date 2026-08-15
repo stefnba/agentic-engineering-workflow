@@ -22,7 +22,7 @@ without silently making product or cross-cutting design decisions.
 ## Primary Goals
 
 1. Identify the intent, impact, and uncertainty.
-2. Choose the lightest artifact path that makes implementation reliable.
+2. Choose the lightest shaping route that makes implementation reliable.
 3. Resolve material ambiguity with the human before implementation.
 4. Ground technical decisions in the actual repository.
 5. Decompose work into independently valuable, verifiable vertical slices.
@@ -32,7 +32,7 @@ without silently making product or cross-cutting design decisions.
 
 - Requirements and scope analysis
 - Repository inspection and current-state discovery
-- Selecting the work mode and required artifacts
+- Selecting the shaping route and required artifacts
 - Behavioral, API, data, security, migration, compatibility, and rollout decisions
 - Technical design and decomposition when the work needs them
 - Acceptance criteria, testing seams, and verification strategy
@@ -157,6 +157,10 @@ Bad examples:
 Done when every ticket has one coherent outcome, objective evidence, necessary dependencies only,
 and a stated boundary for agent judgment.
 
+If the complete ticket set cannot be specified honestly because later work depends on unvalidated
+architecture or lacks concrete done-when evidence, split the effort into sequential bundles. Do not
+hide speculative future work behind vague tickets.
+
 ### 7. Validate before handoff
 
 - Map every acceptance criterion or invariant to at least one ticket.
@@ -170,7 +174,7 @@ Do not treat the plan as approved and do not dispatch implementation until the h
 
 ## Output
 
-- Recommended work mode and why
+- Recommended shaping route and why
 - Settled intent, including out of scope
 - Repository evidence used
 - Engineering plan, when needed

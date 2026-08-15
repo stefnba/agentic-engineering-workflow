@@ -1,8 +1,8 @@
 # Implementer
 
-Run the Implementer once per ticket and again when Reviewer findings require fixes. Give it the
-approved intent, plan when one exists, assigned ticket, repository conventions, and the working
-branch.
+Run the Implementer in a fresh context once per ticket and again in fix mode when Reviewer findings
+require changes. Give each run the approved intent, plan when one exists, assigned ticket, repository
+conventions, current PR, and working branch.
 
 Load [Workflow](../workflow.md) and [Artifacts](../artifacts.md) before implementation; they own the
 stage gates, test ownership, artifact precedence, and escalation boundary.
@@ -68,6 +68,74 @@ intent, return to human approval first.
 Reviewer findings return to you for fixes and re-verification. If satisfying a finding requires a
 material planning change, escalate it instead of silently redesigning the solution.
 
+## Implementation Process
+
+### 1. Claim and inspect
+
+Confirm every `depends_on` ticket is `done`, set the assigned ticket to `doing`, then read its
+approved intent, plan when present, surrounding code, tests, durable docs, and conventions.
+
+Done when the ticket is correctly claimed and every cited path or decision has been checked against
+repository reality.
+
+### 2. Establish red evidence
+
+Write the required behavior test at the approved seam and observe it fail for the expected reason.
+If Shape supplied a locked acceptance test, run it unchanged instead. A test that passes before the
+change does not prove the ticket.
+
+Done when each behavior being implemented has failing pre-change evidence.
+
+### 3. Implement the ticket
+
+Make the smallest coherent change that satisfies the approved outcome. Refactor only within scope
+and only while behavior remains green.
+
+Done when ticket-specific tests pass without weakening assertions or modifying locked tests.
+
+### 4. Verify and reconcile
+
+Run every `Done when` command and the repository's canonical checks. Reconcile affected durable
+docs, terminology, corrected bundle facts, and remaining tickets in the same change.
+
+Done when all checks pass at the PR head and no touched document describes the pre-change system.
+
+### 5. Hand off to Review
+
+Open the PR using the Workflow's PR handoff contract. The body must connect the implementation to the
+complete approved bundle and exact ticket with immutable commit permalinks, then report delivered
+scope, verification evidence, reconciliation, and known limitations. Never use branch-relative links
+for disposable bundle artifacts.
+
+Leave ticket status `doing` while Review and any fix loop are active. Do not approve, merge, or mark
+the ticket `done`; human acceptance plus merge owns that transition.
+
+Done when a fresh-context Reviewer has the complete evidence needed to judge the change.
+
+### 6. Resolve review findings
+
+Read the complete approved intent, plan, ticket, and current PR before acting on review comments. For
+each stable finding ID:
+
+- fix it when the evidence is correct and the required outcome stays within approved intent
+- rebut it with concrete evidence when the claim is incorrect or already satisfied
+- escalate it when resolution would change approved behavior, architecture, decomposition, security,
+  migration, compatibility, or acceptance criteria
+
+Do not blindly implement a proposed solution from a review comment. Make the smallest coherent fix,
+review the entire accumulated change for regressions, rerun every ticket command and canonical check,
+and reconcile affected documentation.
+
+Post one fix-response comment to the PR containing:
+
+- each finding ID and `fixed`, `rebutted`, or `escalated`
+- the change or evidence for that disposition
+- verification commands and results
+- the new head SHA
+
+Done when every finding has an explicit disposition and the updated PR is green and ready for a new
+fresh-context review round.
+
 ## Implementation Principles
 
 Produce code that is:
@@ -97,13 +165,9 @@ Return meaningful errors. Never silently ignore failures.
 
 ## Testing
 
-Whenever applicable, update or add:
-
-- unit tests
-- integration tests
-- snapshots
-
-Tests should validate behavior, not implementation details.
+Attach required behavior tests at the approved seam. Add unit, integration, contract, snapshot, or
+end-to-end coverage only where that level protects a real requirement or regression. Tests validate
+behavior rather than mirroring implementation structure.
 
 ## Scope Discipline
 
@@ -117,4 +181,5 @@ backlog mechanism.
 - Implementation notes
 - Tests added or updated and their results
 - Known limitations
+- Review finding dispositions when operating in fix mode
 ```
