@@ -99,3 +99,122 @@ cross-ticket architecture, or acceptance criteria.
 -->
 
 - [ ] <question requiring a human decision>
+
+---
+
+Draft 2
+
+# Feature: <Name>
+
+## Problem
+
+What problem are we solving?
+Who has the problem?
+Why does it matter?
+
+## Goal
+
+What outcome should exist when this feature is complete?
+
+## Non-goals
+
+Explicitly state what this feature will NOT do.
+
+## User / System Behavior
+
+Describe the desired behavior from the outside.
+
+### Scenario: <name>
+
+Given ...
+When ...
+Then ...
+
+## Functional Requirements
+
+- FR-001: ...
+- FR-002: ...
+- FR-003: ...
+
+## Technical Requirements
+
+- TR-001: ...
+- TR-002: ...
+
+Include important architectural constraints here:
+
+- APIs
+- data model
+- security
+- performance
+- compatibility
+- dependencies
+- observability
+
+## UX / API Contract
+
+If applicable, define:
+
+- screens
+- API endpoints
+- request/response shapes
+- error behavior
+- state transitions
+
+## Invariants
+
+Things that must ALWAYS be true.
+
+- ...
+- ...
+
+## Acceptance Criteria
+
+The feature is complete when:
+
+- ...
+- ...
+- ...
+
+## Edge Cases
+
+- ...
+- ...
+
+## Open Questions (draft only)
+
+- Every material question is resolved before approval, then this section is deleted.
+- A bounded local implementation choice is written as explicit agent discretion in the plan or
+  ticket, not left as an open question.
+
+## Decisions
+
+### YYYY-MM-DD — <decision>
+
+Decision: ...
+Reason: ...
+Alternatives considered: ...
+
+## Rollout / Migration
+
+If applicable:
+
+- migration strategy
+- feature flags
+- backwards compatibility
+- rollback
+
+## References
+
+- Architecture docs
+- Related specs
+- External documentation
+
+Give
+
+```markdown
+## Technical constraints
+
+Order creation must go through the existing persistence abstraction.
+Do not introduce a second persistence mechanism.
+```

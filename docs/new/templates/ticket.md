@@ -85,3 +85,69 @@ npm run build                # expect: success
 - An acceptance criterion conflicts with existing behavior/tests
 - The ticket or plan is factually stale in a way that changes the approved decomposition
 - <domain-specific tripwire>
+
+---
+
+Option 2:
+
+```markdown
+# FEAT-003 — Add idempotent order creation API
+
+## Objective
+
+Implement the API described by FR-004 and API-002 in the feature spec.
+
+## Context
+
+Orders can currently be created through the internal service, but there
+is no public endpoint. Clients may retry requests, so creation must be
+idempotent.
+
+## Scope
+
+- Add POST /v1/orders
+- Validate the request
+- Persist the order
+- Support Idempotency-Key
+- Return the documented response
+- Add unit and integration tests
+
+## Out of scope
+
+- Order cancellation
+- Payment processing
+- Admin UI
+
+## References
+
+- Spec: `../spec.md`
+- Requirements: FR-004, API-002
+- Depends on: FEAT-002
+
+## Acceptance criteria
+
+- [ ] POST /v1/orders implements the API contract.
+- [ ] Invalid requests return the documented validation error.
+- [ ] A successful request persists exactly one order.
+- [ ] Repeating a request with the same Idempotency-Key does not create
+      a second order.
+- [ ] Concurrent requests with the same Idempotency-Key are safe.
+- [ ] Tests cover success, validation failure, retry, and concurrency.
+- [ ] Existing tests continue to pass.
+
+## Agent guidance
+
+Inspect existing API, persistence, validation, and error-handling patterns
+before introducing new abstractions.
+
+Prefer existing project conventions over introducing new libraries or
+architectural patterns.
+
+## Definition of done
+
+- Implementation complete
+- Tests passing
+- Acceptance criteria verified
+- No unrelated changes
+- PR/commit describes what was changed and how it was verified
+```
