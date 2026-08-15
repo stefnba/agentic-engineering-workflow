@@ -4,14 +4,9 @@
 - Engineering plan = decomposition decisions.
 - Tickets = independently executable slices of work, ideally thin vertical slices
 
-All three are in-flight artifacts in one disposable work bundle. They must remain stable and
-readable across planning, implementation, and review, but they are not permanent system
-documentation. When the whole bundle ships, its still-relevant knowledge is absorbed into durable
-documentation and decision records, then the bundle is deleted. Git history preserves the work
-record.
-
-The spec should be human-readable and stable for the bundle's lifetime.
-The ticket should be agent-readable and executable.
+Read [Artifacts](./artifacts.md) when deciding what a bundle contains or resolving an artifact
+conflict—it owns artifact authority and lifetime. This document owns how spec, plan, and tickets
+work together while shaping and executing a bundle.
 
 ```text
                     ┌──────────────┐
@@ -68,9 +63,10 @@ Plan
 Tickets
 ```
 
-So I would treat the first three stages as a specification phase, rather than three completely independent phases.
+Treat these as feedback substeps inside Shape, not as lifecycle stages. The bundle is shaped only
+when the selected substeps have converged and passed critique plus human approval.
 
-### Phase 1 — Spec
+### Shape substep 1 — Spec
 
 Create enough of the spec to establish:
 
@@ -84,7 +80,7 @@ important edge cases
 
 Don't worry yet about every implementation detail.
 
-### Phase 2 — Engineering plan
+### Shape substep 2 — Engineering plan
 
 An architect/human/agent **analyzes the repository** and produces:
 
@@ -98,7 +94,7 @@ parallelization opportunities
 
 This is where repository exploration becomes important. The plan shouldn't be created in a vacuum from the product spec.
 
-### Phase 3 — Ticket generation
+### Shape substep 3 — Ticket generation
 
 Turn the plan into executable work items.
 
@@ -141,7 +137,7 @@ It shouldn't answer:
 
 ### Why plan before tickets?
 
-**important one**: grounding the plan in actual repository exploration. Plans written from the product spec alone consistently produce tickets that reference files that don't exist, miss existing utilities, or propose architectures that fight the codebase's conventions. Having the planning agent read the code first is what makes Phase 3 tickets executable rather than aspirational.
+**important one**: grounding the plan in actual repository exploration. Plans written from the product spec alone consistently produce tickets that reference files that don't exist, miss existing utilities, or propose architectures that fight the codebase's conventions. Having the planning agent read the code first is what makes the ticket-generation substep executable rather than aspirational.
 
 The plan answers:
 
@@ -284,7 +280,21 @@ PR/CI: implementation and verification detail
 
 ## Branch strategy
 
-- Every work get it's own bundle branch for integration and tickets land as PR on this branch. Once done, bundle get PR into main.
+The repository declares its branch strategy; bundle size determines which parts of that strategy are
+needed.
+
+- **Single-ticket bundle or direct ticket:** create one ticket branch and PR directly into the
+  repository's configured integration target. Do not create a bundle integration branch that has
+  only one child.
+- **Multi-ticket bundle under bundle-branch:** create one bundle integration branch. Each ticket gets
+  its own branch and PR into the bundle branch. Ship lands the complete bundle branch on the default
+  branch, then removes the bundle branch and worktrees.
+- **Multi-ticket bundle under trunk:** each ticket branch and PR targets the default branch. Ship
+  performs final reconciliation and bundle deletion; there is no bundle integration branch.
+- **Incident or hotfix:** use the repository's emergency target and release policy. The abbreviated
+  artifact route does not by itself waive verification or human acceptance.
+
+Every working branch gets its own worktree. A ticket branch is based on the branch its PR targets.
 
 ## PR
 

@@ -4,6 +4,9 @@ Run the Implementer once per ticket and again when Reviewer findings require fix
 approved intent, plan when one exists, assigned ticket, repository conventions, and the working
 branch.
 
+Load [Workflow](../workflow.md) and [Artifacts](../artifacts.md) before implementation; they own the
+stage gates, test ownership, artifact precedence, and escalation boundary.
+
 ## System Prompt
 
 ```markdown

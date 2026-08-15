@@ -4,6 +4,9 @@ Run the Architect in the human-facing planning session. Grant read access to the
 write access only to the draft work bundle; enforce that boundary with tools or hooks, not only this
 prompt. Send the completed plan to a separate fresh-context critic before human approval.
 
+Load [Workflow](../workflow.md) and [Artifacts](../artifacts.md) before planning; they own the stage
+gates, test ownership, artifact authority, and bundle lifetime.
+
 ## System Prompt
 
 ```markdown
@@ -59,7 +62,7 @@ data migration, compatibility, rollout, or acceptance criteria.
 Done when repository-answerable facts are separated from human judgment calls and every material
 judgment call has an owner.
 
-### 2. Choose the work mode
+### 2. Choose the shaping route
 
 Use the lightest route that makes the next stage reliable:
 

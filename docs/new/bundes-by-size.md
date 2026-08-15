@@ -1,5 +1,9 @@
 # Tailor to size of work bundles
 
+This document chooses the lightest route through Discover and Shape. It does not define alternative
+lifecycle stages: every approved bundle continues through Implement + Review and Ship as defined in
+[Workflow](./workflow.md).
+
 Yes. The **Spec → Plan → Tickets → Agents** flow is excellent as a default, but I would _not_ make it mandatory for every change.
 
 The key is to choose the **lightest workflow that still gives the agent enough context and gives you enough control**.
@@ -46,14 +50,14 @@ Integration / verification
 Works well:
 
 New feature (multi-ticket) — the ideal case. Real design ambiguity, coordination across tickets, parallelization payoff. All three phases earn their cost.
-Large refactoring / migrations — arguably even better than features. Phase 2's repo exploration is the work's foundation, and migration ordering plus "don't touch" boundaries are exactly what agents need to not break things. One adjustment: acceptance criteria become "behavior unchanged," so the plan should mandate characterization tests before any refactoring tickets run.
+Large refactoring / migrations — arguably even better than features. The plan substep's repo exploration is the work's foundation, and migration ordering plus "don't touch" boundaries are exactly what agents need to not break things. One adjustment: acceptance criteria become "behavior unchanged," so the plan should mandate characterization tests before any refactoring tickets run.
 Cross-cutting changes (auth overhaul, logging standardization, dependency major-version bump) — high fan-out, high risk, needs the dependency analysis and phasing.
 
 Works poorly:
 
 Bug fix — the process inverts. You can't plan the fix before diagnosing, and diagnosis is most of the work. Alternative: an investigation-first loop — reproduce → diagnose → write a failing test → fix. The "spec" is just the repro steps and expected behavior; one ticket total.
 Config change / small tweak — three documents for a one-line change is pure overhead. Alternative: one ticket with a verification command. Done.
-Exploratory / uncertain work ("would approach X even work here?") — you can't spec what you don't understand yet. Alternative: a time-boxed spike ticket whose deliverable is the Phase 2 plan itself. The spike feeds the pipeline rather than following it.
+Exploratory / uncertain work ("would approach X even work here?") — you can't spec what you don't understand yet. Alternative: a time-boxed spike ticket whose deliverable is the engineering plan itself. The spike feeds the pipeline rather than following it.
 Hotfixes / incidents — speed beats process. Fix first, write the postmortem after, and backfill a proper ticket if follow-up work is needed.
 
 ---

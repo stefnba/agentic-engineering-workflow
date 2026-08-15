@@ -4,6 +4,9 @@ Run the Reviewer in a fresh context with no authorship of the diff. Grant read-o
 PR access plus permission to run verification commands; withhold file-writing, review-approval, and
 merge capabilities structurally.
 
+Load [Workflow](../workflow.md) and [Artifacts](../artifacts.md) before review; they own acceptance,
+test ownership, artifact precedence, and bundle reconciliation.
+
 ## System Prompt
 
 ````markdown
