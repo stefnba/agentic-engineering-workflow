@@ -4,7 +4,13 @@
 - Engineering plan = decomposition decisions.
 - Tickets = independently executable slices of work, ideally thin vertical slices
 
-The spec should be human-readable and durable.
+All three are in-flight artifacts in one disposable work bundle. They must remain stable and
+readable across planning, implementation, and review, but they are not permanent system
+documentation. When the whole bundle ships, its still-relevant knowledge is absorbed into durable
+documentation and decision records, then the bundle is deleted. Git history preserves the work
+record.
+
+The spec should be human-readable and stable for the bundle's lifetime.
 The ticket should be agent-readable and executable.
 
 ```text
@@ -106,7 +112,8 @@ acceptance criteria
 verification requirements
 constraints
 
-At this point, tickets should be READY for an implementation agent.
+At this point, tickets should be executable by an implementation agent. Human approval promotes
+the completed bundle into the shaped state.
 
 ## Tailor to size of work bundles
 
@@ -128,10 +135,6 @@ It shouldn't answer:
 
 ```markdown
 # Feature: <Name>
-
-## Status
-
-Proposed | Approved | In Progress | Complete
 
 ## Problem
 
@@ -208,9 +211,11 @@ The feature is complete when:
 - ...
 - ...
 
-## Open Questions
+## Open Questions (draft only)
 
-- ...
+- Every material question is resolved before approval, then this section is deleted.
+- A bounded local implementation choice is written as explicit agent discretion in the plan or
+  ticket, not left as an open question.
 
 ## Decisions
 
@@ -248,7 +253,8 @@ Do not introduce a second persistence mechanism.
 ## Engineering Plan
 
 - The engineering plan is optional for very small features but extremely useful for larger ones.
-- Don't put implementation plans in the permanent spec (Because agents are much better at discovering where a change belongs than a stale spec written weeks earlier.)
+- Don't put implementation plans in the behavioral spec. Agents are much better at discovering
+  where a change belongs from a repository-grounded plan than from design detail mixed into intent.
 
 ### Why plan before tickets?
 
@@ -264,7 +270,7 @@ The tickets answer:
 
 So the natural flow is:
 
-```markdonw
+```markdown
 # Implementation Plan: Orders
 
 ## Architectural approach
@@ -282,17 +288,18 @@ So the natural flow is:
 ## Parallelization
 
 Can run concurrently:
+
 - FEAT-001
 - FEAT-005
 
 After FEAT-002:
+
 - FEAT-003
 - FEAT-004
 
 ## Risks
 
 ...
-
 ```
 
 ### Thin vertical slices
@@ -388,7 +395,7 @@ idempotent.
 
 ## References
 
-- Spec: `specs/orders.md`
+- Spec: `../spec.md`
 - Requirements: FR-004, API-002
 - Depends on: FEAT-002
 
@@ -463,37 +470,25 @@ Blocks:
 
 ### Status of tickets
 
-READY
-A coding agent can start without requiring clarification.
+Persist only status that the ticket file uniquely owns:
 
-BLOCKED
-There is genuinely missing information or an external dependency.
+- `todo` — approved in a shaped bundle and not yet claimed.
+- `doing` — claimed; remains `doing` through implementation, verification, review, and fixes.
+- `done` — accepted and merged into the ticket's integration target.
 
-IMPLEMENTED
-The agent believes the implementation is complete.
+Other states already have better owners:
 
-VERIFYING
-Tests/review/evidence are being evaluated.
-
-DONE
-Acceptance criteria are independently satisfied.
-
-That prevents IN_PROGRESS → DONE from becoming "the agent stopped talking.
+- Draft versus approved belongs to the bundle: an unapproved draft stays local; approval places the
+  bundle under `work/shaped/`.
+- Implemented, checks running, checks passed, review requested, and changes requested belong to the
+  PR and CI system.
+- An unmet ticket dependency is derived from `depends_on`; do not copy it into status.
+- An external blocker is optional `blocked_reason` metadata while status remains `todo` or `doing`.
 
 ```markdown
-DRAFT
-↓
-READY
-↓
-IN_PROGRESS
-↓
-IMPLEMENTED
-↓
-VERIFYING
-↓
-DONE
-
-          ↘ BLOCKED
+bundle: local draft → work/shaped → work/active → shipped and deleted
+ticket: todo → doing → done
+PR/CI: implementation and verification detail
 ```
 
 ## Git and Pull Request

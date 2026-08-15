@@ -5,9 +5,11 @@ Status: Draft | Approved | In Progress | Done
 # Spec: <Feature Name>
 
 <!--
-Location: keep this file in-repo, e.g. specs/<feature-slug>.md
+Location: work/shaped/<bundle-id>/spec.md, then work/active/<bundle-id>/spec.md.
 Audience: an agent (or engineer) with ZERO prior context and no ability to ask questions.
 Rule of thumb: if a detail lives only in your head or in Slack, it doesn't exist. Write it down.
+Lifecycle: this spec lives only for the bundle. At ship, absorb still-relevant knowledge into
+durable system documentation and decision records, then delete the entire bundle.
 -->
 
 ## 1. Goal
@@ -84,19 +86,16 @@ npm run lint
 npm run build
 ```
 
-## 7. Ticket Breakdown
+## 7. Open Questions (draft only)
 
-<!-- Ordered, each one a mergeable unit. Mark parallelizable work. -->
+<!--
+Every material question must be resolved before human approval. Fold the answer into the section
+it constrains, then delete this section.
 
-| #   | Ticket               | Depends on | Parallel-safe |
-| --- | -------------------- | ---------- | ------------- |
-| 1   | <schema/migration>   | —          | no            |
-| 2   | <core service logic> | 1          | no            |
-| 3   | <API endpoint>       | 2          | yes (with 4)  |
-| 4   | <UI wiring>          | 2          | yes (with 3)  |
+A local implementation choice may be delegated only in the plan or ticket as bounded discretion:
+state what the agent may choose and the constraints it may not cross. Never delegate a choice that
+changes observable behavior, scope, public contracts, security, migration, compatibility,
+cross-ticket architecture, or acceptance criteria.
+-->
 
-## 8. Open Questions
-
-<!-- Resolve before handoff, or explicitly delegate. Don't leave silent ambiguity. -->
-
-- [ ] <question> — **Decision:** <answer, or "agent's discretion, prefer X">
+- [ ] <question requiring a human decision>

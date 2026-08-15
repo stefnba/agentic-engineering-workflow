@@ -1,6 +1,7 @@
 ---
-Blocked by: <id> | none
-Parallel-safe with: <id> | none
+status: todo # todo | doing | done; done means accepted and merged
+depends_on: [] # ticket ids that must be done first
+blocked_reason: null # optional external blocker; do not duplicate depends_on here
 ---
 
 # Ticket: <Short imperative title, e.g. "Add rate limiting to /api/login">
@@ -10,9 +11,7 @@ Sizing rule: one ticket = one agent session = one reviewable PR.
 If you can't describe "done" as commands + expected results, split or clarify the ticket.
 -->
 
-**Spec:** specs/<feature-slug>.md (§<section>)
-**Blocked by:** #<id> | none
-**Blocks:**
+**Spec:** `../spec.md` (§<section>)
 
 ---
 
@@ -28,7 +27,7 @@ If you can't describe "done" as commands + expected results, split or clarify th
 - <change 1>
 - <change 2>
 
-**Files to modify / create:**
+**Expected touch points (not an allowlist):**
 
 - `src/middleware/rateLimit.ts` (new)
 - `src/api/routes.ts` (register middleware on login route)
@@ -46,12 +45,28 @@ If you can't describe "done" as commands + expected results, split or clarify th
 - Config values go in `src/config/index.ts`, not hardcoded
 - <known gotcha>
 
+## Autonomy Boundaries
+
+**May decide:**
+
+- <bounded local choice the agent may make>
+
+**Must preserve:**
+
+- <observable behavior, contract, invariant, or approved architectural boundary>
+
+<!--
+Do not put unresolved product or cross-cutting design questions here. Material decisions are
+resolved before approval. This section grants only bounded implementation discretion.
+-->
+
 ## Definition of Done
 
 - [ ] <behavioral check, e.g. "6th login attempt within 60s returns 429 with body {error: 'rate_limited'}">
 - [ ] <negative check, e.g. "successful logins reset the counter">
 - [ ] New tests added and passing
-- [ ] No changes outside the files listed above (or justified in PR description)
+- [ ] Changes outside the expected touch points are limited to required tests, reconciliation, or
+      clearly justified local support work
 
 **Verify with:**
 
@@ -65,11 +80,8 @@ npm run build                # expect: success
 
 <!-- Tells the agent when to stop and ask rather than improvise. -->
 
-- The task requires touching files outside the list above
+- The task requires changing approved behavior, scope, public contracts, security properties,
+  migration behavior, compatibility, or cross-ticket architecture
 - An acceptance criterion conflicts with existing behavior/tests
+- The ticket or plan is factually stale in a way that changes the approved decomposition
 - <domain-specific tripwire>
-
----
-
-Definition of done — commands to run (test, lint, build) and their expected results. This is the biggest lever: agents self-correct when they can verify.
-Dependencies — ordered explicitly ("blocked by #12") so parallel agents don't collide
