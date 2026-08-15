@@ -99,6 +99,7 @@ Split rather than speculate when:
 - later tickets depend on an unvalidated architectural assumption
 - exact verification for later tickets cannot yet be stated
 - the work contains multiple independently useful outcomes
+- the dependency graph is dominated by speculative edges
 - one Plan gate cannot meaningfully approve the whole dependency graph
 - integration drift would dominate before the bundle ships
 
@@ -128,6 +129,7 @@ Adaptive sizing removes unnecessary artifacts, not safeguards:
 - Mandatory Critique still precedes the Plan gate.
 - Material open questions never pass to an Implementer.
 - Every ticket remains one session and one PR.
-- Review remains fresh-context, independent, and read-only.
+- Review remains fresh-context, independent, and read-only. Its depth scales with the change's scope,
+  impact, and risk; its existence does not.
 - Verification and reconciliation remain part of Implement.
 - Ship still absorbs durable knowledge and deletes the complete bundle.
