@@ -111,13 +111,3 @@ trigger `/ship`:
   default branch; a single-ticket bundle already landed there when its one PR merged, so this step is
   a no-op
 - removes the ticket branches, the bundle branch (if one existed), and their worktrees
-
-## Open questions
-
-- What happens when you reject at the Plan gate — back to Discovery, or does the shaping session just
-  revise in place?
-- What ends a critique loop that isn't converging, instead of looping forever?
-- What does hitting the review round limit actually look like for you — what do you see, what do you
-  decide?
-- Does `/complete-ticket` merge directly, or only prepare the merge for you to confirm?
-- How can the human do changes to a PR branch for a ticket. how is that handled with review and documenated?
