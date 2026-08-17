@@ -25,6 +25,10 @@ target architecture and invariants, migration objective, security requirements, 
 contains the complete intent for a small change. When one file plays both intent and ticket roles,
 its sections must still keep approved behavior separate from execution instructions.
 
+Discovery evidence is not always a file: a codebase scan's findings may live only in chat, triaged
+live into a backlog line (accepted) or a decision record (rejected, so the same finding doesn't
+resurface next scan) — see [Running the workflow](./walkthrough.md) for the concrete mechanics.
+
 ## Conflict rules
 
 Authority is axis-specific, not one global document hierarchy:
@@ -76,7 +80,8 @@ PR/CI: implementation, checks, review, and merge state
 
 - `todo`: approved and not claimed.
 - `doing`: claimed; remains `doing` through Implement, Review, fixes, human review, and merge pending.
-- `done`: human-accepted and merged into the configured integration target.
+- `done`: human-accepted and merged into its PR's target branch — the bundle branch for a
+  multi-ticket bundle under `bundle-branch`, otherwise the configured integration target.
 
 Status transitions are written atomically with the git operation that causes them, never as a
 separate step a session performs by hand: `todo` → `doing` is part of the same commit that cuts the
