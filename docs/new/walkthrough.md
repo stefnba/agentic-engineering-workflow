@@ -104,14 +104,17 @@ Once ready, you review the PR and diff yourself, then either merge it directly o
 Once every ticket in the bundle is `done`, go back to the shaping session (or a fresh one) and
 trigger `/ship`:
 
-- confirms checks pass on the bundle branch (or the ticket's own branch, for a single-ticket bundle)
-  by querying its CI status remotely — the shaping session never checks that branch out locally to do
-  this — nothing lands on default until this is green
+- confirms checks pass, by querying CI status remotely rather than checking anything out locally:
+  - **multi-ticket bundle:** targets the bundle branch — this is what gates the merge below
+  - **single-ticket bundle:** targets the integration target directly, since the one ticket's PR
+    already merged there; this just reconfirms it's green
 - folds anything durable — system behavior, decisions — from the bundle into the docs that own it
 - captures unfinished or newly discovered work as backlog lines
-- deletes the bundle
-- for a multi-ticket bundle, merges the bundle branch — now holding every merged ticket — into the
-  default branch; a single-ticket bundle already landed there when its one PR merged, so this step is
-  a no-op
+- deletes the bundle: for a multi-ticket bundle, as a commit on the bundle branch itself, so the merge
+  below lands a bundle-free state on default; for a single-ticket bundle, as a commit directly on the
+  integration target, since there's no bundle branch
+- for a multi-ticket bundle, merges that now-bundle-free bundle branch — holding every merged ticket —
+  into the default branch; a single-ticket bundle already landed there when its one PR merged, so this
+  step is a no-op
 - removes whichever of the ticket branches, the bundle branch (if one existed), and their worktrees
   still exist — some may already be gone if your repo auto-deletes branches on merge
