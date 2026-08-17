@@ -2,6 +2,12 @@
 
 Branch strategy: bundle-branch
 
+## Branch naming
+
+- Bundle branch: `bundle/<bundle-id>`
+- Ticket branch: `ticket/<bundle-id>/<NN>` — a separate prefix from `bundle/` so it never collides
+  with the bundle branch itself.
+
 ## Commit messages
 
 Conventional Commits — `type(scope): subject`.
