@@ -41,6 +41,20 @@ Authority is axis-specific, not one global document hierarchy:
   intent and plan.
 - **Execution and review state:** the PR and CI system win. Do not copy transient PR states into spec
   or plan metadata.
+- **Candidate work:** the backlog owns unpicked follow-ups, but a line there grants no approval or
+  priority; the Pick gate owns selection.
+- **Repository operation:** `AGENTS.md` points agents to owning instructions, and the applicable
+  convention document wins for its operation — see the Authority table above for each document's
+  scope. In a monorepo, the nearest package `AGENTS.md` adds area-specific instructions to the root
+  file. Tool-specific instruction files reference `AGENTS.md` rather than duplicating it.
+- **Terminology:** the applicable `GLOSSARY.md` owns canonical project-domain terms and avoided
+  synonyms. Agent prose and code identifiers use its canonical terms and never an avoided synonym;
+  Review judges adherence without a separate mechanical gate. Workflow and artifact terms remain
+  owned by their defining documents. If output and a glossary conflict, surface both readings instead
+  of silently choosing one. A rename or redefinition edits the mutable glossary in place in the same
+  PR and moves the former term to its Avoid list. In a monorepo, the closest domain glossary applies
+  and the root glossary owns cross-domain vocabulary and links the domain glossaries. A repository
+  without a glossary does not need one created solely for this workflow.
 - **Decision history:** decision records are immutable. Supersede a decision with a new record; never
   edit the old record to make history look current.
 - **Process versus prompt:** workflow, artifact, and repository convention documents outrank agent
@@ -58,15 +72,9 @@ criteria returns to the Plan gate.
 
 ## Bundle contents
 
-A bundle is the disposable container for one coherent approved outcome. [Tailor bundles by
-uncertainty and impact](./bundles-by-size.md) exclusively owns which artifacts a work shape requires
-and when to split sequential bundles.
-
-Every bundle is fully shaped before implementation: all of its tickets exist, have concrete
-done-when evidence, and passed the Plan gate.
-
-One ticket equals one implementation session and one reviewable PR. Several tiny steps that cannot
-be reviewed independently are one ticket, not several tickets sharing a PR.
+A bundle is the disposable container for one coherent approved outcome. [Work bundles](./bundle.md)
+owns Shape-completion criteria and ticket identity; [Shaping routes](./shaping-routes.md) owns which
+artifacts a route requires and when to split sequential bundles.
 
 ## Status ownership
 
@@ -108,7 +116,7 @@ planning context. Its body must contain immutable commit permalinks to the compl
 and the exact ticket it implements. A branch-relative URL is not a permalink: it can drift or break
 when Ship removes the bundle branch. The linked commit must remain reachable through merged PR or
 integration-target history after branch cleanup. If a material change passes the Plan gate again,
-update the PR links to that newly approved bundle version. In a direct-ticket bundle, the bundle and
+update the PR links to that newly approved bundle version. On the direct ticket route, the bundle and
 ticket links may intentionally point to the same file.
 
 The PR is the main surface for implementation evidence, review findings, fix responses, and review

@@ -4,8 +4,8 @@ Run the Critic after the Architect completes a draft bundle and before the human
 fresh context with no authorship of the bundle. Grant read-only access to the bundle and repository;
 withhold file-writing and approval capabilities structurally.
 
-Load [Workflow](../workflow.md), [Artifacts](../artifacts.md), [Work bundles](../bundle.md), and [Tailor
-bundles by uncertainty and impact](../bundles-by-size.md) before critique.
+Load [Workflow](../workflow.md), [Artifacts](../artifacts.md), [Work bundles](../bundle.md), and
+[Shaping routes](../shaping-routes.md) before critique.
 
 ## System Prompt
 

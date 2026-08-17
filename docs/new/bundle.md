@@ -8,7 +8,12 @@ cooperate inside Shape and execution.
 Use the literal formats in [`templates/`](./templates/). Do not embed second copies of templates in
 this document.
 
-## Adaptive contents
+## Route and contents
+
+[Shaping routes](./shaping-routes.md) owns route selection, the artifact combination each route
+requires, and the sequential-bundle criteria — including when a ticket set is too large to shape at
+once. This document defines only how the selected artifacts cooperate inside a bundle, and repeats
+neither the route names nor the split triggers.
 
 ## Naming and layout
 
@@ -19,12 +24,12 @@ example bundles:
 work/
 ├── backlog.md
 ├── shaped/
-│   ├── 2026-08-17-fix-typo/            # direct-ticket route: no spec
+│   ├── 2026-08-17-fix-typo/            # direct ticket route: no spec
 │   │   └── ticket.md                   # complete intent inline
-│   ├── 2026-08-17-add-2fa/             # spec + one ticket
+│   ├── 2026-08-17-add-2fa/             # intent plus tickets route: one ticket
 │   │   ├── spec.md
 │   │   └── ticket.md                   # references the spec, doesn't restate it
-│   └── 2026-08-17-add-invites/         # spec + several tickets
+│   └── 2026-08-17-add-invites/         # intent, plan, and tickets route
 │       ├── spec.md
 │       ├── plan.md                     # only when the route requires one
 │       └── tickets/                    # Multiple tickets
@@ -39,9 +44,9 @@ The bundle ID is `YYYY-MM-DD-<slug>` using the Shape date and a short lowercase 
 `ticket.md` and `tickets/` are mutually exclusive, never both present. The choice depends only on
 ticket count, not on whether a spec or plan also exists:
 
-- Exactly one ticket: `ticket.md`, whether or not `spec.md`/`plan.md` are also present. With no
-  spec (direct-ticket route), it carries the complete approved intent. With a spec (spec-plus-ticket
-  route), it references the spec's requirement IDs instead of restating them.
+- Exactly one ticket: `ticket.md`, whether or not `spec.md`/`plan.md` are also present. On the direct
+  ticket route it carries the complete approved intent; on the intent plus tickets route it
+  references the spec's requirement IDs instead of restating them.
 - More than one ticket: `tickets/`, one numbered file per ticket — numbering exists only to
   distinguish among multiples.
 
@@ -124,22 +129,8 @@ It owns:
 
 A ticket never introduces intent or cross-ticket architecture. If several tiny steps are too coupled
 to review independently, combine them into one ticket during Shape. Do not create several tickets
-that later share a PR.
-
-## Bundle sizing
-
-Shape the complete ticket set upfront, but keep the bundle small enough that doing so is honest.
-Split the work into sequential bundles when any of these is true:
-
-- a later ticket cannot yet name exact done-when evidence
-- later tickets depend on an architectural assumption the first slice must validate
-- the bundle contains independently useful outcomes that can be planned and accepted separately
-- the dependency graph is dominated by speculative edges
-- parallel work would keep the integration branch open long enough for drift to dominate
-- the human cannot meaningfully approve the whole decomposition in one Plan gate
-
-The earlier bundle must leave the repository in a supported state. Its result may inform the next
-bundle, whose own Shape stage and Plan gate remain mandatory.
+that later share a PR. Shape the complete ticket set upfront; a bundle never grows tickets during
+execution.
 
 ## Vertical slicing
 

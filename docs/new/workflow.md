@@ -13,8 +13,8 @@ Discover ──Pick──▶ Shape ──Plan──▶ Implement ──verify + 
                                                          next ticket or Ship
 ```
 
-The stages stay fixed for every kind and size of work. Adaptive sizing changes the route and
-artifacts inside Discover and Shape, not the lifecycle.
+The stages stay fixed for every kind and size of work. The shaping route changes which artifacts
+Discover and Shape produce, not the lifecycle.
 
 | Stage     | Readiness movement                            | Primary output                           | Exit authority       |
 | --------- | --------------------------------------------- | ---------------------------------------- | -------------------- |
@@ -104,19 +104,15 @@ resolved during Shape.
 **Objective:** create one critic-reviewed, human-approved bundle that every assigned agent can
 execute without silently making product or cross-ticket design decisions.
 
-Choose the lightest shaping route that makes implementation reliable:
-
-- Direct, low-impact work: one ticket containing its complete intent.
-- Behaviorally significant work with obvious decomposition: intent/spec plus ticket(s).
-- High-impact or non-obvious decomposition: intent/spec, engineering plan, then tickets.
-- Refactor or migration: target architecture or invariants, engineering plan, then tickets.
+Select the route using [Shaping routes](./shaping-routes.md), the single owner of route selection and
+sequential-bundle criteria.
 
 Intent, planning, and ticket generation are feedback substeps, not stages. A plan or ticket that
 exposes a missing behavioral decision returns to the intent artifact before Shape continues.
 
 **Keep bundles bounded:** Shape creates the complete executable ticket set for one coherent outcome.
-Apply the canonical split criteria in the routing guide rather than creating a speculative ticket
-backlog inside one bundle.
+An outcome too large to shape honestly at once splits into sequential bundles by those criteria,
+never into a speculative ticket backlog inside one bundle.
 
 **Critique is mandatory before approval:** a fresh-context, read-only Critic attacks requirement
 coverage, architecture, slicing, dependencies, risk, and testability. The Architect owns revisions;

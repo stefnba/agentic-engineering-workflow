@@ -46,9 +46,8 @@ when the pick was already fully settled and unambiguous going in; treat that as 
 the default.
 
 If narrowing still leaves feasibility or diagnosis genuinely unknown, don't force it — shape and run
-an investigation/spike first (see [Tailor bundles by uncertainty and
-impact](./bundles-by-size.md)). Its evidence becomes the next thing you pick, not a shortcut into
-Shape.
+an investigation or spike first (see [Shaping routes](./shaping-routes.md)). Its evidence becomes the
+next thing you pick, not a shortcut into Shape.
 
 Once you've reached shared understanding, trigger `/shape` in that same session.
 
@@ -56,8 +55,8 @@ Once you've reached shared understanding, trigger `/shape` in that same session.
 
 Triggered once, by `/shape`, in the shaping session. Everything after that is automatic:
 
-1. Agent picks the shaping route (direct ticket / spec + tickets / spec + plan + tickets /
-   sequential bundles) based on uncertainty and impact, and states why.
+1. Agent picks the shaping route (direct ticket / investigation or spike / intent plus tickets /
+   intent, plan, and tickets / sequential bundles) based on uncertainty and impact, and states why.
 2. Drafts intent, plan (when the route calls for one), and tickets.
 3. Auto-dispatches a fresh-context critique; revises and re-critiques until no blocker remains.
 
