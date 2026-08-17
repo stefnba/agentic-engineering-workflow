@@ -27,6 +27,19 @@ artifacts inside Discover and Shape, not the lifecycle.
 Work may enter at the readiness level it already has. A settled human request can pass through
 Discover as a direct pick; uncertain work may need research or a spike. No stage creates an artifact
 solely to prove that the stage happened.
+## Finding protocol
+
+Critic and Reviewer findings use the same severities:
+
+- **Blocker:** an evidence-backed contract, correctness, safety, executability, or gate violation that
+  must be resolved before the next human gate.
+- **Concern:** an evidence-backed material risk or tradeoff that the human may consciously accept at
+  the next gate after its consequence is explicit.
+
+Do not create minor or suggestion findings. A useful improvement that does not affect the next gate
+is a backlog candidate, never a finding. A read-only Critic or Reviewer reports it separately; skill
+scripts record reported candidates that satisfy the repository's backlog format without
+prioritizing or promoting them.
 
 ## 1. Discover
 
@@ -64,9 +77,8 @@ Intent, planning, and ticket generation are feedback substeps, not stages. A pla
 exposes a missing behavioral decision returns to the intent artifact before Shape continues.
 
 **Keep bundles bounded:** Shape creates the complete executable ticket set for one coherent outcome.
-If later tickets depend on unvalidated architecture, cannot yet carry concrete done-when evidence,
-or describe independently useful outcomes, split the work into sequential bundles. Do not create a
-large speculative ticket backlog inside one bundle.
+Apply the canonical split criteria in the routing guide rather than creating a speculative ticket
+backlog inside one bundle.
 
 **Critique is mandatory before approval:** a fresh-context, read-only Critic attacks requirement
 coverage, architecture, slicing, dependencies, risk, and testability. The Architect owns revisions;
@@ -185,9 +197,8 @@ The final Reviewer comment is tied to the reviewed head SHA and states:
 - remaining limitations or material areas that could not be verified
 
 **Accept gate:** the human accepts the independently reviewed PR and explicitly disposes any open
-concerns. Acceptance authorizes the merge, executed by the coordination tooling according to the
-repository's Git conventions; the ticket becomes `done` only after the PR reaches its configured
-target.
+concerns. Acceptance authorizes the merge, executed by skill scripts according to the repository's
+Git conventions; the ticket becomes `done` only after the PR reaches its configured target.
 Accept applies to the exact reviewed head SHA; any subsequent implementation change invalidates it
 and requires verification and Review again.
 
