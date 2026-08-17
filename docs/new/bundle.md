@@ -10,16 +10,36 @@ this document.
 
 ## Adaptive contents
 
-Choose the lightest bundle that makes implementation reliable:
+## Naming and layout
 
-| Work shape                                          | Bundle contents                                   |
-| --------------------------------------------------- | ------------------------------------------------- |
-| Small, known, low-impact                            | One ticket containing complete intent             |
-| Behaviorally significant with obvious decomposition | Spec plus ticket(s)                               |
-| Non-obvious architecture or decomposition           | Spec, engineering plan, and tickets               |
-| Refactor or migration                               | Target architecture/invariants, plan, and tickets |
+A bundle is **always a directory**. No route ever stores a bundle as a single loose file. Three
+example bundles:
 
-The detailed routing guidance lives in [Tailor bundles by uncertainty and impact](./bundles-by-size.md).
+```text
+work/
+├── backlog.md
+├── shaped/
+│   ├── 2026-08-17-fix-typo/            # direct-ticket route: no spec
+│   │   └── ticket.md                   # complete intent inline
+│   ├── 2026-08-17-add-2fa/             # spec + one ticket
+│   │   ├── spec.md
+│   │   └── ticket.md                   # references the spec, doesn't restate it
+│   └── 2026-08-17-add-invites/         # spec + several tickets
+│       ├── spec.md
+│       ├── plan.md                     # only when the route requires one
+│       └── tickets/                    # Multiple tickets
+│           ├── 01-persistence.md
+│           └── 02-api.md
+└── active/
+    └── YYYY-MM-DD-<slug>/              # same shape, moved here on first claim
+```
+
+The bundle ID is `YYYY-MM-DD-<slug>` using the Shape date and a short lowercase kebab-case slug.
+
+`ticket.md` and `tickets/` are mutually exclusive, never both present. The choice depends only on
+ticket count, not on whether a spec or plan also exists:
+Ticket numbers in `tickets/` are two-digit, stable within the bundle, and encode identity rather
+than execution order. Use the same number in the ticket heading.
 
 ## Shape feedback loop
 
@@ -142,8 +162,8 @@ drift that preserves intent is corrected visibly in the PR; material drift retur
 ## Git and pull requests
 
 The repository's [`docs/agents/git.md`](../agents/git.md) declares `bundle-branch` or `trunk` and owns
-all branch, worktree, commit, PR, and merge mechanics. Bundle size determines which documented
-topology applies.
+branch naming, worktree location, commit conventions, and merge policy. This section owns how bundle
+and ticket branches map onto the declared strategy.
 
 ### Single-ticket bundle
 
