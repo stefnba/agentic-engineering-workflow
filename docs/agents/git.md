@@ -34,3 +34,5 @@ Conventional Commits — `type(scope): subject`.
 **Always create with plain git** — never a WorktreeCreate hook, for any worktree: a hook replaces creation globally and silently disables `.worktreeinclude`.
 
 **Bundle branches and worktrees go through the `bundle-git` skill** — it owns their creation, sync, and cleanup, deriving every name from the strategy and location declared here. Worktrees outside a bundle follow the rules above directly.
+
+**Bundle-branch creation is race-safe by construction, not by locking.** Fetch first: if `bundle/<bundle-id>` already exists, branch the ticket off it directly. If not, create it from the integration target and push it. If that push is rejected because the ref now exists — another ticket's claim won the race — fetch it and branch off that instead of failing.

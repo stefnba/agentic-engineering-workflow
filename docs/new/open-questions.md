@@ -13,10 +13,6 @@
 - The human can jump into a ticket tab and change the PR branch directly (walkthrough.md), but how is
   that captured for the reviewer — does it show up as a normal commit, does review restart, is it
   documented anywhere?
-- What stops two independently-unblocked tickets from racing to create the bundle branch if claimed
-  around the same time? Discussed direction: make bundle-branch creation self-healing via git's
-  atomic ref creation (first push wins; second fetches and rebases onto it) — not yet written into
-  git.md.
 - What's the abandon/cancel path when a bundle stops partway through — do unclaimed tickets just
   never get opened, and who cleans up the bundle branch and worktrees?
 - Who resolves a merge conflict between a ticket's PR and the bundle branch — does the implementer
