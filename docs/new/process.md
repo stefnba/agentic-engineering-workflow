@@ -61,28 +61,56 @@ what's safe to run in parallel), and one paste-ready opening prompt per currentl
 **Plan gate:** you approve. The bundle commits directly to the integration branch — no PR. Critique
 plus your approval already are the review step for a planning artifact; a PR on top of that adds
 ceremony without adding a gate.
+
+## Implement (per ticket)
+
+For each ticket you're ready to start: open a new session tab and paste its opening prompt.
+
+- **Single-ticket bundle:** the prompt creates the ticket's branch and worktree straight from the
+  integration target, and its PR merges directly into that target.
+- **Multi-ticket bundle:** claiming the first ticket also creates a bundle branch off the integration
+  target (e.g. `bundle/<bundle-id>`) — no worktree for the bundle branch itself, since nothing is
+  edited on it directly. Every ticket's branch and worktree are cut from that bundle branch instead
+  of the integration target, and every ticket's PR merges into the bundle branch, not the target.
+
+Either way, the tab then starts the implementation skill, which builds the ticket including tests,
+runs its checks, and opens the PR with a summary.
+
 Only open a ticket's tab once every ticket it depends on is `done`. Tickets with no dependency
 between them can run in tabs side by side.
 
-- Same implementation session kicks off review agent to review with prompt to specifally work on that PR and review diff
-  - review agent posts comment in structured format based on template into PR
-    - Blockers
-    - Concerns
-  - also returns summary back to implementation
-  - Mayebe we even do review based on two axes like mattpott skills (does it meet spec? and does it meet codebase requirement and conventions?)
-- Same implementation sessions validates these findings (tbd if that is good practice) and fixes blockers and maybe concerns too?
-- Once done, posts fixes done to PR and starts new review session
-  - Starts from beginning
-  - Max 3 loops for now
-- Implemenation session gives final summary of what was built and fixes and recommends view
+## Review → fix loop
 
-- Users reviews the PR and diff in detail and would either a) call a /complete-ticket skill to merge the PR into target branch or b) merges PR themselves
+From the same ticket tab, the implementation session dispatches review as a fresh subagent — it
+shares no message history with the implementer, so it judges independently even though you launched
+it from the same place.
 
-**Open question**:
+- Reviewer posts findings to the PR as comments (as blockers or concerns), and returns a summary to the tab.
+- The implementer resolves every blocker — fixes it or rebuts it with evidence. Concerns are not
+  required to be fixed; they carry forward for you to accept or reject at merge time.
+- Posts a fix summary at the new head, which kicks off the next review round. Three rounds is the
+  normal max — going further needs your explicit go-ahead.
 
-- What if users wants to make some changes themselves (minor or major changes)?
+Because you're in that tab's conversation the whole time, you can jump in and steer or fix things
+yourself at any point — nothing about this loop locks you out.
+
+Once ready, you review the PR and diff yourself, then either merge it directly or run
+`/complete-ticket` to do it.
 
 ## Ship
+
+Once every ticket in the bundle is `done`, go back to the shaping session (or a fresh one) and
+trigger `/ship`:
+
+- confirms checks pass on the bundle branch (or the ticket's own branch, for a single-ticket bundle)
+  — nothing lands on default until this is green
+- folds anything durable — system behavior, decisions — from the bundle into the docs that own it
+- captures unfinished or newly discovered work as backlog lines
+- deletes the bundle
+- for a multi-ticket bundle, merges the bundle branch — now holding every merged ticket — into the
+  default branch; a single-ticket bundle already landed there when its one PR merged, so this step is
+  a no-op
+- removes the ticket branches, the bundle branch (if one existed), and their worktrees
 
 ## Open questions
 
