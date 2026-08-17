@@ -1,47 +1,68 @@
+# Running the workflow
+
+A practical walkthrough of using the workflow day to day: which skill you run, which session or tab
+it runs in, and what you do at each handoff. Five stages: Discover, Shape, Implement, Review, Ship.
+
+**You dispatch stages by hand.** Everything inside a stage — critique after a Shape draft, review
+after a PR opens, the fix-and-re-review loop — runs automatically once you've started the stage; you
+don't separately trigger those substeps.
+
+## How you run this
+
+There's no orchestration tooling beyond skills, subagents, worktrees, and git. Two kinds of chat session
+typically carry the whole workflow:
+
+- **One long-lived session per bundle.** Runs Discovery and Shape, and later Ship. Its
+  working directory stays on the integration branch the whole time — it never checks out a ticket
+  branch itself.
+- **One chat session tab per ticket, each cd'd into that ticket's own worktree.** Opened only once the
+  ticket's dependencies are `done`; independent tickets can have tabs open in parallel. Runs
+  Implement; Review is dispatched from inside this same tab as a fresh subagent (see Review below).
+
+Keeping the shaping session open is convenient, not required — bundle and ticket state live in files
+and git, not in a session's memory, so `/ship` works fine from a fresh session too.
+
+Babysitting tabs doesn't scale past a few at once — treat that as a real constraint on how many
+tickets you shape into one parallel wave, not just an inconvenience.
+
 ## Discovery
 
-### Option A: From backlog item
+**Entry point — how you arrive at something to work on:**
 
-- User can use /pick skill
+- **Backlog pick** — `/pick` a one-line backlog item.
+- **Codebase scan** — run `/scan-codebase` for full or narrow findings. Results
+  appear inline in chat only, never written to a file. Triage each finding right there: accept it
+  (→ backlog line, title plus a short breadcrumb) or reject it with a reason (→ decision record
+  under `docs/decisions/`, so the next scan doesn't resurface it).
+- **Fresh idea** — anything you bring yourself; no different from a backlog pick once it's out loud.
 
-### Option B: Interview
+**Narrowing — almost every entry point still needs this.** A backlog line is a title, not a settled
+intent. Run `/interview-me` in the same session and keep going until you and the agent share an
+understanding of the problem, desired outcome, and edge cases. This stays conversational and
+produces no file — `/shape` is the first thing that writes anything durable. Skip the interview only
+when the pick was already fully settled and unambiguous going in; treat that as the rare case, not
+the default.
 
-- User starts /interview-me
-
-### Option C: Codebase audit
-
-- user starts /audit skill which (the current skill is wrong) does a full or narrow audit of the codebase, suggests improvements, simplifications, best practices, etc.
-
-**Open question**:
-
-- is the audi report already a bundle artifcat?
+Once you've reached shared understanding, trigger `/shape` in that same session.
 
 ## Shape
 
-- User triggers /shape skill, agent creates bundle, triggers critique skill
+Triggered once, by `/shape`, in the shaping session. Everything after that is automatic:
 
-- Agent provides brief summary of what will be built and tickets as well as a suggetstion on the sequence (what must be single, what be be implement in parallel)
-  - Also users gets prompts for building the next ticket
+1. Agent picks the shaping route (direct ticket / spec + tickets / spec + plan + tickets /
+   sequential bundles) based on uncertainty and impact, and states why.
+2. Drafts intent, plan (when the route calls for one), and tickets.
+3. Auto-dispatches a fresh-context critique; revises and re-critiques until no blocker remains.
 
-**Open question**:
+You then get: a brief summary of what will be built, the ticket list with sequencing (what's serial,
+what's safe to run in parallel), and one paste-ready opening prompt per currently unblocked ticket
+(worktree path included).
 
-- Does user trigger /to-tickets skill themselves?
-- Is there a /to-plan skill that is user-triggered or automatically?
-- How do we decide which bundle it will be (including spec, plan, multiple tickets)?
-- Which skill involves understanding of the codebase, which doesn't?
-- To which branch do we commit the bundle? (a new PR into main would be a bit much no?)?
-
-## Implement (for each ticket)
-
-- User uses suggested prompt or writes one for the implementation skill to get started (most liekly new chat session)
-  - Sub-agent in main conversation tbd if that is feasible
-- If first ticket, a new worktree and branch must be created (if mutiple tickets) as the target bundle branch
-- Implement skill and corresponding agents
-  - Creates worktree and branch for this ticket
-  - builds the ticket and does it's check
-  - Once done and everything is green, opens PR with summary (based on template, including checks, what deviated from spec and why, etc.)
-
-## Review - fix loop
+**Plan gate:** you approve. The bundle commits directly to the integration branch — no PR. Critique
+plus your approval already are the review step for a planning artifact; a PR on top of that adds
+ceremony without adding a gate.
+Only open a ticket's tab once every ticket it depends on is `done`. Tickets with no dependency
+between them can run in tabs side by side.
 
 - Same implementation session kicks off review agent to review with prompt to specifally work on that PR and review diff
   - review agent posts comment in structured format based on template into PR
@@ -63,6 +84,12 @@
 
 ## Ship
 
-- Once all tickets are done, user goes back to main conversation (can be basically any session but the previous main one is good since it has context about which bundle) and triggers /ship skill on that bundle
+## Open questions
 
-- Bundle gets deleted from git
+- What happens when you reject at the Plan gate — back to Discovery, or does the shaping session just
+  revise in place?
+- What ends a critique loop that isn't converging, instead of looping forever?
+- What does hitting the review round limit actually look like for you — what do you see, what do you
+  decide?
+- Does `/complete-ticket` merge directly, or only prepare the merge for you to confirm?
+- How can the human do changes to a PR branch for a ticket. how is that handled with review and documenated?
