@@ -1,6 +1,7 @@
 # Git conventions
 
 Branch strategy: bundle-branch
+Bundle integration target : main
 
 ## Branch naming
 
