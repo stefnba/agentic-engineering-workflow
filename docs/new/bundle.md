@@ -48,6 +48,11 @@ ticket count, not on whether a spec or plan also exists:
 Ticket numbers in `tickets/` are two-digit, stable within the bundle, and encode identity rather
 than execution order. Use the same number in the ticket heading.
 
+Draft location is tool-local and uncommitted. After the Plan gate, skill scripts publish the exact
+approved bundle under `work/shaped/` on the configured integration target using the repository's Git
+conventions. The first ticket claim moves the complete bundle to `work/active/` on that same
+integration target. Ship deletes the active bundle path; there is no archive.
+
 ## Shape feedback loop
 
 Spec, planning, and ticket generation are feedback substeps inside Shape:
