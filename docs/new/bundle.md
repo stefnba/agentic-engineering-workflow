@@ -38,6 +38,13 @@ The bundle ID is `YYYY-MM-DD-<slug>` using the Shape date and a short lowercase 
 
 `ticket.md` and `tickets/` are mutually exclusive, never both present. The choice depends only on
 ticket count, not on whether a spec or plan also exists:
+
+- Exactly one ticket: `ticket.md`, whether or not `spec.md`/`plan.md` are also present. With no
+  spec (direct-ticket route), it carries the complete approved intent. With a spec (spec-plus-ticket
+  route), it references the spec's requirement IDs instead of restating them.
+- More than one ticket: `tickets/`, one numbered file per ticket — numbering exists only to
+  distinguish among multiples.
+
 Ticket numbers in `tickets/` are two-digit, stable within the bundle, and encode identity rather
 than execution order. Use the same number in the ticket heading.
 
