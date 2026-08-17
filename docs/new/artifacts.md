@@ -37,6 +37,11 @@ Authority is axis-specific, not one global document hierarchy:
   intent and plan.
 - **Execution and review state:** the PR and CI system win. Do not copy transient PR states into spec
   or plan metadata.
+- **Decision history:** decision records are immutable. Supersede a decision with a new record; never
+  edit the old record to make history look current.
+- **Process versus prompt:** workflow, artifact, and repository convention documents outrank agent
+  prompts. Prompts load those owners and contain only role-specific judgment, escalation, and output
+  instructions.
 - **Current system claims during active work:** durable colocated system docs outrank the bundle. If
   code or tests contradict those docs, surface the drift and reconcile it; never silently choose the
   bundle's version.
@@ -54,9 +59,7 @@ uncertainty and impact](./bundles-by-size.md) exclusively owns which artifacts a
 and when to split sequential bundles.
 
 Every bundle is fully shaped before implementation: all of its tickets exist, have concrete
-done-when evidence, and passed the Plan gate. If that is not credible because later work depends on
-unvalidated assumptions, split the effort into sequential bundles rather than writing speculative
-tickets.
+done-when evidence, and passed the Plan gate.
 
 One ticket equals one implementation session and one reviewable PR. Several tiny steps that cannot
 be reviewed independently are one ticket, not several tickets sharing a PR.
@@ -74,6 +77,11 @@ PR/CI: implementation, checks, review, and merge state
 - `todo`: approved and not claimed.
 - `doing`: claimed; remains `doing` through Implement, Review, fixes, human review, and merge pending.
 - `done`: human-accepted and merged into the configured integration target.
+
+Status transitions are written atomically with the git operation that causes them, never as a
+separate step a session performs by hand: `todo` → `doing` is part of the same commit that cuts the
+ticket's branch at claim time, and `doing` → `done` is part of the merge commit itself. Each ticket's
+status lives in that ticket's own file, so parallel claims never contend for the same write.
 
 Do not persist `ready`, `implemented`, `verifying`, `blocked`, or `changes_requested` in ticket
 status. The bundle, PR, and CI already own those facts. Unmet ticket dependencies are derived from
@@ -94,7 +102,8 @@ planning context. Its body must contain immutable commit permalinks to the compl
 and the exact ticket it implements. A branch-relative URL is not a permalink: it can drift or break
 when Ship removes the bundle branch. The linked commit must remain reachable through merged PR or
 default-branch history after branch cleanup. If a material change passes the Plan gate again, update
-the PR links to that newly approved bundle version.
+the PR links to that newly approved bundle version. In a direct-ticket bundle, the bundle and ticket
+links may intentionally point to the same file.
 
 The PR is the main surface for implementation evidence, review findings, fix responses, and review
 state. Its links do not transfer authority: the linked intent, plan, and ticket remain authoritative

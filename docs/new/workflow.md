@@ -16,13 +16,13 @@ Discover ──Pick──▶ Shape ──Plan──▶ Implement ──verify + 
 The stages stay fixed for every kind and size of work. Adaptive sizing changes the route and
 artifacts inside Discover and Shape, not the lifecycle.
 
-| Stage     | Readiness movement                            | Primary output                       | Exit authority       |
-| --------- | --------------------------------------------- | ------------------------------------ | -------------------- |
-| Discover  | unknown or unselected → understood and picked | picked intent or evidence            | human Pick gate      |
-| Shape     | picked → approved and executable              | complete bounded bundle              | human Plan gate      |
-| Implement | executable ticket → verified and reconciled   | implementation PR                    | deterministic checks |
-| Review    | verified → independently judged and accepted  | findings or accepted change          | human Accept gate    |
-| Ship      | accepted bundle → durable shipped outcome     | default branch green; bundle deleted | prior Accept gates   |
+| Stage     | Readiness movement                            | Primary output                           | Exit authority       |
+| --------- | --------------------------------------------- | ---------------------------------------- | -------------------- |
+| Discover  | unknown or unselected → understood and picked | picked intent or evidence                | human Pick gate      |
+| Shape     | picked → approved and executable              | complete bounded bundle                  | human Plan gate      |
+| Implement | executable ticket → verified and reconciled   | implementation PR                        | deterministic checks |
+| Review    | verified → independently judged and accepted  | findings or accepted change              | human Accept gate    |
+| Ship      | accepted bundle → durable shipped outcome     | integration target green; bundle deleted | prior Accept gates   |
 
 Work may enter at the readiness level it already has. A settled human request can pass through
 Discover as a direct pick; uncertain work may need research or a spike. No stage creates an artifact
@@ -246,17 +246,20 @@ Ship begins only when every ticket is `done` and the human triggers it.
 
 Ship:
 
-1. Reconciles remaining bundle knowledge into durable system docs, terminology, and decision
+1. Confirms canonical checks pass on the state holding every merged ticket — this gates every step
+   below.
+2. Reconciles remaining bundle knowledge into durable system docs, terminology, and decision
    records.
-2. Converts unfinished or newly discovered work into backlog entries.
-3. Deletes the complete bundle from the integration state.
-4. Lands that final state on the default branch according to the repository's branch strategy.
-5. Confirms canonical checks pass on the default branch, then removes bundle branches and worktrees.
+3. Converts unfinished or newly discovered work into backlog entries.
+4. Deletes the complete bundle from the integration state.
+5. Lands that final state on the configured integration target according to the repository's branch
+   strategy.
+6. Removes bundle branches and worktrees.
 
 Git history preserves the work record; there is no shipped-bundle archive.
 
-Done when the outcome is on the default branch, canonical checks pass there, durable documentation
-is current, and no bundle artifact, branch, or worktree remains.
+Done when the outcome is on the integration target, canonical checks pass there, durable
+documentation is current, and no bundle artifact, branch, or worktree remains.
 
 ## Human authority
 

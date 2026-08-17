@@ -91,7 +91,8 @@ it from the same place.
 - The implementer resolves every blocker — fixes it or rebuts it with evidence. Concerns are not
   required to be fixed; they carry forward for you to accept or reject at merge time.
 - Posts a fix summary at the new head, which kicks off the next review round. Three rounds is the
-  normal max — going further needs your explicit go-ahead.
+  normal max; four or five need your explicit go-ahead. Five is the hard ceiling — beyond that, back
+  to Shape.
 
 Because you're in that tab's conversation the whole time, you can jump in and steer or fix things
 yourself at any point — nothing about this loop locks you out.
