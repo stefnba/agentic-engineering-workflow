@@ -93,7 +93,8 @@ ticket metadata that can go stale.
 - **Local draft:** unapproved and not shared as committed work.
 - **Shaped:** critic-reviewed and human-approved; implementation may start.
 - **Active:** at least one ticket has started.
-- **Shipped:** every ticket is done, the outcome is on the default branch, and the bundle is deleted.
+- **Shipped:** every ticket is done, the outcome is on the integration target, and the bundle is
+  deleted.
 
 There is no `done/` or shipped-bundle archive. Git history preserves temporary artifacts.
 
@@ -101,9 +102,9 @@ Each implementation PR is the permanent historical bridge from the shipped chang
 planning context. Its body must contain immutable commit permalinks to the complete approved bundle
 and the exact ticket it implements. A branch-relative URL is not a permalink: it can drift or break
 when Ship removes the bundle branch. The linked commit must remain reachable through merged PR or
-default-branch history after branch cleanup. If a material change passes the Plan gate again, update
-the PR links to that newly approved bundle version. In a direct-ticket bundle, the bundle and ticket
-links may intentionally point to the same file.
+integration-target history after branch cleanup. If a material change passes the Plan gate again,
+update the PR links to that newly approved bundle version. In a direct-ticket bundle, the bundle and
+ticket links may intentionally point to the same file.
 
 The PR is the main surface for implementation evidence, review findings, fix responses, and review
 state. Its links do not transfer authority: the linked intent, plan, and ticket remain authoritative
@@ -117,6 +118,5 @@ At Ship:
 3. Move unfinished or newly discovered work into the backlog.
 4. Delete the complete bundle: intent/spec, plan, tickets, and bundle-local evidence.
 
-Never link directly to a disposable bundle from code or durable documentation. Use the implementation
-PR when a historical reference is necessary; that PR owns the immutable links to its bundle and
-ticket.
+**Never reference a disposable bundle from code, durable documentation, or comments — it will not
+exist once Ship deletes it.**
