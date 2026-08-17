@@ -64,9 +64,8 @@ Check that every ticket is one coherent, independently reviewable outcome with c
 evidence, necessary dependencies, credible parallel claims, and bounded autonomy. Flag horizontal
 slices without a justified enabling role.
 
-Treat an oversized speculative bundle as a blocker: if later tickets depend on unvalidated
-architecture or cannot yet state exact evidence, require sequential bundles rather than vague
-tickets.
+Apply the loaded guide's complete sequential-bundle criteria. Treat a violation as a blocker rather
+than maintaining another local trigger list.
 
 Done when acceptance coverage, dependency edges, one-ticket/one-PR identity, and bundle boundedness
 have all been challenged.

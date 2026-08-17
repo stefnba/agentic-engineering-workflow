@@ -82,8 +82,10 @@ intent, optional plan, ticket, relevant durable docs, and repository conventions
 
 Implementation includes:
 
-1. Claim the next unblocked `todo` ticket and set it to `doing`.
-2. Write the required behavior test and observe it fail, unless Shape supplied a locked test.
+1. Start from the one dispatched ticket the claim mechanics already recorded as `doing`.
+2. Establish the ticket's required pre-change evidence. For changed behavior, normally write the
+   behavior test and observe the expected failure; the ticket may specify other evidence when a red
+   test is inapplicable or Shape supplied a locked test.
 3. Implement only the approved ticket and bounded local support work.
 4. Run every ticket done-when command plus canonical repository checks.
 5. Reconcile affected durable docs, terminology, intent corrections, and remaining tickets in the
@@ -117,9 +119,8 @@ an independent Reviewer.
 **Objective:** independently judge what implementation and deterministic verification cannot.
 
 Review runs in a fresh context with no authorship of the diff. The Reviewer is structurally
-read-only, reruns required checks, reads changed code in context, and judges requirement fit,
-correctness, architecture, public contracts, security, realistic performance risk, test honesty,
-and reconciliation.
+read-only, reruns required checks, reads changed code in context, and applies the judgment method and
+output contract in [Reviewer](./agents/reviewer.md).
 
 ```text
 Implement → verify + reconcile → open PR
@@ -128,7 +129,7 @@ Implement → verify + reconcile → open PR
                                 Review round
                          ┌───────────┴───────────┐
                          ▼                       ▼
-                     findings                  clear
+                  fix required              no blockers
                          │                       │
                          ▼                       ▼
            fresh Implementer (fix mode)   final review summary
@@ -165,20 +166,24 @@ explicit human direction. Five is the absolute maximum without returning to Shap
 changing the workflow.
 
 The limit is an escalation condition, never an acceptance condition. Reaching it cannot waive a
-blocker or major concern. A PR is ready for human review only when every finding is fixed, closed by
-the Reviewer after an evidence-backed rebuttal, or resolved through an explicit human planning
-decision, and no blocker or unresolved major concern remains.
+blocker. A PR is ready for human review only when every blocker is fixed, closed by the Reviewer after
+an evidence-backed rebuttal, or resolved through an explicit human planning decision. Open concerns
+are carried visibly to the human Accept gate.
 
 The final Reviewer comment is tied to the reviewed head SHA and states:
 
 - ready for human review
 - independent verification commands and results
 - every finding ID and final disposition
+- every open concern and its consequence
 - remaining limitations or material areas that could not be verified
 
-**Accept gate:** the human accepts the independently reviewed PR. Acceptance authorizes integration;
-the workflow coordinator or automation marks the ticket `done` only when the PR has merged into its
-configured target.
+**Accept gate:** the human accepts the independently reviewed PR and explicitly disposes any open
+concerns. Acceptance authorizes the merge, executed by the coordination tooling according to the
+repository's Git conventions; the ticket becomes `done` only after the PR reaches its configured
+target.
+Accept applies to the exact reviewed head SHA; any subsequent implementation change invalidates it
+and requires verification and Review again.
 
 A review round ends with either findings returned to Implement or a final summary for the human. The
 Review stage ends only when the human accepts the change and it merges.
@@ -187,14 +192,16 @@ Review stage ends only when the human accepts the change and it merges.
 
 **Objective:** land the complete accepted outcome and remove its temporary planning record.
 
-Ship begins only when every ticket is `done`. It:
+Ship begins only when every ticket is `done` and the human triggers it.
+
+Ship:
 
 1. Reconciles remaining bundle knowledge into durable system docs, terminology, and decision
    records.
-2. Lands the bundle on the default branch according to the repository's branch strategy.
-3. Confirms canonical checks pass on the default branch.
-4. Converts unfinished or newly discovered work into backlog entries.
-5. Deletes the complete bundle and all bundle branches and worktrees.
+2. Converts unfinished or newly discovered work into backlog entries.
+3. Deletes the complete bundle from the integration state.
+4. Lands that final state on the default branch according to the repository's branch strategy.
+5. Confirms canonical checks pass on the default branch, then removes bundle branches and worktrees.
 
 Git history preserves the work record; there is no shipped-bundle archive.
 
@@ -220,8 +227,9 @@ human gate. Ship adds no fourth approval; it executes the outcome already accept
   seams, and missing failure or boundary cases.
 - **Ticket owns required evidence:** map the behavior it delivers to exact verification commands and
   expected outcomes.
-- **Implementer owns test code by default:** write the behavior test first, observe it fail, then
-  implement and add honest supporting tests.
+- **Implementer owns test code by default:** for changed behavior, add or adjust the behavior test and
+  observe its pre-change failure when meaningful, then implement and add honest supporting tests. For
+  non-behavioral work, the ticket names equivalent pre-change evidence.
 - **Reviewer owns independent judgment:** rerun required evidence and judge whether author-written
   tests constrain the approved behavior. Passing tests are evidence, not self-approval.
 - **Repository CI owns global gates:** existing test, lint, type, build, and policy commands remain
