@@ -8,15 +8,21 @@ That distinction matters when reading anything here:
 - The skills under `skills/` are meant to be copied into (or eventually installed by) other repos. Their instructions reference paths and structures of a target repo, not this one.
 - The conventions this repo does apply to itself are [work/backlog.md](work/backlog.md), which tracks work on the reference material, and [GLOSSARY.md](GLOSSARY.md), a near-empty root vocabulary file — partly to have them, partly to dogfood the format.
 
+## The workflow
+
+- [docs/workflow.md](docs/workflow.md) — the five stages, human gates, and coordination rules
+- [docs/artifacts.md](docs/artifacts.md) — which artifact owns which question, and for how long
+- [docs/bundle.md](docs/bundle.md) — how intent, plan, and tickets cooperate inside a bundle
+- [docs/shaping-routes.md](docs/shaping-routes.md) — which artifacts a given piece of work needs
+- [docs/walkthrough.md](docs/walkthrough.md) — running it day to day: which skill, which session tab
+
 ## Skills
 
-What exists today. The conventions they follow live in [docs/skills.md](docs/skills.md); the build plan for the unbuilt rest in [work/skills-build-plan.md](work/skills-build-plan.md).
-
-Each name is a pointer — the authoritative description lives in that skill's `SKILL.md` frontmatter.
+What exists today. Each name is a pointer — the authoritative description lives in that skill's `SKILL.md` frontmatter.
 
 ### Workflow skills
 
-Stage-bound — each realizes one role of the [workflow](docs/agentic-workflow.md):
+Stage-bound — each realizes one role of the [workflow](docs/workflow.md):
 
 | Name           | Stage     | Purpose                              |
 | -------------- | --------- | ------------------------------------ |
@@ -47,14 +53,14 @@ Not stage-bound — they serve any session:
 
 ## Agents
 
-The subagents forked skills run in:
+The subagents forked skills run in, under [agents/](agents/):
 
-| Name         | Purpose                         |
-| ------------ | ------------------------------- |
-| `arbiter`    | First-principles design arbiter |
-| `critic`     | Read-only spec attacker         |
-| `reviewer`   | Judges a ticket's PR            |
-| `researcher` | Background evidence gatherer    |
+| Name          | Purpose                                       |
+| ------------- | --------------------------------------------- |
+| `architect`   | Drafts the bundle during Shape                |
+| `critic`      | Read-only spec attacker, before the Plan gate |
+| `implementer` | Executes one ticket to a PR, and fix rounds   |
+| `reviewer`    | Judges a ticket's PR                          |
 
 ## Tool setup
 
