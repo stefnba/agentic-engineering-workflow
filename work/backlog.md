@@ -24,10 +24,17 @@ Tags:
   Either move the referenced content to a proper owning doc and have both sides link to it, or
   confirm walkthrough.md legitimately owns these specific facts and the direction is fine as-is.
 - [follow-up] walkthrough.md already names specific skills (`/pick`, `/scan-codebase`,
-  `/interview-me`, `/shape`, `/complete-ticket`, `/ship`, `bundle-git`) as if they exist. Each still
-  needs to actually be defined as its own modular skill file — including internal, non-user-facing
-  ones (`bundle-git`, claim/dispatch mechanics) that no human ever types directly, not just the
-  slash commands a human invokes.
+  `/interview-me`, `/shape`, `/complete-ticket`, `/ship`) as if they exist. Each still needs to
+  actually be defined as its own modular skill file — including internal, non-user-facing ones
+  (dispatch mechanics) that no human ever types directly, not just the slash commands a human
+  invokes. `bundle-git` now exists and owns claim, status, and merge; `/complete-ticket` should call
+  its script rather than reimplementing the merge.
+- [drift] README.md links `docs/skills.md` and `work/skills-build-plan.md`; README.md and AGENTS.md
+  both link `docs/agentic-workflow.md`. None of the three exist — point them at the `docs/new/` docs
+  that own the material now, or create them.
+- [drift] docs/agents/git.md says the `bundle-git` skill owns bundle branch "creation, sync, and
+  cleanup", but the skill only creates the bundle branch and removes a ticket's worktree. Ship's
+  branch and worktree cleanup, and whatever "sync" means here, are unimplemented.
 - [follow-up] Add reference skill `/codebase-design` — supplies shared vocabulary (module, interface,
   depth, seam, adapter, leverage, locality) for other skills to borrow; not a session driver itself.
 - [follow-up] templates/ticket.md's Outcome section is thin for ticket-only bundles (no spec): it
