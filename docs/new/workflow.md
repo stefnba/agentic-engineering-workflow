@@ -60,6 +60,11 @@ script starting the next subagent inline, not a separate coordinator reacting af
 
 Inner dispatches follow the stage contract deterministically; they carry no product judgment and
 cannot cross a human gate.
+These skill scripts never own product or technical judgment and cannot pass a human gate: Pick,
+Plan, and Accept are explicit human decisions, observed and never inferred. The Implementer never
+selects or claims its own ticket; claim and merge transitions live in scripts because a prompt-only
+instruction cannot guarantee serialization.
+
 ## Finding protocol
 
 Critic and Reviewer findings use the same severities:
