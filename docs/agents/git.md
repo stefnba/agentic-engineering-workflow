@@ -1,7 +1,7 @@
 # Git conventions
 
 Branch strategy: bundle-branch
-Bundle integration target : main
+Integration target: main
 
 ## Branch naming
 
@@ -29,7 +29,7 @@ Conventional Commits — `type(scope): subject`.
 
 **Location**: `.claude/worktrees/` — the path under it mirrors the branch name.
 
-**Base rule**: a branch is cut from the branch its work will PR into — for bundle work the `bundle-git` skill derives that target; outside a bundle it is the default branch (unless an optional Release promotion section below says otherwise).
+**Base rule**: a branch is cut from the branch its work will PR into — for bundle work the `bundle-git` skill derives that target; outside a bundle it is the configured integration target (unless an optional Release promotion section below says otherwise).
 
 **Always create with plain git** — never a WorktreeCreate hook, for any worktree: a hook replaces creation globally and silently disables `.worktreeinclude`.
 

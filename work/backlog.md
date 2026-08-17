@@ -7,6 +7,11 @@ Tags: `[idea]` new idea worth exploring, `[drift]` noticed inconsistency between
 
 ## Items
 
+- [follow-up] Rename the Ship stage to Land — "ship" implies production release, which the workflow
+  explicitly doesn't own (the integration target may be `dev`, promotion to the protected branch is
+  a separate release process); "lands on the integration target" is already the docs' own phrasing.
+  Rename sweeps workflow.md, walkthrough.md, artifacts.md ("Shipped" lifetime state → "Landed"),
+  bundle.md, AGENTS.md, and the planned `/ship` skill name (→ `/land`).
 - [drift] docs/agents/git.md's Worktrees section references an "optional Release promotion section
   below" that doesn't exist in the file — dangling internal reference, resolve or remove.
 - [follow-up] walkthrough.md already names specific skills (`/pick`, `/scan-codebase`,
@@ -16,6 +21,11 @@ Tags: `[idea]` new idea worth exploring, `[drift]` noticed inconsistency between
   slash commands a human invokes.
 - [follow-up] Add reference skill `/codebase-design` — supplies shared vocabulary (module, interface,
   depth, seam, adapter, leverage, locality) for other skills to borrow; not a session driver itself.
+- [follow-up] templates/ticket.md's Outcome section is thin for ticket-only bundles (no spec): it
+  leans on one free-text paragraph for intent that spec-backed tickets get real structure for
+  (BR/BC/INV/AC with IDs). Strengthen the ticket-only-bundle guidance to prompt for the same
+  categories — behavior, constraints, non-goals, acceptance — without requiring the ID machinery a
+  single-ticket bundle has nothing else to cross-reference.
 - [follow-up] Finding protocol refinements (from independent judge ruling — keep two severities,
   harden the record):
   - Mandatory violated-referent field per finding (spec BR/AC/INV, ticket done-when, decision

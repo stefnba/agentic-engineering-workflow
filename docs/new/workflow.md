@@ -231,7 +231,7 @@ The final Reviewer comment is tied to the reviewed head SHA and states:
 
 **Accept gate:** the human accepts the independently reviewed PR and explicitly disposes any open
 concerns. Acceptance authorizes the merge, executed by skill scripts according to the repository's
-Git conventions; the ticket becomes `done` only after the PR reaches its configured target.
+Git conventions; the ticket becomes `done` only after the merge reaches the PR's target branch.
 Accept applies to the exact reviewed head SHA; any subsequent implementation change invalidates it
 and requires verification and Review again.
 
