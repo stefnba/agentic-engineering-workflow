@@ -39,6 +39,12 @@ not promote its own finding into Shape.
 **Pick gate:** the human selects the problem or outcome. A direct, settled human request satisfies
 the gate without first becoming a backlog item.
 
+**Narrowing:** once picked, almost every entry point still needs a conversational pass — clarifying
+problem, desired outcome, and edge cases — before remaining uncertainty is low enough to shape. It
+stays conversational and produces no artifact; skip it only when the pick was already fully settled
+and unambiguous going in. See [Running the workflow](./walkthrough.md) for how this runs
+session-to-session.
+
 Done when the human has picked work whose remaining product and technical uncertainty can be
 resolved during Shape.
 
