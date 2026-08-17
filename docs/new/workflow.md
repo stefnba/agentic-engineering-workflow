@@ -60,6 +60,22 @@ script starting the next subagent inline, not a separate coordinator reacting af
 
 Inner dispatches follow the stage contract deterministically; they carry no product judgment and
 cannot cross a human gate.
+
+**Deterministic skill scripts own transition mechanics.** Skill scripts — never prompts, never an
+agent's judgment — execute state transitions so they are serialized and auditable:
+
+- **Claim:** check that every dependency is `done`, then create the ticket branch on the remote at the
+  current head of the branch the ticket's PR will merge into — the bundle branch for a multi-ticket
+  bundle under `bundle-branch`, otherwise the configured integration target (see [Work
+  bundles](./bundle.md)) — and cut its worktree from that exact state. Creating the branch *is* the
+  claim, so git serializes it: parallel claims on different tickets never collide, and a second claim
+  on the same ticket fails and aborts. A multi-ticket bundle's first claim also creates the bundle
+  branch; [`docs/agents/git.md`](../agents/git.md) owns both mechanisms.
+- **Dispatch mechanics:** start each Architect, Critic, Implementer, and Reviewer with the required
+  fresh context and permissions, and record review-round numbers for fix and re-review runs.
+- **Merge:** after human Accept, merge according to the repository's Git conventions. The merge is the
+  last write — `done` follows from it and is never recorded afterward.
+
 These skill scripts never own product or technical judgment and cannot pass a human gate: Pick,
 Plan, and Accept are explicit human decisions, observed and never inferred. The Implementer never
 selects or claims its own ticket; claim and merge transitions live in scripts because a prompt-only
@@ -134,7 +150,7 @@ intent, optional plan, ticket, relevant durable docs, and repository conventions
 
 Implementation includes:
 
-1. Start from the one dispatched ticket the claim mechanics already recorded as `doing`.
+1. Start from the one dispatched ticket whose branch and worktree the claim already created.
 2. Establish the ticket's required pre-change evidence. For changed behavior, normally write the
    behavior test and observe the expected failure; the ticket may specify other evidence when a red
    test is inapplicable or Shape supplied a locked test.
@@ -231,8 +247,8 @@ The final Reviewer comment is tied to the reviewed head SHA and states:
 - remaining limitations or material areas that could not be verified
 
 **Accept gate:** the human accepts the independently reviewed PR and explicitly disposes any open
-concerns. Acceptance authorizes the merge, executed by skill scripts according to the repository's
-Git conventions; the ticket becomes `done` only after the merge reaches the PR's target branch.
+concerns. Acceptance authorizes the merge, performed according to the repository's Git conventions;
+the ticket reads as `done` once that merge lands on the PR's target branch.
 Accept applies to the exact reviewed head SHA; any subsequent implementation change invalidates it
 and requires verification and Review again.
 

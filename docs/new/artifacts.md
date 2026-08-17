@@ -78,28 +78,31 @@ artifacts a route requires and when to split sequential bundles.
 
 ## Status ownership
 
-Persist only status an artifact uniquely owns:
+Under `work/`, commit artifact content — spec, plan, and ticket text. Derive execution state; never
+store it.
 
 ```text
-bundle: local draft → work/shaped → work/active → shipped and deleted
+bundle: local draft → shaped → active → deleted at Ship
 ticket: todo → doing → done
-PR/CI: implementation, checks, review, and merge state
+PR/CI:  implementation, checks, review, and merge state
 ```
 
-- `todo`: approved and not claimed.
-- `doing`: claimed; remains `doing` through Implement, Review, fixes, human review, and merge pending.
-- `done`: human-accepted and merged into its PR's target branch — the bundle branch for a
+- ticket `done`: its PR is merged into that ticket's target branch — the bundle branch for a
   multi-ticket bundle under `bundle-branch`, otherwise the configured integration target.
+- ticket `doing`: its ticket branch exists on the remote. It stays `doing` through Implement, Review,
+  fixes, and human review.
+- ticket `todo`: neither.
+- bundle `shaped`: it exists under `work/bundles/` on the integration target with no ticket claimed.
+  `active`: at least one ticket is no longer `todo`.
 
-Status transitions are written atomically with the git operation that causes them, never as a
-separate step a session performs by hand: `todo` → `doing` is part of the same commit that cuts the
-ticket's branch at claim time, and `doing` → `done` is part of the merge commit itself. Each ticket's
-status lives in that ticket's own file, so parallel claims never contend for the same write.
+Claiming a ticket *is* creating its branch, so git serializes parallel claims and a second claim on
+the same ticket fails. Deleting an unmerged ticket branch and its worktree un-claims the ticket.
+Nothing is written after a merge, so a human who merges the PR directly leaves exactly the state a
+skill script would.
 
-Do not persist `ready`, `implemented`, `verifying`, `blocked`, or `changes_requested` in ticket
-status. The bundle, PR, and CI already own those facts. Unmet ticket dependencies are derived from
-`depends_on`; an external blocker is raised on the PR or escalated to the human, never recorded as
-ticket metadata that can go stale.
+Do not persist `ready`, `implemented`, `verifying`, `blocked`, or `changes_requested` either. Unmet
+ticket dependencies are derived from `depends_on`; an external blocker is raised on the PR or
+escalated to the human, never recorded as ticket metadata that can go stale.
 
 ## Lifetime
 

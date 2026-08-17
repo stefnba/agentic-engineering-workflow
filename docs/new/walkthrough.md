@@ -21,8 +21,9 @@ separate branch such as `dev` if the default is protected.
   ticket's dependencies are `done`; independent tickets can have tabs open in parallel. Runs
   Implement; Review is dispatched from inside this same tab as a fresh subagent (see Review below).
 
-Keeping the shaping session open is convenient, not required — bundle and ticket state live in files
-and git, not in a session's memory, so `/ship` works fine from a fresh session too.
+Keeping the shaping session open is convenient, not required — the bundle lives in git and ticket
+status is derived from branches and pull requests, never held in a session's memory, so `/ship` works
+fine from a fresh session too.
 
 Babysitting tabs doesn't scale past a few at once — treat that as a real constraint on how many
 tickets you shape into one parallel wave, not just an inconvenience.
@@ -101,8 +102,9 @@ it from the same place.
 Because you're in that tab's conversation the whole time, you can jump in and steer or fix things
 yourself at any point — nothing about this loop locks you out.
 
-Once ready, you review the PR and diff yourself, then either merge it directly or run
-`/complete-ticket` to do it.
+Once ready, you review the PR and diff yourself, then merge it — directly or via
+`/complete-ticket`. Either way the merge is the whole record: the ticket reads as `done` because its
+PR is merged, and nothing writes status afterward.
 
 ## Ship
 

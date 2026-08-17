@@ -35,4 +35,6 @@ Conventional Commits — `type(scope): subject`.
 
 **Bundle branches and worktrees go through the `bundle-git` skill** — it owns their creation, sync, and cleanup, deriving every name from the strategy and location declared here. Worktrees outside a bundle follow the rules above directly.
 
+**Claiming a ticket is creating its branch.** Push the ticket branch to the remote at the head of the branch its PR will merge into, and read the push's porcelain status flag as the verdict: `*` means this push created the branch, so the claim is yours; anything else — `=` (already at that commit) or a plain fast-forward — means another session claimed it first, so stop. Never force-push a claim.
+
 **Bundle-branch creation is race-safe by construction, not by locking.** Fetch first: if `bundle/<bundle-id>` already exists, branch the ticket off it directly. If not, create it from the integration target and push it. If that push is rejected because the ref now exists — another ticket's claim won the race — fetch it and branch off that instead of failing.
