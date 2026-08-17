@@ -8,3 +8,5 @@ Finding protocol refinements (from independent judge ruling — keep two severit
 - [ ] Disposition record for concerns the human accepts at a gate (e.g. backlog entry) — accepted risks must not evaporate
 - [ ] Make concern vs. escalation visibly distinct at the gate: concern = reviewer judgment, escalation = unresolved disagreement with both positions attached
 - [ ] Write admission referents separately for Critic (plan-time) and Reviewer (PR-time) — same taxonomy, different bar
+
+Add reference skill /codebase-design? -> /codebase-design is a reference, not a session driver. It supplies the vocabulary — module, interface, depth, seam, adapter, leverage, locality — and this skill borrows it.
