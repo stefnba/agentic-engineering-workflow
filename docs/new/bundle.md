@@ -173,25 +173,27 @@ drift that preserves intent is corrected visibly in the PR; material drift retur
 
 ## Git and pull requests
 
-The repository's [`docs/agents/git.md`](../agents/git.md) declares `bundle-branch` or `trunk` and owns
-branch naming, worktree location, commit conventions, and merge policy. This section owns how bundle
+The repository's [`docs/agents/git.md`](../agents/git.md) declares the integration target and
+`bundle-branch` or `trunk`, and owns branch naming, worktree location, commit conventions, and merge
+policy. This section owns how bundle
 and ticket branches map onto the declared strategy.
 
 ### Single-ticket bundle
 
 Create one ticket branch and worktree based on the configured integration target. Open one PR into
-that target. Do not create a bundle integration branch with one child.
+that target. Do not create a bundle branch with one child.
 
 ### Multi-ticket bundle under `bundle-branch`
 
-Create one bundle integration branch from the default branch. Each ticket gets one branch,
-worktree, and PR into the bundle branch. After every ticket is accepted and merged, Ship lands the
-bundle branch on the default branch and removes all bundle branches and worktrees.
+Create one bundle branch from the configured integration target. Each ticket gets one
+branch, worktree, and PR into the bundle branch. After every ticket is accepted and merged, Ship
+reconciles and deletes the bundle on the bundle branch, lands that final state on the
+integration target, and removes all bundle branches and worktrees.
 
 ### Multi-ticket bundle under `trunk`
 
-Each ticket gets one branch, worktree, and PR into the default branch. Ship performs final durable
-reconciliation and bundle deletion; there is no bundle integration branch.
+Each ticket gets one branch, worktree, and PR into the configured integration target. Ship performs
+final durable reconciliation and bundle deletion; there is no bundle branch.
 
 ### Incident or hotfix
 
