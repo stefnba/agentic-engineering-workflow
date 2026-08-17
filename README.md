@@ -34,16 +34,16 @@ Stage-bound — each realizes one role of the [workflow](docs/agentic-workflow.m
 
 Not stage-bound — they serve any session:
 
-| Name                 | Purpose                        |
-| -------------------- | ------------------------------ |
-| `setup`              | Installs the workflow          |
-| `bundle-git`         | Tends bundle branches/worktrees |
-| `backlog`            | Maintains the backlog file     |
-| `glossary`           | Maintains the domain glossary  |
-| `decision`           | Writes decision records        |
-| `judge`              | Rules on open design questions |
-| `handoff`            | Compacts a dying session       |
-| `writing-for-agents` | Reviews agent-facing documents |
+| Name                 | Purpose                                    |
+| -------------------- | ------------------------------------------ |
+| `setup`              | Installs the workflow                      |
+| `bundle-git`         | Claims tickets, reports status, merges PRs |
+| `backlog`            | Maintains the backlog file                 |
+| `glossary`           | Maintains the domain glossary              |
+| `decision`           | Writes decision records                    |
+| `judge`              | Rules on open design questions             |
+| `handoff`            | Compacts a dying session                   |
+| `writing-for-agents` | Reviews agent-facing documents             |
 
 ## Agents
 
