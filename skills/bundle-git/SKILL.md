@@ -5,11 +5,14 @@ description: Claim a ticket, report bundle and ticket status, and merge an accep
 
 # bundle-git
 
-Deterministic git mechanics for bundle work. [`docs/agents/git.md`](../../docs/agents/git.md) owns the
-branch strategy and conventions these scripts follow; [Artifacts](../../docs/new/artifacts.md) owns
-why status is derived rather than stored.
+Deterministic git mechanics for bundle work.
 
-Run every script from the repository root. Set `INTEGRATION_TARGET` if the target is not `main`.
+- `${CLAUDE_PROJECT_DIR}/docs/agents/git.md` — this repository's branch strategy and conventions,
+  which these scripts follow. Read it for the integration target and branch names.
+- `${CLAUDE_PLUGIN_ROOT}/docs/artifacts.md` — why status is derived rather than stored.
+
+Run every script from the repository root, invoked as `${CLAUDE_SKILL_DIR}/scripts/<name>.sh`. Set
+`INTEGRATION_TARGET` if the target is not `main`.
 
 | Script | Purpose |
 | --- | --- |
