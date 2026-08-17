@@ -2,8 +2,11 @@
 
 Work on the reference material itself. Unsorted collection dump — order carries no meaning.
 
-Tags: `[idea]` new idea worth exploring, `[drift]` noticed inconsistency between docs or code,
-`[follow-up]` concrete agreed work.
+Tags:
+
+- `[idea]` new idea worth exploring
+- `[drift]` noticed inconsistency between docs or code
+- `[follow-up]` concrete agreed work
 
 ## Items
 
@@ -14,6 +17,12 @@ Tags: `[idea]` new idea worth exploring, `[drift]` noticed inconsistency between
   bundle.md, AGENTS.md, and the planned `/ship` skill name (→ `/land`).
 - [drift] docs/agents/git.md's Worktrees section references an "optional Release promotion section
   below" that doesn't exist in the file — dangling internal reference, resolve or remove.
+- [drift] workflow.md and artifacts.md link _to_ walkthrough.md in three places added this session
+  (Coordination's session/tab model, Discover's narrowing mechanics, Discovery evidence's
+  scan-triage mechanics) — but walkthrough.md is the practical, derived "how you run this" guide,
+  not an owning doc other docs should depend on, per AGENTS.md's "link to the owning doc" rule.
+  Either move the referenced content to a proper owning doc and have both sides link to it, or
+  confirm walkthrough.md legitimately owns these specific facts and the direction is fine as-is.
 - [follow-up] walkthrough.md already names specific skills (`/pick`, `/scan-codebase`,
   `/interview-me`, `/shape`, `/complete-ticket`, `/ship`, `bundle-git`) as if they exist. Each still
   needs to actually be defined as its own modular skill file — including internal, non-user-facing
