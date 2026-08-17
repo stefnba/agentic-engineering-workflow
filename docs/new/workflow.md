@@ -27,6 +27,39 @@ artifacts inside Discover and Shape, not the lifecycle.
 Work may enter at the readiness level it already has. A settled human request can pass through
 Discover as a direct pick; uncertain work may need research or a spike. No stage creates an artifact
 solely to prove that the stage happened.
+
+## Coordination
+
+Coordination is split between the human and deterministic skill scripts — there is no coordinator
+agent and no standing system that watches state and reacts on its own: an autonomous agent in the
+dispatch position could infer or erode human gates, so that implementation is prohibited by design.
+
+Mechanically, everything below runs inline inside a human-launched chat session — see [Running the
+workflow](./walkthrough.md) for the concrete session/tab model. A skill script only runs when a human
+or an already-running session invokes it.
+
+**The human dispatches stages.** Discovery, shaping, each ticket's implementation, and Ship start
+on explicit human dispatch. Every stage ends by reporting the suggested next move — the
+now-unblocked tickets, safe parallel sets from the plan, or the human gate that is due — but a
+stage-level suggestion dispatches nothing; only the human starts the next stage. When the human
+delegates the choice ("take the next ticket"), the invoked skill selects the lowest-numbered
+unblocked `todo` ticket.
+
+**A stage's own skill script auto-dispatches its fixed inner loop.** No human trigger sits between
+the substeps a stage's contract already defines — each dispatch is the current session's skill
+script starting the next subagent inline, not a separate coordinator reacting after the fact:
+
+- Shape: completing a draft bundle automatically dispatches the fresh-context Critic; the Architect
+  revises and re-critique follows until no blocker remains, then the bundle goes to the human Plan
+  gate.
+- Implement and Review: opening or updating the PR automatically dispatches a fresh-context review
+  round; a round with findings automatically dispatches a fix-mode Implementer, whose response
+  automatically dispatches the next round. The loop ends only per the convergence rules — ready for
+  human review, escalation, or the round limit — and always terminates at the human Accept gate or
+  an escalation, never at a merge.
+
+Inner dispatches follow the stage contract deterministically; they carry no product judgment and
+cannot cross a human gate.
 ## Finding protocol
 
 Critic and Reviewer findings use the same severities:
