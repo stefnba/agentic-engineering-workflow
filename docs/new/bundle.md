@@ -23,20 +23,18 @@ example bundles:
 ```text
 work/
 ├── backlog.md
-├── shaped/
-│   ├── 2026-08-17-fix-typo/            # direct ticket route: no spec
-│   │   └── ticket.md                   # complete intent inline
-│   ├── 2026-08-17-add-2fa/             # intent plus tickets route: one ticket
-│   │   ├── spec.md
-│   │   └── ticket.md                   # references the spec, doesn't restate it
-│   └── 2026-08-17-add-invites/         # intent, plan, and tickets route
-│       ├── spec.md
-│       ├── plan.md                     # only when the route requires one
-│       └── tickets/                    # Multiple tickets
-│           ├── 01-persistence.md
-│           └── 02-api.md
-└── active/
-    └── YYYY-MM-DD-<slug>/              # same shape, moved here on first claim
+└── bundles/
+    ├── 2026-08-17-fix-typo/            # direct ticket route: no spec
+    │   └── ticket.md                   # complete intent inline
+    ├── 2026-08-17-add-2fa/             # intent plus tickets route: one ticket
+    │   ├── spec.md
+    │   └── ticket.md                   # references the spec, doesn't restate it
+    └── 2026-08-17-add-invites/         # intent, plan, and tickets route
+        ├── spec.md
+        ├── plan.md                     # only when the route requires one
+        └── tickets/                    # Multiple tickets
+            ├── 01-persistence.md
+            └── 02-api.md
 ```
 
 The bundle ID is `YYYY-MM-DD-<slug>` using the Shape date and a short lowercase kebab-case slug.
@@ -54,9 +52,9 @@ Ticket numbers in `tickets/` are two-digit, stable within the bundle, and encode
 than execution order. Use the same number in the ticket heading.
 
 Draft location is tool-local and uncommitted. After the Plan gate, skill scripts publish the exact
-approved bundle under `work/shaped/` on the configured integration target using the repository's Git
-conventions. The first ticket claim moves the complete bundle to `work/active/` on that same
-integration target. Ship deletes the active bundle path; there is no archive.
+approved bundle under `work/bundles/` on the configured integration target using the repository's Git
+conventions. The path never moves — shaped and active are derived states, not directories (see
+[Artifacts](./artifacts.md)). Ship deletes the bundle path; there is no archive.
 
 ## Shape feedback loop
 
