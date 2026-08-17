@@ -30,5 +30,5 @@
   "disableArtifact": true,
   "autoMemoryEnabled": false,
   "disableDeepLinkRegistration": "disable",
-  "disableAgentView": true
+  "disableAgentView": false
 }
