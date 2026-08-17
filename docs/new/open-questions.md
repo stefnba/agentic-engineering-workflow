@@ -12,3 +12,9 @@
 - Does `/complete-ticket` merge directly, or only prepare the merge for you to confirm?
 - How can the human do changes to a PR branch for a ticket, and how is that handled with review and
   documented?
+- What stops two independently-unblocked tickets from racing to create the bundle branch if both are
+  claimed around the same time?
+- What's the abandon/cancel path when a bundle stops partway through — do unclaimed tickets just never
+  get opened, and who cleans up the bundle branch and worktrees?
+- Who resolves a merge conflict between a ticket's PR and the bundle branch — does the implementer
+  handle it autonomously, or does it stop and hand back to the human?
