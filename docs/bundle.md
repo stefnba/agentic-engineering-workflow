@@ -162,7 +162,7 @@ drift that preserves intent is corrected visibly in the PR; material drift retur
 
 ## Git and pull requests
 
-The repository's [`docs/agents/git.md`](../agents/git.md) declares the integration target and
+The repository's [`docs/agents/git.md`](./agents/git.md) declares the integration target and
 `bundle-branch` or `trunk`, and owns branch naming, worktree location, commit conventions, and merge
 policy. This section owns how bundle
 and ticket branches map onto the declared strategy.

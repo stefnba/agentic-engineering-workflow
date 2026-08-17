@@ -70,7 +70,7 @@ agent's judgment — execute state transitions so they are serialized and audita
   bundles](./bundle.md)) — and cut its worktree from that exact state. Creating the branch *is* the
   claim, so git serializes it: parallel claims on different tickets never collide, and a second claim
   on the same ticket fails and aborts. A multi-ticket bundle's first claim also creates the bundle
-  branch; [`docs/agents/git.md`](../agents/git.md) owns both mechanisms.
+  branch; [`docs/agents/git.md`](./agents/git.md) owns both mechanisms.
 - **Dispatch mechanics:** start each Architect, Critic, Implementer, and Reviewer with the required
   fresh context and permissions, and record review-round numbers for fix and re-review runs.
 - **Merge:** after human Accept, merge according to the repository's Git conventions. The merge is the
@@ -188,7 +188,7 @@ an independent Reviewer.
 
 Review runs in a fresh context with no authorship of the diff. The Reviewer is structurally
 read-only, reruns required checks, reads changed code in context, and applies the judgment method and
-output contract in [Reviewer](./agents/reviewer.md).
+output contract in [Reviewer](../agents/reviewer.md).
 
 ```text
 Implement → verify + reconcile → open PR
