@@ -35,6 +35,11 @@ Tags:
 - [drift] docs/agents/git.md says the `bundle-git` skill owns bundle branch "creation, sync, and
   cleanup", but the skill only creates the bundle branch and removes a ticket's worktree. Ship's
   branch and worktree cleanup, and whatever "sync" means here, are unimplemented.
+- [follow-up] `bundle-git`'s claim is verified over the `git://` smart protocol, never against
+  github.com over HTTPS, and the chain claim → PR → `/complete-ticket` → derived `done` has never run
+  joined — only its two halves separately. One real push settles both. Smaller gaps:
+  `--match-head-commit` was confirmed to exist but never exercised against a mismatched head, and
+  everything ran on darwin with git 2.52.
 - [follow-up] Add reference skill `/codebase-design` — supplies shared vocabulary (module, interface,
   depth, seam, adapter, leverage, locality) for other skills to borrow; not a session driver itself.
 - [follow-up] templates/ticket.md's Outcome section is thin for ticket-only bundles (no spec): it
