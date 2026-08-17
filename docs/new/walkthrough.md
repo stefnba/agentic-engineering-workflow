@@ -10,12 +10,12 @@ don't separately trigger those substeps.
 ## How you run this
 
 There's no orchestration tooling beyond skills, subagents, worktrees, and git. Two kinds of chat session
-typically carry the whole workflow. Wherever "integration branch" or "default branch" appears below,
-it means your declared integration target — usually the repo's default branch, but a separate branch
-such as `dev` if the default is protected.
+typically carry the whole workflow. "Integration target" below means your declared integration
+target branch (see [Prerequisites](./prerequisites.md)) — usually the repo's default branch, but a
+separate branch such as `dev` if the default is protected.
 
 - **One long-lived session per bundle.** Runs Discovery and Shape, and later Ship. Its
-  working directory stays on the integration branch the whole time — it never checks out a ticket
+  working directory stays on the integration target the whole time — it never checks out a ticket
   branch itself.
 - **One chat session tab per ticket, each cd'd into that ticket's own worktree.** Opened only once the
   ticket's dependencies are `done`; independent tickets can have tabs open in parallel. Runs
@@ -45,6 +45,11 @@ produces no file — `/shape` is the first thing that writes anything durable. S
 when the pick was already fully settled and unambiguous going in; treat that as the rare case, not
 the default.
 
+If narrowing still leaves feasibility or diagnosis genuinely unknown, don't force it — shape and run
+an investigation/spike first (see [Tailor bundles by uncertainty and
+impact](./bundles-by-size.md)). Its evidence becomes the next thing you pick, not a shortcut into
+Shape.
+
 Once you've reached shared understanding, trigger `/shape` in that same session.
 
 ## Shape
@@ -60,7 +65,7 @@ You then get: a brief summary of what will be built, the ticket list with sequen
 what's safe to run in parallel), and one paste-ready opening prompt per currently unblocked ticket
 (worktree path included).
 
-**Plan gate:** you approve. The bundle commits directly to the integration branch — no PR. Critique
+**Plan gate:** you approve. The bundle commits directly to the integration target — no PR. Critique
 plus your approval already are the review step for a planning artifact; a PR on top of that adds
 ceremony without adding a gate.
 
@@ -112,10 +117,10 @@ trigger `/ship`:
 - folds anything durable — system behavior, decisions — from the bundle into the docs that own it
 - captures unfinished or newly discovered work as backlog lines
 - deletes the bundle: for a multi-ticket bundle, as a commit on the bundle branch itself, so the merge
-  below lands a bundle-free state on default; for a single-ticket bundle, as a commit directly on the
-  integration target, since there's no bundle branch
+  below lands a bundle-free state on the integration target; for a single-ticket bundle, as a commit
+  directly on the integration target, since there's no bundle branch
 - for a multi-ticket bundle, merges that now-bundle-free bundle branch — holding every merged ticket —
-  into the default branch; a single-ticket bundle already landed there when its one PR merged, so this
-  step is a no-op
+  into the integration target; a single-ticket bundle already landed there when its one PR merged, so
+  this step is a no-op
 - removes whichever of the ticket branches, the bundle branch (if one existed), and their worktrees
   still exist — some may already be gone if your repo auto-deletes branches on merge
