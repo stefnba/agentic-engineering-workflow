@@ -43,6 +43,12 @@ Nothing writes status. A human merging the PR in the web UI leaves the same stat
 as `todo` again. A status query that cannot reach the forge reports `unknown` rather than guessing —
 never read that as `todo`.
 
+## Tests
+
+`tests/run.sh` runs the scripts against a local `git daemon` with a stubbed `gh` — no network, and
+nothing written outside a temp dir. It covers a ten-way claim race, the dependency gate, both bundle
+shapes, listing, an unreachable forge, and the flags passed to the merge. Exits non-zero on failure.
+
 ## Exit codes from `claim-ticket.sh`
 
 `2` no such ticket · `3` blocked by an unfinished dependency · `4` already claimed · `5` stale
