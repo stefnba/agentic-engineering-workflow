@@ -55,3 +55,14 @@ Tags:
     escalation = unresolved disagreement with both positions attached.
   - Write admission referents separately for Critic (plan-time) and Reviewer (PR-time) — same
     taxonomy, different bar.
+- [idea] Add a session-recap skill (`/recap`), callable from any session at any point. Reports the
+  flow of the chat session itself — not repository, bundle, or ticket state: what this session is
+  about, a very brief digest of what was discussed, what was suggested, what's already settled or
+  done in the conversation, and which threads are still open. Earns its keep because the workflow
+  deliberately leaves this unpersisted — narrowing "produces no artifact", scan findings stay
+  "inline in chat only", Reviewer backlog candidates have no persistence mechanism — so a recap
+  surfaces it before a tab switch or context compaction loses it. Read-only reporting only: it may
+  name the human gate that is due but never passes one and dispatches nothing, and it marks
+  recollection as recollection (including saying so when context was compacted). Don't name it
+  `/status` and don't have it restate derived ticket status — `bundle-status.sh` already answers
+  that, and it's a different question.
