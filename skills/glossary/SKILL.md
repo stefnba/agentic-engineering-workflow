@@ -37,8 +37,8 @@ before writing anything. Never write an unconfirmed entry.
 ## Renames
 
 The glossary is mutable, edited in place; history is git's. A rename edits the entry in place
-and moves the old term into _Avoid_ — never delete and recreate. (Contrast: `docs/decisions/`
-records are immutable-supersede, never edited.)
+and moves the old term into _Avoid_ — never delete and recreate. (Contrast:
+`${CLAUDE_PROJECT_DIR}/docs/decisions/` records are immutable-supersede, never edited.)
 
 ## Boundary with `record-decision`
 

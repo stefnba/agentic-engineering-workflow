@@ -13,24 +13,23 @@ written before the human says yes.
 `${CLAUDE_PLUGIN_ROOT}/workflow/git-mechanics.md` owns what the settings mean and why branch names
 and the land are not among them.
 
-Every repository path named below — `work/`, `docs/`, `AGENTS.md`, `.gitignore` — is relative to
-`${CLAUDE_PROJECT_DIR}`. That is the repo being installed into, never this plugin's own tree.
-
 ## What a run writes
 
-| Path                      | From                                               | Contents                                              |
-| ------------------------- | -------------------------------------------------- | ----------------------------------------------------- |
-| `work/config.conf`        | `${CLAUDE_SKILL_DIR}/templates/config.conf`        | the settings the scripts read                         |
-| `docs/conventions/git.md` | `${CLAUDE_SKILL_DIR}/templates/git-conventions.md` | commit and PR conventions a human follows             |
-| `AGENTS.md`               | `${CLAUDE_SKILL_DIR}/templates/agents-pointer.md`  | one pointer block naming the workflow                 |
-| `.gitignore`              | appended                                           | the `WORKTREE_DIR` value, so worktrees stay untracked |
+| Path                                            | From                                               | Contents                                              |
+| ----------------------------------------------- | -------------------------------------------------- | ----------------------------------------------------- |
+| `${CLAUDE_PROJECT_DIR}/work/config.conf`        | `${CLAUDE_SKILL_DIR}/templates/config.conf`        | the settings the scripts read                         |
+| `${CLAUDE_PROJECT_DIR}/docs/conventions/git.md` | `${CLAUDE_SKILL_DIR}/templates/git-conventions.md` | commit and PR conventions a human follows             |
+| `${CLAUDE_PROJECT_DIR}/AGENTS.md`               | `${CLAUDE_SKILL_DIR}/templates/agents-pointer.md`  | one pointer block naming the workflow                 |
+| `${CLAUDE_PROJECT_DIR}/.gitignore`              | appended                                           | the `WORKTREE_DIR` value, so worktrees stay untracked |
 
 Two rules the writes must honour:
 
-- **`work/config.conf` is committed, not ignored.** A clone without it falls back to the defaults in
-  the template — which silently lands work on `main` when the integration target is `dev`.
-- **The `.gitignore` entry has to match `WORKTREE_DIR`.** They are one decision written twice; a
-  non-default `WORKTREE_DIR` with the default ignore line leaves worktrees staged for commit.
+- **`${CLAUDE_PROJECT_DIR}/work/config.conf` is committed, not ignored.** A clone without it falls
+  back to the defaults in the template — which silently lands work on `main` when the integration
+  target is `dev`.
+- **The `${CLAUDE_PROJECT_DIR}/.gitignore` entry has to match `WORKTREE_DIR`.** They are one decision
+  written twice; a non-default `WORKTREE_DIR` with the default ignore line leaves worktrees staged
+  for commit.
 
 ## Process
 
@@ -47,13 +46,13 @@ everything.
 
 Read what exists; don't assume. Report each as found or absent:
 
-- `work/config.conf` — present means this is a re-run; read its current values so step 3 offers them
-  rather than the template defaults.
-- `AGENTS.md` and `CLAUDE.md` — which the repo uses, and whether either already carries a pointer
-  block from a prior run.
-- `docs/conventions/git.md` — present means the repo already owns its conventions; never overwrite
-  one without asking.
-- `.gitignore` — whether a worktree line is already there.
+- `${CLAUDE_PROJECT_DIR}/work/config.conf` — present means this is a re-run; read its current values
+  so step 3 offers them rather than the template defaults.
+- `${CLAUDE_PROJECT_DIR}/AGENTS.md` and `${CLAUDE_PROJECT_DIR}/CLAUDE.md` — which the repo uses, and
+  whether either already carries a pointer block from a prior run.
+- `${CLAUDE_PROJECT_DIR}/docs/conventions/git.md` — present means the repo already owns its
+  conventions; never overwrite one without asking.
+- `${CLAUDE_PROJECT_DIR}/.gitignore` — whether a worktree line is already there.
 - The repository's default branch, as the natural `INTEGRATION_TARGET` candidate.
 
 ### 3. Ask the three settings
@@ -77,16 +76,18 @@ for a yes.
 
 ### 5. Write
 
-1. Copy the config template to `work/config.conf`, substituting the three answered values. Keep its
-   comments — they are what a later reader consults.
-2. Copy the git-conventions template to `docs/conventions/git.md`. Skip entirely when one already
-   exists; never overwrite it.
-3. Append the pointer block to `AGENTS.md`, or to `CLAUDE.md` when that's what the repo uses — never
-   both. Replace a block from a prior run rather than appending a duplicate.
-4. Append the `WORKTREE_DIR` value to `.gitignore` if no matching line is there.
+1. Copy the config template to `${CLAUDE_PROJECT_DIR}/work/config.conf`, substituting the three
+   answered values. Keep its comments — they are what a later reader consults.
+2. Copy the git-conventions template to `${CLAUDE_PROJECT_DIR}/docs/conventions/git.md`. Skip
+   entirely when one already exists; never overwrite it.
+3. Append the pointer block to `${CLAUDE_PROJECT_DIR}/AGENTS.md`, or to
+   `${CLAUDE_PROJECT_DIR}/CLAUDE.md` when that's what the repo uses — never both. Replace a block
+   from a prior run rather than appending a duplicate.
+4. Append the `WORKTREE_DIR` value to `${CLAUDE_PROJECT_DIR}/.gitignore` if no matching line is
+   there.
 
 ### 6. Report
 
 List what was written and what was skipped. Then tell the human two things: **commit
-`work/config.conf`**, and that `docs/conventions/git.md` is now theirs to edit — a re-run won't
-overwrite it.
+`${CLAUDE_PROJECT_DIR}/work/config.conf`**, and that `${CLAUDE_PROJECT_DIR}/docs/conventions/git.md`
+is now theirs to edit — a re-run won't overwrite it.

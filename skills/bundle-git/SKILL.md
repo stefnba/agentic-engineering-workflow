@@ -13,9 +13,10 @@ Deterministic git mechanics for bundle work.
 - `${CLAUDE_PLUGIN_ROOT}/workflow/artifacts.md` — why status is derived rather than stored.
 
 Run every script from the repository root, invoked as `${CLAUDE_SKILL_DIR}/scripts/<name>.sh`.
-Settings and their defaults come from `${CLAUDE_PROJECT_DIR}/work/config.conf`, which documents itself; an environment
-variable of the same name outranks the file. `scripts/_config.sh` reads them, holds the branch names,
-and is sourced by the others rather than run on its own.
+Settings and their defaults come from `${CLAUDE_PROJECT_DIR}/work/config.conf`, which documents
+itself; an environment variable of the same name outranks the file.
+`${CLAUDE_SKILL_DIR}/scripts/_config.sh` reads them, holds the branch names, and is sourced by the
+others rather than run on its own.
 
 No script lands a finished bundle branch on the integration target yet — that Ship step is
 unimplemented, and its rules are not a setting these scripts may reinterpret.
@@ -29,11 +30,11 @@ unimplemented, and its rules are not a setting these scripts may reinterpret.
 | `scripts/complete-ticket.sh <pr> [sha]`     | Merge an accepted ticket PR per `TICKET_MERGE_METHOD`, remove its worktree. |
 
 ```console
-$ scripts/bundle-status.sh
+$ ${CLAUDE_SKILL_DIR}/scripts/bundle-status.sh
 active   2026-08-17-add-invites
 shaped   2026-08-17-add-2fa
 
-$ scripts/bundle-status.sh 2026-08-17-add-invites
+$ ${CLAUDE_SKILL_DIR}/scripts/bundle-status.sh 2026-08-17-add-invites
 active   2026-08-17-add-invites
   done     01-persistence
   doing    02-api

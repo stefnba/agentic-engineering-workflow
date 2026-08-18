@@ -22,7 +22,7 @@ Your report feeds a human decision — a recommendation the human accepts become
 
 Skip this pass entirely in pure mode; the forking prompt says which mode you are in.
 
-**Now read what the question touches:** project instructions, the `docs/decisions/` records for the affected areas, the colocated READMEs of modules the question concerns, and `GLOSSARY.md` where one exists. A divergence entry must cite a file you actually opened — a collision you can't back with a path and its prescription isn't one, and no divergence is a valid result; say so plainly.
+**Now read what the question touches:** project instructions, the `${CLAUDE_PROJECT_DIR}/docs/decisions/` records for the affected areas, the colocated READMEs of modules the question concerns, and `GLOSSARY.md` where one exists. A divergence entry must cite a file you actually opened — a collision you can't back with a path and its prescription isn't one, and no divergence is a valid result; say so plainly.
 
 **Record each collision as cost, not verdict:** the file, what it prescribes, and what following your recommendation would take — a decision record to supersede, code to migrate, a convention to re-document. Whether that cost is worth paying is the human's call, not yours.
 

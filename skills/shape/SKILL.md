@@ -54,10 +54,11 @@ diagnosis.
 
 ### 3. Inspect the repository
 
-Read the modules the change touches, their colocated documentation, the `docs/decisions/` records
-covering those areas, and the `GLOSSARY.md` of every domain involved — a bundle that contradicts a
-standing decision re-litigates it by accident, and one written from memory describes an imaginary
-architecture. Name real extension points; cite exact paths.
+Read the modules the change touches, their colocated documentation, the
+`${CLAUDE_PROJECT_DIR}/docs/decisions/` records covering those areas, and the `GLOSSARY.md` of every
+domain involved — a bundle that contradicts a standing decision re-litigates it by accident, and one
+written from memory describes an imaginary architecture. Name real extension points; cite exact
+paths.
 
 ### 4. Create the bundle
 
