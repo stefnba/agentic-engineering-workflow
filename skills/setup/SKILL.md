@@ -38,13 +38,43 @@ Two rules the writes must honour:
 Read `${CLAUDE_SKILL_DIR}/references/prerequisites.md` and check each
 one: `git remote -v`, the candidate integration target branch exists, `gh auth status` succeeds.
 
+Report all three lines in this order every run, whatever the outcome — a check the human can't see
+is one they'll assume passed. Name the value found, not just the verdict. A check that couldn't run
+because an earlier one failed is still `❌`, with the reason it couldn't run.
+
+```markdown
+**Prerequisites**
+
+- ✅ Remote — `origin` → `git@github.com:acme/billing.git`
+- ✅ Integration target — `main` exists on `origin`
+- ✅ Forge CLI — `gh` authenticated as `dana-k`
+
+All three pass. Reading what's already in the repo.
+```
+
 **Stop and report if any is missing.** A repo without an authenticated forge CLI cannot derive ticket
 status at all, so installing the workflow into it produces a system that reports `unknown` for
-everything.
+everything. Say which check failed, why it blocks the workflow, and the one command that fixes it:
+
+```markdown
+**Prerequisites**
+
+- ❌ Remote — none configured; `git remote -v` is empty
+- ❌ Integration target — can't check, no remote to check against
+- ✅ Forge CLI — `gh` authenticated as `dana-k`
+
+**Stopped — nothing written.** Ticket and bundle status are derived from pull request records,
+so a repo with no remote reports `unknown` for everything the workflow asks.
+
+Add a remote and push once, then re-run `/setup`:
+
+    git remote add origin <url> && git push -u origin main
+```
 
 ### 2. Explore
 
-Read what exists; don't assume. Report each as found or absent:
+Read what exists; don't assume. Report under a **Repository** heading, one bullet per line below,
+each marked `found` or `absent` — absent is the normal case for a first run, not a failure:
 
 - `${CLAUDE_PROJECT_DIR}/work/config.conf` — present means this is a re-run; read its current values
   so step 3 offers them rather than the template defaults.
