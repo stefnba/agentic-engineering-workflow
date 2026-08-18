@@ -17,7 +17,9 @@ useful. A bundle contains the minimum artifact set its shaping route requires.
 | Decision record           | Which durable, consequential choice was made and why?                               | Work status or step-by-step implementation                |
 | `GLOSSARY.md`             | Which project-domain terms and rejected synonyms are canonical?                     | General programming or workflow-artifact terminology      |
 | `AGENTS.md`               | Which repository or package conventions and gotchas must every agent follow?        | Domain behavior or workflows owned by linked documents    |
-| `docs/conventions/git.md` | Which branch, worktree, commit, PR, and merge *values* does this repository use?    | The procedures that consume them                          |
+| `docs/conventions/git.md` | Which git conventions must a human follow here?                                     | Anything a script reads — that is `work/config.conf`      |
+| `work/config.conf`        | Which settings do the workflow's scripts run with?                                  | Conventions no script consumes                            |
+| `docs/research/`          | What durable reference did investigation establish?                                 | Evidence for one bundle, which lives with that bundle     |
 | Git mechanics             | How are worktrees based, tickets claimed, and bundle branches created race-safely?  | Any value a repository declares for itself                |
 | Agent prompt              | How does one role judge, act, escalate, and report within the loaded workflow?      | Lifecycle, artifact authority, or repository conventions  |
 
@@ -89,14 +91,14 @@ PR/CI:  implementation, checks, review, and merge state
 ```
 
 - ticket `done`: its PR is merged into that ticket's target branch — the bundle branch for a
-  multi-ticket bundle under `bundle-branch`, otherwise the configured integration target.
+  multi-ticket bundle, otherwise the configured integration target.
 - ticket `doing`: its ticket branch exists on the remote. It stays `doing` through Implement, Review,
   fixes, and human review.
 - ticket `todo`: neither.
 - bundle `shaped`: it exists under `work/bundles/` on the integration target with no ticket claimed.
   `active`: at least one ticket is no longer `todo`.
 
-Claiming a ticket *is* creating its branch, so git serializes parallel claims and a second claim on
+Claiming a ticket _is_ creating its branch, so git serializes parallel claims and a second claim on
 the same ticket fails. Deleting an unmerged ticket branch and its worktree un-claims the ticket.
 Nothing is written after a merge, so a human who merges the PR directly leaves exactly the state a
 skill script would.

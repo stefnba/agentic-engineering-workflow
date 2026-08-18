@@ -18,10 +18,10 @@
   still needs an owner for deleting the bundle branch and the published bundle path.
 - Who resolves a merge conflict between a ticket's PR and the bundle branch — does the implementer
   handle it autonomously, or does it stop and hand back to the human?
-- How does Ship land the bundle branch on the integration target? `docs/conventions/git.md` declares
-  only squash, which would collapse the per-ticket commits that are the whole surviving record once
-  Ship deletes the bundle. Suggested: `--no-ff` merge commit, never squash, never rebase; when the
-  target has moved, merge it into the bundle branch, re-run the Ship check, then land; a repo that
-  forbids merge commits declares `trunk` instead. Invariant and prohibitions go in
-  `workflow/git-mechanics.md` (which has no land section at all today), the concrete method in
-  `docs/conventions/git.md`. Applies only to multi-ticket under `bundle-branch`.
+- How does Ship land the bundle branch on the integration target? `MERGE_METHOD` in
+  `work/config.conf` covers ticket PRs only, and its `squash` default would collapse the per-ticket
+  commits that are the whole surviving record once Ship deletes the bundle. Suggested: `--no-ff`
+  merge commit, never squash, never rebase; when the target has moved, merge it into the bundle
+  branch, re-run the Ship check, then land. If a repo needs to choose, that is a second setting
+  (`LAND_METHOD`) rather than prose. Invariant and prohibitions go in `workflow/git-mechanics.md`,
+  which has no land section at all today. Applies only to multi-ticket bundles.

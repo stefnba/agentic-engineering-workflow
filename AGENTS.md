@@ -11,15 +11,18 @@ This repo collects agentic-coding practices — workflow design, documentation s
 This repo is also the plugin: its root is the plugin root, so everything here ships to consuming
 repos. Three layers, distinguished by who may change a file:
 
-| Path                              | Layer                                                        | Changed by                 |
-| --------------------------------- | ------------------------------------------------------------ | -------------------------- |
-| `workflow/`, `agents/`, `skills/` | plugin — the workflow contract and its components            | the workflow author        |
-| `docs/conventions/*.md`           | values and rules a consuming repo owns, installed by `setup` | the consuming repo's owner |
-| `docs/*.md`, `docs/decisions/`    | published narrative, never loaded by an agent                | the workflow author        |
+| Path                              | Layer                                             | Changed by                 |
+| --------------------------------- | ------------------------------------------------- | -------------------------- |
+| `workflow/`, `agents/`, `skills/` | plugin — the workflow contract and its components | the workflow author        |
+| `docs/conventions/*.md`           | rules a consuming repo owns, installed by `setup` | the consuming repo's owner |
+| `work/config.conf`                | settings a consuming repo owns that scripts read  | the consuming repo's owner |
+| `docs/*.md`, `docs/decisions/`    | published narrative, never loaded by an agent     | the workflow author        |
 
 Each layer has its own directory, so placement answers the question the table asks: a rule the
 workflow owns goes in `workflow/`, a convention a repository owns goes in `docs/conventions/`,
-and prose only a human reads goes in `docs/`.
+and prose only a human reads goes in `docs/`. The one split that isn't by directory: anything a
+script consumes is machine-readable config in `work/config.conf`, never prose in `docs/conventions/`
+(see [docs/decisions/2026-08-18-script-read-settings.md](docs/decisions/2026-08-18-script-read-settings.md)).
 
 Placement rule for supporting material: **one consumer keeps it in that skill's own folder; two or
 more promote it to `workflow/`.**
@@ -38,7 +41,7 @@ on GitHub:
 - **[GLOSSARY.md](GLOSSARY.md) is live here too**, near-empty by design — only terms no owning doc already defines; artifact terms (bundle, spec, ticket, backlog) stay owned by [workflow/artifacts.md](workflow/artifacts.md).
 - **Decision records are immutable.** Supersede a `docs/decisions/` record with a new one; never edit it.
 - **One copy.** Docs reference each other instead of restating. When adding material, link to the owning doc; if nothing owns it yet, decide where it belongs before writing.
-- Read [docs/conventions/git.md](docs/conventions/git.md) before any git operation — it declares this repo's branch strategy, worktree rules, and commit and PR conventions. [workflow/git-mechanics.md](workflow/git-mechanics.md) owns the procedures that consume those values.
+- Read [docs/conventions/git.md](docs/conventions/git.md) before any git operation — it holds this repo's commit and PR conventions and the plain-git worktree rule. Settings the scripts read live in [work/config.conf](work/config.conf); [workflow/git-mechanics.md](workflow/git-mechanics.md) owns the procedures that consume both.
 
 ## Output style
 

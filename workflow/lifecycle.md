@@ -66,12 +66,12 @@ agent's judgment — execute state transitions so they are serialized and audita
 
 - **Claim:** check that every dependency is `done`, then create the ticket branch on the remote at the
   current head of the branch the ticket's PR will merge into — the bundle branch for a multi-ticket
-  bundle under `bundle-branch`, otherwise the configured integration target (see [Work
-  bundles](./bundle.md)) — and cut its worktree from that exact state. Creating the branch _is_ the
+  bundle, otherwise the configured integration target (see [Work bundles](./bundle.md)) — and cut
+  its worktree from that exact state. Creating the branch _is_ the
   claim, so git serializes it: parallel claims on different tickets never collide, and a second claim
   on the same ticket fails and aborts. A multi-ticket bundle's first claim also creates the bundle
   branch; [Git mechanics](./git-mechanics.md) owns both procedures, and
-  [`docs/conventions/git.md`](../docs/conventions/git.md) declares the values they use.
+  `${CLAUDE_PROJECT_DIR}/work/config.conf` holds the settings they read.
 - **Dispatch mechanics:** start each Architect, Critic, Implementer, and Reviewer with the required
   fresh context and permissions, and record review-round numbers for fix and re-review runs.
 - **Merge:** after human Accept, merge according to the repository's Git conventions. The merge is the
@@ -280,8 +280,7 @@ Ship:
    records.
 3. Converts unfinished or newly discovered work into backlog entries.
 4. Deletes the complete bundle from the integration state.
-5. Lands that final state on the configured integration target according to the repository's branch
-   strategy.
+5. Lands that final state on the configured integration target.
 6. Removes bundle branches and worktrees.
 
 Git history preserves the work record; there is no shipped-bundle archive.

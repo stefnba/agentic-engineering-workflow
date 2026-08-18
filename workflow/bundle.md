@@ -162,27 +162,24 @@ drift that preserves intent is corrected visibly in the PR; material drift retur
 
 ## Git and pull requests
 
-The repository's [`docs/conventions/git.md`](../docs/conventions/git.md) declares the integration target and
-`bundle-branch` or `trunk`, and owns branch naming, worktree location, commit conventions, and merge
-policy. This section owns how bundle
-and ticket branches map onto the declared strategy.
+[Git mechanics](./git-mechanics.md) owns branch naming, the claim, and bundle-branch creation, and
+names the settings it reads from `${CLAUDE_PROJECT_DIR}/work/config.conf`. This section owns how
+bundle and ticket branches map onto a bundle's shape.
+
+The shape decides the strategy — nothing declares it. A bundle with more than one ticket gets a
+bundle branch; a single-ticket bundle does not.
 
 ### Single-ticket bundle
 
 Create one ticket branch and worktree based on the configured integration target. Open one PR into
 that target. Do not create a bundle branch with one child.
 
-### Multi-ticket bundle under `bundle-branch`
+### Multi-ticket bundle
 
 Create one bundle branch from the configured integration target. Each ticket gets one
 branch, worktree, and PR into the bundle branch. After every ticket is accepted and merged, Ship
 reconciles and deletes the bundle on the bundle branch, lands that final state on the
 integration target, and removes all bundle branches and worktrees.
-
-### Multi-ticket bundle under `trunk`
-
-Each ticket gets one branch, worktree, and PR into the configured integration target. Ship performs
-final durable reconciliation and bundle deletion; there is no bundle branch.
 
 ### Incident or hotfix
 
