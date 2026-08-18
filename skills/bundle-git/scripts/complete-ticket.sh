@@ -9,7 +9,7 @@ set -euo pipefail
 pr="$1"
 accepted="${2:-}"
 
-args=("--$MERGE_METHOD" --delete-branch)
+args=("--$TICKET_MERGE_METHOD" --delete-branch)
 # Accept applies to the exact reviewed head SHA; let the forge enforce that rather than trusting it.
 [ -n "$accepted" ] && args+=(--match-head-commit "$accepted")
 

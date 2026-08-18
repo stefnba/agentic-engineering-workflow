@@ -4,7 +4,7 @@ How the workflow uses git. These rules are identical in every consuming repo and
 `bundle-git` skill's scripts implement — changing them changes the scripts' behavior.
 
 The settings they operate on are read from `${CLAUDE_PROJECT_DIR}/work/config.conf`:
-`INTEGRATION_TARGET`, `MERGE_METHOD`, `WORKTREE_DIR`. `${CLAUDE_PROJECT_DIR}/docs/conventions/git.md`
+`INTEGRATION_TARGET`, `TICKET_MERGE_METHOD`, `WORKTREE_DIR`. `${CLAUDE_PROJECT_DIR}/docs/conventions/git.md`
 holds the conventions a human follows — commit messages, PR titles, the plain-git worktree rule —
 and nothing a script reads.
 
@@ -45,3 +45,32 @@ a plain fast-forward — means another session claimed it first, so stop. Never 
 branch the ticket off it directly. If not, create it from the integration target and push it. If that
 push is rejected because the ref now exists — another ticket's claim won the race — fetch it and
 branch off that instead of failing.
+
+## Landing a bundle
+
+Only a multi-ticket bundle has a land. A single-ticket bundle's PR already landed on the integration
+target, so Ship's reconciliation and deletion commits go straight there.
+
+**The land preserves each ticket's commits exactly as they reached the bundle branch** — one per
+ticket under the default `TICKET_MERGE_METHOD=squash`, whatever that setting produces otherwise. Once Ship
+deletes the bundle, those commits — their subjects, their PR back-references, and the permalinks in
+those PR bodies — are the only bridge left from a shipped line of code to the ticket that approved
+it. The land must not collapse or rewrite them:
+
+- **Merge, never squash.** `git merge --no-ff`, or `gh pr merge --merge` if you choose to land
+  through a pull request. Squashing replaces every ticket commit with one commit attributed to the
+  bundle, so `git blame` stops at the bundle and no single ticket can be reverted or bisected
+  afterwards.
+- **Never rebase the bundle branch.** It reissues commits Ship already verified as a whole and that
+  the ticket PRs' merge records point at, so what lands is a state no check ever ran against.
+- **`--no-ff` even when a fast-forward is available.** The merge commit is the only surviving record
+  that these commits were one approved outcome; a fast-forward erases that boundary in exactly the
+  quiet cases.
+- **When the integration target has moved, merge it into the bundle branch, re-run the Ship check,
+  then land.** That is the only permitted reconciliation.
+
+`TICKET_MERGE_METHOD` is named for its whole scope: ticket PRs, nothing else. The land is fixed,
+not a setting — it is what makes "git
+history preserves the work record; there is no shipped-bundle archive" true.
+
+[Lifecycle](./lifecycle.md) sequences these rules as Ship steps 5–7;

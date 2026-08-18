@@ -74,8 +74,10 @@ agent's judgment — execute state transitions so they are serialized and audita
   `${CLAUDE_PROJECT_DIR}/work/config.conf` holds the settings they read.
 - **Dispatch mechanics:** start each Architect, Critic, Implementer, and Reviewer with the required
   fresh context and permissions, and record review-round numbers for fix and re-review runs.
-- **Merge:** after human Accept, merge according to the repository's Git conventions. The merge is the
-  last write — `done` follows from it and is never recorded afterward.
+- **Merge:** after human Accept, merge the ticket PR into its target using `TICKET_MERGE_METHOD`.
+  The merge is the last write — `done` follows from it and is never recorded afterward. Landing a
+  finished bundle branch on the integration target is a separate Ship step with a fixed method; see
+  [Git mechanics](./git-mechanics.md).
 
 These skill scripts never own product or technical judgment and cannot pass a human gate: Pick,
 Plan, and Accept are explicit human decisions, observed and never inferred. The Implementer never
@@ -132,9 +134,10 @@ An outcome too large to shape honestly at once splits into sequential bundles by
 never into a speculative ticket backlog inside one bundle.
 
 **Run conditions:** the Architect runs in the human-facing planning session with read access to the
-repository and write access only to the draft bundle; enforce that boundary with tools or hooks, not
-only the prompt. The Critic runs in a fresh context with no authorship of the bundle and no
-file-writing or approval capability, withheld structurally rather than by instruction.
+repository and write access only to the draft bundle; that boundary is prompt-level and wants a hook
+behind it. The Critic runs in a fresh context with no authorship of the bundle and no file-editing
+capability, withheld structurally; because a shell stays available for reading the repository, the
+rest of read-only is prompt-level, the same gap Review carries.
 
 **Critique is mandatory before approval:** a fresh-context, read-only Critic attacks requirement
 coverage, architecture, slicing, dependencies, risk, and testability. The Architect owns revisions;
@@ -197,9 +200,17 @@ an independent Reviewer.
 
 **Objective:** independently judge what implementation and deterministic verification cannot.
 
-Review runs in a fresh context with no authorship of the diff. The Reviewer is structurally
-read-only, reruns required checks, reads changed code in context, and applies the judgment method and
-output contract in [Reviewer](../agents/reviewer.md).
+**Run conditions:** the Reviewer runs in a fresh context per round with no authorship of the diff
+and no file-editing capability, withheld structurally rather than by instruction. Verification needs
+a shell, so the rest of read-only — no push, approve, or merge — is prompt-level until a hook or
+permission rule backs it; that gap is real and tracked. Read-only binds the change, not the
+filesystem: build output, caches, and temp files are expected; source, refs, branches, and PR state
+are not. Each run receives the PR number and the exact head SHA to judge, and confirms against the
+forge that the SHA is the PR head and that the tree it inspects sits there with no tracked file
+modified.
+
+The Reviewer reruns required checks, reads changed code in context, and applies its judgment method
+and output contract.
 
 ```text
 Implement → verify + reconcile → open PR
@@ -208,7 +219,7 @@ Implement → verify + reconcile → open PR
                                 Review round
                          ┌───────────┴───────────┐
                          ▼                       ▼
-                  fix required              no blockers
+                   fix required             no blockers
                          │                       │
                          ▼                       ▼
            fresh Implementer (fix mode)   final review summary
@@ -281,8 +292,15 @@ Ship:
    records.
 3. Converts unfinished or newly discovered work into backlog entries.
 4. Deletes the complete bundle from the integration state.
-5. Lands that final state on the configured integration target.
-6. Removes bundle branches and worktrees.
+5. Merges the integration target into the bundle branch when the target has moved since the branch
+   was cut — the only reconciliation the land rules permit. A single-ticket bundle has no bundle
+   branch, so this step and the next do not apply to it.
+6. Re-runs canonical checks on the state produced by steps 2–5. Ship's own commits change
+   documentation, backlog, and bundle files only; a Ship step that would change behavior is not Ship
+   work and returns to the Plan gate.
+7. Lands that final state on the configured integration target — [Git mechanics](./git-mechanics.md)
+   owns the land rules.
+8. Removes bundle branches and worktrees.
 
 Git history preserves the work record; there is no shipped-bundle archive.
 
@@ -299,6 +317,8 @@ Only the human may pass these gates:
 
 Agents may cross deterministic checks between gates. They may not infer, self-grant, or bypass a
 human gate. Ship adds no fourth approval; it executes the outcome already accepted ticket by ticket.
+Its own commits carry no behavior change and are re-verified before landing, so nothing reaches the
+integration target unverified.
 
 ## Test ownership
 

@@ -13,18 +13,22 @@ Deterministic git mechanics for bundle work.
 - `${CLAUDE_PLUGIN_ROOT}/workflow/artifacts.md` — why status is derived rather than stored.
 
 Run every script from the repository root, invoked as `${CLAUDE_SKILL_DIR}/scripts/<name>.sh`.
-Settings come from `work/config.conf` (`INTEGRATION_TARGET`, `MERGE_METHOD`, `WORKTREE_DIR`); the
+Settings come from `work/config.conf` (`INTEGRATION_TARGET`, `TICKET_MERGE_METHOD`, `WORKTREE_DIR`); the
 defaults are `main`, `squash`, and `.claude/worktrees`, and an environment variable of the same name
 outranks the file. `scripts/_config.sh` holds them plus the branch names and is sourced by the
 others, never run on its own.
 
-| Script                                      | Purpose                                                                   |
-| ------------------------------------------- | ------------------------------------------------------------------------- |
-| `scripts/bundle-status.sh`                  | List every bundle with its status.                                        |
-| `scripts/bundle-status.sh <bundle-id>`      | One bundle plus the status of each of its tickets.                        |
-| `scripts/ticket-status.sh <bundle-id> <NN>` | Print one ticket's status, for scripts and gates.                         |
-| `scripts/claim-ticket.sh <bundle-id> <NN>`  | Create the ticket's branch and worktree. Claiming is creating the branch. |
-| `scripts/complete-ticket.sh <pr> [sha]`     | Merge an accepted PR per `MERGE_METHOD` and remove its worktree.          |
+`TICKET_MERGE_METHOD` covers ticket PRs and nothing else. No script lands a finished bundle branch on
+the integration target yet; that is a Ship step whose method is fixed, not configurable — see
+"Landing a bundle" in `${CLAUDE_PLUGIN_ROOT}/workflow/git-mechanics.md`.
+
+| Script                                      | Purpose                                                                     |
+| ------------------------------------------- | --------------------------------------------------------------------------- |
+| `scripts/bundle-status.sh`                  | List every bundle with its status.                                          |
+| `scripts/bundle-status.sh <bundle-id>`      | One bundle plus the status of each of its tickets.                          |
+| `scripts/ticket-status.sh <bundle-id> <NN>` | Print one ticket's status, for scripts and gates.                           |
+| `scripts/claim-ticket.sh <bundle-id> <NN>`  | Create the ticket's branch and worktree. Claiming is creating the branch.   |
+| `scripts/complete-ticket.sh <pr> [sha]`     | Merge an accepted ticket PR per `TICKET_MERGE_METHOD`, remove its worktree. |
 
 ```console
 $ scripts/bundle-status.sh

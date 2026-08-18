@@ -145,12 +145,12 @@ mkdir -p "work/bundles/$cfg"
 printf 'depends_on: []\n---\nconfig probe\n' > "work/bundles/$cfg/ticket.md"
 git add "work/bundles/$cfg" && git commit -qm "docs(bundle): publish config probe" && git push -q origin main
 # Written the way the shipped template is: aligned inline comments, not bare KEY=value.
-printf 'MERGE_METHOD=rebase  # how PRs land\nWORKTREE_DIR=.wt     # where worktrees go\n' > work/config.conf
+printf 'TICKET_MERGE_METHOD=rebase  # ticket PR merge method\nWORKTREE_DIR=.wt            # where worktrees go\n' > work/config.conf
 "$scripts/claim-ticket.sh" "$cfg" 01 >/dev/null 2>&1
 ok "worktree honours WORKTREE_DIR"  "$([ -d ".wt/ticket/$cfg/01" ] && echo yes)" yes
 export GH_STUB_LOG="$root/merge2.log" GH_STUB_BRANCH="ticket/$cfg/01"
 "$scripts/complete-ticket.sh" 43 >/dev/null 2>&1
-ok "merge honours MERGE_METHOD"     "$(grep -c -- '--rebase' "$root/merge2.log")" 1
+ok "merge honours TICKET_MERGE_METHOD" "$(grep -c -- '--rebase' "$root/merge2.log")" 1
 ok "no --squash when overridden"    "$(grep -c -- '--squash' "$root/merge2.log")" 0
 
 echo "== a non-default INTEGRATION_TARGET is what tickets cut from and merge into"

@@ -29,8 +29,11 @@ contains the complete intent for a small change. When one file plays both intent
 its sections must still keep approved behavior separate from execution instructions.
 
 Discovery evidence is not always a file: a codebase scan's findings may live only in chat, triaged
-live into a backlog line (accepted) or a decision record (rejected, so the same finding doesn't
-resurface next scan) — see [Running the workflow](../docs/walkthrough.md) for the concrete mechanics.
+live into a backlog line (accepted) or rejected. Write a decision record for a rejection only when
+it encodes a durable choice — "this stays as it is, because X", in the format of
+[`templates/decision-record.md`](./templates/decision-record.md) — never merely to stop a finding
+from resurfacing. Drop a rejection with no durable reason behind it and let it resurface next scan.
+See [Running the workflow](../docs/walkthrough.md) for the concrete mechanics.
 
 ## Conflict rules
 
@@ -133,7 +136,8 @@ system documentation.
 At Ship:
 
 1. Move currently true system behavior into the owning durable documentation.
-2. Move durable, consequential rationale into a decision record when it meets that bar.
+2. Move durable, consequential rationale into a decision record when it meets that bar, using
+   [`templates/decision-record.md`](./templates/decision-record.md).
 3. Move unfinished or newly discovered work into the backlog.
 4. Delete the complete bundle: intent/spec, plan, tickets, and bundle-local evidence.
 

@@ -100,15 +100,15 @@ Work in progress — the workflow stages are still being designed, and the docs 
 ## Important
 
 Branch names are not configurable, and neither is branch strategy — a multi-ticket bundle gets a
-bundle branch, a single-ticket bundle doesn't. See [git-mechanics.md](workflow/git-mechanics.md) for
-why.
+bundle branch, a single-ticket bundle doesn't. Neither is how a finished bundle branch lands on the
+integration target. See [git-mechanics.md](workflow/git-mechanics.md) for why.
 
 ## Config
 
-| Setting              | Default             | What it controls                                            |
-| -------------------- | ------------------- | ----------------------------------------------------------- |
-| `INTEGRATION_TARGET` | `main`              | branch bundles land on, and ticket branches are cut from    |
-| `MERGE_METHOD`       | `squash`            | `gh pr merge` flag: `squash`, `merge`, or `rebase`          |
-| `WORKTREE_DIR`       | `.claude/worktrees` | where ticket worktrees go; the path mirrors the branch name |
+| Setting               | Default             | What it controls                                            |
+| --------------------- | ------------------- | ----------------------------------------------------------- |
+| `INTEGRATION_TARGET`  | `main`              | branch bundles land on, and ticket branches are cut from    |
+| `TICKET_MERGE_METHOD` | `squash`            | ticket PRs only; the bundle land is fixed, not configurable |
+| `WORKTREE_DIR`        | `.claude/worktrees` | where ticket worktrees go; the path mirrors the branch name |
 
 One key per line, no spaces around `=`; an environment variable of the same name outranks the file.

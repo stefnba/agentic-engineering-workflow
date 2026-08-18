@@ -172,14 +172,20 @@ bundle branch; a single-ticket bundle does not.
 ### Single-ticket bundle
 
 Create one ticket branch and worktree based on the configured integration target. Open one PR into
-that target. Do not create a bundle branch with one child.
+that target, merged with `TICKET_MERGE_METHOD`. Do not create a bundle branch with one child, and
+note there is nothing to land afterwards — the one PR already put the work on the target.
 
 ### Multi-ticket bundle
 
-Create one bundle branch from the configured integration target. Each ticket gets one
-branch, worktree, and PR into the bundle branch. After every ticket is accepted and merged, Ship
-reconciles and deletes the bundle on the bundle branch, lands that final state on the
-integration target, and removes all bundle branches and worktrees.
+Create one bundle branch from the configured integration target. Each ticket gets one branch,
+worktree, and PR into the bundle branch, merged with `TICKET_MERGE_METHOD`. After every ticket is
+accepted and merged, Ship reconciles and deletes the bundle on the bundle branch, lands that final
+state on the integration target with a fixed `--no-ff` merge, and removes all bundle branches and
+worktrees.
+
+Two merge points, two methods: a ticket PR uses the configured `TICKET_MERGE_METHOD`; the land is
+fixed so the per-ticket commits survive the bundle's deletion. [Git mechanics](./git-mechanics.md)
+owns both.
 
 ### Incident or hotfix
 

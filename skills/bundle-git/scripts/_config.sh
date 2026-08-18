@@ -7,7 +7,7 @@
 
 # An environment variable outranks the file, so a one-off override needs no edit.
 _env_target="${INTEGRATION_TARGET:-}"
-_env_merge="${MERGE_METHOD:-}"
+_env_merge="${TICKET_MERGE_METHOD:-}"
 _env_worktree="${WORKTREE_DIR:-}"
 
 if [ -f work/config.conf ]; then
@@ -22,7 +22,7 @@ if [ -f work/config.conf ]; then
 fi
 
 INTEGRATION_TARGET="${_env_target:-${INTEGRATION_TARGET:-main}}"
-MERGE_METHOD="${_env_merge:-${MERGE_METHOD:-squash}}"
+TICKET_MERGE_METHOD="${_env_merge:-${TICKET_MERGE_METHOD:-squash}}"
 WORKTREE_DIR="${_env_worktree:-${WORKTREE_DIR:-.claude/worktrees}}"
 unset _env_target _env_merge _env_worktree _bad
 

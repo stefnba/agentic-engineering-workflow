@@ -35,8 +35,8 @@ tickets you shape into one parallel wave, not just an inconvenience.
 - **Backlog pick** — `/pick` a one-line backlog item.
 - **Codebase scan** — run `/scan-codebase` for full or narrow findings. Results
   appear inline in chat only, never written to a file. Triage each finding right there: accept it
-  (→ backlog line, title plus a short breadcrumb) or reject it with a reason (→ decision record
-  under `docs/decisions/`, so the next scan doesn't resurface it).
+  (→ backlog line, title plus a short breadcrumb) or reject it. A rejection that encodes a durable
+  choice — "this stays as it is, because X" — earns a decision record under `docs/decisions/`, so the next scan doesn't resurface it.
 - **Fresh idea** — anything you bring yourself; no different from a backlog pick once it's out loud.
 
 **Narrowing — almost every entry point still needs this.** A backlog line is a title, not a settled
@@ -90,7 +90,8 @@ between them can run in tabs side by side.
 
 From the same ticket tab, the implementation session dispatches review as a fresh subagent — it
 shares no message history with the implementer, so it judges independently even though you launched
-it from the same place.
+it from the same place. It does share the tab's worktree, so it first checks that the worktree sits
+on the exact PR head SHA with nothing uncommitted, and stops rather than review unpushed work.
 
 - Reviewer posts findings to the PR as comments (as blockers or concerns), and returns a summary to the tab.
 - The implementer resolves every blocker — fixes it or rebuts it with evidence. Concerns are not
@@ -102,17 +103,18 @@ it from the same place.
 Because you're in that tab's conversation the whole time, you can jump in and steer or fix things
 yourself at any point — nothing about this loop locks you out.
 
-Once ready, you review the PR and diff yourself, then merge it — directly or via
-`/complete-ticket`. Either way the merge is the whole record: the ticket reads as `done` because its
-PR is merged, and nothing writes status afterward.
+Once ready, you review the PR and diff yourself, then merge it — squash by default, whatever
+`TICKET_MERGE_METHOD` says — directly or via `/complete-ticket`. Either way the merge is the whole
+record: the ticket reads as `done` because its PR is merged, and nothing writes status afterward.
+That setting stops at ticket PRs; the bundle land below is fixed.
 
 ## Ship
 
 Once every ticket in the bundle is `done`, go back to the shaping session (or a fresh one) and
 trigger `/ship`:
 
-- confirms checks pass, by querying CI status remotely rather than checking anything out locally:
-  - **multi-ticket bundle:** targets the bundle branch — this is what gates the merge below
+- confirms checks are green before touching anything, by querying CI status remotely:
+  - **multi-ticket bundle:** targets the bundle branch — this gates every step below
   - **single-ticket bundle:** targets the integration target directly, since the one ticket's PR
     already merged there; this just reconfirms it's green
 - folds anything durable — system behavior, decisions — from the bundle into the docs that own it
@@ -120,8 +122,12 @@ trigger `/ship`:
 - deletes the bundle: for a multi-ticket bundle, as a commit on the bundle branch itself, so the merge
   below lands a bundle-free state on the integration target; for a single-ticket bundle, as a commit
   directly on the integration target, since there's no bundle branch
+- for a multi-ticket bundle, merges the integration target into the bundle branch if the target moved
+  while the bundle was in flight, then re-runs the checks — this time locally, since the state being
+  landed now includes Ship's own commits and that merge, and no CI run has seen it
 - for a multi-ticket bundle, merges that now-bundle-free bundle branch — holding every merged ticket —
-  into the integration target; a single-ticket bundle already landed there when its one PR merged, so
-  this step is a no-op
+  into the integration target with `--no-ff`, never a squash or a rebase, so each ticket stays its own
+  commit (see [Git mechanics](../workflow/git-mechanics.md)); a single-ticket bundle already landed
+  there when its one PR merged, so this step is a no-op
 - removes whichever of the ticket branches, the bundle branch (if one existed), and their worktrees
   still exist — some may already be gone if your repo auto-deletes branches on merge
