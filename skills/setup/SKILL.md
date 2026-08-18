@@ -2,6 +2,7 @@
 name: setup
 description: Install the agentic coding workflow into a repository — check prerequisites, interview the three settings, then write work/config.conf, docs/conventions/git.md, and the AGENTS.md pointer. Run once per repo, before any bundle work.
 disable-model-invocation: true
+model: haiku
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash(git remote:*), Bash(git branch:*), Bash(git rev-parse:*), Bash(gh auth status:*), Bash(ls:*), Bash(cat:*)
 ---
 
@@ -54,9 +55,11 @@ All three pass. Reading what's already in the repo.
 
 **Stop and report if any is missing.** A repo without an authenticated forge CLI cannot derive ticket
 status at all, so installing the workflow into it produces a system that reports `unknown` for
-everything. Say which check failed, why it blocks the workflow, and the one command that fixes it:
+everything. Say which check failed, why it blocks the workflow, and give copy-pasteable commands that
+fix it — in dependency order when more than one failed, since authenticating precedes creating a
+repository and creating one precedes pushing to it. Print the commands; never run them.
 
-```markdown
+````markdown
 **Prerequisites**
 
 - ❌ Remote — none configured; `git remote -v` is empty
@@ -66,10 +69,21 @@ everything. Say which check failed, why it blocks the workflow, and the one comm
 **Stopped — nothing written.** Ticket and bundle status are derived from pull request records,
 so a repo with no remote reports `unknown` for everything the workflow asks.
 
-Add a remote and push once, then re-run `/setup`:
+If the repository doesn't exist on the forge yet, create it and push:
 
-    git remote add origin <url> && git push -u origin main
+```bash
+git add -A && git commit -m "Initial commit"
+gh repo create <name> --private --source=. --remote=origin --push
 ```
+
+If it already exists, wire up the remote instead:
+
+```bash
+git remote add origin <url> && git push -u origin <branch>
+```
+
+Then re-run `/setup`.
+````
 
 ### 2. Explore
 
