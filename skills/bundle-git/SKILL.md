@@ -7,14 +7,16 @@ description: Claim a ticket, report bundle and ticket status, and merge an accep
 
 Deterministic git mechanics for bundle work.
 
-- `${CLAUDE_PROJECT_DIR}/docs/conventions/git.md` — this repository's branch strategy and conventions,
-  which these scripts follow. Read it for the integration target and branch names.
+- `${CLAUDE_PROJECT_DIR}/work/config.conf` — the settings these scripts run with.
 - `${CLAUDE_PLUGIN_ROOT}/workflow/git-mechanics.md` — the claim and bundle-branch procedures these
   scripts implement.
 - `${CLAUDE_PLUGIN_ROOT}/workflow/artifacts.md` — why status is derived rather than stored.
 
-Run every script from the repository root, invoked as `${CLAUDE_SKILL_DIR}/scripts/<name>.sh`. Set
-`INTEGRATION_TARGET` if the target is not `main`.
+Run every script from the repository root, invoked as `${CLAUDE_SKILL_DIR}/scripts/<name>.sh`.
+Settings come from `work/config.conf` (`INTEGRATION_TARGET`, `MERGE_METHOD`, `WORKTREE_DIR`); the
+defaults are `main`, `squash`, and `.claude/worktrees`, and an environment variable of the same name
+outranks the file. `scripts/_config.sh` holds them plus the branch names and is sourced by the
+others, never run on its own.
 
 | Script                                      | Purpose                                                                   |
 | ------------------------------------------- | ------------------------------------------------------------------------- |
@@ -22,7 +24,7 @@ Run every script from the repository root, invoked as `${CLAUDE_SKILL_DIR}/scrip
 | `scripts/bundle-status.sh <bundle-id>`      | One bundle plus the status of each of its tickets.                        |
 | `scripts/ticket-status.sh <bundle-id> <NN>` | Print one ticket's status, for scripts and gates.                         |
 | `scripts/claim-ticket.sh <bundle-id> <NN>`  | Create the ticket's branch and worktree. Claiming is creating the branch. |
-| `scripts/complete-ticket.sh <pr> [sha]`     | Squash-merge an accepted PR and remove its worktree.                      |
+| `scripts/complete-ticket.sh <pr> [sha]`     | Merge an accepted PR per `MERGE_METHOD` and remove its worktree.          |
 
 ```console
 $ scripts/bundle-status.sh

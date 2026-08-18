@@ -5,11 +5,12 @@ set -uo pipefail
 
 bundle="$1"
 nn="$2"
-target="${INTEGRATION_TARGET:-main}"
-branch="ticket/$bundle/$nn"
+. "$(cd "$(dirname "$0")" && pwd)/_config.sh"
+target="$INTEGRATION_TARGET"
+branch=$(ticket_branch "$bundle" "$nn")
 
 if [ "$(ls "work/bundles/$bundle/tickets" 2>/dev/null | wc -l)" -gt 1 ]; then
-  base="bundle/$bundle"
+  base=$(bundle_branch "$bundle")
 else
   base="$target"
 fi

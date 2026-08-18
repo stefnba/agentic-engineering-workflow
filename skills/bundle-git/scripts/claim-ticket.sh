@@ -6,10 +6,11 @@ set -euo pipefail
 
 bundle="$1"
 nn="$2"
-target="${INTEGRATION_TARGET:-main}"
 here="$(cd "$(dirname "$0")" && pwd)"
-branch="ticket/$bundle/$nn"
-worktree=".claude/worktrees/$branch"
+. "$here/_config.sh"
+target="$INTEGRATION_TARGET"
+branch=$(ticket_branch "$bundle" "$nn")
+worktree="$WORKTREE_DIR/$branch"
 
 git fetch -q origin
 
@@ -22,7 +23,7 @@ fi
 
 # A multi-ticket bundle shares one bundle branch; a single-ticket bundle PRs into the target directly.
 if [ "$(ls "work/bundles/$bundle/tickets" 2>/dev/null | wc -l)" -gt 1 ]; then
-  base="bundle/$bundle"
+  base=$(bundle_branch "$bundle")
   git ls-remote --exit-code --heads origin "$base" >/dev/null 2>&1 ||
     git push -q origin "origin/$target:refs/heads/$base" ||
     true # another ticket's claim won the race and created it first
