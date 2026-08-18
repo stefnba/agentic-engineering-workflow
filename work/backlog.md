@@ -43,9 +43,9 @@ Tags:
   contract in the tree and currently reachable only by loading the whole lifecycle doc.
 - [follow-up] Neither `skills/setup/` nor `skills/shape/` has a `SKILL.md` yet — both hold only their
   reference material (`setup/references/prerequisites.md`, `shape/templates/`).
-- [drift] `workflow/git-mechanics.md` says the `bundle-git` skill owns bundle branch "creation, sync,
-  and cleanup", but the skill only creates the bundle branch and removes a ticket's worktree. Ship's
-  branch and worktree cleanup, and whatever "sync" means here, are unimplemented.
+- [drift] `workflow/git-mechanics.md` says the `bundle-git` skill owns bundle branch creation and
+  cleanup, but the skill only creates the bundle branch and removes a ticket's worktree. Ship's
+  branch and worktree cleanup is unimplemented. (The undefined "sync" it also claimed is gone.)
 - [follow-up] `bundle-git`'s claim is verified over the `git://` smart protocol, never against
   github.com over HTTPS, and the chain claim → PR → `/complete-ticket` → derived `done` has never run
   joined — only its two halves separately. One real push settles both. Smaller gaps:

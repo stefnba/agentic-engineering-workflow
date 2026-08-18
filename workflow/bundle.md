@@ -145,9 +145,9 @@ tests that pin current behavior, and the ticket that adds them precedes every re
 ## Dependencies and parallelization
 
 Record only real blocking edges. A ticket depends on another when it cannot satisfy its done-when
-against the earlier repository state—not merely because the numbered order looks natural.
+against the earlier repository state — not merely because the numbered order looks natural.
 
-Parallel-safe means more than “no dependency”: expected code ownership, migrations, shared schemas,
+Parallel-safe means more than "no dependency": expected code ownership, migrations, shared schemas,
 generated artifacts, and integration tests must not create an unsafe collision. The plan owns this
 judgment; `depends_on` owns only hard execution order.
 

@@ -10,9 +10,9 @@ don't separately trigger those substeps.
 ## How you run this
 
 There's no orchestration tooling beyond skills, subagents, worktrees, and git. Two kinds of chat session
-typically carry the whole workflow. "Integration target" below means your declared integration
-target branch (see [Prerequisites](../skills/setup/references/prerequisites.md)) — usually the repo's default branch, but a
-separate branch such as `dev` if the default is protected.
+typically carry the whole workflow. "Integration target" below means the branch declared as
+`INTEGRATION_TARGET` in `work/config.conf` — usually the repo's default branch, but a separate
+branch such as `dev` if the default is protected.
 
 - **One long-lived session per bundle.** Runs Discovery and Shape, and later Ship. Its
   working directory stays on the integration target the whole time — it never checks out a ticket

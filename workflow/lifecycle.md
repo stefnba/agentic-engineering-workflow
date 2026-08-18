@@ -6,11 +6,11 @@ output, or exit authority changes materially.
 ```text
 Discover ──Pick──▶ Shape ──Plan──▶ Implement ──verify + reconcile──▶ Review
    ▲                  │                 ▲                              │
-   └──── clarify ─────┘                 └──────── fix request ─────────┘
-                                                                        │
-                                                                     Accept
-                                                                        ▼
-                                                         next ticket or Ship
+   └──── clarify ─────┘                 └──────── fix request ─────────┤
+                                                                       │
+                                                                    Accept
+                                                                       ▼
+                                                              next ticket or Ship
 ```
 
 The stages stay fixed for every kind and size of work. The shaping route changes which artifacts
@@ -216,7 +216,8 @@ Implement → verify + reconcile → open PR
                          ▼                       ▼
              verify + PR response          human Accept
                          │                       │
-                         └──────► next Review        merge + complete
+                         │                       ▼
+                         └──────► next Review    merge + complete
 ```
 
 Each Reviewer starts in fresh context and reviews the complete PR at its exact head SHA. It posts one

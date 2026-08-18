@@ -28,8 +28,8 @@ branch; a single-ticket bundle's PR targets the integration target directly.
 A branch is cut from the branch its work will PR into — for bundle work the `bundle-git` skill
 derives that target; outside a bundle it is the configured integration target.
 
-**Bundle branches and worktrees go through the `bundle-git` skill.** It owns their creation, sync,
-and cleanup, deriving every name from the bundle's shape and the settings above. Worktrees outside a
+**Bundle branches and worktrees go through the `bundle-git` skill.** It owns their creation and
+cleanup, deriving every name from the bundle's shape and the settings above. Worktrees outside a
 bundle follow the base rule directly.
 
 ## Claiming a ticket

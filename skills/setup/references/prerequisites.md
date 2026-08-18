@@ -1,3 +1,7 @@
+# Prerequisites
+
+What a repository needs before the workflow can run.
+
 ## Git
 
 - A remote repository with a local clone.
