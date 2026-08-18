@@ -75,6 +75,10 @@ Typical examples:
 A successful result may be “do not proceed.” If implementation is warranted, the human picks that
 result before Shape creates a bundle.
 
+The intent artifact for this route states the open question, the evidence that settles it, the time
+box, and the decision the answer feeds — see
+[`skills/shape/templates/spike.md`](../skills/shape/templates/spike.md).
+
 ### Intent plus tickets
 
 Use when observable behavior or binding constraints need approval, but the technical approach and

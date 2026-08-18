@@ -48,8 +48,10 @@ ticket count, not on whether a spec or plan also exists:
 - More than one ticket: `tickets/`, one numbered file per ticket — numbering exists only to
   distinguish among multiples.
 
-Ticket numbers in `tickets/` are two-digit, stable within the bundle, and encode identity rather
-than execution order. Use the same number in the ticket heading.
+Ticket numbers are two-digit, stable within the bundle, and encode identity rather than execution
+order. Use the same number in the ticket heading. A lone `ticket.md` is number `01` — the scripts
+derive its branch and status from that number even though it has no sibling to be distinguished
+from.
 
 Draft location is tool-local and uncommitted. After the Plan gate, skill scripts publish the exact
 approved bundle under `work/bundles/` on the configured integration target using the repository's Git
