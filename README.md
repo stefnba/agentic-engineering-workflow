@@ -45,7 +45,6 @@ Prose for humans lives in [docs/](docs/) and is never loaded by an agent:
 
 - [walkthrough.md](docs/walkthrough.md) — running it day to day: which skill, which session tab
 - [tool-setup.md](docs/tool-setup.md) — configuring Claude Code for a consuming repo
-- [decisions/](docs/decisions/) — decision records
 
 ## Skills
 
