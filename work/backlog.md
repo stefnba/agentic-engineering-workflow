@@ -31,12 +31,6 @@ Tags:
   a separate release process); "lands on the integration target" is already the docs' own phrasing.
   Rename sweeps lifecycle.md, walkthrough.md, artifacts.md ("Shipped" lifetime state → "Landed"),
   bundle.md, AGENTS.md, and the planned `/ship` skill name (→ `/land`).
-- [drift] lifecycle.md and artifacts.md link _to_ walkthrough.md in three places added this session
-  (Coordination's session/tab model, Discover's narrowing mechanics, Discovery evidence's
-  scan-triage mechanics) — but walkthrough.md is the practical, derived "how you run this" guide,
-  not an owning doc other docs should depend on, per AGENTS.md's "link to the owning doc" rule.
-  Either move the referenced content to a proper owning doc and have both sides link to it, or
-  confirm walkthrough.md legitimately owns these specific facts and the direction is fine as-is.
 - [follow-up] walkthrough.md already names specific skills (`/pick`, `/scan-codebase`,
   `/interview-me`, `/shape`, `/complete-ticket`, `/ship`) as if they exist. Each still needs to
   actually be defined as its own modular skill file — including internal, non-user-facing ones

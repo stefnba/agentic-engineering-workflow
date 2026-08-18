@@ -30,10 +30,8 @@ its sections must still keep approved behavior separate from execution instructi
 
 Discovery evidence is not always a file: a codebase scan's findings may live only in chat, triaged
 live into a backlog line (accepted) or rejected. Write a decision record for a rejection only when
-it encodes a durable choice — "this stays as it is, because X", in the format of
-[`templates/decision-record.md`](./templates/decision-record.md) — never merely to stop a finding
-from resurfacing. Drop a rejection with no durable reason behind it and let it resurface next scan.
-See [Running the workflow](../docs/walkthrough.md) for the concrete mechanics.
+it encodes a durable choice — "this stays as it is, because X" — never merely to stop a finding from
+resurfacing. Drop a rejection with no durable reason behind it and let it resurface next scan.
 
 ## Conflict rules
 
@@ -72,9 +70,9 @@ Authority is axis-specific, not one global document hierarchy:
 - **Shipped system:** code, tests, and durable docs replace the bundle. The bundle is not permanent
   documentation.
 
-Correct factual drift in the artifact that owns the fact. A correction that changes approved
-behavior, binding architecture, decomposition, security, migration, compatibility, or acceptance
-criteria returns to the Plan gate.
+Correct factual drift in the artifact that owns the fact. A correction material enough to reopen an
+approved decision returns to the Plan gate instead — [Lifecycle](./lifecycle.md) owns which changes
+those are.
 
 ## Bundle contents
 
@@ -93,18 +91,17 @@ ticket: todo → doing → done
 PR/CI:  implementation, checks, review, and merge state
 ```
 
-- ticket `done`: its PR is merged into that ticket's target branch — the bundle branch for a
-  multi-ticket bundle, otherwise the configured integration target.
+- ticket `done`: its PR is merged into that ticket's target branch, whichever
+  [Git mechanics](./git-mechanics.md) derives it to be.
 - ticket `doing`: its ticket branch exists on the remote. It stays `doing` through Implement, Review,
   fixes, and human review.
 - ticket `todo`: neither.
 - bundle `shaped`: it exists under `work/bundles/` on the integration target with no ticket claimed.
   `active`: at least one ticket is no longer `todo`.
 
-Claiming a ticket _is_ creating its branch, so git serializes parallel claims and a second claim on
-the same ticket fails. Deleting an unmerged ticket branch and its worktree un-claims the ticket.
-Nothing is written after a merge, so a human who merges the PR directly leaves exactly the state a
-skill script would.
+Claiming a ticket _is_ creating its branch, which is why `doing` needs no record of its own.
+Deleting an unmerged ticket branch and its worktree un-claims the ticket. Nothing is written after a
+merge, so a human who merges the PR directly leaves exactly the state a skill script would.
 
 Do not persist `ready`, `implemented`, `verifying`, `blocked`, or `changes_requested` either. Unmet
 ticket dependencies are derived from `depends_on`; an external blocker is raised on the PR or
@@ -121,12 +118,8 @@ escalated to the human, never recorded as ticket metadata that can go stale.
 There is no `done/` or shipped-bundle archive. Git history preserves temporary artifacts.
 
 Each implementation PR is the permanent historical bridge from the shipped change to its temporary
-planning context. Its body must contain immutable commit permalinks to the complete approved bundle
-and the exact ticket it implements. A branch-relative URL is not a permalink: it can drift or break
-when Ship removes the bundle branch. The linked commit must remain reachable through merged PR or
-integration-target history after branch cleanup. If a material change passes the Plan gate again,
-update the PR links to that newly approved bundle version. On the direct ticket route, the bundle and
-ticket links may intentionally point to the same file.
+planning context — which is why the links in its body have to outlive the bundle. The PR handoff
+contract in [Lifecycle](./lifecycle.md) owns what that body must carry.
 
 The PR is the main surface for implementation evidence, review findings, fix responses, and review
 state. Its links do not transfer authority: the linked intent, plan, and ticket remain authoritative
@@ -136,8 +129,7 @@ system documentation.
 At Ship:
 
 1. Move currently true system behavior into the owning durable documentation.
-2. Move durable, consequential rationale into a decision record when it meets that bar, using
-   [`templates/decision-record.md`](./templates/decision-record.md).
+2. Move durable, consequential rationale into a decision record when it meets that bar.
 3. Move unfinished or newly discovered work into the backlog.
 4. Delete the complete bundle: intent/spec, plan, tickets, and bundle-local evidence.
 

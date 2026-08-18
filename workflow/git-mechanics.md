@@ -69,8 +69,7 @@ it. The land must not collapse or rewrite them:
 - **When the integration target has moved, merge it into the bundle branch, re-run the Ship check,
   then land.** That is the only permitted reconciliation.
 
-`TICKET_MERGE_METHOD` is named for its whole scope: ticket PRs, nothing else. The land is fixed,
-not a setting — it is what makes "git
-history preserves the work record; there is no shipped-bundle archive" true.
-
-[Lifecycle](./lifecycle.md) sequences these rules as Ship steps 5–7;
+`TICKET_MERGE_METHOD` is named for its whole scope: ticket PRs, nothing else. The land is fixed, not
+a setting — it is what makes [Artifacts](./artifacts.md)'s "no shipped-bundle archive; git history
+preserves temporary artifacts" true. [Lifecycle](./lifecycle.md) sequences these rules as Ship steps
+5–7.

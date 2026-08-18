@@ -34,9 +34,18 @@ Coordination is split between the human and deterministic skill scripts — ther
 agent and no standing system that watches state and reacts on its own: an autonomous agent in the
 dispatch position could infer or erode human gates, so that implementation is prohibited by design.
 
-Mechanically, everything below runs inline inside a human-launched chat session — see [Running the
-workflow](../docs/walkthrough.md) for the concrete session/tab model. A skill script only runs when a human
-or an already-running session invokes it.
+Mechanically, everything below runs inline inside a human-launched chat session, and a skill script
+only runs when a human or an already-running session invokes it. Two kinds of session carry a bundle:
+
+- **One session per bundle**, long-lived, runs Discover, Shape, and later Ship. Its working directory
+  stays on the integration target; it never checks out a ticket branch. Keeping it open is
+  convenient, not required — the bundle lives in git and every status is derived, so Ship runs just
+  as well from a fresh session.
+- **One session per ticket**, in that ticket's own worktree, runs Implement and dispatches that
+  ticket's Review rounds. It opens only once every ticket it depends on is `done`; tickets with no
+  dependency between them run side by side. Review is dispatched from here as a fresh subagent: no
+  shared message history, but the same worktree, which is why a Reviewer verifies the head SHA and a
+  clean tree before judging.
 
 **The human dispatches stages.** Discovery, shaping, each ticket's implementation, and Ship start
 on explicit human dispatch. Every stage ends by reporting the suggested next move — the
@@ -64,20 +73,16 @@ cannot cross a human gate.
 **Deterministic skill scripts own transition mechanics.** Skill scripts — never prompts, never an
 agent's judgment — execute state transitions so they are serialized and auditable:
 
-- **Claim:** check that every dependency is `done`, then create the ticket branch on the remote at the
-  current head of the branch the ticket's PR will merge into — the bundle branch for a multi-ticket
-  bundle, otherwise the configured integration target (see [Work bundles](./bundle.md)) — and cut
-  its worktree from that exact state. Creating the branch _is_ the
-  claim, so git serializes it: parallel claims on different tickets never collide, and a second claim
-  on the same ticket fails and aborts. A multi-ticket bundle's first claim also creates the bundle
-  branch; [Git mechanics](./git-mechanics.md) owns both procedures, and
-  `${CLAUDE_PROJECT_DIR}/work/config.conf` holds the settings they read.
+- **Claim:** check that every dependency is `done`, then create the ticket branch and cut its
+  worktree. Creating the branch _is_ the claim, so git itself serializes competing claims — no lock
+  and no coordinator. [Git mechanics](./git-mechanics.md) owns the procedure, the branch a worktree
+  is cut from, and bundle-branch creation.
 - **Dispatch mechanics:** start each Architect, Critic, Implementer, and Reviewer with the required
   fresh context and permissions, and record review-round numbers for fix and re-review runs.
-- **Merge:** after human Accept, merge the ticket PR into its target using `TICKET_MERGE_METHOD`.
-  The merge is the last write — `done` follows from it and is never recorded afterward. Landing a
-  finished bundle branch on the integration target is a separate Ship step with a fixed method; see
-  [Git mechanics](./git-mechanics.md).
+- **Merge:** after human Accept, merge the ticket PR into its target. The merge is the last write —
+  `done` follows from it and is never recorded afterward. Landing a finished bundle branch on the
+  integration target is a separate Ship step; [Git mechanics](./git-mechanics.md) owns both merges
+  and why only one of them is configurable.
 
 These skill scripts never own product or technical judgment and cannot pass a human gate: Pick,
 Plan, and Accept are explicit human decisions, observed and never inferred. The Implementer never
@@ -112,8 +117,7 @@ the gate without first becoming a backlog item.
 **Narrowing:** once picked, almost every entry point still needs a conversational pass — clarifying
 problem, desired outcome, and edge cases — before remaining uncertainty is low enough to shape. It
 stays conversational and produces no artifact; skip it only when the pick was already fully settled
-and unambiguous going in. See [Running the workflow](../docs/walkthrough.md) for how this runs
-session-to-session.
+and unambiguous going in.
 
 Done when the human has picked work whose remaining product and technical uncertainty can be
 resolved during Shape.
@@ -180,8 +184,9 @@ returns to the Plan gate.
 
 ### PR handoff contract
 
-The PR is the main implementation and review surface, but not the source of approved intent. Its
-body must contain:
+The PR is the main implementation and review surface, but not the source of approved intent. It is
+also the permanent bridge from a shipped change back to the planning record Ship later deletes, so
+its links have to outlive that record. Its body must contain:
 
 - immutable commit permalinks to the complete approved bundle and exact implemented ticket
 - the delivered scope
@@ -189,9 +194,11 @@ body must contain:
 - reconciliation performed
 - known limitations or residual risk
 
-Do not use branch-relative bundle or ticket links. Keep the body current when the head or verification
-evidence changes; if the Plan gate is repeated, replace the planning links with permalinks to the new
-approved version.
+A branch-relative URL is not a permalink: it can drift, and it breaks once Ship removes the bundle
+branch. The linked commit must stay reachable through merged-PR or integration-target history after
+branch cleanup. Keep the body current when the head or verification evidence changes; if the Plan
+gate is repeated, replace the planning links with permalinks to the newly approved version. On the
+direct ticket route the bundle and ticket links may intentionally point at the same file.
 
 Done when every required check passes at the PR head and the change plus reconciliation is ready for
 an independent Reviewer.
@@ -286,23 +293,26 @@ Ship begins only when every ticket is `done` and the human triggers it.
 
 Ship:
 
-1. Confirms canonical checks pass on the state holding every merged ticket — this gates every step
-   below.
+1. Confirms canonical checks pass on the state holding every merged ticket, queried remotely — the
+   bundle branch for a multi-ticket bundle, the integration target for a single-ticket one, whose
+   only PR already merged there. This gates every step below.
 2. Reconciles remaining bundle knowledge into durable system docs, terminology, and decision
    records.
 3. Converts unfinished or newly discovered work into backlog entries.
-4. Deletes the complete bundle from the integration state.
+4. Deletes the complete bundle from the integration state — as a commit on the bundle branch when
+   there is one, so the land below carries a bundle-free state onto the integration target;
+   otherwise as a commit directly on the integration target.
 5. Merges the integration target into the bundle branch when the target has moved since the branch
    was cut — the only reconciliation the land rules permit. A single-ticket bundle has no bundle
-   branch, so this step and the next do not apply to it.
-6. Re-runs canonical checks on the state produced by steps 2–5. Ship's own commits change
-   documentation, backlog, and bundle files only; a Ship step that would change behavior is not Ship
-   work and returns to the Plan gate.
+   branch, so this step and step 7 do not apply to it.
+6. Re-runs canonical checks on the state produced by steps 2–5, locally: that state carries Ship's
+   own commits and that merge, so no CI run has seen it. Ship's own commits change documentation,
+   backlog, and bundle files only; a Ship step that would change behavior is not Ship work and
+   returns to the Plan gate.
 7. Lands that final state on the configured integration target — [Git mechanics](./git-mechanics.md)
    owns the land rules.
-8. Removes bundle branches and worktrees.
-
-Git history preserves the work record; there is no shipped-bundle archive.
+8. Removes whichever ticket branches, bundle branch, and worktrees still exist — a repository that
+   deletes branches on merge will have removed some already.
 
 Done when the outcome is on the integration target, canonical checks pass there, durable
 documentation is current, and no bundle artifact, branch, or worktree remains.

@@ -53,7 +53,9 @@ than execution order. Use the same number in the ticket heading.
 
 Draft location is tool-local and uncommitted. After the Plan gate, skill scripts publish the exact
 approved bundle under `work/bundles/` on the configured integration target using the repository's Git
-conventions. The path never moves — shaped and active are derived states, not directories (see
+conventions — committed directly, never through a PR: mandatory critique plus the human's approval
+already are the review a planning artifact gets, and a PR on top adds ceremony without adding a
+gate. The path never moves — shaped and active are derived states, not directories (see
 [Artifacts](./artifacts.md)). Ship deletes the bundle path; there is no archive.
 
 ## Shape feedback loop
@@ -151,41 +153,37 @@ Parallel-safe means more than "no dependency": expected code ownership, migratio
 generated artifacts, and integration tests must not create an unsafe collision. The plan owns this
 judgment; `depends_on` owns only hard execution order.
 
+Human attention is the other ceiling. Every parallel ticket runs in its own session that the human
+steers and gates, and that does not scale past a few at once — treat it as a real constraint on how
+wide a parallel wave to shape, not an inconvenience.
+
 ## Autonomy and escalation
 
 Every ticket states what the Implementer may decide and what it must preserve. Local refactoring and
 helper design may be delegated within the ticket's scope.
 
-Escalate to the human when implementation would change approved behavior, scope, public contracts,
-security, migration, compatibility, cross-ticket architecture, or acceptance criteria. Factual
-drift that preserves intent is corrected visibly in the PR; material drift returns to the Plan gate.
+Escalate to the human when implementation would cross a boundary that returns work to the Plan gate,
+or would decide cross-ticket architecture. [Lifecycle](./lifecycle.md) owns which changes those are;
+a ticket adds only the boundaries specific to its own slice.
 
 ## Git and pull requests
 
-[Git mechanics](./git-mechanics.md) owns branch naming, the claim, and bundle-branch creation, and
-names the settings it reads from `${CLAUDE_PROJECT_DIR}/work/config.conf`. This section owns how
-bundle and ticket branches map onto a bundle's shape.
-
-The shape decides the strategy — nothing declares it. A bundle with more than one ticket gets a
-bundle branch; a single-ticket bundle does not.
+[Git mechanics](./git-mechanics.md) owns branch naming, branch strategy, the claim, the land, and the
+settings it reads from `${CLAUDE_PROJECT_DIR}/work/config.conf`. This section owns only what a
+bundle's shape implies: which branches and pull requests exist, and what each one targets.
 
 ### Single-ticket bundle
 
-Create one ticket branch and worktree based on the configured integration target. Open one PR into
-that target, merged with `TICKET_MERGE_METHOD`. Do not create a bundle branch with one child, and
-note there is nothing to land afterwards — the one PR already put the work on the target.
+One ticket branch and worktree, based on the configured integration target, and one PR into that
+target. Do not create a bundle branch with one child, and note there is nothing to land afterwards —
+the one PR already put the work on the target.
 
 ### Multi-ticket bundle
 
-Create one bundle branch from the configured integration target. Each ticket gets one branch,
-worktree, and PR into the bundle branch, merged with `TICKET_MERGE_METHOD`. After every ticket is
-accepted and merged, Ship reconciles and deletes the bundle on the bundle branch, lands that final
-state on the integration target with a fixed `--no-ff` merge, and removes all bundle branches and
-worktrees.
-
-Two merge points, two methods: a ticket PR uses the configured `TICKET_MERGE_METHOD`; the land is
-fixed so the per-ticket commits survive the bundle's deletion. [Git mechanics](./git-mechanics.md)
-owns both.
+One bundle branch off the configured integration target, and per ticket one branch, worktree, and PR
+into that bundle branch. Nothing is ever edited on the bundle branch directly, so it gets no worktree
+of its own. Once every ticket is merged, Ship reconciles and deletes the bundle there, lands that
+state on the integration target, and removes the branches and worktrees.
 
 ### Incident or hotfix
 

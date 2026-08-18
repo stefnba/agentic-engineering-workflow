@@ -115,9 +115,9 @@ the restriction is structural — but the gap itself needs a hook or a permissio
   [artifacts.md](../workflow/artifacts.md) and [walkthrough.md](../docs/walkthrough.md) now split on
   whether a rejection encodes a durable choice: "this stays as it is, because X" earns a record, "not
   worth it now" earns nothing and correctly resurfaces next scan. The missing template exists at
-  [`workflow/templates/decision-record.md`](../workflow/templates/decision-record.md) — `Decision` /
-  `Consequences`, matching the two records already in `docs/decisions/` — and is linked from the
-  triage rule, the Ship list, and the immutability rule.
+  [`skills/record-decision/templates/decision-record.md`](../skills/record-decision/templates/decision-record.md)
+  — `Decision` / `Consequences`, matching the two records already in `docs/decisions/`. The workflow
+  docs no longer link it: the `record-decision` skill owns the format.
 - **13. Direct push to the integration target was never stated outright.** Folded into 5's
   prerequisites bullet, which now requires a target permitting direct pushes, and merge commits once
   a bundle has more than one ticket, naming the required-review, required-PR, and linear-history
