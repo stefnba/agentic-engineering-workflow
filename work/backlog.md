@@ -10,6 +10,15 @@ Tags:
 
 ## Items
 
+- [follow-up] The research split from `docs/decisions/2026-08-18-consuming-repo-layout.md` is now in
+  `workflow/artifacts.md`'s authority table, but the research skill that has to honour it is unbuilt.
+- [follow-up] `skills/setup/SKILL.md` is a placeholder: it states what a run writes but nothing
+  performs the interview or the writes. Implement it — `work/config.conf` from
+  `skills/setup/templates/config.conf`, `docs/conventions/git.md`, the `AGENTS.md` pointer line, and
+  the `WORKTREE_DIR` line in `.gitignore` (per `docs/decisions/2026-08-18-script-read-settings.md`).
+- [follow-up] `bundle-git` has no Ship-side script: nothing lands a bundle branch on the integration
+  target, and `MERGE_METHOD` covers ticket PRs only. See the landing question in
+  `work/open-questions.md`; a `LAND_METHOD` setting may fall out of it.
 - [follow-up] Rename the Ship stage to Land — "ship" implies production release, which the workflow
   explicitly doesn't own (the integration target may be `dev`, promotion to the protected branch is
   a separate release process); "lands on the integration target" is already the docs' own phrasing.
