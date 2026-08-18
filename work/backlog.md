@@ -43,10 +43,6 @@ Tags:
 - [follow-up] `skills/setup/` holds `references/prerequisites.md` and `templates/` but no `SKILL.md`
   yet — the skill itself is unbuilt. Templates live there because setup installs them into the
   consuming repo; `shape` will read them from that location.
-- [follow-up] `agents/*.md` frontmatter carries only `name`. Claude Code selects a subagent from its
-  `description`, so without one these four cannot be auto-dispatched by role — only named
-  explicitly. Decide whether that is intended (the workflow dispatches them from skill scripts, not
-  by model choice) and either add descriptions or record the reason.
 - [drift] Converting the agent files to prompt-only dropped their operator preamble — which context
   to run in, which permissions to withhold structurally. `docs/workflow.md` owns those conditions for
   Critic and Reviewer; confirm it also owns them for Architect and Implementer, or the constraint is

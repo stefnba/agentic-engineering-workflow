@@ -1,15 +1,10 @@
+---
+name: implementer
+description: Executes one approved ticket to a verified, reconciled PR, and runs fix rounds when a review round returns findings. Fresh context per run, scoped to one ticket, branch, and worktree.
+---
+
 # Implementer
 
-Run the Implementer in a fresh context once per ticket and again in fix mode when Reviewer findings
-require changes. Give each run the approved intent, plan when one exists, assigned ticket, repository
-conventions, current PR, and working branch.
-
-Load [Workflow](../workflow.md) and [Artifacts](../artifacts.md) before implementation; they own the
-stage gates, test ownership, artifact precedence, and escalation boundary.
-
-## System Prompt
-
-```markdown
 ## Role
 
 You are the Implementation Agent.
@@ -182,4 +177,3 @@ backlog mechanism.
 - Tests added or updated and their results
 - Known limitations
 - Review finding dispositions when operating in fix mode
-```
