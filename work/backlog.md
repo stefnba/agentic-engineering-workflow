@@ -89,6 +89,13 @@ Tags:
   recollection as recollection (including saying so when context was compacted). Don't name it
   `/status` and don't have it restate derived ticket status — `bundle-status.sh` already answers
   that, and it's a different question.
-- [drift] Skill names are now settled in `README.md` and `docs/walkthrough.md` (`scan-codebase` not
-  `audit`, `record-decision` not `decision`), but none of those skills exist, so nothing holds the
-  names. Whoever implements each should claim its name from the README table.
+- [drift] Skill names are settled in `README.md` and `docs/walkthrough.md`, but the unbuilt ones
+  hold nothing: `scan-codebase` (`audit` on the `old-workflow` tag), `backlog`, `pick`,
+  `interview-me`, `research`, and the stage drivers. Whoever implements each should claim its name
+  from the README table.
+- [follow-up] Five skills stay on the `old-workflow` tag because they encode the superseded
+  contract: `backlog`, `pick`, `interview-me`, `research`, and `audit` (→ `scan-codebase`). They are
+  blocked behind the Ship→Land rename and the Finding-protocol extraction — write them fresh against
+  `workflow/` afterwards, with `git show old-workflow:skills/<name>/SKILL.md` as reference, rather
+  than restoring and patching paths. The stage drivers (`shape`, `critique`, `implement`, `review`,
+  `ship`) are a full rewrite regardless.

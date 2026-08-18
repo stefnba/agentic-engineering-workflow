@@ -48,7 +48,7 @@ Prose for humans lives in [docs/](docs/) and is never loaded by an agent:
 
 ## Skills
 
-The planned set. Only `setup`, `bundle-git`, and `record-decision` exist under [skills/](skills/) today; the rest are named here because the workflow docs refer to them, and are tracked in the backlog. Each name is a pointer — the authoritative description lives in that skill's `SKILL.md` frontmatter.
+The planned set. Seven exist under [skills/](skills/) today — `setup`, `bundle-git`, `record-decision`, `glossary`, `handoff`, `judge`, and `writing-for-agents`; the rest are named here because the workflow docs refer to them, and are tracked in the backlog. Each name is a pointer — the authoritative description lives in that skill's `SKILL.md` frontmatter.
 
 ### Workflow skills
 
@@ -87,6 +87,7 @@ The subagents forked skills run in, under [agents/](agents/):
 
 | Name          | Purpose                                                                               |
 | ------------- | ------------------------------------------------------------------------------------- |
+| `arbiter`     | Rules on an open design question, in a fresh read-only context                        |
 | `architect`   | Drafts the bundle during Shape.                                                       |
 | `critic`      | Read-only spec attacker, before the Plan gate                                         |
 | `implementer` | Executes one ticket to a PR, and fix rounds                                           |
