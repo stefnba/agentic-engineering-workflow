@@ -139,5 +139,41 @@ ok "squash merge requested"         "$(grep -c -- '--squash' "$root/merge.log")"
 ok "head branch deleted"            "$(grep -c -- '--delete-branch' "$root/merge.log")" 1
 ok "accepted sha is enforced"       "$(grep -c -- '--match-head-commit deadbeef' "$root/merge.log")" 1
 
+echo "== work/config.conf overrides the defaults"
+cfg=2026-08-17-config
+mkdir -p "work/bundles/$cfg"
+printf 'depends_on: []\n---\nconfig probe\n' > "work/bundles/$cfg/ticket.md"
+git add "work/bundles/$cfg" && git commit -qm "docs(bundle): publish config probe" && git push -q origin main
+# Written the way the shipped template is: aligned inline comments, not bare KEY=value.
+printf 'MERGE_METHOD=rebase  # how PRs land\nWORKTREE_DIR=.wt     # where worktrees go\n' > work/config.conf
+"$scripts/claim-ticket.sh" "$cfg" 01 >/dev/null 2>&1
+ok "worktree honours WORKTREE_DIR"  "$([ -d ".wt/ticket/$cfg/01" ] && echo yes)" yes
+export GH_STUB_LOG="$root/merge2.log" GH_STUB_BRANCH="ticket/$cfg/01"
+"$scripts/complete-ticket.sh" 43 >/dev/null 2>&1
+ok "merge honours MERGE_METHOD"     "$(grep -c -- '--rebase' "$root/merge2.log")" 1
+ok "no --squash when overridden"    "$(grep -c -- '--squash' "$root/merge2.log")" 0
+
+echo "== a non-default INTEGRATION_TARGET is what tickets cut from and merge into"
+tgt=2026-08-17-target
+mkdir -p "work/bundles/$tgt"
+printf 'depends_on: []\n---\ntarget probe\n' > "work/bundles/$tgt/ticket.md"
+git add "work/bundles/$tgt" && git commit -qm "docs(bundle): publish target probe"
+git push -q origin main main:refs/heads/dev
+printf 'INTEGRATION_TARGET=dev\n' > work/config.conf
+"$scripts/claim-ticket.sh" "$tgt" 01 > "$root/target.out" 2>&1
+ok "claim cuts from the target"     "$(grep -c 'from dev' "$root/target.out")" 1
+echo "ticket/$tgt/01 dev" > "$MERGED"
+ok "merged into the target is done" "$("$scripts/ticket-status.sh" "$tgt" 01)" done
+echo "ticket/$tgt/01 main" > "$MERGED"
+ok "merged elsewhere is not done"   "$("$scripts/ticket-status.sh" "$tgt" 01)" doing
+ok "environment outranks the file"  "$(INTEGRATION_TARGET=main "$scripts/ticket-status.sh" "$tgt" 01)" done
+
+echo "== a malformed config line stops instead of running as a command"
+printf 'INTEGRATION_TARGET = dev\n' > work/config.conf
+"$scripts/ticket-status.sh" "$tgt" 01 > "$root/badcfg.out" 2>&1
+ok "malformed config exits 1"       "$?" 1
+ok "malformed config names the line" "$(grep -c 'expected KEY=value' "$root/badcfg.out")" 1
+rm -f work/config.conf
+
 printf '\n%d passed, %d failed\n' "$pass" "$fail"
 [ "$fail" -eq 0 ]
