@@ -5,7 +5,7 @@ reliable: which artifacts one picked outcome needs, and when to split it into se
 This document is the single owner of both; no other document keeps a second route table or split
 trigger list.
 
-Choosing a lighter route never changes the five lifecycle stages in [Workflow](./workflow.md): every
+Choosing a lighter route never changes the five lifecycle stages in [Lifecycle](./lifecycle.md): every
 approved ticket still passes through Implement, independent Review, and human Accept; every completed
 bundle passes through Ship.
 

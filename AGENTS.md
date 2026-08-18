@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Orientation for agents working on this repo. Only orientation lives here — the conventions themselves live in `docs/`. Read the owning doc before acting; don't work from a summary of it.
+Orientation for agents working on this repo. Only orientation lives here — the contract itself lives in `workflow/`. Read the owning doc before acting; don't work from a summary of it.
 
 ## Reference repo, not consuming repo
 
@@ -18,12 +18,12 @@ repos. Three layers, distinguished by who may change a file:
 | `README.md`, `docs/walkthrough.md`, `docs/decisions/` | published narrative, never installed                         | the workflow author        |
 
 Placement rule for supporting material: **one consumer keeps it in that skill's own folder; two or
-more promote it to `docs/`.**
+more promote it to `workflow/`.**
 
 Reference by link form, not by guesswork — a bare relative path resolves differently at runtime than
 on GitHub:
 
-- plugin file from a `SKILL.md` → `${CLAUDE_PLUGIN_ROOT}/docs/<file>.md`
+- plugin file from a `SKILL.md` → `${CLAUDE_PLUGIN_ROOT}/workflow/<file>.md`
 - the skill's own bundled file → `${CLAUDE_SKILL_DIR}/<path>`
 - the consuming repo's file → `${CLAUDE_PROJECT_DIR}/docs/agents/git.md`
 - doc to doc inside `docs/` → plain relative, so GitHub renders it
@@ -31,7 +31,7 @@ on GitHub:
 ## Conventions this repo applies to itself
 
 - **The `work/` tree is live here**, dogfooding its own format: new ideas, noticed drift, and follow-ups become lines in [work/backlog.md](work/backlog.md) (tags and format defined at the top of the file) — not TODOs scattered in other files.
-- **[GLOSSARY.md](GLOSSARY.md) is live here too**, near-empty by design — only terms no owning doc already defines; artifact terms (bundle, spec, ticket, backlog) stay owned by [docs/artifacts.md](docs/artifacts.md).
+- **[GLOSSARY.md](GLOSSARY.md) is live here too**, near-empty by design — only terms no owning doc already defines; artifact terms (bundle, spec, ticket, backlog) stay owned by [workflow/artifacts.md](workflow/artifacts.md).
 - **Decision records are immutable.** Supersede a `docs/decisions/` record with a new one; never edit it.
 - **One copy.** Docs reference each other instead of restating. When adding material, link to the owning doc; if nothing owns it yet, decide where it belongs before writing.
 - Read [docs/agents/git.md](docs/agents/git.md) before any git operation — it declares the branch strategy and the commit and PR conventions.

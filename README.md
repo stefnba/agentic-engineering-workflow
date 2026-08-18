@@ -10,11 +10,19 @@ That distinction matters when reading anything here:
 
 ## The workflow
 
-- [docs/workflow.md](docs/workflow.md) — the five stages, human gates, and coordination rules
-- [docs/artifacts.md](docs/artifacts.md) — which artifact owns which question, and for how long
-- [docs/bundle.md](docs/bundle.md) — how intent, plan, and tickets cooperate inside a bundle
-- [docs/shaping-routes.md](docs/shaping-routes.md) — which artifacts a given piece of work needs
-- [docs/walkthrough.md](docs/walkthrough.md) — running it day to day: which skill, which session tab
+The contract lives in [workflow/](workflow/) — normative, and what the skills and agents load:
+
+- [lifecycle.md](workflow/lifecycle.md) — the five stages, human gates, and coordination rules
+- [artifacts.md](workflow/artifacts.md) — which artifact owns which question, and for how long
+- [bundle.md](workflow/bundle.md) — how intent, plan, and tickets cooperate inside a bundle
+- [shaping-routes.md](workflow/shaping-routes.md) — which artifacts a given piece of work needs
+- [git-mechanics.md](workflow/git-mechanics.md) — worktree basing, ticket claiming, race-safe bundle branches
+
+Prose for humans lives in [docs/](docs/) and is never loaded by an agent:
+
+- [walkthrough.md](docs/walkthrough.md) — running it day to day: which skill, which session tab
+- [tool-setup.md](docs/tool-setup.md) — configuring Claude Code for a consuming repo
+- [decisions/](docs/decisions/) — decision records
 
 ## Skills
 
@@ -22,7 +30,7 @@ What exists today. Each name is a pointer — the authoritative description live
 
 ### Workflow skills
 
-Stage-bound — each realizes one role of the [workflow](docs/workflow.md):
+Stage-bound — each realizes one role of the [workflow](workflow/lifecycle.md):
 
 | Name           | Stage     | Purpose                              |
 | -------------- | --------- | ------------------------------------ |
@@ -61,10 +69,6 @@ The subagents forked skills run in, under [agents/](agents/):
 | `critic`      | Read-only spec attacker, before the Plan gate                                         |
 | `implementer` | Executes one ticket to a PR, and fix rounds                                           |
 | `reviewer`    | Judges a ticket's PR. Run read-only in a fresh context with no authorship of the diff |
-
-## Tool setup
-
-[docs/tool-setup.md](docs/tool-setup.md) — configuring Claude Code for a consuming repo: trimming the default system prompt and toolset, protecting secrets, MCP servers, output styles. (Codex section is still a TODO.)
 
 ## Status
 

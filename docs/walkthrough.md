@@ -47,7 +47,7 @@ when the pick was already fully settled and unambiguous going in; treat that as 
 the default.
 
 If narrowing still leaves feasibility or diagnosis genuinely unknown, don't force it — shape and run
-an investigation or spike first (see [Shaping routes](./shaping-routes.md)). Its evidence becomes the
+an investigation or spike first (see [Shaping routes](../workflow/shaping-routes.md)). Its evidence becomes the
 next thing you pick, not a shortcut into Shape.
 
 Once you've reached shared understanding, trigger `/shape` in that same session.

@@ -5,20 +5,21 @@ useful. A bundle contains the minimum artifact set its shaping route requires.
 
 ## Authority
 
-| Artifact             | Question it owns                                                                    | It does not own                                           |
-| -------------------- | ----------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| `work/backlog.md`    | What candidate work or follow-up remains unpicked?                                  | Priority, approval, or implementation scope               |
-| Discovery evidence   | What did we observe or learn?                                                       | Commitment, priority, or implementation scope             |
-| Intent artifact      | What outcome, behavior, constraints, and invariants did the human approve?          | Current implementation facts or interior design           |
-| Engineering plan     | How will this repository realize and decompose the approved intent?                 | Behavior or requirements absent from intent               |
-| Ticket               | What may one agent change, what does it depend on, and what evidence makes it done? | Cross-ticket architecture or unapproved product decisions |
-| PR and CI            | What changed, what checks ran, what was reviewed, and what is the current state?    | Intent, decomposition, or durable system truth            |
-| Durable system docs  | How is the shipped system intended to work now?                                     | In-flight plans or historical feature state               |
-| Decision record      | Which durable, consequential choice was made and why?                               | Work status or step-by-step implementation                |
-| `GLOSSARY.md`        | Which project-domain terms and rejected synonyms are canonical?                     | General programming or workflow-artifact terminology      |
-| `AGENTS.md`          | Which repository or package conventions and gotchas must every agent follow?        | Domain behavior or workflows owned by linked documents    |
-| `docs/agents/git.md` | Which branch, worktree, commit, PR, and merge conventions apply?                    | Work decomposition or human approval                      |
-| Agent prompt         | How does one role judge, act, escalate, and report within the loaded workflow?      | Lifecycle, artifact authority, or repository conventions  |
+| Artifact                  | Question it owns                                                                    | It does not own                                           |
+| ------------------------- | ----------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| `work/backlog.md`         | What candidate work or follow-up remains unpicked?                                  | Priority, approval, or implementation scope               |
+| Discovery evidence        | What did we observe or learn?                                                       | Commitment, priority, or implementation scope             |
+| Intent artifact           | What outcome, behavior, constraints, and invariants did the human approve?          | Current implementation facts or interior design           |
+| Engineering plan          | How will this repository realize and decompose the approved intent?                 | Behavior or requirements absent from intent               |
+| Ticket                    | What may one agent change, what does it depend on, and what evidence makes it done? | Cross-ticket architecture or unapproved product decisions |
+| PR and CI                 | What changed, what checks ran, what was reviewed, and what is the current state?    | Intent, decomposition, or durable system truth            |
+| Durable system docs       | How is the shipped system intended to work now?                                     | In-flight plans or historical feature state               |
+| Decision record           | Which durable, consequential choice was made and why?                               | Work status or step-by-step implementation                |
+| `GLOSSARY.md`             | Which project-domain terms and rejected synonyms are canonical?                     | General programming or workflow-artifact terminology      |
+| `AGENTS.md`               | Which repository or package conventions and gotchas must every agent follow?        | Domain behavior or workflows owned by linked documents    |
+| `docs/conventions/git.md` | Which branch, worktree, commit, PR, and merge *values* does this repository use?    | The procedures that consume them                          |
+| Git mechanics             | How are worktrees based, tickets claimed, and bundle branches created race-safely?  | Any value a repository declares for itself                |
+| Agent prompt              | How does one role judge, act, escalate, and report within the loaded workflow?      | Lifecycle, artifact authority, or repository conventions  |
 
 “Intent artifact” is a role, not one mandatory filename. It may be a feature spec, bug statement,
 target architecture and invariants, migration objective, security requirements, or a ticket that
@@ -27,7 +28,7 @@ its sections must still keep approved behavior separate from execution instructi
 
 Discovery evidence is not always a file: a codebase scan's findings may live only in chat, triaged
 live into a backlog line (accepted) or a decision record (rejected, so the same finding doesn't
-resurface next scan) — see [Running the workflow](./walkthrough.md) for the concrete mechanics.
+resurface next scan) — see [Running the workflow](../docs/walkthrough.md) for the concrete mechanics.
 
 ## Conflict rules
 

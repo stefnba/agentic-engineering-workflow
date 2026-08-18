@@ -1,4 +1,4 @@
-# Workflow
+# Lifecycle
 
 The workflow has five lifecycle stages. A stage exists when purpose, actor or context, permissions,
 output, or exit authority changes materially.
@@ -35,7 +35,7 @@ agent and no standing system that watches state and reacts on its own: an autono
 dispatch position could infer or erode human gates, so that implementation is prohibited by design.
 
 Mechanically, everything below runs inline inside a human-launched chat session — see [Running the
-workflow](./walkthrough.md) for the concrete session/tab model. A skill script only runs when a human
+workflow](../docs/walkthrough.md) for the concrete session/tab model. A skill script only runs when a human
 or an already-running session invokes it.
 
 **The human dispatches stages.** Discovery, shaping, each ticket's implementation, and Ship start
@@ -67,10 +67,11 @@ agent's judgment — execute state transitions so they are serialized and audita
 - **Claim:** check that every dependency is `done`, then create the ticket branch on the remote at the
   current head of the branch the ticket's PR will merge into — the bundle branch for a multi-ticket
   bundle under `bundle-branch`, otherwise the configured integration target (see [Work
-  bundles](./bundle.md)) — and cut its worktree from that exact state. Creating the branch *is* the
+  bundles](./bundle.md)) — and cut its worktree from that exact state. Creating the branch _is_ the
   claim, so git serializes it: parallel claims on different tickets never collide, and a second claim
   on the same ticket fails and aborts. A multi-ticket bundle's first claim also creates the bundle
-  branch; [`docs/agents/git.md`](./agents/git.md) owns both mechanisms.
+  branch; [Git mechanics](./git-mechanics.md) owns both procedures, and
+  [`docs/conventions/git.md`](../docs/conventions/git.md) declares the values they use.
 - **Dispatch mechanics:** start each Architect, Critic, Implementer, and Reviewer with the required
   fresh context and permissions, and record review-round numbers for fix and re-review runs.
 - **Merge:** after human Accept, merge according to the repository's Git conventions. The merge is the
@@ -109,7 +110,7 @@ the gate without first becoming a backlog item.
 **Narrowing:** once picked, almost every entry point still needs a conversational pass — clarifying
 problem, desired outcome, and edge cases — before remaining uncertainty is low enough to shape. It
 stays conversational and produces no artifact; skip it only when the pick was already fully settled
-and unambiguous going in. See [Running the workflow](./walkthrough.md) for how this runs
+and unambiguous going in. See [Running the workflow](../docs/walkthrough.md) for how this runs
 session-to-session.
 
 Done when the human has picked work whose remaining product and technical uncertainty can be
@@ -130,6 +131,11 @@ exposes a missing behavioral decision returns to the intent artifact before Shap
 An outcome too large to shape honestly at once splits into sequential bundles by those criteria,
 never into a speculative ticket backlog inside one bundle.
 
+**Run conditions:** the Architect runs in the human-facing planning session with read access to the
+repository and write access only to the draft bundle; enforce that boundary with tools or hooks, not
+only the prompt. The Critic runs in a fresh context with no authorship of the bundle and no
+file-writing or approval capability, withheld structurally rather than by instruction.
+
 **Critique is mandatory before approval:** a fresh-context, read-only Critic attacks requirement
 coverage, architecture, slicing, dependencies, risk, and testability. The Architect owns revisions;
 the Critic supplies findings, never fixes or approval.
@@ -144,6 +150,11 @@ evidence, and introduces no requirement or cross-ticket decision absent from app
 ## 3. Implement
 
 **Objective:** turn one approved ticket into a verified and reconciled implementation PR.
+
+**Run conditions:** the Implementer runs in a fresh context once per dispatched ticket, and again in
+fix mode when a review round returns findings. Each run receives the approved bundle, its assigned
+ticket, repository conventions, the current PR when one exists, and the branch and worktree the claim
+already prepared. It never selects or claims its own ticket.
 
 The Implementer works in a fresh session on one ticket, branch, and worktree. It reads the approved
 intent, optional plan, ticket, relevant durable docs, and repository conventions before editing.

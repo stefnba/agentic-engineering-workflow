@@ -13,8 +13,8 @@ Not triaged, not agreed work. Promote items to the backlog as they get accepted.
 ### 1. A repeated Plan gate has no write path
 
 Several docs route material drift "back to the Plan gate"
-([workflow.md:163](../docs/workflow.md#L163), [bundle.md:161](../docs/bundle.md#L161)) and
-[artifacts.md:122](../docs/artifacts.md#L122) tells the PR to relink to "that newly approved
+([workflow.md:163](../workflow/lifecycle.md#L163), [bundle.md:161](../workflow/bundle.md#L161)) and
+[artifacts.md:122](../workflow/artifacts.md#L122) tells the PR to relink to "that newly approved
 bundle version" — but nothing says where a revised bundle gets written mid-execution. Drafts are
 tool-local; publication happens once, at the first Plan gate, onto the integration target. For a
 multi-ticket bundle the ticket branches were cut from the bundle branch *before* the revision, so a
@@ -25,7 +25,7 @@ This is the design gap behind the unimplemented "sync" the backlog already notes
 
 ### 2. Ship makes unverified, unreviewed commits and calls it "no fourth approval"
 
-[workflow.md:266-274](../docs/workflow.md#L266-L274) confirms checks at step 1, *then* writes
+[workflow.md:266-274](../workflow/lifecycle.md#L266-L274) confirms checks at step 1, *then* writes
 durable docs, backlog entries, and the bundle deletion at steps 2–4, then lands the result. Those
 commits didn't exist when the gate ran, get no Review round, and get no Accept — yet the stage table
 claims Ship's exit authority is "prior Accept gates." Ship reconciliation can be substantial (system
@@ -35,18 +35,18 @@ Either re-verify after step 4, or say plainly that Ship's own output is trusted 
 
 ### 3. Implement and Ship both own reconciliation, separated by one word
 
-[workflow.md:159](../docs/workflow.md#L159) has the Implementer reconcile durable docs "in the
+[workflow.md:159](../workflow/lifecycle.md#L159) has the Implementer reconcile durable docs "in the
 same PR"; Ship step 2 reconciles "*remaining* bundle knowledge." No rule says what legitimately
 defers to Ship. Predictable failure: implementers either duplicate Ship's work or punt everything
 to it.
 
 ### 4. Investigation/spike is two different things
 
-[workflow.md:101](../docs/workflow.md#L101) makes it a Discover activity;
-[shaping-routes.md:63](../docs/shaping-routes.md#L63) makes it one of five *shaping routes*, and
+[workflow.md:101](../workflow/lifecycle.md#L101) makes it a Discover activity;
+[shaping-routes.md:63](../workflow/shaping-routes.md#L63) makes it one of five *shaping routes*, and
 [walkthrough.md:49](../docs/walkthrough.md#L49) says "shape and run an investigation or spike."
 
-As a route it implies a bundle — but [bundle.md:23-38](../docs/bundle.md#L23-L38) shows no spike
+As a route it implies a bundle — but [bundle.md:23-38](../workflow/bundle.md#L23-L38) shows no spike
 layout, a spike has no production code so one-ticket-one-PR and independent Review don't obviously
 apply, and Ship would *delete the spike's evidence*, which was the entire deliverable.
 
@@ -56,7 +56,7 @@ defined Ship semantics.
 ### 5. Nothing declares how a bundle branch lands on the integration target
 
 [docs/agents/git.md](../docs/agents/git.md) declares squash for PRs only. If Ship step 5 squashes,
-per-ticket history collapses — contradicting [workflow.md:276](../docs/workflow.md#L276) "Git
+per-ticket history collapses — contradicting [workflow.md:276](../workflow/lifecycle.md#L276) "Git
 history preserves the work record; there is no shipped-bundle archive," which is the stated
 justification for having no archive at all. If it merges, say so in `git.md`.
 
@@ -65,7 +65,7 @@ justification for having no archive at all. If it merges, say so in `git.md`.
 The Implementer is told to "report unrelated work through the repository's backlog mechanism"
 ([implementer.md:45](../agents/implementer.md#L45)); Critic and Reviewer both emit backlog
 candidates. Every parallel ticket appending to one file is exactly the collision
-[bundle.md:150-152](../docs/bundle.md#L150-L152) warns about when judging parallel safety.
+[bundle.md:150-152](../workflow/bundle.md#L150-L152) warns about when judging parallel safety.
 
 Open question #4 asks *who* persists Reviewer candidates; the wider problem is *where*, without
 conflicts. One-file-per-entry, or defer all backlog writes to Ship on the bundle branch.
@@ -80,7 +80,7 @@ behind. Applies to single-ticket bundles off a moving integration target too.
 ### 8. The dependency gate has no `unknown` branch
 
 [prerequisites.md:14](../skills/setup/references/prerequisites.md#L14) correctly says an unreachable forge reports
-`unknown`, never `todo`. But claim's contract ([workflow.md:67](../docs/workflow.md#L67)) is
+`unknown`, never `todo`. But claim's contract ([workflow.md:67](../workflow/lifecycle.md#L67)) is
 "check that every dependency is `done`" and `claim-ticket.sh` exposes only exit 3 "blocked by an
 unfinished dependency." Fail-closed is surely intended — nothing says it.
 
@@ -103,7 +103,7 @@ sometimes migrations. Split the concept: no source/PR-state writes vs. no filesy
 
 ### 11. The "no coordinator" claim is over-stated
 
-[workflow.md:33-35](../docs/workflow.md#L33-L35) says there's "no standing system that watches
+[workflow.md:33-35](../workflow/lifecycle.md#L33-L35) says there's "no standing system that watches
 state and reacts on its own," then lines 48–59 describe a script that runs Critic→Architect→Critic
 and Reviewer→Implementer→Reviewer loops with round counting. That *is* orchestration; the real (and
 good) invariant is "no autonomous product judgment, cannot cross a human gate." Say that instead —
@@ -116,7 +116,7 @@ is what makes the framing feel strained.
 
 [walkthrough.md:38-39](../docs/walkthrough.md#L38-L39) writes a rejected scan finding to
 `docs/decisions/` "so the next scan doesn't resurface it."
-[artifacts.md:17](../docs/artifacts.md#L17) defines that artifact as "which durable,
+[artifacts.md:17](../workflow/artifacts.md#L17) defines that artifact as "which durable,
 consequential choice was made and why," and they're immutable. "We looked at this lint nit and
 passed" isn't that.
 
@@ -146,10 +146,10 @@ acceptable — just scope the session-independence claim so it doesn't over-prom
   mandates `# NN — <title>`. Direct-ticket bundles can't satisfy the template.
 - [prerequisites.md](../skills/setup/references/prerequisites.md) is the only doc with no H1.
 - Both ASCII diagrams in `workflow.md` are misaligned —
-  [line 10](../docs/workflow.md#L10)'s connector dangles a column off the `fix request` corner,
-  and in the Review diagram [line 208](../docs/workflow.md#L208) `merge + complete` sits under
+  [line 10](../workflow/lifecycle.md#L10)'s connector dangles a column off the `fix request` corner,
+  and in the Review diagram [line 208](../workflow/lifecycle.md#L208) `merge + complete` sits under
   no branch.
-- [bundle.md:167-168](../docs/bundle.md#L167-L168) has a stray mid-sentence line wrap ("This
+- [bundle.md:167-168](../workflow/bundle.md#L167-L168) has a stray mid-sentence line wrap ("This
   section owns how bundle / and ticket branches…").
-- [bundle.md:150](../docs/bundle.md#L150) uses curly quotes and an em-dash without spaces where
+- [bundle.md:150](../workflow/bundle.md#L150) uses curly quotes and an em-dash without spaces where
   the rest of the file uses straight quotes and spaced dashes.

@@ -13,11 +13,9 @@ Tags:
 - [follow-up] Rename the Ship stage to Land — "ship" implies production release, which the workflow
   explicitly doesn't own (the integration target may be `dev`, promotion to the protected branch is
   a separate release process); "lands on the integration target" is already the docs' own phrasing.
-  Rename sweeps workflow.md, walkthrough.md, artifacts.md ("Shipped" lifetime state → "Landed"),
+  Rename sweeps lifecycle.md, walkthrough.md, artifacts.md ("Shipped" lifetime state → "Landed"),
   bundle.md, AGENTS.md, and the planned `/ship` skill name (→ `/land`).
-- [drift] docs/agents/git.md's Worktrees section references an "optional Release promotion section
-  below" that doesn't exist in the file — dangling internal reference, resolve or remove.
-- [drift] workflow.md and artifacts.md link _to_ walkthrough.md in three places added this session
+- [drift] lifecycle.md and artifacts.md link _to_ walkthrough.md in three places added this session
   (Coordination's session/tab model, Discover's narrowing mechanics, Discovery evidence's
   scan-triage mechanics) — but walkthrough.md is the practical, derived "how you run this" guide,
   not an owning doc other docs should depend on, per AGENTS.md's "link to the owning doc" rule.
@@ -37,7 +35,7 @@ Tags:
   into the plugin next to the skill; leave values behind.
 - [follow-up] Make `docs/agents/git.md` a setup-skill template (`skills/setup/templates/git.md`)
   with this repo's copy as the dogfooded instance, same relationship as `work/backlog.md`.
-- [follow-up] Extract the Finding protocol section out of `docs/workflow.md` into its own doc.
+- [follow-up] Extract the Finding protocol section out of `workflow/lifecycle.md` into its own doc.
   Critic, Reviewer, and Implementer (fix mode) all load it; it is the clearest multi-consumer
   contract in the tree and currently reachable only by loading the whole lifecycle doc.
 - [follow-up] Neither `skills/setup/` nor `skills/shape/` has a `SKILL.md` yet — both hold only their
