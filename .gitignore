@@ -12,7 +12,7 @@
 .claude/settings.local.json
 .claude/*.local.json
 
-# Python (scripts/)
+# Python
 __pycache__/
 *.py[cod]
 .venv/
