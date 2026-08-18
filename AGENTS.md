@@ -11,11 +11,15 @@ This repo collects agentic-coding practices — workflow design, documentation s
 This repo is also the plugin: its root is the plugin root, so everything here ships to consuming
 repos. Three layers, distinguished by who may change a file:
 
-| Path                                                  | Layer                                                        | Changed by                 |
-| ----------------------------------------------------- | ------------------------------------------------------------ | -------------------------- |
-| `docs/*.md`, `agents/`, `skills/`                     | plugin — the workflow contract and its components            | the workflow author        |
-| `docs/agents/*.md`                                    | template installed into a consuming repo — values, not prose | the consuming repo's owner |
-| `README.md`, `docs/walkthrough.md`, `docs/decisions/` | published narrative, never installed                         | the workflow author        |
+| Path                              | Layer                                                        | Changed by                 |
+| --------------------------------- | ------------------------------------------------------------ | -------------------------- |
+| `workflow/`, `agents/`, `skills/` | plugin — the workflow contract and its components            | the workflow author        |
+| `docs/conventions/*.md`           | values and rules a consuming repo owns, installed by `setup` | the consuming repo's owner |
+| `docs/*.md`, `docs/decisions/`    | published narrative, never loaded by an agent                | the workflow author        |
+
+Each layer has its own directory, so placement answers the question the table asks: a rule the
+workflow owns goes in `workflow/`, a convention a repository owns goes in `docs/conventions/`,
+and prose only a human reads goes in `docs/`.
 
 Placement rule for supporting material: **one consumer keeps it in that skill's own folder; two or
 more promote it to `workflow/`.**
@@ -25,8 +29,8 @@ on GitHub:
 
 - plugin file from a `SKILL.md` → `${CLAUDE_PLUGIN_ROOT}/workflow/<file>.md`
 - the skill's own bundled file → `${CLAUDE_SKILL_DIR}/<path>`
-- the consuming repo's file → `${CLAUDE_PROJECT_DIR}/docs/agents/git.md`
-- doc to doc inside `docs/` → plain relative, so GitHub renders it
+- the consuming repo's file → `${CLAUDE_PROJECT_DIR}/docs/conventions/git.md`
+- doc to doc inside the repo → plain relative, so GitHub renders it
 
 ## Conventions this repo applies to itself
 
@@ -34,7 +38,7 @@ on GitHub:
 - **[GLOSSARY.md](GLOSSARY.md) is live here too**, near-empty by design — only terms no owning doc already defines; artifact terms (bundle, spec, ticket, backlog) stay owned by [workflow/artifacts.md](workflow/artifacts.md).
 - **Decision records are immutable.** Supersede a `docs/decisions/` record with a new one; never edit it.
 - **One copy.** Docs reference each other instead of restating. When adding material, link to the owning doc; if nothing owns it yet, decide where it belongs before writing.
-- Read [docs/agents/git.md](docs/agents/git.md) before any git operation — it declares the branch strategy and the commit and PR conventions.
+- Read [docs/conventions/git.md](docs/conventions/git.md) before any git operation — it declares this repo's branch strategy, worktree rules, and commit and PR conventions. [workflow/git-mechanics.md](workflow/git-mechanics.md) owns the procedures that consume those values.
 
 ## Output style
 

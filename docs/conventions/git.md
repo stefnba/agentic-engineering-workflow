@@ -1,0 +1,38 @@
+# Git conventions
+
+This repository's git conventions: the values it declares and the rules that apply to any git work.
+
+## Bundle workflow
+
+Branch strategy: **bundle-branch**
+
+Integration target: **main**
+
+## Branch naming
+
+- Bundle branch: `bundle/<bundle-id>`
+- Ticket branch: `ticket/<bundle-id>/<NN>` — a separate prefix from `bundle/` so it never collides
+  with the bundle branch itself.
+
+## Commit messages
+
+Conventional Commits — `type(scope): subject`.
+
+- Types, exactly these seven: feat, fix, refactor, docs, test, chore, ci.
+- Subject imperative, lowercase after the colon, ≤ 72 characters.
+- Body only when the why isn't obvious from the diff.
+- One logical change per commit.
+
+## PR conventions
+
+- **Title**: same shape as a commit subject — `type(scope): summary`, imperative,
+  ≤ 72 characters. Squash merge turns the title into the target branch's commit message,
+  so this keeps history in one convention rather than two.
+- **Merge method**: squash — one commit per PR on its target branch.
+
+## Worktrees
+
+**Location**: `.claude/worktrees/` — the path under it mirrors the branch name.
+
+**Always create worktrees with plain git** — never a WorktreeCreate hook, for any worktree: a hook
+replaces creation globally and silently disables `.worktreeinclude`.

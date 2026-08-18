@@ -1,7 +1,7 @@
 # Review of `docs/new/` — 2026-08-17
 
 Read-through of all 14 files under [docs/new/](../docs/), plus
-[docs/agents/git.md](../docs/agents/git.md) and [skills/bundle-git/SKILL.md](../skills/bundle-git/SKILL.md).
+[docs/conventions/git.md](../docs/conventions/git.md) and [skills/bundle-git/SKILL.md](../skills/bundle-git/SKILL.md).
 The workflow is a first draft with known gaps — everything below is deliberately *outside* what
 [docs/new/open-questions.md](open-questions.md) and [work/backlog.md](backlog.md)
 already track, except where noted.
@@ -55,7 +55,7 @@ defined Ship semantics.
 
 ### 5. Nothing declares how a bundle branch lands on the integration target
 
-[docs/agents/git.md](../docs/agents/git.md) declares squash for PRs only. If Ship step 5 squashes,
+[docs/conventions/git.md](../docs/conventions/git.md) declares squash for PRs only. If Ship step 5 squashes,
 per-ticket history collapses — contradicting [workflow.md:276](../workflow/lifecycle.md#L276) "Git
 history preserves the work record; there is no shipped-bundle archive," which is the stated
 justification for having no archive at all. If it merges, say so in `git.md`.

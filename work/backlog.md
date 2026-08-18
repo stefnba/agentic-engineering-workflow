@@ -27,21 +27,15 @@ Tags:
   (dispatch mechanics) that no human ever types directly, not just the slash commands a human
   invokes. `bundle-git` now exists and owns claim, status, and merge; `/complete-ticket` should call
   its script rather than reimplementing the merge.
-- [follow-up] Split `docs/agents/git.md` along the layer boundary. Its config half (integration
-  target, branch strategy, branch prefixes, commit types, worktree location, merge method) is what a
-  consuming repo owns and the setup skill fills in. Its mechanics half — the claim push-status
-  protocol and race-safe bundle-branch creation — is identical in every consuming repo and is what
-  `bundle-git`'s scripts implement, so a user editing it silently breaks them. Move the mechanics
-  into the plugin next to the skill; leave values behind.
-- [follow-up] Make `docs/agents/git.md` a setup-skill template (`skills/setup/templates/git.md`)
+- [follow-up] Make `docs/conventions/git.md` a setup-skill template (`skills/setup/templates/git.md`)
   with this repo's copy as the dogfooded instance, same relationship as `work/backlog.md`.
 - [follow-up] Extract the Finding protocol section out of `workflow/lifecycle.md` into its own doc.
   Critic, Reviewer, and Implementer (fix mode) all load it; it is the clearest multi-consumer
   contract in the tree and currently reachable only by loading the whole lifecycle doc.
 - [follow-up] Neither `skills/setup/` nor `skills/shape/` has a `SKILL.md` yet — both hold only their
   reference material (`setup/references/prerequisites.md`, `shape/templates/`).
-- [drift] docs/agents/git.md says the `bundle-git` skill owns bundle branch "creation, sync, and
-  cleanup", but the skill only creates the bundle branch and removes a ticket's worktree. Ship's
+- [drift] `workflow/git-mechanics.md` says the `bundle-git` skill owns bundle branch "creation, sync,
+  and cleanup", but the skill only creates the bundle branch and removes a ticket's worktree. Ship's
   branch and worktree cleanup, and whatever "sync" means here, are unimplemented.
 - [follow-up] `bundle-git`'s claim is verified over the `git://` smart protocol, never against
   github.com over HTTPS, and the chain claim → PR → `/complete-ticket` → derived `done` has never run
