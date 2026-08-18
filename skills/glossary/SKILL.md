@@ -18,15 +18,16 @@ notes.
 
 **Read the target glossary in full first** (see Routing below for which one). If it doesn't
 exist yet, that's fine — never nag about a missing glossary. Create it only lazily, on the
-first confirmed capture, from this skill's `assets/template.md`.
+first confirmed capture, from `${CLAUDE_SKILL_DIR}/assets/template.md`.
 
 ## Routing (monorepo)
 
 A term specific to one workspace package's domain belongs in that domain's own
-`GLOSSARY.md`, at the domain root. A cross-cutting term belongs in the root `GLOSSARY.md`,
-which also carries a Domains section linking each sub-glossary and stating the relationships
-between domains — no separate map file, and the section exists only when sub-glossaries do.
-Infer which glossary a term belongs to from the topic; ask when it's unclear.
+`GLOSSARY.md`, at the domain root. A cross-cutting term belongs in the root
+`${CLAUDE_PROJECT_DIR}/GLOSSARY.md`, which also carries a Domains section linking
+each sub-glossary and stating the relationships between domains — no separate map
+file, and the section exists only when sub-glossaries do. Infer which glossary a
+term belongs to from the topic; ask when it's unclear.
 
 ## Capture
 

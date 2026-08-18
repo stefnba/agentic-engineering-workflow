@@ -48,7 +48,7 @@ Prose for humans lives in [docs/](docs/) and is never loaded by an agent:
 
 ## Skills
 
-The planned set. Seven exist under [skills/](skills/) today — `setup`, `bundle-git`, `record-decision`, `glossary`, `handoff`, `judge`, and `writing-for-agents`; the rest are named here because the workflow docs refer to them, and are tracked in the backlog. Each name is a pointer — the authoritative description lives in that skill's `SKILL.md` frontmatter.
+The planned set. Ten exist under [skills/](skills/) today — `setup`, `interview-me`, `shape`, `critique`, `bundle-git`, `record-decision`, `glossary`, `handoff`, `judge`, and `writing-for-agents`; the rest are named here because the workflow docs refer to them, and are tracked in the backlog. Each name is a pointer — the authoritative description lives in that skill's `SKILL.md` frontmatter.
 
 ### Workflow skills
 
@@ -60,8 +60,8 @@ Stage-bound — each realizes one role of the [workflow](workflow/lifecycle.md):
 | `research`      | Discover  | Investigates one topic               |
 | `interview-me`  | Discover  | Grills intent until settled          |
 | `pick`          | Discover  | Presents candidates; the human picks |
-| `shape`         | Shape     | Writes spec and tickets              |
-| `critique`      | Shape     | Attacks the shaped spec              |
+| `shape`         | Shape     | Drafts the bundle, runs critique     |
+| `critique`      | Shape     | Attacks the draft bundle             |
 | `implement`     | Implement | Executes one ticket to a PR          |
 | `review`        | Review    | Judges a ticket's PR                 |
 | `ship`          | Ship      | Absorbs and deletes bundle           |

@@ -39,7 +39,7 @@ The test to write against: **the next agent should not have to ask the user anyt
 
 **Don't reorder or reconstruct the section set from memory** — it's what keeps handoffs comparable to each other; the canonical list is below.
 
-**Read [example-structure.md](example-structure.md) once you know which sections apply**, for shape and detail level — how much to say per section, how terse to be. It doesn't define which sections exist or their order; that's below.
+**Read `${CLAUDE_SKILL_DIR}/example-structure.md` once you know which sections apply**, for shape and detail level — how much to say per section, how terse to be. It doesn't define which sections exist or their order; that's below.
 
 ### Sections
 

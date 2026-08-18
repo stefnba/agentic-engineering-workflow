@@ -12,10 +12,6 @@ Tags:
 
 - [follow-up] The research split from `docs/decisions/2026-08-18-consuming-repo-layout.md` is now in
   `workflow/artifacts.md`'s authority table, but the research skill that has to honour it is unbuilt.
-- [follow-up] `skills/setup/SKILL.md` is a placeholder: it states what a run writes but nothing
-  performs the interview or the writes. Implement it — `work/config.conf` from
-  `skills/setup/templates/config.conf`, `docs/conventions/git.md`, the `AGENTS.md` pointer line, and
-  the `WORKTREE_DIR` line in `.gitignore` (per `docs/decisions/2026-08-18-script-read-settings.md`).
 - [follow-up] Structurally enforce the read-only agents. `agents/reviewer.md` and `agents/critic.md`
   now carry a `tools:` allowlist, which withholds file editing only — both keep `Bash` because
   verification and repository reading need it, so nothing stops a push, approve, or merge except the
@@ -31,12 +27,11 @@ Tags:
   a separate release process); "lands on the integration target" is already the docs' own phrasing.
   Rename sweeps lifecycle.md, walkthrough.md, artifacts.md ("Shipped" lifetime state → "Landed"),
   bundle.md, AGENTS.md, and the planned `/ship` skill name (→ `/land`).
-- [follow-up] walkthrough.md already names specific skills (`/pick`, `/scan-codebase`,
-  `/interview-me`, `/shape`, `/complete-ticket`, `/ship`) as if they exist. Each still needs to
-  actually be defined as its own modular skill file — including internal, non-user-facing ones
-  (dispatch mechanics) that no human ever types directly, not just the slash commands a human
-  invokes. `bundle-git` now exists and owns claim, status, and merge; `/complete-ticket` should call
-  its script rather than reimplementing the merge.
+- [follow-up] walkthrough.md names skills that still don't exist: `/pick`, `/scan-codebase`,
+  `/complete-ticket`, `/ship`. `/interview-me`, `/shape`, and `/critique` now do. `bundle-git` owns
+  claim, status, and merge, so `/complete-ticket` should call its script rather than reimplementing
+  the merge — and the internal, non-user-facing dispatch skills still need defining too, not just
+  the slash commands a human types.
 - [follow-up] Make `docs/conventions/git.md` a setup-skill template (`skills/setup/templates/git.md`)
   with this repo's copy as the dogfooded instance, same relationship as `work/backlog.md`.
 - [follow-up] Extract the Finding protocol section out of `workflow/lifecycle.md` into its own doc.
@@ -44,8 +39,13 @@ Tags:
   contract in the tree and currently reachable only by loading the whole lifecycle doc. Now more
   pressing: `agents/critic.md` and `agents/reviewer.md` both point at `lifecycle.md` by path for the
   two severities, so each drags in the whole lifecycle doc to read two definitions.
-- [follow-up] Neither `skills/setup/` nor `skills/shape/` has a `SKILL.md` yet — both hold only their
-  reference material (`setup/references/prerequisites.md`, `shape/templates/`).
+- [drift] `skills/record-decision/SKILL.md` is frontmatter only — four lines, no body. Nothing tells
+  an agent what to do, and it never points at its own
+  `${CLAUDE_SKILL_DIR}/templates/decision-record.md`, so the template is unreachable.
+- [follow-up] `shape` publishes the approved bundle by hand — `git add`/`commit`/`push` from the
+  prompt, sourcing `bundle-git`'s `_config.sh` for `INTEGRATION_TARGET`. Every other state
+  transition is a script; this one is prose, so a collision retry or a wrong target branch depends
+  on the model following instructions. Consider `bundle-git/scripts/publish-bundle.sh`.
 - [drift] `workflow/git-mechanics.md` says the `bundle-git` skill owns bundle branch creation and
   cleanup, but the skill only creates the bundle branch and removes a ticket's worktree. Ship's
   branch and worktree cleanup is unimplemented. (The undefined "sync" it also claimed is gone.)

@@ -11,8 +11,8 @@ Reference for any document whose reader is an agent. The packaging differs — s
 
 Writing a new document and improving an existing one follow the same loop:
 
-1. **Decide the packaging.** Skill, instructions file, runbook. For a skill, read `references/skill-mechanics.md` before drafting; if a dedicated skill-scaffolding skill is installed, it owns scaffolding and evals — this document owns the writing.
-2. **Baseline.** For a new document or section, give the task to an agent _without_ it and record what actually goes wrong — `references/testing.md` has the mechanics. For a change to an existing line, rerun the prompts that motivated that line instead of a full baseline.
+1. **Decide the packaging.** Skill, instructions file, runbook. For a skill, read `${CLAUDE_SKILL_DIR}/references/skill-mechanics.md` before drafting; if a dedicated skill-scaffolding skill is installed, it owns scaffolding and evals — this document owns the writing.
+2. **Baseline.** For a new document or section, give the task to an agent _without_ it and record what actually goes wrong — `${CLAUDE_SKILL_DIR}/references/testing.md` has the mechanics. For a change to an existing line, rerun the prompts that motivated that line instead of a full baseline.
 3. **Draft short.** Write the shortest sentence that resolves the observed failure, using the
    sections below. Add words only when the baseline shows the terse version still fails — not by
    default, and not to explain the why unless a reader without it acted wrong.
