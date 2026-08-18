@@ -115,8 +115,48 @@ Branch names and how a finished bundle lands are **not** questions. The workflow
 
 ### 4. Confirm
 
-Show the exact file list to be written, plus the exact lines to be appended to existing files. Wait
-for a yes.
+**Confirm the decisions, not the file bodies.** The three answered values and which existing files
+get touched are what the human is being asked to approve; a pasted template is text they can read in
+the plugin any time, and it buries the values inside its own commented defaults.
+
+Report four parts in order, then wait for a yes:
+
+1. **Settings** — the three answered values, one per row, each with the reason it was chosen. On a
+   re-run, name the current value each one replaces.
+2. **Writes** — one row per path, each with its action: create from template, append the block below,
+   or skip with the reason (an existing `${CLAUDE_PROJECT_DIR}/docs/conventions/git.md` is theirs and
+   stays).
+3. **The appended block, verbatim** — only for files the repo already owns, which is where a wrong
+   line actually costs something. Show the lines instead of counting them.
+4. **`Proceed?`**
+
+````markdown
+**Settings**
+
+| Setting               | Value               | Why                                    |
+| --------------------- | ------------------- | -------------------------------------- |
+| `INTEGRATION_TARGET`  | `dev`               | `main` is protected — required reviews |
+| `TICKET_MERGE_METHOD` | `squash`            | default                                |
+| `WORKTREE_DIR`        | `.claude/worktrees` | default                                |
+
+**Writes**
+
+| Path                      | Action                                             |
+| ------------------------- | -------------------------------------------------- |
+| `work/config.conf`        | create from template, carrying the values above    |
+| `docs/conventions/git.md` | create from template                               |
+| `AGENTS.md`               | create — repo uses neither AGENTS.md nor CLAUDE.md |
+| `.gitignore`              | append the block below                             |
+
+Appended to `.gitignore`:
+
+```gitignore
+# Agentic workflow worktrees
+.claude/worktrees/
+```
+
+Proceed?
+````
 
 ### 5. Write
 
