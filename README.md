@@ -8,6 +8,29 @@ That distinction matters when reading anything here:
 - The skills under `skills/` are meant to be copied into (or eventually installed by) other repos. Their instructions reference paths and structures of a target repo, not this one.
 - The conventions this repo does apply to itself are [work/backlog.md](work/backlog.md), which tracks work on the reference material, and [GLOSSARY.md](GLOSSARY.md), a near-empty root vocabulary file — partly to have them, partly to dogfood the format.
 
+## Getting started
+
+Installing this into a repo of your own:
+
+1. **Check the prerequisites** — a git remote, a declared integration target branch, and an
+   authenticated forge CLI (`gh`). Ticket status is derived from pull request records, so the forge
+   CLI is not optional. Details in
+   [skills/setup/references/prerequisites.md](skills/setup/references/prerequisites.md).
+2. **Install the plugin**, then run [`/setup`](skills/setup/SKILL.md) in the target repo — a
+   placeholder today, so do these by hand for now. It writes:
+
+   | Path                      | What it is                                                                          |
+   | ------------------------- | ----------------------------------------------------------------------------------- |
+   | `work/config.conf`        | settings the scripts read — from [the template](skills/setup/templates/config.conf) |
+   | `docs/conventions/git.md` | commit and PR conventions a human follows                                           |
+   | `AGENTS.md`               | one pointer line naming the workflow                                                |
+   | `.gitignore`              | your `WORKTREE_DIR`, so ticket worktrees stay untracked                             |
+
+3. **Commit `work/config.conf`.** A clone without it silently falls back to the
+   [defaults](#config) — which means work landing on `main` when your integration target is `dev`.
+
+4. Read [docs/walkthrough.md](docs/walkthrough.md) for how a day actually runs.
+
 ## The workflow
 
 The contract lives in [workflow/](workflow/) — normative, and what the skills and agents load:
@@ -73,3 +96,19 @@ The subagents forked skills run in, under [agents/](agents/):
 ## Status
 
 Work in progress — the workflow stages are still being designed, and the docs and skills have drifted in places (tracked in the backlog).
+
+## Important
+
+Branch names are not configurable, and neither is branch strategy — a multi-ticket bundle gets a
+bundle branch, a single-ticket bundle doesn't. See [git-mechanics.md](workflow/git-mechanics.md) for
+why.
+
+## Config
+
+| Setting              | Default             | What it controls                                            |
+| -------------------- | ------------------- | ----------------------------------------------------------- |
+| `INTEGRATION_TARGET` | `main`              | branch bundles land on, and ticket branches are cut from    |
+| `MERGE_METHOD`       | `squash`            | `gh pr merge` flag: `squash`, `merge`, or `rebase`          |
+| `WORKTREE_DIR`       | `.claude/worktrees` | where ticket worktrees go; the path mirrors the branch name |
+
+One key per line, no spaces around `=`; an environment variable of the same name outranks the file.
