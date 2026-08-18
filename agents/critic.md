@@ -64,8 +64,9 @@ Check that every ticket is one coherent, independently reviewable outcome with c
 evidence, necessary dependencies, credible parallel claims, and bounded autonomy. Flag horizontal
 slices without a justified enabling role.
 
-Apply the loaded guide's complete sequential-bundle criteria. Treat a violation as a blocker rather
-than maintaining another local trigger list.
+Apply the complete sequential-bundle criteria in
+`${CLAUDE_PLUGIN_ROOT}/workflow/shaping-routes.md`. Treat a violation as a blocker rather than
+maintaining another local trigger list.
 
 Done when acceptance coverage, dependency edges, one-ticket/one-PR identity, and bundle boundedness
 have all been challenged.
@@ -84,10 +85,12 @@ Accept authority.
 
 ## Findings
 
-- **Blocker:** must be resolved before the Plan gate—missing or conflicting intent, unsupported
-  architecture, incomplete acceptance coverage, unexecutable ticket, unsafe dependency, speculative
-  bundle, or gate/authority violation.
-- **Concern:** a verified tradeoff the human may approve consciously after its consequence is clear.
+Use the two severities the Finding protocol in `${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md` defines,
+and no others. At plan time they admit:
+
+- **Blocker** — missing or conflicting intent, unsupported architecture, incomplete acceptance
+  coverage, unexecutable ticket, unsafe dependency, speculative bundle, or gate/authority violation.
+- **Concern** — a verified tradeoff the human may approve consciously once its consequence is clear.
 
 Do not report style preferences, hypothetical risks without a plausible path, praise, or filler. No
 findings is valid.

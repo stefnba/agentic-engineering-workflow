@@ -41,8 +41,8 @@ Read before judging:
 
 Summarize for yourself what this ticket must deliver, what is explicitly out of scope, and which
 verification evidence it requires. Do not review against the implementation you personally would
-have preferred. Confirm that the PR body contains immutable commit permalinks to the complete
-approved bundle and exact ticket; a mutable or missing link makes the handoff incomplete.
+have preferred. Confirm the PR body satisfies the handoff contract in
+`${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md`; an incomplete handoff is a blocker in its own right.
 
 Done when each review claim can be traced to an approved requirement, ticket condition, or
 repository convention.
@@ -121,22 +121,24 @@ escalated, and the full PR has been judged at the new head.
 
 ## Severity
 
-- **Blocker**: must be fixed before acceptance—failed verification, unmet requirement, correctness
-  defect, security issue, incompatible contract, unsafe migration, or materially dishonest evidence.
-- **Major concern**: a verified material risk that requires a fix, evidence-backed rebuttal, or
-  explicit human planning decision before the PR is ready for human review.
+Use the two severities the Finding protocol in `${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md` defines,
+and no others. At PR time they admit:
 
-Do not use minor or suggestion findings. If an item would not affect acceptance or create a concrete
-follow-up decision, omit it.
+- **Blocker** — failed verification, unmet requirement, correctness defect, security issue,
+  incompatible contract, unsafe migration, or materially dishonest evidence.
+- **Concern** — a verified material risk the human may consciously accept at the Accept gate once
+  its consequence is explicit.
+
+If an item would not affect acceptance or create a concrete follow-up decision, omit it.
 
 ## Output
 
 Post one structured summary comment to the PR for this round, tied to the exact reviewed head SHA.
 Use inline comments only when a precise code location materially helps establish the evidence. Give
-every finding a round-stable ID. List blockers before major concerns:
+every finding a round-stable ID. List blockers before concerns:
 
 ```text
-R<round>-F<N> [blocker|major-concern] <axis> — <file:line or command>
+R<round>-F<N> [blocker|concern] <axis> — <file:line or command>
 Claim: <what the change does or asserts>
 Evidence: <what you inspected or reproduced>
 Impact: <the concrete failure or risk>
@@ -153,4 +155,5 @@ Then report:
 
 Never implement the fix. Return findings to the implementation agent for fix and re-verification,
 then review the complete PR again in a fresh context. Follow the Workflow's convergence and round
-limit; a round limit never makes an unresolved finding acceptable.
+limit in `${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md`; reaching the limit never makes an unresolved
+finding acceptable.

@@ -41,7 +41,9 @@ Tags:
   with this repo's copy as the dogfooded instance, same relationship as `work/backlog.md`.
 - [follow-up] Extract the Finding protocol section out of `workflow/lifecycle.md` into its own doc.
   Critic, Reviewer, and Implementer (fix mode) all load it; it is the clearest multi-consumer
-  contract in the tree and currently reachable only by loading the whole lifecycle doc.
+  contract in the tree and currently reachable only by loading the whole lifecycle doc. Now more
+  pressing: `agents/critic.md` and `agents/reviewer.md` both point at `lifecycle.md` by path for the
+  two severities, so each drags in the whole lifecycle doc to read two definitions.
 - [follow-up] Neither `skills/setup/` nor `skills/shape/` has a `SKILL.md` yet — both hold only their
   reference material (`setup/references/prerequisites.md`, `shape/templates/`).
 - [drift] `workflow/git-mechanics.md` says the `bundle-git` skill owns bundle branch creation and
@@ -83,3 +85,6 @@ Tags:
   recollection as recollection (including saying so when context was compacted). Don't name it
   `/status` and don't have it restate derived ticket status — `bundle-status.sh` already answers
   that, and it's a different question.
+- [drift] Skill names are now settled in `README.md` and `docs/walkthrough.md` (`scan-codebase` not
+  `audit`, `record-decision` not `decision`), but none of those skills exist, so nothing holds the
+  names. Whoever implements each should claim its name from the README table.

@@ -50,25 +50,22 @@ State:
 - impact if the plan is wrong
 - remaining uncertainty
 
-Do not ask the human for facts the repository can answer. Ask immediately when a choice affects
-scope, observable behavior, public contracts, architecture shared by multiple tickets, security,
-data migration, compatibility, rollout, or acceptance criteria.
+Do not ask the human for facts the repository can answer. Ask immediately when a choice would cross
+a boundary that belongs to the Plan gate — `${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md` lists
+them — or would settle architecture shared by several tickets.
 
 Done when repository-answerable facts are separated from human judgment calls and every material
 judgment call has an owner.
 
 ### 2. Choose the shaping route
 
-Use the lightest route that makes the next stage reliable:
+Select with the decision framework in `${CLAUDE_PLUGIN_ROOT}/workflow/shaping-routes.md`, which owns
+the routes, their criteria, and the sequential-bundle split triggers. Name the chosen route with that
+document's wording verbatim and state what made you choose it.
 
-- known, low-impact change: ticket directly
-- uncertain problem: investigation or spike, then decide the next route
-- behaviorally significant change with obvious decomposition: spec, then ticket(s)
-- high-impact or non-obvious decomposition: spec or other intent artifact, then plan, then tickets
-- refactor or migration: target architecture or invariants, then plan and tickets
-
-Do not manufacture a spec or plan when the work is already executable. Do not skip investigation
-when the requested solution depends on an unverified diagnosis.
+Take the lightest route that makes the next stage reliable: do not manufacture a spec or plan when
+the work is already executable, and do not skip investigation when the requested solution depends on
+an unverified diagnosis.
 
 Done when every proposed artifact removes a named uncertainty or creates a required execution
 boundary.
@@ -99,8 +96,8 @@ Define only what competent implementations must agree on:
 Keep interior implementation open unless a technical constraint is genuinely binding.
 
 All material questions are resolved before approval. A local choice may be delegated only by
-stating its bounds explicitly; delegated discretion may not change approved behavior, scope,
-public contracts, security properties, migration behavior, or cross-ticket architecture.
+stating its bounds explicitly, and no delegation may reach a Plan-gate boundary or cross-ticket
+architecture.
 
 Done when every binding statement is testable or decision-constraining and no material open
 question remains delegated to implementation.
@@ -124,7 +121,7 @@ a missing cross-ticket decision.
 
 ### 6. Break work into tickets
 
-Prefer thin vertical slices that produce an observable, testable outcome. Each ticket should:
+**Prefer thin vertical slices** that produce an observable, testable outcome. Each ticket should:
 
 - deliver one coherent outcome
 - be independently reviewable
@@ -152,18 +149,16 @@ Bad examples:
 Done when every ticket has one coherent outcome, objective evidence, necessary dependencies only,
 and a stated boundary for agent judgment.
 
-If the complete ticket set cannot be specified honestly because later work depends on unvalidated
-architecture or lacks concrete done-when evidence, split the effort into sequential bundles. Do not
-hide speculative future work behind vague tickets.
+When the complete ticket set cannot be specified honestly, split into sequential bundles by the
+criteria in `${CLAUDE_PLUGIN_ROOT}/workflow/shaping-routes.md` rather than hiding speculative future
+work behind vague tickets.
 
 ### 7. Validate before handoff
 
-- Map every acceptance criterion or invariant to at least one ticket.
-- Check that dependency edges are necessary and parallel claims are credible.
-- Check that no ticket introduces a requirement or decision absent from the approved intent.
-- Run an independent planning critique.
-- Resolve material critique findings and human judgment calls.
-- Present the route, intent, plan, and decomposition for human approval.
+Check the bundle against the Shape-completion criteria in
+`${CLAUDE_PLUGIN_ROOT}/workflow/bundle.md`, then run the independent planning critique and resolve
+every material finding and human judgment call it surfaces. Present the route, intent, plan, and
+decomposition for approval.
 
 Do not treat the plan as approved and do not dispatch implementation until the human approves it.
 

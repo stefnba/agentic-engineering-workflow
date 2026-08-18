@@ -52,9 +52,9 @@ Read surrounding code before editing. Reuse existing abstractions.
 
 Decide local implementation details only inside the ticket's explicit autonomy boundaries.
 
-Stop and ask the human if implementation would change approved behavior, scope, public contracts,
-security properties, migration behavior, compatibility, cross-ticket architecture, or acceptance
-criteria. Do not convert a material planning question into an implementation choice.
+Stop and ask the human if implementation would cross a boundary that returns work to the Plan gate —
+`${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md` lists which changes those are — or would decide
+cross-ticket architecture. Do not convert a material planning question into an implementation choice.
 
 If repository facts have drifted without changing intent, correct the affected temporary plan or
 ticket and make the correction visible in the PR. If the correction changes decomposition or
@@ -65,13 +65,14 @@ material planning change, escalate it instead of silently redesigning the soluti
 
 ## Implementation Process
 
-### 1. Claim and inspect
+### 1. Orient
 
-Confirm every `depends_on` ticket is `done`, set the assigned ticket to `doing`, then read its
-approved intent, plan when present, surrounding code, tests, durable docs, and conventions.
+You are dispatched onto one already-claimed ticket, in the branch and worktree its claim prepared;
+you never select or claim a ticket, and you never write its status — status is derived, per
+`${CLAUDE_PLUGIN_ROOT}/workflow/artifacts.md`. Read the approved intent, plan when present,
+surrounding code, tests, durable docs, and conventions.
 
-Done when the ticket is correctly claimed and every cited path or decision has been checked against
-repository reality.
+Done when every cited path or decision has been checked against repository reality.
 
 ### 2. Establish red evidence
 
@@ -97,13 +98,10 @@ Done when all checks pass at the PR head and no touched document describes the p
 
 ### 5. Hand off to Review
 
-Open the PR using the Workflow's PR handoff contract. The body must connect the implementation to the
-complete approved bundle and exact ticket with immutable commit permalinks, then report delivered
-scope, verification evidence, reconciliation, and known limitations. Never use branch-relative links
-for disposable bundle artifacts.
+Open the PR with a body that satisfies every element of the PR handoff contract in
+`${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md`.
 
-Leave ticket status `doing` while Review and any fix loop are active. Do not approve, merge, or mark
-the ticket `done`; human acceptance plus merge owns that transition.
+Do not approve or merge; human acceptance plus that merge is what makes the ticket `done`.
 
 Done when a fresh-context Reviewer has the complete evidence needed to judge the change.
 
@@ -114,8 +112,7 @@ each stable finding ID:
 
 - fix it when the evidence is correct and the required outcome stays within approved intent
 - rebut it with concrete evidence when the claim is incorrect or already satisfied
-- escalate it when resolution would change approved behavior, architecture, decomposition, security,
-  migration, compatibility, or acceptance criteria
+- escalate it when resolution would cross one of those same Plan-gate boundaries
 
 Do not blindly implement a proposed solution from a review comment. Make the smallest coherent fix,
 review the entire accumulated change for regressions, rerun every ticket command and canonical check,

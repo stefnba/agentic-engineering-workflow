@@ -80,8 +80,8 @@ npm run build                # expect: success
 
 <!-- Tells the agent when to stop and ask rather than improvise. -->
 
-- The task requires changing approved behavior, scope, public contracts, security properties,
-  migration behavior, compatibility, or cross-ticket architecture
+- The task would cross a Plan-gate boundary, as the workflow's Lifecycle defines them, or would
+  decide cross-ticket architecture
 - An acceptance criterion conflicts with existing behavior/tests
 - The ticket or plan is factually stale in a way that changes the approved decomposition
 - <domain-specific tripwire>

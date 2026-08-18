@@ -13,14 +13,12 @@ Deterministic git mechanics for bundle work.
 - `${CLAUDE_PLUGIN_ROOT}/workflow/artifacts.md` — why status is derived rather than stored.
 
 Run every script from the repository root, invoked as `${CLAUDE_SKILL_DIR}/scripts/<name>.sh`.
-Settings come from `work/config.conf` (`INTEGRATION_TARGET`, `TICKET_MERGE_METHOD`, `WORKTREE_DIR`); the
-defaults are `main`, `squash`, and `.claude/worktrees`, and an environment variable of the same name
-outranks the file. `scripts/_config.sh` holds them plus the branch names and is sourced by the
-others, never run on its own.
+Settings and their defaults come from `${CLAUDE_PROJECT_DIR}/work/config.conf`, which documents itself; an environment
+variable of the same name outranks the file. `scripts/_config.sh` reads them, holds the branch names,
+and is sourced by the others rather than run on its own.
 
-`TICKET_MERGE_METHOD` covers ticket PRs and nothing else. No script lands a finished bundle branch on
-the integration target yet; that is a Ship step whose method is fixed, not configurable — see
-"Landing a bundle" in `${CLAUDE_PLUGIN_ROOT}/workflow/git-mechanics.md`.
+No script lands a finished bundle branch on the integration target yet — that Ship step is
+unimplemented, and its rules are not a setting these scripts may reinterpret.
 
 | Script                                      | Purpose                                                                     |
 | ------------------------------------------- | --------------------------------------------------------------------------- |
@@ -44,15 +42,12 @@ active   2026-08-17-add-invites
 
 ## Status is derived
 
-- ticket `done` — its PR is merged into that ticket's target branch.
-- ticket `doing` — its branch exists on the remote.
-- ticket `todo` — neither.
-- bundle `active` — at least one ticket is no longer `todo`; `shaped` — none is.
+Every status above is computed from the remote branches and the ticket PRs' merge records on each
+call; no script writes one. `${CLAUDE_PLUGIN_ROOT}/workflow/artifacts.md` defines what each state
+means.
 
-Nothing writes status. A human merging the PR in the web UI leaves the same state as
-`complete-ticket.sh`. To cancel a ticket, delete its remote branch and remove its worktree; it reads
-as `todo` again. A status query that cannot reach the forge reports `unknown` rather than guessing —
-never read that as `todo`.
+To cancel a ticket, delete its remote branch and remove its worktree; it reads as `todo` again. A
+query that cannot reach the forge reports `unknown` rather than guessing — never read that as `todo`.
 
 ## Tests
 

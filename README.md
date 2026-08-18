@@ -49,23 +49,23 @@ Prose for humans lives in [docs/](docs/) and is never loaded by an agent:
 
 ## Skills
 
-What exists today. Each name is a pointer — the authoritative description lives in that skill's `SKILL.md` frontmatter.
+The planned set. Only `setup`, `bundle-git`, and `record-decision` exist under [skills/](skills/) today; the rest are named here because the workflow docs refer to them, and are tracked in the backlog. Each name is a pointer — the authoritative description lives in that skill's `SKILL.md` frontmatter.
 
 ### Workflow skills
 
 Stage-bound — each realizes one role of the [workflow](workflow/lifecycle.md):
 
-| Name           | Stage     | Purpose                              |
-| -------------- | --------- | ------------------------------------ |
-| `audit`        | Discover  | Sweeps the repo for drift            |
-| `research`     | Discover  | Investigates one topic               |
-| `interview-me` | Discover  | Grills intent until settled          |
-| `pick`         | Discover  | Presents candidates; the human picks |
-| `shape`        | Shape     | Writes spec and tickets              |
-| `critique`     | Shape     | Attacks the shaped spec              |
-| `implement`    | Implement | Executes one ticket to a PR          |
-| `review`       | Review    | Judges a ticket's PR                 |
-| `ship`         | Ship      | Absorbs and deletes bundle           |
+| Name            | Stage     | Purpose                              |
+| --------------- | --------- | ------------------------------------ |
+| `scan-codebase` | Discover  | Sweeps the repo for drift            |
+| `research`      | Discover  | Investigates one topic               |
+| `interview-me`  | Discover  | Grills intent until settled          |
+| `pick`          | Discover  | Presents candidates; the human picks |
+| `shape`         | Shape     | Writes spec and tickets              |
+| `critique`      | Shape     | Attacks the shaped spec              |
+| `implement`     | Implement | Executes one ticket to a PR          |
+| `review`        | Review    | Judges a ticket's PR                 |
+| `ship`          | Ship      | Absorbs and deletes bundle           |
 
 ### Supporting skills
 
@@ -77,7 +77,7 @@ Not stage-bound — they serve any session:
 | `bundle-git`         | Claims tickets, reports status, merges PRs |
 | `backlog`            | Maintains the backlog file                 |
 | `glossary`           | Maintains the domain glossary              |
-| `decision`           | Writes decision records                    |
+| `record-decision`    | Writes decision records                    |
 | `judge`              | Rules on open design questions             |
 | `handoff`            | Compacts a dying session                   |
 | `writing-for-agents` | Reviews agent-facing documents             |
@@ -99,16 +99,12 @@ Work in progress — the workflow stages are still being designed, and the docs 
 
 ## Important
 
-Branch names are not configurable, and neither is branch strategy — a multi-ticket bundle gets a
-bundle branch, a single-ticket bundle doesn't. Neither is how a finished bundle branch lands on the
-integration target. See [git-mechanics.md](workflow/git-mechanics.md) for why.
+Three things are fixed by the workflow rather than declared by your repo: branch names, branch
+strategy, and how a finished bundle branch lands on the integration target. See
+[git-mechanics.md](workflow/git-mechanics.md) for each rule and why it is not a setting.
 
 ## Config
 
-| Setting               | Default             | What it controls                                            |
-| --------------------- | ------------------- | ----------------------------------------------------------- |
-| `INTEGRATION_TARGET`  | `main`              | branch bundles land on, and ticket branches are cut from    |
-| `TICKET_MERGE_METHOD` | `squash`            | ticket PRs only; the bundle land is fixed, not configurable |
-| `WORKTREE_DIR`        | `.claude/worktrees` | where ticket worktrees go; the path mirrors the branch name |
-
-One key per line, no spaces around `=`; an environment variable of the same name outranks the file.
+Three settings, in `work/config.conf`: `INTEGRATION_TARGET`, `TICKET_MERGE_METHOD`, and
+`WORKTREE_DIR`. [The template](skills/setup/templates/config.conf) documents what each controls and
+its default, and is the copy to read — nothing else restates those values.

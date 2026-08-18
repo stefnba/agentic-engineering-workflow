@@ -94,8 +94,8 @@ it constrains, then delete this section.
 
 A local implementation choice may be delegated only in the plan or ticket as bounded discretion:
 state what the agent may choose and the constraints it may not cross. Never delegate a choice that
-changes observable behavior, scope, public contracts, security, migration, compatibility,
-cross-ticket architecture, or acceptance criteria.
+reaches a Plan-gate boundary, as the workflow's Lifecycle defines them, or that settles cross-ticket
+architecture.
 -->
 
 - [ ] <question requiring a human decision>

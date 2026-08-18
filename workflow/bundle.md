@@ -64,7 +64,7 @@ Spec, planning, and ticket generation are feedback substeps inside Shape:
 
 ```text
 intent/spec → plan when needed → tickets
-      ▲              │              │
+      ▲              │               │
       └──────── missing decision ────┘
 ```
 
@@ -72,7 +72,7 @@ Planning is repository-grounded. It may reveal a migration decision, compatibili
 failure behavior, or invariant absent from intent. Resolve that gap in the owning artifact before
 continuing; never let a ticket silently decide it.
 
-Shape is complete only after:
+**Shape is complete only after:**
 
 1. Every material question is resolved.
 2. The full bounded ticket set exists with concrete done-when evidence.
