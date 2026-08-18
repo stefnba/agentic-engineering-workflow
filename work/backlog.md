@@ -16,9 +16,16 @@ Tags:
   performs the interview or the writes. Implement it — `work/config.conf` from
   `skills/setup/templates/config.conf`, `docs/conventions/git.md`, the `AGENTS.md` pointer line, and
   the `WORKTREE_DIR` line in `.gitignore` (per `docs/decisions/2026-08-18-script-read-settings.md`).
+- [follow-up] Structurally enforce the read-only agents. `agents/reviewer.md` and `agents/critic.md`
+  now carry a `tools:` allowlist, which withholds file editing only — both keep `Bash` because
+  verification and repository reading need it, so nothing stops a push, approve, or merge except the
+  prompt. Both prompts and `workflow/lifecycle.md`'s Run conditions say so plainly rather than
+  overclaiming. Close it with a hook or a permission rule, and the same question applies to the
+  Architect's "write access only to the draft bundle" boundary.
 - [follow-up] `bundle-git` has no Ship-side script: nothing lands a bundle branch on the integration
-  target, and `MERGE_METHOD` covers ticket PRs only. See the landing question in
-  `work/open-questions.md`; a `LAND_METHOD` setting may fall out of it.
+  target. The rules it must implement are settled — see "Landing a bundle" in
+  `workflow/git-mechanics.md` — but nothing enforces them, and `TICKET_MERGE_METHOD` deliberately does not
+  cover the land.
 - [follow-up] Rename the Ship stage to Land — "ship" implies production release, which the workflow
   explicitly doesn't own (the integration target may be `dev`, promotion to the protected branch is
   a separate release process); "lands on the integration target" is already the docs' own phrasing.
