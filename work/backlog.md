@@ -29,9 +29,25 @@ Tags:
   (dispatch mechanics) that no human ever types directly, not just the slash commands a human
   invokes. `bundle-git` now exists and owns claim, status, and merge; `/complete-ticket` should call
   its script rather than reimplementing the merge.
-- [drift] README.md links `docs/skills.md` and `work/skills-build-plan.md`; README.md and AGENTS.md
-  both link `docs/agentic-workflow.md`. None of the three exist — point them at the `docs/new/` docs
-  that own the material now, or create them.
+- [follow-up] Split `docs/agents/git.md` along the layer boundary. Its config half (integration
+  target, branch strategy, branch prefixes, commit types, worktree location, merge method) is what a
+  consuming repo owns and the setup skill fills in. Its mechanics half — the claim push-status
+  protocol and race-safe bundle-branch creation — is identical in every consuming repo and is what
+  `bundle-git`'s scripts implement, so a user editing it silently breaks them. Move the mechanics
+  into the plugin next to the skill; leave values behind.
+- [follow-up] Make `docs/agents/git.md` a setup-skill template (`skills/setup/templates/git.md`)
+  with this repo's copy as the dogfooded instance, same relationship as `work/backlog.md`.
+- [follow-up] Extract the Finding protocol section out of `docs/workflow.md` into its own doc.
+  Critic, Reviewer, and Implementer (fix mode) all load it; it is the clearest multi-consumer
+  contract in the tree and currently reachable only by loading the whole lifecycle doc.
+- [follow-up] `skills/setup/` holds `references/prerequisites.md` but no `SKILL.md` yet — the skill
+  itself is unbuilt. Same for `shape`, which will own `docs/templates/` usage.
+- [drift] `agents/*.md` reference plugin docs with plain relative paths (`../docs/workflow.md`).
+  Documented substitution of `${CLAUDE_PLUGIN_ROOT}` is confirmed for plugin _skills_; whether it
+  applies inside agent definition files was not verified. Confirm, then either switch them to the
+  variable or record why relative is correct there. Concrete evidence it's already fragile: reached
+  through the dogfooding symlink `.claude/agents/architect.md`, `../docs/workflow.md` resolves to
+  `.claude/docs/workflow.md` and does not exist. The same link is correct from the real file.
 - [drift] docs/agents/git.md says the `bundle-git` skill owns bundle branch "creation, sync, and
   cleanup", but the skill only creates the bundle branch and removes a ticket's worktree. Ship's
   branch and worktree cleanup, and whatever "sync" means here, are unimplemented.
