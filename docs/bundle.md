@@ -5,7 +5,7 @@ A bundle is the disposable planning and execution record for one coherent outcom
 [Workflow](./workflow.md) for stages and gates. This document owns how intent, plan, and tickets
 cooperate inside Shape and execution.
 
-Use the literal formats in [`templates/`](./templates/). Do not embed second copies of templates in
+Use the literal formats in [`skills/setup/templates/`](../skills/setup/templates/). Do not embed second copies of templates in
 this document.
 
 ## Route and contents

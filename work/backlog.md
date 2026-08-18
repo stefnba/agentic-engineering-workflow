@@ -40,14 +40,17 @@ Tags:
 - [follow-up] Extract the Finding protocol section out of `docs/workflow.md` into its own doc.
   Critic, Reviewer, and Implementer (fix mode) all load it; it is the clearest multi-consumer
   contract in the tree and currently reachable only by loading the whole lifecycle doc.
-- [follow-up] `skills/setup/` holds `references/prerequisites.md` but no `SKILL.md` yet — the skill
-  itself is unbuilt. Same for `shape`, which will own `docs/templates/` usage.
-- [drift] `agents/*.md` reference plugin docs with plain relative paths (`../docs/workflow.md`).
-  Documented substitution of `${CLAUDE_PLUGIN_ROOT}` is confirmed for plugin _skills_; whether it
-  applies inside agent definition files was not verified. Confirm, then either switch them to the
-  variable or record why relative is correct there. Concrete evidence it's already fragile: reached
-  through the dogfooding symlink `.claude/agents/architect.md`, `../docs/workflow.md` resolves to
-  `.claude/docs/workflow.md` and does not exist. The same link is correct from the real file.
+- [follow-up] `skills/setup/` holds `references/prerequisites.md` and `templates/` but no `SKILL.md`
+  yet — the skill itself is unbuilt. Templates live there because setup installs them into the
+  consuming repo; `shape` will read them from that location.
+- [follow-up] `agents/*.md` frontmatter carries only `name`. Claude Code selects a subagent from its
+  `description`, so without one these four cannot be auto-dispatched by role — only named
+  explicitly. Decide whether that is intended (the workflow dispatches them from skill scripts, not
+  by model choice) and either add descriptions or record the reason.
+- [drift] Converting the agent files to prompt-only dropped their operator preamble — which context
+  to run in, which permissions to withhold structurally. `docs/workflow.md` owns those conditions for
+  Critic and Reviewer; confirm it also owns them for Architect and Implementer, or the constraint is
+  now unowned.
 - [drift] docs/agents/git.md says the `bundle-git` skill owns bundle branch "creation, sync, and
   cleanup", but the skill only creates the bundle branch and removes a ticket's worktree. Ship's
   branch and worktree cleanup, and whatever "sync" means here, are unimplemented.

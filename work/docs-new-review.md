@@ -142,7 +142,7 @@ acceptable — just scope the session-independence claim so it doesn't over-prom
 
 ## Nits
 
-- Lone `ticket.md` has no number, but [templates/ticket.md:11](../docs/templates/ticket.md#L11)
+- Lone `ticket.md` has no number, but [templates/ticket.md:11](../skills/setup/templates/ticket.md#L11)
   mandates `# NN — <title>`. Direct-ticket bundles can't satisfy the template.
 - [prerequisites.md](../skills/setup/references/prerequisites.md) is the only doc with no H1.
 - Both ASCII diagrams in `workflow.md` are misaligned —
