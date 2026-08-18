@@ -28,6 +28,17 @@ Work may enter at the readiness level it already has. A settled human request ca
 Discover as a direct pick; uncertain work may need research or a spike. No stage creates an artifact
 solely to prove that the stage happened.
 
+## Contents
+
+- [Coordination](#coordination) — who dispatches what, and which transitions are scripts
+- [Finding protocol](#finding-protocol) — the two severities Critic and Reviewer use
+- [1. Discover](#1-discover) · [2. Shape](#2-shape) · [3. Implement](#3-implement) ·
+  [4. Review](#4-review) · [5. Ship](#5-ship)
+- [PR handoff contract](#pr-handoff-contract) — what an implementation PR body must carry
+- [Convergence and round limit](#convergence-and-round-limit) — when review stops
+- [Human authority](#human-authority) — the three gates no agent may pass
+- [Test ownership](#test-ownership) — which role owns which part of testing
+
 ## Coordination
 
 Coordination is split between the human and deterministic skill scripts — there is no coordinator
@@ -130,18 +141,19 @@ execute without silently making product or cross-ticket design decisions.
 Select the route using [Shaping routes](./shaping-routes.md), the single owner of route selection and
 sequential-bundle criteria.
 
-Intent, planning, and ticket generation are feedback substeps, not stages. A plan or ticket that
-exposes a missing behavioral decision returns to the intent artifact before Shape continues.
+Intent, planning, and ticket generation are feedback substeps inside Shape, not stages — a plan or
+ticket that exposes a missing behavioral decision returns to the intent artifact before Shape
+continues. [Work bundles](./bundle.md) owns that loop and the criteria that complete Shape.
 
 **Keep bundles bounded:** Shape creates the complete executable ticket set for one coherent outcome.
 An outcome too large to shape honestly at once splits into sequential bundles by those criteria,
 never into a speculative ticket backlog inside one bundle.
 
 **Run conditions:** the Architect runs in the human-facing planning session with read access to the
-repository and write access only to the draft bundle; that boundary is prompt-level and wants a hook
-behind it. The Critic runs in a fresh context with no authorship of the bundle and no file-editing
-capability, withheld structurally; because a shell stays available for reading the repository, the
-rest of read-only is prompt-level, the same gap Review carries.
+repository and write access only to the draft bundle; that boundary is prompt-level, not enforced.
+The Critic runs in a fresh context with no authorship of the bundle and no file-editing capability,
+withheld structurally; a shell stays available for reading the repository, so the rest of read-only
+is prompt-level too.
 
 **Critique is mandatory before approval:** a fresh-context, read-only Critic attacks requirement
 coverage, architecture, slicing, dependencies, risk, and testability. The Architect owns revisions;
@@ -184,9 +196,10 @@ returns to the Plan gate.
 
 ### PR handoff contract
 
-The PR is the main implementation and review surface, but not the source of approved intent. It is
-also the permanent bridge from a shipped change back to the planning record Ship later deletes, so
-its links have to outlive that record. Its body must contain:
+The PR is the main implementation and review surface, not the source of approved intent, and —
+because Ship deletes the bundle — the permanent bridge back to the planning record.
+[Artifacts](./artifacts.md) owns both roles and why the links must outlive that record. Its body
+must contain:
 
 - immutable commit permalinks to the complete approved bundle and exact implemented ticket
 - the delivered scope
@@ -209,11 +222,10 @@ an independent Reviewer.
 
 **Run conditions:** the Reviewer runs in a fresh context per round with no authorship of the diff
 and no file-editing capability, withheld structurally rather than by instruction. Verification needs
-a shell, so the rest of read-only — no push, approve, or merge — is prompt-level until a hook or
-permission rule backs it; that gap is real and tracked. Read-only binds the change, not the
-filesystem: build output, caches, and temp files are expected; source, refs, branches, and PR state
-are not. Each run receives the PR number and the exact head SHA to judge, and confirms against the
-forge that the SHA is the PR head and that the tree it inspects sits there with no tracked file
+a shell, so the rest of read-only — no push, approve, or merge — is prompt-level, not enforced.
+Read-only binds the change, not the filesystem: build output, caches, and temp files are expected;
+source, refs, branches, and PR state are not. Each run receives the PR number and the exact head
+SHA to judge, and confirms against the forge that the SHA is the PR head and that the tree it inspects sits there with no tracked file
 modified.
 
 The Reviewer reruns required checks, reads changed code in context, and applies its judgment method
@@ -289,30 +301,28 @@ Review stage ends only when the human accepts the change and it merges.
 
 **Objective:** land the complete accepted outcome and remove its temporary planning record.
 
-Ship begins only when every ticket is `done` and the human triggers it.
+Ship begins only when every ticket is `done` and the human triggers it. Then, in order:
 
-Ship:
-
-1. Confirms canonical checks pass on the state holding every merged ticket, queried remotely — the
-   bundle branch for a multi-ticket bundle, the integration target for a single-ticket one, whose
-   only PR already merged there. This gates every step below.
-2. Reconciles remaining bundle knowledge into durable system docs, terminology, and decision
-   records.
-3. Converts unfinished or newly discovered work into backlog entries.
-4. Deletes the complete bundle from the integration state — as a commit on the bundle branch when
-   there is one, so the land below carries a bundle-free state onto the integration target;
-   otherwise as a commit directly on the integration target.
-5. Merges the integration target into the bundle branch when the target has moved since the branch
-   was cut — the only reconciliation the land rules permit. A single-ticket bundle has no bundle
-   branch, so this step and step 7 do not apply to it.
-6. Re-runs canonical checks on the state produced by steps 2–5, locally: that state carries Ship's
-   own commits and that merge, so no CI run has seen it. Ship's own commits change documentation,
-   backlog, and bundle files only; a Ship step that would change behavior is not Ship work and
-   returns to the Plan gate.
-7. Lands that final state on the configured integration target — [Git mechanics](./git-mechanics.md)
-   owns the land rules.
-8. Removes whichever ticket branches, bundle branch, and worktrees still exist — a repository that
-   deletes branches on merge will have removed some already.
+1. **Check the merged state.** Confirm canonical checks pass on the state holding every merged
+   ticket, queried remotely — the bundle branch for a multi-ticket bundle, the integration target for
+   a single-ticket one, whose only PR already merged there. This gates every step below.
+2. **Reconcile durable knowledge.** Move remaining bundle knowledge into durable system docs,
+   terminology, and decision records.
+3. **Drain the leftovers.** Convert unfinished or newly discovered work into backlog entries.
+4. **Delete the complete bundle** from the integration state — as a commit on the bundle branch when
+   there is one, so the land carries a bundle-free state onto the integration target; otherwise as a
+   commit directly on the integration target.
+5. **Reconcile with the integration target.** When it has moved since the bundle branch was cut,
+   merge it into the bundle branch — the only reconciliation the land rules permit. A
+   single-ticket bundle has no bundle branch, so neither this step nor the land applies to it.
+6. **Re-verify locally.** Re-run canonical checks on the state the reconcile and delete steps
+   produced: it carries Ship's own commits and that merge, so no CI run has seen it. Ship's own
+   commits change documentation, backlog, and bundle files only; a Ship step that would change
+   behavior is not Ship work and returns to the Plan gate.
+7. **Land that final state** on the configured integration target —
+   [Git mechanics](./git-mechanics.md) owns the land rules.
+8. **Remove the leftovers in git:** whichever ticket branches, bundle branch, and worktrees still
+   exist — a repository that deletes branches on merge will have removed some already.
 
 Done when the outcome is on the integration target, canonical checks pass there, durable
 documentation is current, and no bundle artifact, branch, or worktree remains.

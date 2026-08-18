@@ -1,19 +1,16 @@
 # Work bundles
 
-A bundle is the disposable planning and execution record for one coherent outcome. Read
-[Artifacts](./artifacts.md) for authority, precedence, status, and lifetime; read
-[Lifecycle](./lifecycle.md) for stages and gates. This document owns how intent, plan, and tickets
-cooperate inside Shape and execution.
+[Artifacts](./artifacts.md) defines what a bundle is and owns its authority, precedence, status,
+and lifetime; [Lifecycle](./lifecycle.md) owns stages and gates. This document owns how intent,
+plan, and tickets cooperate inside Shape and execution.
 
-Use the literal formats in [`skills/shape/templates/`](../skills/shape/templates/). Do not embed second copies of templates in
-this document.
+Use the literal formats in [`skills/shape/templates/`](../skills/shape/templates/).
 
 ## Route and contents
 
 [Shaping routes](./shaping-routes.md) owns route selection, the artifact combination each route
 requires, and the sequential-bundle criteria — including when a ticket set is too large to shape at
-once. This document defines only how the selected artifacts cooperate inside a bundle, and repeats
-neither the route names nor the split triggers.
+once. This document defines only how the selected artifacts cooperate inside a bundle.
 
 ## Naming and layout
 

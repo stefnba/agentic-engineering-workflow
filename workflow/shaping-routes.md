@@ -5,9 +5,8 @@ reliable: which artifacts one picked outcome needs, and when to split it into se
 This document is the single owner of both; no other document keeps a second route table or split
 trigger list.
 
-Choosing a lighter route never changes the five lifecycle stages in [Lifecycle](./lifecycle.md): every
-approved ticket still passes through Implement, independent Review, and human Accept; every completed
-bundle passes through Ship.
+Choosing a lighter route never changes the five lifecycle stages in [Lifecycle](./lifecycle.md) —
+see [Non-negotiable boundaries](#non-negotiable-boundaries) below for what a route may never remove.
 
 There are five routes. Use these names verbatim — in prose, in an Architect's route statement, and in
 any document that refers to a route:
@@ -148,13 +147,14 @@ model for a security change.
 
 ## Non-negotiable boundaries
 
-A lighter route removes unnecessary artifacts, not safeguards:
+A lighter route removes unnecessary artifacts, not safeguards. Whatever the route:
 
-- Human Pick, Plan, and Accept authority never moves to an agent.
-- Mandatory Critique still precedes the Plan gate.
+- Human Pick, Plan, and Accept authority stays with the human, and mandatory Critique still precedes
+  the Plan gate.
 - Material open questions never pass to an Implementer.
-- Every ticket remains one session and one PR.
+- Every ticket remains one session and one PR, with verification and reconciliation inside Implement.
 - Review remains fresh-context, independent, and read-only. Its depth scales with the change's scope,
   impact, and risk; its existence does not.
-- Verification and reconciliation remain part of Implement.
 - Ship still absorbs durable knowledge and deletes the complete bundle.
+
+[Lifecycle](./lifecycle.md) owns every rule in that list; a route narrows none of them.

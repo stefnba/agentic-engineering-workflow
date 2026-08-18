@@ -121,10 +121,10 @@ Each implementation PR is the permanent historical bridge from the shipped chang
 planning context — which is why the links in its body have to outlive the bundle. The PR handoff
 contract in [Lifecycle](./lifecycle.md) owns what that body must carry.
 
-The PR is the main surface for implementation evidence, review findings, fix responses, and review
-state. Its links do not transfer authority: the linked intent, plan, and ticket remain authoritative
-while the work is active. PR comments are an execution log, not a second specification or durable
-system documentation.
+The PR is also the main surface for implementation evidence, review findings, fix responses, and
+review state. Its links do not transfer authority: the linked intent, plan, and ticket remain
+authoritative while the work is active. PR comments are an execution log, not a second
+specification or durable system documentation.
 
 At Ship:
 

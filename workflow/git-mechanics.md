@@ -52,7 +52,7 @@ Only a multi-ticket bundle has a land. A single-ticket bundle's PR already lande
 target, so Ship's reconciliation and deletion commits go straight there.
 
 **The land preserves each ticket's commits exactly as they reached the bundle branch** — one per
-ticket under the default `TICKET_MERGE_METHOD=squash`, whatever that setting produces otherwise. Once Ship
+ticket when `TICKET_MERGE_METHOD` squashes, whatever that setting produces otherwise. Once Ship
 deletes the bundle, those commits — their subjects, their PR back-references, and the permalinks in
 those PR bodies — are the only bridge left from a shipped line of code to the ticket that approved
 it. The land must not collapse or rewrite them:
@@ -71,5 +71,5 @@ it. The land must not collapse or rewrite them:
 
 `TICKET_MERGE_METHOD` is named for its whole scope: ticket PRs, nothing else. The land is fixed, not
 a setting — it is what makes [Artifacts](./artifacts.md)'s "no shipped-bundle archive; git history
-preserves temporary artifacts" true. [Lifecycle](./lifecycle.md) sequences these rules as Ship steps
-5–7.
+preserves temporary artifacts" true. [Lifecycle](./lifecycle.md) sequences these rules as Ship's
+reconcile, re-verify, and land steps.
