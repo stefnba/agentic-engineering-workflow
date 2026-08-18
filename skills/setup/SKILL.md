@@ -34,6 +34,10 @@ Two rules the writes must honour:
 
 ## Process
 
+Every step reports the same way: a bold heading, then one bullet per item —
+`` `name` — value, then the reason ``. Never a table; the human reads these blocks in sequence, and a
+shape change reads as a different kind of information. The examples below are the format.
+
 ### 1. Check prerequisites
 
 Read `${CLAUDE_SKILL_DIR}/references/prerequisites.md` and check each
@@ -87,17 +91,27 @@ Then re-run `/setup`.
 
 ### 2. Explore
 
-Read what exists; don't assume. Report under a **Repository** heading, one bullet per line below,
-each marked `found` or `absent` — absent is the normal case for a first run, not a failure:
+Read what exists; don't assume. Report under a **Repository** heading, one bullet per item in the
+order below, each naming what was found — `absent` is the normal case for a first run, not a failure:
 
 - `${CLAUDE_PROJECT_DIR}/work/config.conf` — present means this is a re-run; read its current values
-  so step 3 offers them rather than the template defaults.
+  so the settings question offers them rather than the template defaults.
 - `${CLAUDE_PROJECT_DIR}/AGENTS.md` and `${CLAUDE_PROJECT_DIR}/CLAUDE.md` — which the repo uses, and
   whether either already carries a pointer block from a prior run.
 - `${CLAUDE_PROJECT_DIR}/docs/conventions/git.md` — present means the repo already owns its
   conventions; never overwrite one without asking.
 - `${CLAUDE_PROJECT_DIR}/.gitignore` — whether a worktree line is already there.
 - The repository's default branch, as the natural `INTEGRATION_TARGET` candidate.
+
+```markdown
+**Repository**
+
+- `work/config.conf` — absent; first run, so the settings below start from the template defaults
+- `AGENTS.md` — absent, and no `CLAUDE.md` either; the pointer block needs a new `AGENTS.md`
+- `docs/conventions/git.md` — absent
+- `.gitignore` — found, no worktree line
+- Default branch — `main`
+```
 
 ### 3. Ask the three settings
 
@@ -121,11 +135,11 @@ the plugin any time, and it buries the values inside its own commented defaults.
 
 Report four parts in order, then wait for a yes:
 
-1. **Settings** — the three answered values, one per row, each with the reason it was chosen. On a
+1. **Settings** — the three answered values, one bullet each, with the reason it was chosen. On a
    re-run, name the current value each one replaces.
-2. **Writes** — one row per path, each with its action: create from template, append the block below,
-   or skip with the reason (an existing `${CLAUDE_PROJECT_DIR}/docs/conventions/git.md` is theirs and
-   stays).
+2. **Writes** — one bullet per path, each with its action: create from template, append the block
+   below, or skip with the reason (an existing `${CLAUDE_PROJECT_DIR}/docs/conventions/git.md` is
+   theirs and stays).
 3. **The appended block, verbatim** — only for files the repo already owns, which is where a wrong
    line actually costs something. Show the lines instead of counting them.
 4. **`Proceed?`**
@@ -133,20 +147,16 @@ Report four parts in order, then wait for a yes:
 ````markdown
 **Settings**
 
-| Setting               | Value               | Why                                    |
-| --------------------- | ------------------- | -------------------------------------- |
-| `INTEGRATION_TARGET`  | `dev`               | `main` is protected — required reviews |
-| `TICKET_MERGE_METHOD` | `squash`            | default                                |
-| `WORKTREE_DIR`        | `.claude/worktrees` | default                                |
+- `INTEGRATION_TARGET` — `dev`; `main` is protected (required reviews), so bundles land on `dev`
+- `TICKET_MERGE_METHOD` — `squash` (default)
+- `WORKTREE_DIR` — `.claude/worktrees` (default)
 
 **Writes**
 
-| Path                      | Action                                             |
-| ------------------------- | -------------------------------------------------- |
-| `work/config.conf`        | create from template, carrying the values above    |
-| `docs/conventions/git.md` | create from template                               |
-| `AGENTS.md`               | create — repo uses neither AGENTS.md nor CLAUDE.md |
-| `.gitignore`              | append the block below                             |
+- `work/config.conf` — create from template, carrying the values above
+- `docs/conventions/git.md` — create from template
+- `AGENTS.md` — create; repo uses neither AGENTS.md nor CLAUDE.md today
+- `.gitignore` — append the block below
 
 Appended to `.gitignore`:
 
@@ -172,6 +182,23 @@ Proceed?
 
 ### 6. Report
 
-List what was written and what was skipped. Then tell the human two things: **commit
-`${CLAUDE_PROJECT_DIR}/work/config.conf`**, and that `${CLAUDE_PROJECT_DIR}/docs/conventions/git.md`
-is now theirs to edit — a re-run won't overwrite it.
+Report an **Installed** bullet per path — written, appended, or skipped with its reason — then the
+two things the human owns from here. **Commit
+`${CLAUDE_PROJECT_DIR}/work/config.conf`**, and `${CLAUDE_PROJECT_DIR}/docs/conventions/git.md` is
+now theirs to edit — a re-run won't overwrite it.
+
+```markdown
+**Installed**
+
+- `work/config.conf` — written: `INTEGRATION_TARGET=dev`, `TICKET_MERGE_METHOD=squash`,
+  `WORKTREE_DIR=.claude/worktrees`
+- `docs/conventions/git.md` — skipped; already present, left untouched
+- `AGENTS.md` — created, carrying the pointer block
+- `.gitignore` — appended `.claude/worktrees/`
+
+Two things are yours from here:
+
+- **Commit `work/config.conf`.** A clone without it falls back to the template defaults silently —
+  which lands work on `main` instead of `dev`.
+- `docs/conventions/git.md` is yours to edit. A re-run of `/setup` won't overwrite it.
+```
