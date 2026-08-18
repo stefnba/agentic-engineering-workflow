@@ -147,3 +147,5 @@ the restriction is structural — but the gap itself needs a hook or a permissio
 - **Lone `ticket.md` can't satisfy the template.**
   [ticket.md:7](../skills/shape/templates/ticket.md#L7) heads with `# Ticket: <title>` and no number;
   [bundle.md:51-52](../workflow/bundle.md#L51-L52) scopes numbering to `tickets/`.
+  Resolved 2026-08-18: the template heads with `# NN — <title>`, and bundle.md's numbering paragraph
+  now states that a lone `ticket.md` is number `01` — the number `bundle-status.sh` already assumed.
