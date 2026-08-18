@@ -40,13 +40,8 @@ Tags:
 - [follow-up] Extract the Finding protocol section out of `docs/workflow.md` into its own doc.
   Critic, Reviewer, and Implementer (fix mode) all load it; it is the clearest multi-consumer
   contract in the tree and currently reachable only by loading the whole lifecycle doc.
-- [follow-up] `skills/setup/` holds `references/prerequisites.md` and `templates/` but no `SKILL.md`
-  yet — the skill itself is unbuilt. Templates live there because setup installs them into the
-  consuming repo; `shape` will read them from that location.
-- [drift] Converting the agent files to prompt-only dropped their operator preamble — which context
-  to run in, which permissions to withhold structurally. `docs/workflow.md` owns those conditions for
-  Critic and Reviewer; confirm it also owns them for Architect and Implementer, or the constraint is
-  now unowned.
+- [follow-up] Neither `skills/setup/` nor `skills/shape/` has a `SKILL.md` yet — both hold only their
+  reference material (`setup/references/prerequisites.md`, `shape/templates/`).
 - [drift] docs/agents/git.md says the `bundle-git` skill owns bundle branch "creation, sync, and
   cleanup", but the skill only creates the bundle branch and removes a ticket's worktree. Ship's
   branch and worktree cleanup, and whatever "sync" means here, are unimplemented.
