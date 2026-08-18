@@ -56,11 +56,15 @@ Tags:
   everything ran on darwin with git 2.52.
 - [follow-up] Add reference skill `/codebase-design` — supplies shared vocabulary (module, interface,
   depth, seam, adapter, leverage, locality) for other skills to borrow; not a session driver itself.
-- [follow-up] templates/ticket.md's Outcome section is thin for ticket-only bundles (no spec): it
-  leans on one free-text paragraph for intent that spec-backed tickets get real structure for
-  (BR/BC/INV/AC with IDs). Strengthen the ticket-only-bundle guidance to prompt for the same
-  categories — behavior, constraints, non-goals, acceptance — without requiring the ID machinery a
-  single-ticket bundle has nothing else to cross-reference.
+- [follow-up] `bundle-git` documents input rules it should enforce, both verified by running it:
+  `claim-ticket.sh:35` parses `depends_on` with a `sed` that mishandles three of the four YAML forms
+  — quoted or unpadded numbers block the claim forever, block-sequence style fails open and lets a
+  dependent ticket start early — and `claim-ticket.sh:25` / `ticket-status.sh:12` count `ls tickets`
+  entries, so a stray file flips the branch strategy.
+- [follow-up] `scripts/find-by-frontmatter.py:163` parses the whole file instead of stopping at the
+  closing `---`, so any body with a bullet list crashes it. Every filled ticket triggers it.
+- [drift] `workflow/bundle.md` puts the characterization-test mandate on the plan, but a refactor on
+  the intent-plus-tickets route has no plan, so the mandate has no home there.
 - [follow-up] Finding protocol refinements (from independent judge ruling — keep two severities,
   harden the record):
   - Mandatory violated-referent field per finding (spec BR/AC/INV, ticket done-when, decision
