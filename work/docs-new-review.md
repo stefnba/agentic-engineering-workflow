@@ -19,29 +19,6 @@ tool-local; publication happens once, at the first Plan gate, onto the integrati
 multi-ticket bundle the ticket branches were cut from the bundle branch _before_ the revision, so a
 re-approved `spec.md` on the integration target is invisible to every in-flight worktree.
 
-### 3. Implement and Ship both own reconciliation, separated by one word
-
-[lifecycle.md:171](../workflow/lifecycle.md#L171) has the Implementer reconcile durable docs "in the
-same PR"; [Ship step 2](../workflow/lifecycle.md#L289) reconciles "_remaining_ bundle knowledge." No
-rule says what legitimately defers to Ship. Predictable failure: implementers either duplicate Ship's
-work or punt everything to it.
-
-Proposal: the Implementer reconciles whatever its own diff makes false or stale, never deferring
-that; Ship reconciles only bundle-level knowledge no single ticket owned.
-
-### 4. Investigation/spike is two different things
-
-[lifecycle.md:104](../workflow/lifecycle.md#L104) makes it a Discover activity;
-[shaping-routes.md:62](../workflow/shaping-routes.md#L62) makes it one of five _shaping routes_, and
-[walkthrough.md:52](../docs/walkthrough.md#L52) says "shape and run an investigation or spike."
-
-As a route it implies a bundle — but [bundle.md:20-38](../workflow/bundle.md#L20-L38) shows no spike
-layout, a spike has no production code so one-ticket-one-PR and independent Review don't obviously
-apply, and Ship would _delete the spike's evidence_, which was the entire deliverable.
-
-Ship step 2 does give that evidence a survival path (fold into a decision record), so this is
-narrower than "pick one" — but it is nowhere stated, and there is still no spike bundle layout.
-
 ### 6. `work/backlog.md` is a shared write surface across parallel ticket PRs
 
 The Implementer is told to add follow-up work "through the workflow's backlog mechanism"
@@ -62,20 +39,6 @@ behind. Applies to single-ticket bundles off a moving integration target too.
 The bundle branch now has exactly such a rule — [Ship step 5](../workflow/lifecycle.md#L292) merges a
 moved integration target in before landing. A ticket branch has no equivalent.
 
-### 8. The dependency gate reports `unknown` as "not done"
-
-[prerequisites.md:21](../skills/setup/references/prerequisites.md#L21) correctly says an unreachable
-forge reports `unknown`, never `todo`, and the behavior _is_ fail-closed:
-[`ticket-status.sh`](../skills/bundle-git/scripts/ticket-status.sh) writes its error to stderr and
-prints nothing to stdout, so the `= done` comparison in
-[claim-ticket.sh:36-37](../skills/bundle-git/scripts/claim-ticket.sh#L36-L37) fails on an empty
-string. (Its non-zero exit is discarded by the command substitution, so the exit code is not what
-saves it.) Only the message lies — it says "blocked: ticket NN is not done" when the truth is
-"couldn't tell." Same in [SKILL.md](../skills/bundle-git/SKILL.md)'s exit-code list.
-
-Downgraded from a design hole to a wording fix: report the status that was actually observed, and say
-`3` covers `unknown` too.
-
 ### 9. Reviewer independence: stated honestly now, still not enforced
 
 Reopened by the second review pass. What landed: Review gained a **Run conditions** paragraph
@@ -89,6 +52,23 @@ nothing else. Every prompt and the Run conditions paragraphs now say that plainl
 the restriction is structural — but the gap itself needs a hook or a permission rule, tracked in
 [backlog.md](backlog.md).
 
+## Fixed on 2026-08-19
+
+- **3. Implement and Ship both own reconciliation, separated by one word.** The boundary is now
+  stated on both sides: [lifecycle.md](../workflow/lifecycle.md) Implement step 5 adds "everything
+  this diff made false or stale, which never defers to Ship", and Ship step 2 reconciles
+  "bundle-level knowledge no single ticket owned ... knowledge that only became true once every
+  ticket had landed" — the phrasing
+  [`skills/shape/templates/plan.md`](../skills/shape/templates/plan.md) already used for the same
+  split. [implementer.md](../agents/implementer.md) carries the one operative clause, since punting
+  to Ship is the failure mode it has to resist.
+- **8. The dependency gate reported `unknown` as "not done".** `claim-ticket.sh` now captures the
+  dependency's status and names it — `blocked: ticket 01 is unknown` rather than `is not done` — with
+  an empty result from a failed query normalised to `unknown`. The gate is closed either way, which
+  it already was; only the message changed. `bundle-git/SKILL.md`'s exit-code list says `3` covers
+  `unknown` and that it needs the forge fixed rather than the ticket waited on. Two tests cover it:
+  an unmet dependency reports `doing`, and a dependency behind a downed forge reports `unknown`.
+
 ## Fixed on 2026-08-18
 
 - **2. Ship made unverified, unreviewed commits.** [lifecycle.md:287-300](../workflow/lifecycle.md#L287-L300)
@@ -96,6 +76,14 @@ the restriction is structural — but the gap itself needs a hook or a permissio
   capture, bundle deletion, and the target merge, step 6 re-runs canonical checks on the state that
   will actually land. The Human authority section says why that means no fourth approval — Ship's own
   commits carry no behavior change and are re-verified before landing.
+- **4. Investigation/spike is two different things.** The item's remaining half was "there is still
+  no spike bundle layout"; [`skills/shape/templates/spike.md`](../skills/shape/templates/spike.md)
+  is that layout. It states the bundle is deleted at Ship and, at
+  [line 113](../skills/shape/templates/spike.md#L113), forces the evidence question at Shape rather
+  than leaving it to Ship — "decided here, so the result is not stranded in a file Ship deletes",
+  with a named owner. The Discover-activity/shaping-route double life is not a contradiction: an
+  investigation small enough to run inside Discover needs no bundle, and one that doesn't is shaped
+  as a spike bundle.
 - **5. Nothing declared how a bundle branch lands on the integration target.**
   [git-mechanics.md](../workflow/git-mechanics.md) now has a "Landing a bundle" section: merge with
   `--no-ff`, never squash, never rebase, merge a moved target in and re-verify before landing. The
