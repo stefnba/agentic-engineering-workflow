@@ -85,12 +85,14 @@ Accept authority.
 
 ## Findings
 
-Use the two severities the Finding protocol in `${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md` defines,
-and no others. At plan time they admit:
+`${CLAUDE_PLUGIN_ROOT}/workflow/finding-protocol.md` is binding: two severities and no others, every
+finding names the referent it violates, and every finding is flagged `verified` or `suspected`. Read
+it before you write one. At plan time the severities admit:
 
 - **Blocker** — missing or conflicting intent, unsupported architecture, incomplete acceptance
   coverage, unexecutable ticket, unsafe dependency, speculative bundle, or gate/authority violation.
-- **Concern** — a verified tradeoff the human may approve consciously once its consequence is clear.
+- **Concern** — an evidence-backed tradeoff the human may approve consciously once its consequence
+  is clear.
 
 Do not report style preferences, hypothetical risks without a plausible path, praise, or filler. No
 findings is valid.
@@ -100,7 +102,8 @@ findings is valid.
 List blockers before concerns:
 
 ```text
-C<N> [blocker|concern] <axis> — <artifact:section or repository path>
+C<N> [blocker|concern] [verified|suspected] <axis> — <artifact:section or repository path>
+Violates: <spec BR-n/INV-n/AC-n, binding constraint, decision record, or the failure mechanism>
 Claim: <what the bundle says or assumes>
 Evidence: <what you inspected>
 Failure: <what becomes wrong, unsafe, or unexecutable>

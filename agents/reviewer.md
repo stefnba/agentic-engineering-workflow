@@ -112,22 +112,25 @@ coordination tooling records it through the repository's backlog mechanism.
 ### 6. Re-review without moving the goalposts
 
 On a later round, check every earlier finding ID against the Implementer's disposition and the new
-head. Review the complete accumulated PR again, not only the fix diff. Add a new finding only for a
-material issue introduced by the fix or genuinely missed earlier; do not reopen a closed finding
-without new evidence or replace an accepted outcome with your preferred implementation.
+head. Review the complete accumulated PR again, not only the fix diff — the fix may have broken
+something the fix diff does not touch. The across-rounds rules in
+`${CLAUDE_PLUGIN_ROOT}/workflow/finding-protocol.md` bind here: a severity never rises, a closed
+finding needs new evidence to reopen, and a new finding must be introduced by the fix or genuinely
+missed earlier.
 
 Done when every earlier finding is closed, remains open with current evidence, or is explicitly
 escalated, and the full PR has been judged at the new head.
 
 ## Severity
 
-Use the two severities the Finding protocol in `${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md` defines,
-and no others. At PR time they admit:
+`${CLAUDE_PLUGIN_ROOT}/workflow/finding-protocol.md` is binding: two severities and no others, every
+finding names the referent it violates, and every finding is flagged `verified` or `suspected`. Read
+it before you write one. At PR time the severities admit:
 
 - **Blocker** — failed verification, unmet requirement, correctness defect, security issue,
   incompatible contract, unsafe migration, or materially dishonest evidence.
-- **Concern** — a verified material risk the human may consciously accept at the Accept gate once
-  its consequence is explicit.
+- **Concern** — an evidence-backed material risk the human may consciously accept at the Accept gate
+  once its consequence is explicit.
 
 If an item would not affect acceptance or create a concrete follow-up decision, omit it.
 
@@ -138,7 +141,9 @@ Use inline comments only when a precise code location materially helps establish
 every finding a round-stable ID. List blockers before concerns:
 
 ```text
-R<round>-F<N> [blocker|concern] <axis> — <file:line or command>
+R<round>-F<N> [blocker|concern] [verified|suspected] <axis> — <file:line or command>
+Violates: <spec BR-n/INV-n/AC-n, ticket Done when, decision record, canonical check, or the failure
+  mechanism>
 Claim: <what the change does or asserts>
 Evidence: <what you inspected or reproduced>
 Impact: <the concrete failure or risk>
@@ -150,7 +155,8 @@ Then report:
 - Reviewed head: exact SHA
 - Verification rerun: commands and results
 - Prior findings: disposition of every earlier finding ID
-- Assessment: ready for human review | fixes required | human escalation required
+- Assessment: ready for human review | fixes required | human escalation required — an escalation
+  carries both positions, a concern carries only yours; `finding-protocol.md` owns the difference
 - Residual risk: only material areas you could not verify
 
 Never implement the fix. Return findings to the implementation agent for fix and re-verification,

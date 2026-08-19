@@ -31,13 +31,16 @@ solely to prove that the stage happened.
 ## Contents
 
 - [Coordination](#coordination) — who dispatches what, and which transitions are scripts
-- [Finding protocol](#finding-protocol) — the two severities Critic and Reviewer use
 - [1. Discover](#1-discover) · [2. Shape](#2-shape) · [3. Implement](#3-implement) ·
   [4. Review](#4-review) · [5. Ship](#5-ship)
 - [PR handoff contract](#pr-handoff-contract) — what an implementation PR body must carry
 - [Convergence and round limit](#convergence-and-round-limit) — when review stops
 - [Human authority](#human-authority) — the three gates no agent may pass
 - [Test ownership](#test-ownership) — which role owns which part of testing
+
+Findings are governed separately: [Finding protocol](./finding-protocol.md) owns the severities,
+what a finding must name, and what survives a round. Critic and Reviewer load it without loading
+this document.
 
 ## Coordination
 
@@ -99,20 +102,6 @@ These skill scripts never own product or technical judgment and cannot pass a hu
 Plan, and Accept are explicit human decisions, observed and never inferred. The Implementer never
 selects or claims its own ticket; claim and merge transitions live in scripts because a prompt-only
 instruction cannot guarantee serialization.
-
-## Finding protocol
-
-Critic and Reviewer findings use the same severities:
-
-- **Blocker:** an evidence-backed contract, correctness, safety, executability, or gate violation that
-  must be resolved before the next human gate.
-- **Concern:** an evidence-backed material risk or tradeoff that the human may consciously accept at
-  the next gate after its consequence is explicit.
-
-Do not create minor or suggestion findings. A useful improvement that does not affect the next gate
-is a backlog candidate, never a finding. A read-only Critic or Reviewer reports it separately; skill
-scripts record reported candidates that satisfy the repository's backlog format without
-prioritizing or promoting them.
 
 ## 1. Discover
 
@@ -187,7 +176,7 @@ Implementation includes:
 3. Implement only the approved ticket and bounded local support work.
 4. Run every ticket done-when command plus canonical repository checks.
 5. Reconcile affected durable docs, terminology, intent corrections, and remaining tickets in the
-   same PR.
+   same PR — everything this diff made false or stale, which never defers to Ship.
 6. Open the PR using the handoff contract below; leave the ticket `doing` while Review is pending.
 
 A factual correction that preserves approved intent is made visible in the PR. A change to behavior,
@@ -289,8 +278,10 @@ The final Reviewer comment is tied to the reviewed head SHA and states:
 - remaining limitations or material areas that could not be verified
 
 **Accept gate:** the human accepts the independently reviewed PR and explicitly disposes any open
-concerns. Acceptance authorizes the merge, performed according to the repository's Git conventions;
-the ticket reads as `done` once that merge lands on the PR's target branch.
+concerns; an accepted concern leaves a durable trace rather than evaporating, per
+[Finding protocol](./finding-protocol.md). Acceptance authorizes the merge, performed according to
+the repository's Git conventions; the ticket reads as `done` once that merge lands on the PR's
+target branch.
 Accept applies to the exact reviewed head SHA; any subsequent implementation change invalidates it
 and requires verification and Review again.
 
@@ -306,8 +297,10 @@ Ship begins only when every ticket is `done` and the human triggers it. Then, in
 1. **Check the merged state.** Confirm canonical checks pass on the state holding every merged
    ticket, queried remotely — the bundle branch for a multi-ticket bundle, the integration target for
    a single-ticket one, whose only PR already merged there. This gates every step below.
-2. **Reconcile durable knowledge.** Move remaining bundle knowledge into durable system docs,
-   terminology, and decision records.
+2. **Reconcile durable knowledge.** Move bundle-level knowledge no single ticket owned into durable
+   system docs, terminology, and decision records. What a ticket's own diff made false was already
+   reconciled in that ticket's PR; anything left here is knowledge that only became true once every
+   ticket had landed.
 3. **Drain the leftovers.** Convert unfinished or newly discovered work into backlog entries.
 4. **Delete the complete bundle** from the integration state — as a commit on the bundle branch when
    there is one, so the land carries a bundle-free state onto the integration target; otherwise as a

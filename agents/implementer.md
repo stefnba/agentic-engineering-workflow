@@ -94,6 +94,8 @@ Done when ticket-specific tests pass without weakening assertions or modifying l
 Run every `Done when` command and the repository's canonical checks. Reconcile affected durable
 docs, terminology, corrected bundle facts, and remaining tickets in the same change.
 
+Never defer that to Ship: Ship reconciles only what no single ticket owned.
+
 Done when all checks pass at the PR head and no touched document describes the pre-change system.
 
 ### 5. Hand off to Review
@@ -107,8 +109,10 @@ Done when a fresh-context Reviewer has the complete evidence needed to judge the
 
 ### 6. Resolve review findings
 
-Read the complete approved intent, plan, ticket, and current PR before acting on review comments. For
-each stable finding ID:
+Read the complete approved intent, plan, ticket, and current PR before acting on review comments. A
+finding flagged `suspected` is confirmed before you act on it — reproduce it, or establish that it
+does not hold — and your response says which you did; see
+`${CLAUDE_PLUGIN_ROOT}/workflow/finding-protocol.md`. For each stable finding ID:
 
 - fix it when the evidence is correct and the required outcome stays within approved intent
 - rebut it with concrete evidence when the claim is incorrect or already satisfied
@@ -120,7 +124,8 @@ and reconcile affected documentation.
 
 Post one fix-response comment to the PR containing:
 
-- each finding ID and `fixed`, `rebutted`, or `escalated`
+- each finding ID and `fixed`, `rebutted`, or `escalated`, and for a `suspected` finding, what
+  confirming it showed
 - the change or evidence for that disposition
 - verification commands and results
 - the new head SHA

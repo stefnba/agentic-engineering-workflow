@@ -40,6 +40,7 @@ The contract lives in [workflow/](workflow/) — normative, and what the skills 
 - [bundle.md](workflow/bundle.md) — how intent, plan, and tickets cooperate inside a bundle
 - [shaping-routes.md](workflow/shaping-routes.md) — which artifacts a given piece of work needs
 - [git-mechanics.md](workflow/git-mechanics.md) — worktree basing, ticket claiming, race-safe bundle branches
+- [finding-protocol.md](workflow/finding-protocol.md) — what Critic and Reviewer may report, and what survives a round
 
 Prose for humans lives in [docs/](docs/) and is never loaded by an agent:
 
