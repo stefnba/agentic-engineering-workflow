@@ -131,7 +131,8 @@ workflow rather than anything about the repository:
 
 An **area** is what an item is about — the second axis to the kind above — and it spans the two
 artifacts that outlive every bundle: a backlog line carries its kind then its areas
-(`- [drift][api] …`), a decision record the same terms in `areas:`.
+(`- [drift] [api] …` — always space-separated, since `][` parses as a reference link), and a
+decision record carries the same terms in `areas:`.
 
 That vocabulary is never declared as a list; a registry drifts from use in both directions. **The
 areas already in use are the vocabulary:** read the backlog's lines and the records' frontmatter,
