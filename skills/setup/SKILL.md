@@ -119,9 +119,10 @@ Ask all three in one round, each with its recommended answer. The template docum
 controls; don't restate its wording.
 
 - **`INTEGRATION_TARGET`** — the branch bundles land on and ticket branches are cut from. Recommend
-  the default branch, **unless** it's protected: required reviews, no direct push, or required linear
-  history make it unusable as an integration target, and the repo needs a separate branch such as
-  `dev`. Say which case you found.
+  the default branch, and **ask whether it's protected** — required reviews, no direct push, or
+  required linear history make it unusable as an integration target, and the repo needs a separate
+  branch such as `dev` instead. Protection isn't readable with this skill's tools: it's their answer
+  to give, never a check to run.
 - **`TICKET_MERGE_METHOD`** — `squash | merge | rebase`, for ticket PRs only.
 - **`WORKTREE_DIR`** — where ticket worktrees go.
 
@@ -147,7 +148,7 @@ Report four parts in order, then wait for a yes:
 ````markdown
 **Settings**
 
-- `INTEGRATION_TARGET` — `dev`; `main` is protected (required reviews), so bundles land on `dev`
+- `INTEGRATION_TARGET` — `dev`; you reported `main` protected by required reviews
 - `TICKET_MERGE_METHOD` — `squash` (default)
 - `WORKTREE_DIR` — `.claude/worktrees` (default)
 
