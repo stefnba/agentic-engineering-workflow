@@ -91,8 +91,9 @@ rm -rf ".claude/worktrees/ticket/$multi/01" && git worktree prune
 ok "already claimed refuses (4)"    "$?" 4
 
 echo "== dependency gate"
-"$scripts/claim-ticket.sh" "$multi" 02 >/dev/null 2>&1
+"$scripts/claim-ticket.sh" "$multi" 02 > "$root/dep.out" 2>&1
 ok "unmet dependency blocks (3)"    "$?" 3
+ok "names the status it saw"        "$(grep -c 'ticket 01 is doing' "$root/dep.out")" 1
 "$scripts/claim-ticket.sh" "$multi" 99 >/dev/null 2>&1
 ok "unknown ticket refuses (2)"     "$?" 2
 echo "ticket/$multi/01 bundle/$multi" > "$MERGED"
@@ -110,12 +111,27 @@ ok "lists every bundle"             "$("$scripts/bundle-status.sh" | wc -l | tr 
 ok "per-ticket listing"             "$("$scripts/bundle-status.sh" "$multi" | tr -s ' ' | tr '\n' '|')" \
                                     "active $multi| done 01-persistence| doing 02-api| todo 03-ui|"
 
+echo "== a stray file in tickets/ does not flip the branch strategy"
+stray=2026-08-17-stray
+mkdir -p "work/bundles/$stray/tickets"
+printf 'depends_on: []\n---\nthe only ticket\n' > "work/bundles/$stray/tickets/01-only.md"
+printf 'scratch\n'                             > "work/bundles/$stray/tickets/notes.txt"
+git add -A && git commit -qm "docs(bundle): a bundle with a stray file" && git push -q origin main
+"$scripts/claim-ticket.sh" "$stray" 01 >/dev/null 2>&1
+ok "stray-file claim exits 0"       "$?" 0
+ok "one ticket still takes no branch" "$(git ls-remote --heads origin "bundle/$stray" | wc -l | tr -d ' ')" 0
+printf 'ticket/%s/01 main\n' "$stray" >> "$MERGED"
+ok "status agrees on the base"      "$("$scripts/ticket-status.sh" "$stray" 01)" done
+
 echo "== an unreachable forge never reads as todo"
 mv "$root/bin/gh" "$root/bin/gh.real"
 printf '#!/usr/bin/env bash\nexit 1\n' > "$root/bin/gh" && chmod +x "$root/bin/gh"
 "$scripts/ticket-status.sh" "$multi" 01 >/dev/null 2>&1
 ok "ticket status exits non-zero"   "$?" 1
 ok "bundle status says unknown"     "$("$scripts/bundle-status.sh" "$multi" 2>/dev/null | head -1 | awk '{print $1}')" unknown
+"$scripts/claim-ticket.sh" "$multi" 02 > "$root/unknown.out" 2>&1
+ok "unqueryable dependency blocks"  "$?" 3
+ok "and says unknown, not todo"     "$(grep -c 'ticket 01 is unknown' "$root/unknown.out")" 1
 mv -f "$root/bin/gh.real" "$root/bin/gh"
 
 echo "== concurrent claims on one ticket"

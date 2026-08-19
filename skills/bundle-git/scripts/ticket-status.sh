@@ -6,14 +6,8 @@ set -uo pipefail
 bundle="$1"
 nn="$2"
 . "$(cd "$(dirname "$0")" && pwd)/_config.sh"
-target="$INTEGRATION_TARGET"
 branch=$(ticket_branch "$bundle" "$nn")
-
-if [ "$(ls "work/bundles/$bundle/tickets" 2>/dev/null | wc -l)" -gt 1 ]; then
-  base=$(bundle_branch "$bundle")
-else
-  base="$target"
-fi
+base=$(ticket_base "$bundle")
 
 # done means merged into this ticket's own target, not merged anywhere. The PR record survives the
 # head branch being deleted on merge, so this still answers after cleanup. Fail loudly rather than

@@ -28,3 +28,15 @@ unset _env_target _env_merge _env_worktree _bad
 
 ticket_branch() { echo "ticket/$1/$2"; } # <bundle-id> <NN>
 bundle_branch() { echo "bundle/$1"; }    # <bundle-id>
+
+# A multi-ticket bundle shares one bundle branch; a single-ticket bundle's PR targets the
+# integration target directly. Defined once for the same reason as the branch names above: claim and
+# status must agree, or a claimed ticket reads as todo and unblocks its dependents early. Count
+# NN-<slug>.md entries only — a stray file in tickets/ must not flip the strategy.
+ticket_base() { # <bundle-id> -> the branch this bundle's ticket PRs target
+  local n=0 f
+  for f in "work/bundles/$1/tickets/"[0-9][0-9]-*.md; do
+    if [ -f "$f" ]; then n=$((n + 1)); fi
+  done
+  if [ "$n" -gt 1 ]; then bundle_branch "$1"; else echo "$INTEGRATION_TARGET"; fi
+}

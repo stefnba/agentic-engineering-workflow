@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Claim one ticket by creating its branch and worktree. A second claim on the same ticket fails.
 #   usage: claim-ticket.sh <bundle-id> <NN>
-#   exit:  2 no such ticket   3 blocked by a dependency   4 already claimed   5 stale worktree
+#   exit:  2 no such ticket   3 dependency not done   4 already claimed   5 stale worktree
 set -euo pipefail
 
 bundle="$1"
@@ -21,20 +21,23 @@ else
 fi
 [ -n "$ticket" ] || { echo "no such ticket: $bundle/$nn" >&2; exit 2; }
 
-# A multi-ticket bundle shares one bundle branch; a single-ticket bundle PRs into the target directly.
-if [ "$(ls "work/bundles/$bundle/tickets" 2>/dev/null | wc -l)" -gt 1 ]; then
-  base=$(bundle_branch "$bundle")
+# A base that is not the target means a multi-ticket bundle, whose shared branch the first claim
+# creates.
+base=$(ticket_base "$bundle")
+if [ "$base" != "$target" ]; then
   git ls-remote --exit-code --heads origin "$base" >/dev/null 2>&1 ||
     git push -q origin "origin/$target:refs/heads/$base" ||
     true # another ticket's claim won the race and created it first
   git fetch -q origin "+refs/heads/$base:refs/remotes/origin/$base"
-else
-  base="$target"
 fi
 
+# Report the status actually observed. A failed query prints nothing and is unknown, not todo — the
+# gate is closed either way, but "couldn't tell" and "not finished yet" need different responses.
 for dep in $(sed -n 's/^depends_on: *\[\(.*\)\]/\1/p' "$ticket" | tr -d ' ' | tr ',' '\n'); do
-  [ "$("$here/ticket-status.sh" "$bundle" "$dep")" = done ] ||
-    { echo "blocked: ticket $dep is not done" >&2; exit 3; }
+  dep_status=$("$here/ticket-status.sh" "$bundle" "$dep") || dep_status=""
+  [ -n "$dep_status" ] || dep_status=unknown
+  [ "$dep_status" = done ] ||
+    { echo "blocked: ticket $dep is $dep_status" >&2; exit 3; }
 done
 
 if [ -e "$worktree" ]; then

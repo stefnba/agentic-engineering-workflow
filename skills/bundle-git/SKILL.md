@@ -58,6 +58,8 @@ shapes, listing, an unreachable forge, and the flags passed to the merge. Exits 
 
 ## Exit codes from `claim-ticket.sh`
 
-`2` no such ticket · `3` blocked by an unfinished dependency · `4` already claimed · `5` stale
-worktree in the way. Treat a non-zero exit as a stop, never as something to retry or work around: a
-`4` means another session owns that ticket.
+`2` no such ticket · `3` a dependency is not `done` · `4` already claimed · `5` stale worktree in the
+way. Treat a non-zero exit as a stop, never as something to retry or work around: a `4` means another
+session owns that ticket. A `3` names the status it saw — `todo`, `doing`, or `unknown` when the
+forge could not be queried, which blocks the claim exactly as an unfinished dependency does and needs
+the forge fixed rather than the ticket waited on.
