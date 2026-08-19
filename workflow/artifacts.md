@@ -107,6 +107,43 @@ Do not persist `ready`, `implemented`, `verifying`, `blocked`, or `changes_reque
 ticket dependencies are derived from `depends_on`; an external blocker is raised on the PR or
 escalated to the human, never recorded as ticket metadata that can go stale.
 
+## Decision records
+
+A choice earns a record only when it was **contested, consequential, and not obvious from the
+code** — all three. The test: someone changing it next year without the reasoning breaks something
+or spends a week rediscovering why. Most bundles produce none; twenty a year means the bar slipped
+and the folder is a log nobody reads.
+
+A choice with no rejected alternative was a default, not a decision, and belongs with its owner: a
+convention in `docs/conventions/`, a term in `GLOSSARY.md`, an unpicked follow-up in
+`work/backlog.md`, current behavior in the durable system docs.
+
+## Backlog tags
+
+Every repository uses the same three **kind** tags, because they classify a line's standing in this
+workflow rather than anything about the repository:
+
+- `[idea]` — worth exploring, nothing agreed
+- `[drift]` — a noticed inconsistency between documents, or between documents and code
+- `[follow-up]` — concrete agreed work
+
+## Areas
+
+An **area** is what an item is about — the second axis to the kind above — and it spans the two
+artifacts that outlive every bundle: a backlog line carries its kind then its areas
+(`- [drift][api] …`), a decision record the same terms in `areas:`.
+
+That vocabulary is never declared as a list; a registry drifts from use in both directions. **The
+areas already in use are the vocabulary:** read the backlog's lines and the records' frontmatter,
+reuse the closest term, coin one only when none fits. Widening an existing term beats a
+near-synonym — `auth` beside `authentication` is what this prevents.
+
+An area names a place, not a topic: a package, a domain, a deployable — `api`, `client`, `billing`.
+If a reader can't tell which directories it covers, two people will tag the same work differently.
+Keep them coarse enough to repeat, add a cross-cutting term like `ci` or `deps` only once work
+accumulates there, and never reuse a kind as an area. Several areas per item are fine; a repository
+with no meaningful split runs with two or three, or none until a second earns its place.
+
 ## Lifetime
 
 - **Local draft:** unapproved and not shared as committed work.

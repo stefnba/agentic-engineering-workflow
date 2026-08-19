@@ -115,9 +115,13 @@ the restriction is structural — but the gap itself needs a hook or a permissio
   [artifacts.md](../workflow/artifacts.md) and [walkthrough.md](../docs/walkthrough.md) now split on
   whether a rejection encodes a durable choice: "this stays as it is, because X" earns a record, "not
   worth it now" earns nothing and correctly resurfaces next scan. The missing template exists at
-  [`skills/record-decision/templates/decision-record.md`](../skills/record-decision/templates/decision-record.md)
-  — `Decision` / `Consequences`, matching the two records already in `docs/decisions/`. The workflow
-  docs no longer link it: the `record-decision` skill owns the format.
+  [`skills/record-decision/templates/decision-record.md`](../skills/record-decision/templates/decision-record.md).
+  The workflow docs no longer link it: the `record-decision` skill owns the format. Revised
+  2026-08-19 from `Decision` / `Consequences` to `Context` / `Decision` / `Rejected` / `Costs` /
+  `Revisit if`, so an unweighed alternative or an unnamed cost is a visibly empty section rather
+  than a thin paragraph; the bar the item turns on now sits in
+  [artifacts.md](../workflow/artifacts.md) instead of being gestured at. The three records already
+  in `docs/decisions/` keep the two-section shape — they are immutable.
 - **13. Direct push to the integration target was never stated outright.** Folded into 5's
   prerequisites bullet, which now requires a target permitting direct pushes, and merge commits once
   a bundle has more than one ticket, naming the required-review, required-PR, and linear-history

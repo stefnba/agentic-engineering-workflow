@@ -2,12 +2,6 @@
 
 Work on the reference material itself. Unsorted collection dump — order carries no meaning.
 
-Tags:
-
-- `[idea]` new idea worth exploring
-- `[drift]` noticed inconsistency between docs or code
-- `[follow-up]` concrete agreed work
-
 ## Items
 
 - [follow-up] The research split from `docs/decisions/2026-08-18-consuming-repo-layout.md` is now in
