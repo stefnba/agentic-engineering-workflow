@@ -20,8 +20,11 @@ Status is derived by reconstructing these names, so every consumer has to agree 
 repository that changed them would see a claimed ticket read as `todo`, which lets a dependent ticket
 start early. `scripts/_config.sh` is the one definition every script uses.
 
-**Branch strategy** is derived, not declared: a bundle with more than one ticket gets a bundle
-branch; a single-ticket bundle's PR targets the integration target directly.
+**Branch strategy** is derived, not declared. Until the first claim it follows the ticket count: more
+than one ticket gets a bundle branch, a single-ticket bundle's PR targets the integration target
+directly. **From the first claim onward the branch itself is the answer** — if `bundle/<bundle-id>`
+exists on the remote, that is the base, whatever the ticket files now say. The count is a file that
+can change; the PRs already merged against a base cannot.
 
 ## Worktree base rule
 
