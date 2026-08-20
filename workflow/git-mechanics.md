@@ -48,8 +48,9 @@ branch off that instead of failing.
 
 ## Landing a bundle
 
-Only a multi-ticket bundle has a land. A single-ticket bundle's PR already landed on the integration
-target, so Land's reconciliation and deletion commits go straight there.
+Only a multi-ticket bundle has a branch to land. A single-ticket bundle's PR already landed on the
+integration target, so Land's reconciliation and deletion commits go straight there — the stage runs
+either way.
 
 **The land preserves each ticket's commits exactly as they reached the bundle branch** — one per
 ticket when `TICKET_MERGE_METHOD` squashes, whatever that setting produces otherwise. Once Land

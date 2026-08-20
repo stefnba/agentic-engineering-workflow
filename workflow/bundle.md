@@ -174,8 +174,10 @@ bundle's shape implies: which branches and pull requests exist, and what each on
 ### Single-ticket bundle
 
 One ticket branch and worktree, based on the configured integration target, and one PR into that
-target. Do not create a bundle branch with one child, and note there is nothing to land afterwards —
-the one PR already put the work on the target.
+target. Do not create a bundle branch with one child: there is no second ticket for it to integrate,
+and that one PR already put the work on the target. Land still runs — with no bundle branch it has
+nothing to merge, so its reconciliation and deletion commits go straight to the integration target
+(see [Lifecycle](./lifecycle.md), which owns which of its steps that shape skips).
 
 ### Multi-ticket bundle
 
