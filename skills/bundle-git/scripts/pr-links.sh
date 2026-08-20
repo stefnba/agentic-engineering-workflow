@@ -34,6 +34,10 @@ sha=$(git log -1 --format=%H "origin/$INTEGRATION_TARGET" -- "work/bundles/$bund
 repo=$(gh repo view --json url -q .url) ||
   { echo "cannot reach the forge to resolve the repository URL" >&2; exit 4; }
 
-printf -- '- Bundle: %s/tree/%s/work/bundles/%s\n' "$repo" "$sha" "$bundle"
-printf -- '- Ticket: %s/blob/%s/%s — %s\n' "$repo" "$sha" "$ticket" "$nn"
+# Markdown links, not bare URLs: the body is read rendered, and a 100-character permalink in the
+# middle of a line is noise a reader has to skip. The link text carries what identifies the target —
+# the bundle ID, and the ticket's path within the bundle.
+rel="${ticket#work/bundles/$bundle/}"
+printf -- '- Bundle: [`%s`](%s/tree/%s/work/bundles/%s)\n' "$bundle" "$repo" "$sha" "$bundle"
+printf -- '- Ticket: `%s` — [`%s`](%s/blob/%s/%s)\n' "$nn" "$rel" "$repo" "$sha" "$ticket"
 printf -- '- Base: `%s`\n' "$(ticket_base "$bundle")"
