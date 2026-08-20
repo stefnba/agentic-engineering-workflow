@@ -3,7 +3,7 @@ name: pick
 description: Choose the next backlog line to work on. Use when the user asks what to work on next, wants to see what's worth doing, or wants to start something from the backlog — even when they don't say "pick".
 argument-hint: "[kind or area to focus on]"
 disable-model-invocation: true
-allowed-tools: Read, Grep, Glob, Bash, Skill(backlog *)
+allowed-tools: Read, Grep, Glob, Bash
 ---
 
 # Pick the next candidate
@@ -91,10 +91,3 @@ one is the act of approval that closes this gate.
 
 **Leave the picked line in the backlog.** `shape` deletes it in the commit that publishes the
 bundle.
-
-## 4. Prune
-
-REQUIRED: **before ending, run the `backlog` skill's prune round.** It owns what counts as a dead
-line, proposes the deletions with their evidence, and writes what the human confirms — this skill
-never edits the file, and that skill's diff report is the prune's closing output. Nothing earns a
-proposal: end without a prune round.

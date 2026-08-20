@@ -76,18 +76,16 @@ Candidate work and follow-ups nobody has picked yet.
 - [follow-up] [skills] `skills/bundle-git/tests/run.sh` pins that a stray file _inside_ `tickets/` can't flip
   the branch strategy, but nothing pins a sibling directory under `work/bundles/<id>/`. `ticket_base` is
   safe today by inspection; add the case before any design puts a directory there.
-- [follow-up] [skills] `skills/pick/SKILL.md` grants `Skill(backlog *)` in `allowed-tools`, copied from the
-  `old-workflow` tag and never exercised. If the scoped form doesn't grant, pick's prune round silently
-  loses its only write path — it delegates every deletion to the `backlog` skill.
 - [drift] [docs] The 16 numbered decision records were deleted wholesale in `d63c87c`, which `AGENTS.md`
   forbids — supersede, never delete. Rules the current docs assert flatly now carry no recorded rationale:
   bundles-deleted-no-archive, colocated system docs, shape creates the full ticket set, date-slug ids,
   tickets as files, specs as target state. `git show old-workflow:docs/decisions/` has them; 0004, 0005,
   0015 and 0016 are genuinely superseded.
 - [drift] [docs] `skills/record-decision/templates/decision-record.md` mandates YAML frontmatter with
-  `areas:`, and `workflow/artifacts.md` reads the area vocabulary from records' frontmatter — but two of
-  the three records use a prose byline and none carries `areas:`, so that vocabulary has no source. Old
-  record 0005 settled the format and was one of the deleted ones.
+  `areas:`, and `workflow/artifacts.md` reads the area vocabulary from records' frontmatter — but of the
+  four records, two use a prose byline, a third has frontmatter without `areas:`, and only
+  `2026-08-20-land-worktree.md` carries the field, so that vocabulary has one source. Old record 0005
+  settled the format and was one of the deleted ones.
 - [drift] [skills] [docs] The skill and agent authoring conventions from the deleted `docs/skills.md` are
   documented nowhere, though every skill here follows them: inline vs `context: fork`, path-scoped write
   boundaries as a PreToolUse hook rather than a tool list, `background: false` when someone waits,

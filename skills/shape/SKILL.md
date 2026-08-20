@@ -113,6 +113,9 @@ means the intent itself is unsettled.
 Present for approval:
 
 - the chosen route, and the intent in a few lines — outcome, and what's out of scope
+- every other `${CLAUDE_PROJECT_DIR}/work/backlog.md` line this bundle covers, quoted verbatim —
+  publishing deletes them alongside the line it was shaped from, so one the human doesn't confirm
+  stays
 - one line per ticket:
   `NN — <title> — blocked by: <NN, NN | none> — delivers: <one line>`
 - what's serial and what's safe in parallel
@@ -140,7 +143,8 @@ the review a planning artifact gets
 
 If the bundle was shaped from a `${CLAUDE_PROJECT_DIR}/work/backlog.md` line, delete that line in
 the same commit — the
-bundle replaces it, and the item lives in exactly one place at every committed state.
+bundle replaces it, and the item lives in exactly one place at every committed state. Delete every
+further line the Plan gate confirmed as covered in that same commit, and no line it didn't.
 
 If the push is rejected on a date-and-slug collision, rename to a disambiguated slug and retry. That
 costs a rename, not a rewrite.

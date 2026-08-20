@@ -81,9 +81,18 @@ summarising them.
 
 ## Prune
 
-**Only when asked, or as `/pick`'s closing round.** A prune is a deliberate pass over the whole
-file — the one invocation where **Leave everything else alone** below doesn't bind. Never volunteer
-one alongside another operation.
+**Only when asked, at Shape's Plan gate, or as Land's backlog reconciliation.** A prune is a
+deliberate pass — the one invocation where **Leave everything else alone** below doesn't bind. Never
+volunteer one alongside another operation.
+
+Two scopes, and both stages use the first:
+
+- **Scoped to one bundle.** At the Plan gate, the lines the approved scope covers; at Land, the lines
+  its work made true. The evidence differs, so the handling does: coverage is a claim about what will
+  be delivered, which the human confirms line by line before anything goes, while landed is
+  verifiable, so the proposal carries its proof.
+- **The whole file** — only on request. A sweep asks the human to adjudicate every line at once, so
+  it earns its keep rarely.
 
 Four things earn a proposal:
 
