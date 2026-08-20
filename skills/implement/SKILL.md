@@ -3,6 +3,7 @@ name: implement
 description: Implement one approved ticket — claim it, build it against the ticket's own evidence, verify, reconcile, open the PR, then run its review–fix rounds to convergence. Invoke with the bundle ID and ticket number, in that ticket's own tab.
 argument-hint: "[bundle id] [NN]"
 disable-model-invocation: true
+model: sonnet
 ---
 
 # Implement one ticket
