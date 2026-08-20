@@ -22,6 +22,7 @@ useful. A bundle contains the minimum artifact set its shaping route requires.
 | `docs/research/`          | What durable reference did investigation establish?                                 | Evidence for one bundle, which lives with that bundle     |
 | Git mechanics             | How are worktrees based, tickets claimed, and bundle branches created race-safely?  | Any value a repository declares for itself                |
 | Agent prompt              | How does one role judge, act, escalate, and report within the loaded workflow?      | Lifecycle, artifact authority, or repository conventions  |
+| Component conventions     | How is a role packaged as a skill or agent — invocation, permissions, references?   | What that role itself judges, decides, or reports         |
 
 “Intent artifact” is a role, not one mandatory filename. It may be a feature spec, bug statement,
 target architecture and invariants, migration objective, security requirements, or a ticket that

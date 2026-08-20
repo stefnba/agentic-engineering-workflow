@@ -24,17 +24,10 @@ and prose only a human reads goes in `docs/`. The one split that isn't by direct
 script consumes is machine-readable config in `work/config.conf`, never prose in `docs/conventions/`
 (see [docs/decisions/2026-08-18-script-read-settings.md](docs/decisions/2026-08-18-script-read-settings.md)).
 
-Placement rule for supporting material: **one consumer keeps it in that skill's own folder; two or
-more promote it to `workflow/`.**
-
-Reference by link form, not by guesswork — a bare relative path resolves differently at runtime than
-on GitHub:
-
-- plugin file from a `SKILL.md` → `${CLAUDE_PLUGIN_ROOT}/workflow/<file>.md`
-- the skill's own bundled file → `${CLAUDE_SKILL_DIR}/<path>`
-- the consuming repo's file → `${CLAUDE_PROJECT_DIR}/docs/conventions/git.md`
-- doc to doc inside the repo → plain relative, so GitHub renders it
-- a consuming repo's `AGENTS.md` → no placeholder at all; project instructions expand none of them, so name the skill that loads the plugin file and link the repo's own files relatively
+Building or changing a skill or an agent has its own contract in
+[workflow/components.md](workflow/components.md) — inline versus forked, write boundaries as hooks,
+where supporting material goes, which link form resolves at runtime, and the four plugin rules. Read
+it before adding either.
 
 ## Conventions this repo applies to itself
 
