@@ -121,16 +121,16 @@ published=$(git rev-parse origin/main)
 "$scripts/pr-links.sh" "$multi" 02 > "$root/links.out" 2>&1
 ok "pr-links exits 0"               "$?" 0
 ok "bundle link is a tree permalink" "$(sed -n 1p "$root/links.out")" \
-                                    "- Bundle: https://forge.test/acme/widgets/tree/$published/work/bundles/$multi"
+                                    "- Bundle: [\`$multi\`](https://forge.test/acme/widgets/tree/$published/work/bundles/$multi)"
 ok "ticket link is a blob permalink" "$(sed -n 2p "$root/links.out")" \
-                                    "- Ticket: https://forge.test/acme/widgets/blob/$published/work/bundles/$multi/tickets/02-api.md — 02"
+                                    "- Ticket: \`02\` — [\`tickets/02-api.md\`](https://forge.test/acme/widgets/blob/$published/work/bundles/$multi/tickets/02-api.md)"
 ok "base is the bundle branch"      "$(sed -n 3p "$root/links.out")" "- Base: \`bundle/$multi\`"
 ( cd ".claude/worktrees/ticket/$multi/02" && "$scripts/pr-links.sh" "$multi" 02 | sed -n 1p ) \
   > "$root/links-wt.out" 2>&1
 ok "same answer from the worktree"  "$(cat "$root/links-wt.out")" "$(sed -n 1p "$root/links.out")"
 "$scripts/pr-links.sh" "$solo" 01 | sed -n 2,3p > "$root/links-solo.out" 2>&1
 ok "solo bundle links ticket.md"    "$(sed -n 1p "$root/links-solo.out")" \
-                                    "- Ticket: https://forge.test/acme/widgets/blob/$published/work/bundles/$solo/ticket.md — 01"
+                                    "- Ticket: \`01\` — [\`ticket.md\`](https://forge.test/acme/widgets/blob/$published/work/bundles/$solo/ticket.md)"
 ok "and targets the integration target" "$(sed -n 2p "$root/links-solo.out")" "- Base: \`main\`"
 "$scripts/pr-links.sh" "$multi" 99 >/dev/null 2>&1
 ok "unknown ticket refuses (2)"     "$?" 2
