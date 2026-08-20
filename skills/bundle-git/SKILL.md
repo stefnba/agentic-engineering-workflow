@@ -18,9 +18,6 @@ itself; an environment variable of the same name outranks the file.
 `${CLAUDE_SKILL_DIR}/scripts/_config.sh` reads them, holds the branch names, and is sourced by the
 others rather than run on its own.
 
-No script lands a finished bundle branch on the integration target yet — that Land step is
-unimplemented, and its rules are not a setting these scripts may reinterpret.
-
 | Script                                      | Purpose                                                                     |
 | ------------------------------------------- | --------------------------------------------------------------------------- |
 | `scripts/bundle-status.sh`                  | List every bundle with its status.                                          |
@@ -28,6 +25,9 @@ unimplemented, and its rules are not a setting these scripts may reinterpret.
 | `scripts/ticket-status.sh <bundle-id> <NN>` | Print one ticket's status, for scripts and gates.                           |
 | `scripts/claim-ticket.sh <bundle-id> <NN>`  | Create the ticket's branch and worktree. Claiming is creating the branch.   |
 | `scripts/complete-ticket.sh <pr> [sha]`     | Merge an accepted ticket PR per `TICKET_MERGE_METHOD`, remove its worktree. |
+| `scripts/land-bundle.sh start <bundle-id>`   | Open the land: a detached worktree on the integration target, bundle merged in. |
+| `scripts/land-bundle.sh push <bundle-id>`    | Publish that worktree's tip on the integration target.                      |
+| `scripts/land-bundle.sh cleanup <bundle-id>` | Delete the bundle's branches and remove its worktrees.                      |
 
 ```console
 $ ${CLAUDE_SKILL_DIR}/scripts/bundle-status.sh
@@ -54,12 +54,30 @@ query that cannot reach the forge reports `unknown` rather than guessing — nev
 
 `tests/run.sh` runs the scripts against a local `git daemon` with a stubbed `gh` — no network, and
 nothing written outside a temp dir. It covers a ten-way claim race, the dependency gate, both bundle
-shapes, listing, an unreachable forge, and the flags passed to the merge. Exits non-zero on failure.
+shapes, listing, an unreachable forge, the flags passed to the merge, the staleness refusal, and a
+full land — gate, detached worktree, the moved-target loop, the backlog union, and cleanup. Exits
+non-zero on failure.
 
-## Exit codes from `claim-ticket.sh`
+The land rules themselves are not a setting these scripts may reinterpret —
+`${CLAUDE_PLUGIN_ROOT}/workflow/git-mechanics.md` owns them, and the `land` skill sequences the three
+verbs with the judgment steps in between.
 
-`2` no such ticket · `3` a dependency is not `done` · `4` already claimed · `5` stale worktree in the
-way. Treat a non-zero exit as a stop, never as something to retry or work around: a `4` means another
-session owns that ticket. A `3` names the status it saw — `todo`, `doing`, or `unknown` when the
-forge could not be queried, which blocks the claim exactly as an unfinished dependency does and needs
-the forge fixed rather than the ticket waited on.
+## Exit codes
+
+Treat a non-zero exit as a stop, never as something to retry or work around.
+
+**`claim-ticket.sh`** — `2` no such ticket · `3` a dependency is not `done` · `4` already claimed ·
+`5` stale worktree in the way. A `4` means another session owns that ticket. A `3` names the status it
+saw — `todo`, `doing`, or `unknown` when the forge could not be queried, which blocks the claim
+exactly as an unfinished dependency does and needs the forge fixed rather than the ticket waited on.
+
+**`complete-ticket.sh`** — `2` the ticket branch is stale against its base: a sibling merged first, so
+the reviewed diff was verified against a base that has moved. Merge the base in, re-verify, and get a
+fresh Accept; the fix moves the head, which is why it cannot happen after the Accept it invalidates.
+
+**`land-bundle.sh`** — `2` no such bundle · `3` a ticket is not `done` · `4` nothing to land, a
+single-ticket bundle whose commits go to the session's own checkout · `5` a previous land left a
+worktree · `6` the integration target moved · `7` a merge conflict, left in place for the human.
+
+**`6` is a loop, not a failure.** `push` merged the moved target in and stopped rather than
+publishing a state no check has run against. Re-run the canonical checks, then `push` again.

@@ -80,6 +80,26 @@ continuing; never let a ticket silently decide it.
 5. A fresh-context Critic has attacked the bundle.
 6. The human has passed the Plan gate.
 
+## Revising a published bundle
+
+A published bundle can be revised while its tickets are in flight, and it is revised where it was
+published: as an ordinary commit on the integration target, through a repeated Plan gate. Land
+deletes the bundle from the state it publishes, so a revision costs nothing at land time — the bundle
+never travels backwards into the branch that deleted it ([Git mechanics](./git-mechanics.md)).
+
+Two things a revision may not do, because in-flight work already depends on them:
+
+- **Change the ticket set.** Adding or removing a `NN-<slug>.md` file rewrites the `depends_on` graph
+  under tickets already claimed against the old one, and changes which branch this bundle's PRs
+  target. A bundle that needs a different decomposition is not revised; it is stopped and reshaped.
+- **Change a claimed ticket's contract.** Its branch was cut, and its accepted head is what the merge
+  is bound to. Revise a ticket only while it is still `todo`; a claimed one is changed by cancelling
+  the claim — delete its branch and worktree and it reads `todo` again.
+
+An in-flight worktree does not see the revision, and does not need to: the tickets it holds are the
+ones the revision left alone. What a ticket's own diff makes false is reconciled in that ticket's PR;
+what only the whole bundle makes false is reconciled at Land.
+
 ## Intent/spec
 
 The intent artifact answers:
@@ -182,9 +202,10 @@ nothing to merge, so its reconciliation and deletion commits go straight to the 
 ### Multi-ticket bundle
 
 One bundle branch off the configured integration target, and per ticket one branch, worktree, and PR
-into that bundle branch. Nothing is ever edited on the bundle branch directly, so it gets no worktree
-of its own. Once every ticket is merged, Land reconciles and deletes the bundle there, lands that
-state on the integration target, and removes the branches and worktrees.
+into that bundle branch. Content reaches the bundle branch only through an accepted ticket PR, and
+nothing else ever writes to it — not even Land, which merges it into a detached worktree on the
+integration target and reconciles, drains and deletes the bundle there before publishing (see
+[Git mechanics](./git-mechanics.md)). Then it removes the branches and worktrees.
 
 ### Incident or hotfix
 

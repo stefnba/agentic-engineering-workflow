@@ -5,18 +5,7 @@
 set -uo pipefail
 
 here="$(cd "$(dirname "$0")" && pwd)"
-
-ticket_names() { # <bundle-id> -> "NN name" per line
-  if [ -f "work/bundles/$1/ticket.md" ]; then
-    echo "01 ticket"
-  else
-    for f in "work/bundles/$1/tickets/"[0-9][0-9]-*.md; do
-      [ -f "$f" ] || continue
-      name=$(basename "$f" .md)
-      echo "${name%%-*} $name"
-    done
-  fi
-}
+. "$here/_config.sh" # ticket_names, so this and the land gate iterate the same set
 
 bundle_status() { # shaped until a ticket is claimed, then active; unknown if a query failed
   local nn rest st out=shaped

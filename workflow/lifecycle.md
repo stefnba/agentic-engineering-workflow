@@ -52,7 +52,8 @@ Mechanically, everything below runs inline inside a human-launched chat session,
 only runs when a human or an already-running session invokes it. Two kinds of session carry a bundle:
 
 - **One session per bundle**, long-lived, runs Discover, Shape, and later Land. Its working directory
-  stays on the integration target; it never checks out a ticket branch. Keeping it open is
+  stays on the integration target and never checks out a ticket or bundle branch — Land works in a
+  detached worktree instead, per [Git mechanics](./git-mechanics.md). Keeping it open is
   convenient, not required — the bundle lives in git and every status is derived, so Land runs just
   as well from a fresh session.
 - **One session per ticket**, in that ticket's own worktree, runs Implement and dispatches that
@@ -296,26 +297,30 @@ Land begins only when every ticket is `done` and the human triggers it. Then, in
 
 1. **Check the merged state.** Confirm canonical checks pass on the state holding every merged
    ticket, queried remotely — the bundle branch for a multi-ticket bundle, the integration target for
-   a single-ticket one, whose only PR already merged there. This gates every step below.
+   a single-ticket one, whose only PR already merged there. This gates every step below. Then open
+   the land: a detached worktree on the integration target with the bundle branch merged into it, so
+   every step after this one works there ([Git mechanics](./git-mechanics.md)).
 2. **Reconcile durable knowledge.** Move bundle-level knowledge no single ticket owned into durable
    system docs, terminology, and decision records. What a ticket's own diff made false was already
    reconciled in that ticket's PR; anything left here is knowledge that only became true once every
    ticket had landed.
-3. **Drain the leftovers.** Convert unfinished or newly discovered work into backlog entries.
-4. **Delete the complete bundle** from the integration state — as a commit on the bundle branch when
-   there is one, so the land carries a bundle-free state onto the integration target; otherwise as a
-   commit directly on the integration target.
-5. **Reconcile with the integration target.** When it has moved since the bundle branch was cut,
-   merge it into the bundle branch — the only reconciliation the land rules permit. A
-   single-ticket bundle has no bundle branch, so neither this step nor the land applies to it.
-6. **Re-verify locally.** Re-run canonical checks on the state the reconcile and delete steps
-   produced: it carries Land's own commits and that merge, so no CI run has seen it. Land's own
-   commits change documentation, backlog, and bundle files only; a Land step that would change
-   behavior is not Land work and returns to the Plan gate.
-7. **Land that final state** on the configured integration target —
-   [Git mechanics](./git-mechanics.md) owns the land rules.
-8. **Remove the leftovers in git:** whichever ticket branches, bundle branch, and worktrees still
-   exist — a repository that deletes branches on merge will have removed some already.
+3. **Reconcile the backlog.** Convert unfinished or newly discovered work into backlog entries, and
+   retire the lines this bundle made true. Landing is what makes a candidate line false, so this is
+   the only stage that reliably knows which ones.
+4. **Delete the complete bundle** — a commit in Land's worktree, so what gets published carries no
+   planning record. A single-ticket bundle has no worktree of its own, so its deletion commit goes
+   directly to the integration target.
+5. **Re-verify in Land's worktree.** Re-run canonical checks on the state steps 2–4 produced: it
+   carries Land's own commits and the bundle merge, so no CI run has seen it. Land's own commits
+   change documentation, backlog, and bundle files only; a Land step that would change behavior is
+   not Land work and returns to the Plan gate.
+6. **Publish that state** on the configured integration target — [Git mechanics](./git-mechanics.md)
+   owns the land rules. **If the target moved while Land worked, merging it in returns to step 5**,
+   because the merged state is one no check has run against. That loop repeats until the publish
+   succeeds; skipping the re-run is what it exists to prevent.
+7. **Remove the leftovers in git:** whichever ticket branches, bundle branch, and worktrees still
+   exist — a repository that deletes branches on merge will have removed some already. Land's own
+   worktree goes last and from outside it, since removing the tree a step is standing in fails.
 
 Done when the outcome is on the integration target, canonical checks pass there, durable
 documentation is current, and no bundle artifact, branch, or worktree remains.

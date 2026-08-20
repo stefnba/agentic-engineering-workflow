@@ -17,9 +17,9 @@ There's no orchestration tooling beyond skills, subagents, worktrees, and git. I
 have two kinds of tab open:
 
 - **One long-lived session for the bundle.** Runs Discovery and Shape, and later Land. It stays on
-  the integration target and never checks out a ticket branch. You can close it and come back later
-  from a fresh session — the bundle is in git and every status is derived, so nothing lives only in
-  that conversation.
+  the integration target and never checks out a ticket or bundle branch — Land cuts itself a
+  throwaway worktree instead. You can close it and come back later from a fresh session — the bundle
+  is in git and every status is derived, so nothing lives only in that conversation.
 - **One tab per ticket**, each `cd`'d into that ticket's own worktree. Runs Implement, and dispatches
   its own Review rounds. Tickets with no dependency between them can have tabs open side by side.
 
@@ -110,11 +110,16 @@ Once every ticket is `done`, go back to the bundle's session (or a fresh one) an
 runs in order, and stops if the first step isn't green:
 
 - confirms the checks pass on the state holding every merged ticket
+- opens a throwaway worktree on the integration target and merges the bundle into it — everything
+  below happens there, so a check that fails at the end costs you a directory, not a rescue
 - folds anything durable — system behavior, decisions — into the docs that own it
 - captures unfinished or newly discovered work as backlog lines
 - deletes the bundle, so what lands carries no planning record with it
-- re-verifies, then lands the result on the integration target
+- re-verifies, then publishes that state on the integration target
 - removes the branches and worktrees that are left
+
+If somebody else pushes while you're landing, `/land` merges their work in and sends you back to
+re-run the checks before it will publish. Expect to see that; it isn't a failure.
 
 Land in [Lifecycle](../workflow/lifecycle.md) has the exact steps and which of them a single-ticket
 bundle skips; [Git mechanics](../workflow/git-mechanics.md) has the land rules.

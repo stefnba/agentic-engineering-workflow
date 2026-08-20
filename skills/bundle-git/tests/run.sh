@@ -44,7 +44,7 @@ case "$args" in
     [ -f "$MERGED" ] || exit 0
     awk -v h="$head" -v b="$base" '$1==h && $2==b {print NR}' "$MERGED"
     ;;
-  "pr view"*) echo "${GH_STUB_BRANCH:-ticket/x/01}" ;;
+  "pr view"*) echo "${GH_STUB_BRANCH:-ticket/x/01} ${GH_STUB_BASE:-main}" ;;
   "pr merge"*) echo "$args" > "$GH_STUB_LOG" ;;
   *) exit 1 ;;
 esac
@@ -69,6 +69,7 @@ printf 'depends_on: []\n---\npersistence\n'   > "work/bundles/$multi/tickets/01-
 printf 'depends_on: [01]\n---\napi\n'         > "work/bundles/$multi/tickets/02-api.md"
 printf 'depends_on: []\n---\nui\n'            > "work/bundles/$multi/tickets/03-ui.md"
 printf 'depends_on: []\n---\nfix the typo\n'  > "work/bundles/$solo/ticket.md"
+printf '# Backlog\n\n- [idea] something nobody has picked up\n' > work/backlog.md
 git add -A && git commit -qm "docs(bundle): publish test bundles" && git push -q origin main
 
 echo "== derived status before any claim"
@@ -149,7 +150,7 @@ ok "every other claim is told so"   "$(grep -l 'already claimed' "$root"/race*.o
 ok "one ticket ref on the remote"   "$(git ls-remote --heads origin "ticket/$multi/03" | wc -l | tr -d ' ')" 1
 
 echo "== merging an accepted PR"
-export GH_STUB_LOG="$root/merge.log" GH_STUB_BRANCH="ticket/$multi/01"
+export GH_STUB_LOG="$root/merge.log" GH_STUB_BRANCH="ticket/$multi/01" GH_STUB_BASE="bundle/$multi"
 "$scripts/complete-ticket.sh" 42 deadbeef >/dev/null 2>&1
 ok "squash merge requested"         "$(grep -c -- '--squash' "$root/merge.log")" 1
 ok "head branch deleted"            "$(grep -c -- '--delete-branch' "$root/merge.log")" 1
@@ -164,7 +165,7 @@ git add "work/bundles/$cfg" && git commit -qm "docs(bundle): publish config prob
 printf 'TICKET_MERGE_METHOD=rebase  # ticket PR merge method\nWORKTREE_DIR=.wt            # where worktrees go\n' > work/config.conf
 "$scripts/claim-ticket.sh" "$cfg" 01 >/dev/null 2>&1
 ok "worktree honours WORKTREE_DIR"  "$([ -d ".wt/ticket/$cfg/01" ] && echo yes)" yes
-export GH_STUB_LOG="$root/merge2.log" GH_STUB_BRANCH="ticket/$cfg/01"
+export GH_STUB_LOG="$root/merge2.log" GH_STUB_BRANCH="ticket/$cfg/01" GH_STUB_BASE=main
 "$scripts/complete-ticket.sh" 43 >/dev/null 2>&1
 ok "merge honours TICKET_MERGE_METHOD" "$(grep -c -- '--rebase' "$root/merge2.log")" 1
 ok "no --squash when overridden"    "$(grep -c -- '--squash' "$root/merge2.log")" 0
@@ -190,6 +191,103 @@ printf 'INTEGRATION_TARGET = dev\n' > work/config.conf
 ok "malformed config exits 1"       "$?" 1
 ok "malformed config names the line" "$(grep -c 'expected KEY=value' "$root/badcfg.out")" 1
 rm -f work/config.conf
+
+echo "== the remote bundle branch outranks the ticket count"
+# A bundle revised from three tickets to one must not re-derive main as the base: its merged PRs
+# targeted bundle/<id>, and re-deriving would report a done ticket as todo.
+echo "ticket/$multi/01 bundle/$multi" > "$MERGED"
+ok "done against the bundle branch"   "$("$scripts/ticket-status.sh" "$multi" 01)" done
+mkdir -p "$root/stash"
+mv "work/bundles/$multi/tickets/02-api.md" "work/bundles/$multi/tickets/03-ui.md" "$root/stash/"
+ok "still done when the count drops" "$("$scripts/ticket-status.sh" "$multi" 01)" done
+mv "$root/stash/02-api.md" "$root/stash/03-ui.md" "work/bundles/$multi/tickets/"
+
+echo "== a stale ticket branch is refused, not merged"
+git fetch -q origin
+git worktree add -q --detach "$root/adv" "origin/bundle/$multi"
+( cd "$root/adv" && printf 'landed\n' > sibling.txt && git add sibling.txt &&
+  git commit -qm "feat: a sibling ticket landed first" && git push -q origin "HEAD:bundle/$multi" )
+git worktree remove --force "$root/adv"
+git fetch -q origin
+export GH_STUB_LOG="$root/stale.log" GH_STUB_BRANCH="ticket/$multi/01" GH_STUB_BASE="bundle/$multi"
+"$scripts/complete-ticket.sh" 44 > "$root/stale.out" 2>&1
+ok "stale branch refuses (2)"        "$?" 2
+ok "and no merge was requested"      "$([ -f "$root/stale.log" ] && echo yes || echo no)" no
+ok "and it names the cure"           "$(grep -c 're-verify, re-Accept' "$root/stale.out")" 1
+
+echo "== merging the base in makes it mergeable again"
+wt=".claude/worktrees/ticket/$multi/01"
+[ -d "$wt" ] || git worktree add -q "$wt" "ticket/$multi/01"
+( cd "$wt" && git merge -q --no-ff -m "chore: merge the base in" "origin/bundle/$multi" &&
+  git push -q origin "HEAD:ticket/$multi/01" )
+git fetch -q origin
+"$scripts/complete-ticket.sh" 44 >/dev/null 2>&1
+ok "current branch merges (0)"       "$?" 0
+
+echo "== an unreadable PR record is unknown, not stale"
+mv "$root/bin/gh" "$root/bin/gh.real"
+printf '#!/usr/bin/env bash\nexit 1\n' > "$root/bin/gh" && chmod +x "$root/bin/gh"
+"$scripts/complete-ticket.sh" 44 > "$root/nopr.out" 2>&1
+ok "unreadable PR exits 1"           "$?" 1
+ok "and does not claim staleness"    "$(grep -c 'unknown base' "$root/nopr.out")" 1
+mv -f "$root/bin/gh.real" "$root/bin/gh"
+
+echo "== land: the gate refuses an unfinished bundle"
+printf 'ticket/%s/01 bundle/%s\n' "$multi" "$multi" > "$MERGED"
+"$scripts/land-bundle.sh" start "$multi" > "$root/land3.out" 2>&1
+ok "an unfinished ticket blocks (3)"  "$?" 3
+ok "and names which one"              "$(grep -cE 'ticket 0[23] is (todo|doing)' "$root/land3.out")" 1
+"$scripts/land-bundle.sh" start "$solo" >/dev/null 2>&1
+ok "single-ticket has nothing to land (4)" "$?" 4
+"$scripts/land-bundle.sh" start no-such-bundle >/dev/null 2>&1
+ok "unknown bundle refuses (2)"       "$?" 2
+
+echo "== land: start opens a detached worktree with the bundle merged in"
+for nn in 01 02 03; do printf 'ticket/%s/%s bundle/%s\n' "$multi" "$nn" "$multi" >> "$MERGED"; done
+"$scripts/land-bundle.sh" start "$multi" >/dev/null 2>&1
+ok "start exits 0"                    "$?" 0
+land=".claude/worktrees/land/$multi"
+ok "land worktree exists"             "$([ -d "$land" ] && echo yes)" yes
+ok "it is detached, on no branch"     "$(git -C "$land" symbolic-ref -q HEAD || echo detached)" detached
+ok "the bundle branch came with it"   "$([ -f "$land/sibling.txt" ] && echo yes)" yes
+ok "and it carries the bundle"        "$([ -d "$land/work/bundles/$multi" ] && echo yes)" yes
+"$scripts/land-bundle.sh" start "$multi" >/dev/null 2>&1
+ok "a second start refuses (5)"       "$?" 5
+
+echo "== land: push re-verifies when the target moved, and unions the backlog"
+# Both sides append to work/backlog.md, which is the collision this exists for: Land drains here
+# while another session adds a Critic candidate on the target.
+( cd "$land" && printf -- '- [followup] drained by the land\n' >> work/backlog.md &&
+  git commit -qam "chore(land): drain the leftovers" &&
+  git rm -rq "work/bundles/$multi" && git commit -qm "chore(land): delete the bundle" )
+git worktree add -q --detach "$root/other" origin/main
+( cd "$root/other" && printf -- '- [idea] from another session\n' >> work/backlog.md &&
+  git commit -qam "chore(backlog): another session" && git push -q origin HEAD:main )
+git worktree remove --force "$root/other"
+"$scripts/land-bundle.sh" push "$multi" > "$root/push6.out" 2>&1
+ok "a moved target returns 6"         "$?" 6
+ok "and says to re-run the checks"    "$(grep -c 're-run the canonical checks' "$root/push6.out")" 1
+ok "the backlog conflict resolved"    "$(grep -c 'keeping both sides' "$root/push6.out")" 1
+ok "no conflict markers survive"      "$(grep -c '<<<<<<<' "$land/work/backlog.md")" 0
+ok "both backlog lines are kept"      "$(grep -c 'drained by the land\|from another session' "$land/work/backlog.md")" 2
+ok "nothing is left unmerged"         "$(git -C "$land" diff --name-only --diff-filter=U | wc -l | tr -d ' ')" 0
+ok "target not published yet"         "$(git ls-remote origin main | cut -f1)" "$(git rev-parse origin/main)"
+"$scripts/land-bundle.sh" push "$multi" >/dev/null 2>&1
+ok "push after re-verifying exits 0"  "$?" 0
+git fetch -q origin
+ok "the bundle is gone from main"     "$(git ls-tree -r --name-only origin/main | grep -c "work/bundles/$multi")" 0
+ok "ticket commits survive the land"  "$(git log --oneline origin/main | grep -c 'a sibling ticket landed first')" 1
+ok "the land is a first-parent merge" "$(git log --first-parent --oneline origin/main | grep -c "land bundle $multi")" 1
+
+echo "== land: cleanup removes the branches and every worktree"
+( cd "$land" && "$scripts/land-bundle.sh" cleanup "$multi" >/dev/null 2>&1 )
+ok "cleanup refuses from inside (2)"  "$?" 2
+"$scripts/land-bundle.sh" cleanup "$multi" >/dev/null 2>&1
+ok "cleanup exits 0"                  "$?" 0
+ok "bundle branch deleted"            "$(git ls-remote --heads origin "bundle/$multi" | wc -l | tr -d ' ')" 0
+ok "ticket branches deleted"          "$(git ls-remote --heads origin "ticket/$multi/*" | wc -l | tr -d ' ')" 0
+ok "land worktree removed"            "$([ -d "$land" ] && echo yes || echo no)" no
+
 
 printf '\n%d passed, %d failed\n' "$pass" "$fail"
 [ "$fail" -eq 0 ]
