@@ -139,7 +139,18 @@ Publish straight to the integration target, no PR — mandatory critique plus th
 the review a planning artifact gets
 (`${CLAUDE_PLUGIN_ROOT}/workflow/bundle.md`). Read `INTEGRATION_TARGET` by sourcing
 `${CLAUDE_PLUGIN_ROOT}/skills/bundle-git/scripts/_config.sh` from the repository root; never assume
-`main`. Follow `${CLAUDE_PROJECT_DIR}/docs/conventions/git.md` for the commit message.
+`main`. The subject is fixed, so the publishing commit is greppable by bundle ID:
+
+```text
+bundle: publish <bundle-id>
+```
+
+Add a body only when this commit deletes a `${CLAUDE_PROJECT_DIR}/work/backlog.md` line the bundle
+doesn't obviously cover — one line naming what it replaced:
+
+```text
+Shaped from the backlog's session-recap idea, which this bundle replaces
+```
 
 If the bundle was shaped from a `${CLAUDE_PROJECT_DIR}/work/backlog.md` line, delete that line in
 the same commit — the
