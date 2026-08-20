@@ -65,7 +65,7 @@ Stage-bound — each realizes one role of the [workflow](workflow/lifecycle.md):
 | `critique`      | Shape     | Attacks the draft bundle             |
 | `implement`     | Implement | Executes one ticket to a PR          |
 | `review`        | Review    | Judges a ticket's PR                 |
-| `ship`          | Ship      | Absorbs and deletes bundle           |
+| `land`          | Land      | Absorbs and deletes bundle           |
 
 ### Supporting skills
 

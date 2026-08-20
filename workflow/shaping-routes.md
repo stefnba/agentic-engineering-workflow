@@ -112,7 +112,7 @@ invent new behavior.
 ### Sequential bundles
 
 Use for initiatives too large or uncertain to shape honestly as one executable ticket set. Approve a
-coherent first outcome, implement and ship it, then shape the next bundle using what was learned.
+coherent first outcome, implement and land it, then shape the next bundle using what was learned.
 
 Split rather than speculate when:
 
@@ -121,7 +121,7 @@ Split rather than speculate when:
 - the work contains multiple independently useful outcomes
 - the dependency graph is dominated by speculative edges
 - one Plan gate cannot meaningfully approve the whole dependency graph
-- integration drift would dominate before the bundle ships
+- integration drift would dominate before the bundle lands
 
 Do not use sequential bundles to evade complete shaping. Every individual bundle still has its full
 ticket set and its own Plan gate before implementation.
@@ -155,6 +155,6 @@ A lighter route removes unnecessary artifacts, not safeguards. Whatever the rout
 - Every ticket remains one session and one PR, with verification and reconciliation inside Implement.
 - Review remains fresh-context, independent, and read-only. Its depth scales with the change's scope,
   impact, and risk; its existence does not.
-- Ship still absorbs durable knowledge and deletes the complete bundle.
+- Land still absorbs durable knowledge and deletes the complete bundle.
 
 [Lifecycle](./lifecycle.md) owns every rule in that list; a route narrows none of them.

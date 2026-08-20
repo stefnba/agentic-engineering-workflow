@@ -11,7 +11,7 @@
 - reviewer.md settles the _policy_ for a real improvement that doesn't affect acceptance (report it
   separately as a backlog candidate, never a finding), but not the _mechanism_: the Reviewer is
   structurally read-only, so what actually turns its "Backlog candidates" comment into a persisted
-  line in `work/backlog.md` — a skill script scraping PR comments, a step inside Ship, a manual copy?
+  line in `work/backlog.md` — a skill script scraping PR comments, a step inside Land, a manual copy?
 - The human can jump into a ticket tab and change the PR branch directly (walkthrough.md), but how is
   that captured for the reviewer — does it show up as a normal commit, does review restart, is it
   documented anywhere?
@@ -21,7 +21,7 @@
 - Who resolves a merge conflict between a ticket's PR and the bundle branch — does the implementer
   handle it autonomously, or does it stop and hand back to the human?
 - Does a spike run as a bundle with its own ticket and PR, or stay inline in Discover? It has no
-  bundle layout, no production code for one-ticket-one-PR to bind, and Ship would delete the evidence
+  bundle layout, no production code for one-ticket-one-PR to bind, and Land would delete the evidence
   that was the deliverable. (Also open item 4 in `docs-new-review.md`.)
 - Should the claim gate know about preconditions that are not ticket edges — a date, an operator
   action, another repo's infrastructure? `depends_on` carries ticket edges only and an external

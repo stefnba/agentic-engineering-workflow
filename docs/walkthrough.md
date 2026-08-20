@@ -5,10 +5,10 @@ happens at each handoff. It describes the flow; it doesn't define it. Every rule
 by a document under [`workflow/`](../workflow/) and linked at the point it applies — when the two
 disagree, the linked document is right.
 
-Five stages: Discover, Shape, Implement, Review, Ship.
+Five stages: Discover, Shape, Implement, Review, Land.
 
 **You dispatch stages by hand; each stage's inner loop runs itself.** You start Discovery, Shape,
-each ticket, and Ship. You don't separately trigger the critique after a Shape draft or the
+each ticket, and Land. You don't separately trigger the critique after a Shape draft or the
 review-fix rounds after a PR opens — those are dispatched by the stage you already started.
 
 ## How you run this
@@ -16,7 +16,7 @@ review-fix rounds after a PR opens — those are dispatched by the stage you alr
 There's no orchestration tooling beyond skills, subagents, worktrees, and git. In practice you'll
 have two kinds of tab open:
 
-- **One long-lived session for the bundle.** Runs Discovery and Shape, and later Ship. It stays on
+- **One long-lived session for the bundle.** Runs Discovery and Shape, and later Land. It stays on
   the integration target and never checks out a ticket branch. You can close it and come back later
   from a fresh session — the bundle is in git and every status is derived, so nothing lives only in
   that conversation.
@@ -104,9 +104,9 @@ yourself at any point — nothing about this loop locks you out.
 `/complete-ticket`. The merge is the whole record: the ticket reads as `done` because its PR is
 merged, and nothing writes a status afterward.
 
-## Ship
+## Land
 
-Once every ticket is `done`, go back to the bundle's session (or a fresh one) and trigger `/ship`. It
+Once every ticket is `done`, go back to the bundle's session (or a fresh one) and trigger `/land`. It
 runs in order, and stops if the first step isn't green:
 
 - confirms the checks pass on the state holding every merged ticket
@@ -116,5 +116,5 @@ runs in order, and stops if the first step isn't green:
 - re-verifies, then lands the result on the integration target
 - removes the branches and worktrees that are left
 
-Ship in [Lifecycle](../workflow/lifecycle.md) has the exact steps and which of them a single-ticket
+Land in [Lifecycle](../workflow/lifecycle.md) has the exact steps and which of them a single-ticket
 bundle skips; [Git mechanics](../workflow/git-mechanics.md) has the land rules.

@@ -48,11 +48,11 @@ reader who disagrees can see whether their objection was weighed. A choice with 
 alternative is not a decision — leave it out. Use as many lines per decision as the alternatives
 need; the one-line form below is a floor, not a shape.
 
-Tag the ones that outlive this bundle as `(decision record at Ship)` so Ship does not have to
+Tag the ones that outlive this bundle as `(decision record at Land)` so Land does not have to
 re-derive which they were.
 
 Example:
-PD-2 (decision record at Ship): Enforce the limit in middleware rather than in the login handler —
+PD-2 (decision record at Land): Enforce the limit in middleware rather than in the login handler —
 one enforcement point for every future auth route.
   Rejected: per-handler checks, which drift the moment a route is added.
   Rejected: gateway rate limiting, which cannot see the authenticated principal. -->
@@ -154,7 +154,7 @@ served in. Omit the section when the change ships in one step. -->
 
 <!-- Optional. The durable documentation, colocated READMEs, and glossary terms this bundle makes
 stale, and which slice updates each. List only what a specific slice can fix inside its own PR;
-knowledge that only becomes true once every ticket has landed is Ship's, per
+knowledge that only becomes true once every ticket has landed is Land's, per
 ${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md. Omit the section when no document goes wrong. -->
 
 - `<path>` — <what changes> (slice NN)

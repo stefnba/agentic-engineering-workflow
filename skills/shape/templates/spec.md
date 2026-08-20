@@ -25,7 +25,7 @@ critique can deep-link them.
 The sections below are what this artifact owns. It does not own current repository facts, file
 paths, ticket order, status, or interior implementation choices — see the Intent/spec section of
 ${CLAUDE_PLUGIN_ROOT}/workflow/bundle.md for the full split, and ${CLAUDE_PLUGIN_ROOT}/workflow/artifacts.md
-for what happens to this file at Ship.
+for what happens to this file at Land.
 
 Write target behavior in present tense; the spec describes the system as it will behave, not a
 promise about future work. Every sentence constrains behavior or gets deleted. Use the repository's
@@ -47,7 +47,7 @@ For a bug, this is the reproduction: what is done, what happens, what should hap
 
 ## Outcome
 
-<!-- One paragraph. What is observably true once this bundle ships that is not true now — from
+<!-- One paragraph. What is observably true once this bundle lands that is not true now — from
 outside the system, in the user's or caller's terms. This is what lets an agent make an aligned
 judgment call in a place the spec is silent, so state the intent, not the mechanism.
 
@@ -209,7 +209,7 @@ plan.md. Omit the section when the change ships in one step with nothing gated. 
 <!-- Optional, and only what binds the approved outcome: standing decision records this spec must not
 re-litigate, durable research, related durable system docs, and external specifications the behavior
 must conform to (a protocol, an RFC, a partner's contract). Links only, no summaries — and never a
-link to another bundle, which Ship will delete.
+link to another bundle, which Land will delete.
 
 Documentation that merely informs how the work gets built — a library's API reference, a framework's
 migration guide — is not a constraint on the outcome. It belongs in the plan's External references,

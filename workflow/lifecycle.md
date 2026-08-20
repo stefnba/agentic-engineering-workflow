@@ -10,7 +10,7 @@ Discover ──Pick──▶ Shape ──Plan──▶ Implement ──verify + 
                                                                        │
                                                                     Accept
                                                                        ▼
-                                                              next ticket or Ship
+                                                              next ticket or Land
 ```
 
 The stages stay fixed for every kind and size of work. The shaping route changes which artifacts
@@ -22,7 +22,7 @@ Discover and Shape produce, not the lifecycle.
 | Shape     | picked → approved and executable              | complete bounded bundle                  | human Plan gate      |
 | Implement | executable ticket → verified and reconciled   | implementation PR                        | deterministic checks |
 | Review    | verified → independently judged and accepted  | findings or accepted change              | human Accept gate    |
-| Ship      | accepted bundle → durable shipped outcome     | integration target green; bundle deleted | prior Accept gates   |
+| Land      | accepted bundle → durable landed outcome      | integration target green; bundle deleted | prior Accept gates   |
 
 Work may enter at the readiness level it already has. A settled human request can pass through
 Discover as a direct pick; uncertain work may need research or a spike. No stage creates an artifact
@@ -32,7 +32,7 @@ solely to prove that the stage happened.
 
 - [Coordination](#coordination) — who dispatches what, and which transitions are scripts
 - [1. Discover](#1-discover) · [2. Shape](#2-shape) · [3. Implement](#3-implement) ·
-  [4. Review](#4-review) · [5. Ship](#5-ship)
+  [4. Review](#4-review) · [5. Land](#5-land)
 - [PR handoff contract](#pr-handoff-contract) — what an implementation PR body must carry
 - [Convergence and round limit](#convergence-and-round-limit) — when review stops
 - [Human authority](#human-authority) — the three gates no agent may pass
@@ -51,9 +51,9 @@ dispatch position could infer or erode human gates, so that implementation is pr
 Mechanically, everything below runs inline inside a human-launched chat session, and a skill script
 only runs when a human or an already-running session invokes it. Two kinds of session carry a bundle:
 
-- **One session per bundle**, long-lived, runs Discover, Shape, and later Ship. Its working directory
+- **One session per bundle**, long-lived, runs Discover, Shape, and later Land. Its working directory
   stays on the integration target; it never checks out a ticket branch. Keeping it open is
-  convenient, not required — the bundle lives in git and every status is derived, so Ship runs just
+  convenient, not required — the bundle lives in git and every status is derived, so Land runs just
   as well from a fresh session.
 - **One session per ticket**, in that ticket's own worktree, runs Implement and dispatches that
   ticket's Review rounds. It opens only once every ticket it depends on is `done`; tickets with no
@@ -61,7 +61,7 @@ only runs when a human or an already-running session invokes it. Two kinds of se
   shared message history, but the same worktree, which is why a Reviewer verifies the head SHA and a
   clean tree before judging.
 
-**The human dispatches stages.** Discovery, shaping, each ticket's implementation, and Ship start
+**The human dispatches stages.** Discovery, shaping, each ticket's implementation, and Land start
 on explicit human dispatch. Every stage ends by reporting the suggested next move — the
 now-unblocked tickets, safe parallel sets from the plan, or the human gate that is due — but a
 stage-level suggestion dispatches nothing; only the human starts the next stage. When the human
@@ -95,7 +95,7 @@ agent's judgment — execute state transitions so they are serialized and audita
   fresh context and permissions, and record review-round numbers for fix and re-review runs.
 - **Merge:** after human Accept, merge the ticket PR into its target. The merge is the last write —
   `done` follows from it and is never recorded afterward. Landing a finished bundle branch on the
-  integration target is a separate Ship step; [Git mechanics](./git-mechanics.md) owns both merges
+  integration target is a separate Land step; [Git mechanics](./git-mechanics.md) owns both merges
   and why only one of them is configurable.
 
 These skill scripts never own product or technical judgment and cannot pass a human gate: Pick,
@@ -176,7 +176,7 @@ Implementation includes:
 3. Implement only the approved ticket and bounded local support work.
 4. Run every ticket done-when command plus canonical repository checks.
 5. Reconcile affected durable docs, terminology, intent corrections, and remaining tickets in the
-   same PR — everything this diff made false or stale, which never defers to Ship.
+   same PR — everything this diff made false or stale, which never defers to Land.
 6. Open the PR using the handoff contract below; leave the ticket `doing` while Review is pending.
 
 A factual correction that preserves approved intent is made visible in the PR. A change to behavior,
@@ -186,7 +186,7 @@ returns to the Plan gate.
 ### PR handoff contract
 
 The PR is the main implementation and review surface, not the source of approved intent, and —
-because Ship deletes the bundle — the permanent bridge back to the planning record.
+because Land deletes the bundle — the permanent bridge back to the planning record.
 [Artifacts](./artifacts.md) owns both roles and why the links must outlive that record. Its body
 must contain:
 
@@ -196,7 +196,7 @@ must contain:
 - reconciliation performed
 - known limitations or residual risk
 
-A branch-relative URL is not a permalink: it can drift, and it breaks once Ship removes the bundle
+A branch-relative URL is not a permalink: it can drift, and it breaks once Land removes the bundle
 branch. The linked commit must stay reachable through merged-PR or integration-target history after
 branch cleanup. Keep the body current when the head or verification evidence changes; if the Plan
 gate is repeated, replace the planning links with permalinks to the newly approved version. On the
@@ -288,11 +288,11 @@ and requires verification and Review again.
 A review round ends with either findings returned to Implement or a final summary for the human. The
 Review stage ends only when the human accepts the change and it merges.
 
-## 5. Ship
+## 5. Land
 
 **Objective:** land the complete accepted outcome and remove its temporary planning record.
 
-Ship begins only when every ticket is `done` and the human triggers it. Then, in order:
+Land begins only when every ticket is `done` and the human triggers it. Then, in order:
 
 1. **Check the merged state.** Confirm canonical checks pass on the state holding every merged
    ticket, queried remotely — the bundle branch for a multi-ticket bundle, the integration target for
@@ -309,9 +309,9 @@ Ship begins only when every ticket is `done` and the human triggers it. Then, in
    merge it into the bundle branch — the only reconciliation the land rules permit. A
    single-ticket bundle has no bundle branch, so neither this step nor the land applies to it.
 6. **Re-verify locally.** Re-run canonical checks on the state the reconcile and delete steps
-   produced: it carries Ship's own commits and that merge, so no CI run has seen it. Ship's own
-   commits change documentation, backlog, and bundle files only; a Ship step that would change
-   behavior is not Ship work and returns to the Plan gate.
+   produced: it carries Land's own commits and that merge, so no CI run has seen it. Land's own
+   commits change documentation, backlog, and bundle files only; a Land step that would change
+   behavior is not Land work and returns to the Plan gate.
 7. **Land that final state** on the configured integration target —
    [Git mechanics](./git-mechanics.md) owns the land rules.
 8. **Remove the leftovers in git:** whichever ticket branches, bundle branch, and worktrees still
@@ -329,7 +329,7 @@ Only the human may pass these gates:
 3. **Accept:** this implementation is acceptable.
 
 Agents may cross deterministic checks between gates. They may not infer, self-grant, or bypass a
-human gate. Ship adds no fourth approval; it executes the outcome already accepted ticket by ticket.
+human gate. Land adds no fourth approval; it executes the outcome already accepted ticket by ticket.
 Its own commits carry no behavior change and are re-verified before landing, so nothing reaches the
 integration target unverified.
 

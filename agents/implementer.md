@@ -94,7 +94,7 @@ Done when ticket-specific tests pass without weakening assertions or modifying l
 Run every `Done when` command and the repository's canonical checks. Reconcile affected durable
 docs, terminology, corrected bundle facts, and remaining tickets in the same change.
 
-Never defer that to Ship: Ship reconciles only what no single ticket owned.
+Never defer that to Land: Land reconciles only what no single ticket owned.
 
 Done when all checks pass at the PR head and no touched document describes the pre-change system.
 

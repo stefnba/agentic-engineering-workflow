@@ -1,6 +1,6 @@
 ---
 name: bundle-git
-description: Claim a ticket, report bundle and ticket status, and merge an accepted ticket PR. Deterministic git mechanics behind the agentic workflow's Shape, Implement, Review, and Ship stages — not a session driver.
+description: Claim a ticket, report bundle and ticket status, and merge an accepted ticket PR. Deterministic git mechanics behind the agentic workflow's Shape, Implement, Review, and Land stages — not a session driver.
 ---
 
 # bundle-git
@@ -18,7 +18,7 @@ itself; an environment variable of the same name outranks the file.
 `${CLAUDE_SKILL_DIR}/scripts/_config.sh` reads them, holds the branch names, and is sourced by the
 others rather than run on its own.
 
-No script lands a finished bundle branch on the integration target yet — that Ship step is
+No script lands a finished bundle branch on the integration target yet — that Land step is
 unimplemented, and its rules are not a setting these scripts may reinterpret.
 
 | Script                                      | Purpose                                                                     |

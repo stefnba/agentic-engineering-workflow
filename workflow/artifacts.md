@@ -13,7 +13,7 @@ useful. A bundle contains the minimum artifact set its shaping route requires.
 | Engineering plan          | How will this repository realize and decompose the approved intent?                 | Behavior or requirements absent from intent               |
 | Ticket                    | What may one agent change, what does it depend on, and what evidence makes it done? | Cross-ticket architecture or unapproved product decisions |
 | PR and CI                 | What changed, what checks ran, what was reviewed, and what is the current state?    | Intent, decomposition, or durable system truth            |
-| Durable system docs       | How is the shipped system intended to work now?                                     | In-flight plans or historical feature state               |
+| Durable system docs       | How is the current system intended to work now?                                     | In-flight plans or historical feature state               |
 | Decision record           | Which durable, consequential choice was made and why?                               | Work status or step-by-step implementation                |
 | `GLOSSARY.md`             | Which project-domain terms and rejected synonyms are canonical?                     | General programming or workflow-artifact terminology      |
 | `AGENTS.md`               | Which repository or package conventions and gotchas must every agent follow?        | Domain behavior or workflows owned by linked documents    |
@@ -67,7 +67,7 @@ Authority is axis-specific, not one global document hierarchy:
 - **Current system claims during active work:** durable colocated system docs outrank the bundle. If
   code or tests contradict those docs, surface the drift and reconcile it; never silently choose the
   bundle's version.
-- **Shipped system:** code, tests, and durable docs replace the bundle. The bundle is not permanent
+- **Landed system:** code, tests, and durable docs replace the bundle. The bundle is not permanent
   documentation.
 
 Correct factual drift in the artifact that owns the fact. A correction material enough to reopen an
@@ -86,7 +86,7 @@ Under `work/`, commit artifact content — spec, plan, and ticket text. Derive e
 store it.
 
 ```text
-bundle: local draft → shaped → active → deleted at Ship
+bundle: local draft → shaped → active → deleted at Land
 ticket: todo → doing → done
 PR/CI:  implementation, checks, review, and merge state
 ```
@@ -150,12 +150,12 @@ with no meaningful split runs with two or three, or none until a second earns it
 - **Local draft:** unapproved and not shared as committed work.
 - **Shaped:** critic-reviewed and human-approved; implementation may start.
 - **Active:** at least one ticket has started.
-- **Shipped:** every ticket is done, the outcome is on the integration target, and the bundle is
+- **Landed:** every ticket is done, the outcome is on the integration target, and the bundle is
   deleted.
 
-There is no `done/` or shipped-bundle archive. Git history preserves temporary artifacts.
+There is no `done/` or landed-bundle archive. Git history preserves temporary artifacts.
 
-Each implementation PR is the permanent historical bridge from the shipped change to its temporary
+Each implementation PR is the permanent historical bridge from the landed change to its temporary
 planning context — which is why the links in its body have to outlive the bundle. The PR handoff
 contract in [Lifecycle](./lifecycle.md) owns what that body must carry.
 
@@ -164,7 +164,7 @@ review state. Its links do not transfer authority: the linked intent, plan, and 
 authoritative while the work is active. PR comments are an execution log, not a second
 specification or durable system documentation.
 
-At Ship:
+At Land:
 
 1. Move currently true system behavior into the owning durable documentation.
 2. Move durable, consequential rationale into a decision record when it meets that bar.
@@ -172,4 +172,4 @@ At Ship:
 4. Delete the complete bundle: intent/spec, plan, tickets, and bundle-local evidence.
 
 **Never reference a disposable bundle from code, durable documentation, or comments — it will not
-exist once Ship deletes it.**
+exist once Land deletes it.**

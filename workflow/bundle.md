@@ -55,7 +55,7 @@ approved bundle under `work/bundles/` on the configured integration target using
 conventions — committed directly, never through a PR: mandatory critique plus the human's approval
 already are the review a planning artifact gets, and a PR on top adds ceremony without adding a
 gate. The path never moves — shaped and active are derived states, not directories (see
-[Artifacts](./artifacts.md)). Ship deletes the bundle path; there is no archive.
+[Artifacts](./artifacts.md)). Land deletes the bundle path; there is no archive.
 
 ## Shape feedback loop
 
@@ -181,7 +181,7 @@ the one PR already put the work on the target.
 
 One bundle branch off the configured integration target, and per ticket one branch, worktree, and PR
 into that bundle branch. Nothing is ever edited on the bundle branch directly, so it gets no worktree
-of its own. Once every ticket is merged, Ship reconciles and deletes the bundle there, lands that
+of its own. Once every ticket is merged, Land reconciles and deletes the bundle there, lands that
 state on the integration target, and removes the branches and worktrees.
 
 ### Incident or hotfix
@@ -194,7 +194,7 @@ itself waive verification, independent Review, or human acceptance.
 - Ticket: unit of approved work and implementation session.
 - PR: unit of independent Review and human Accept.
 - Commit: implementation history within the PR.
-- Bundle: unit of coherent outcome and final Ship.
+- Bundle: unit of coherent outcome and final Land.
 
 Default and rule: one ticket equals one PR. If that produces meaningless PRs, the decomposition is
 wrong; merge the steps into one ticket before implementation.
