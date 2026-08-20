@@ -39,13 +39,18 @@ background only where the work is fire-and-forget.
 
 ## Permissions
 
-- **A write boundary needs a hook.** Tool lists — a skill's `allowed-tools`, an agent's `tools` —
-  are per-tool, not per-path. Path scope like "shape edits only its bundle" is a skill-scoped
-  `PreToolUse` hook denying `Edit`/`Write` outside the allowed paths. The same holds for an agent:
-  where it may write is a hook, never its tool list.
-- **Say which half is structural.** A tool list withholds a capability outright; anything it cannot
-  express is prompt-level and the component states that plainly rather than claiming enforcement it
-  does not have.
+- **The granting field and the withholding field are different fields.** A skill's `allowed-tools`
+  only pre-approves: it skips the permission prompt for the invoking turn and leaves every other
+  tool callable. What removes a tool from the pool is `disallowed-tools` on a skill,
+  `disallowedTools` on an agent, and an agent's `tools`, which is a true allowlist. A component
+  claiming a capability is withheld names one of those three, never `allowed-tools`.
+- **A write boundary needs a hook.** All of them are per-tool, not per-path. Path scope like "shape
+  edits only its bundle" is a skill-scoped `PreToolUse` hook denying `Edit`/`Write` outside the
+  allowed paths. The same holds for an agent: where it may write is a hook, never its tool list.
+- **Say which half is structural.** A withholding field reaches only the tools it names, and on a
+  skill only until the next user message; a tool added later, an MCP tool, and `EndConversation`
+  stay callable regardless. That residue is prompt-level and the component states it plainly rather
+  than claiming enforcement it does not have.
 - **Every skill that crosses a human gate is manual** (`disable-model-invocation: true`). A skill
   invoked by another skill, or by context, stays model-invocable.
 
@@ -77,4 +82,6 @@ The plugin scanner treats every `.md` under `agents/` as an agent definition, so
    a cache.
 
 Where a Claude-Code-specific field isn't needed, prefer the portable
-[Agent Skills](https://agentskills.io) spec fields.
+[Agent Skills](https://agentskills.io) spec fields. `disallowed-tools` is the deliberate exception:
+the spec has no equivalent, and packaging a skill that carries it fails hard rather than dropping
+the field, so reach for it only where the withholding is the point.
