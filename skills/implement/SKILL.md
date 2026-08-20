@@ -137,10 +137,10 @@ the PR — see the template's Ticket comment.
 This loop runs without the human. It ends at their Accept gate, at an escalation, or at the round
 limit — never at a merge.
 
-**Round N — review.** Dispatch the `reviewer` agent as a fresh subagent and wait. Give it the PR
-number, the exact head SHA (`gh pr view <pr> --json headRefOid`), the round number, and this worktree
-path — and nothing else. It reads the bundle, the ticket, and the diff itself; a summary from you is
-your authorship leaking into a judgment whose whole value is that it is independent.
+**Round N — review.** Invoke the `review` skill with the PR number, the exact head SHA
+(`gh pr view <pr> --json headRefOid`), and the round number — and nothing else. It blocks, and it
+forks: what it reads, it reads for itself. A summary from you is your authorship leaking into a
+judgment whose whole value is that it is independent.
 
 **Change nothing while a round runs.** It shares this worktree and first confirms it sits at the PR
 head with no tracked file modified — an edit of yours makes it stop rather than review.
