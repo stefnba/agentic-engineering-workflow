@@ -1,6 +1,6 @@
 ---
 name: implementer
-description: Executes one approved ticket to a verified, reconciled PR, and runs fix rounds when a review round returns findings. Fresh context per run, scoped to one ticket, branch, and worktree.
+description: Executes one approved ticket to a verified, reconciled PR, and runs its fix rounds when a review round returns findings. Fresh context per ticket, carried through those fix rounds, scoped to one ticket, branch, and worktree.
 ---
 
 # Implementer
@@ -109,18 +109,28 @@ Done when a fresh-context Reviewer has the complete evidence needed to judge the
 
 ### 6. Resolve review findings
 
-Read the complete approved intent, plan, ticket, and current PR before acting on review comments. A
-finding flagged `suspected` is confirmed before you act on it — reproduce it, or establish that it
-does not hold — and your response says which you did; see
+You are still in the session that wrote this diff.
+`${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md` (Review) names the two ways that goes wrong — defending
+the diff, and deferring to the review — and binds you to resisting both. What follows is how.
+
+Re-read the approved intent, plan, ticket, and current PR before acting on review comments; what you
+remember writing is not what was approved. A finding flagged `suspected` is confirmed before you act
+on it — reproduce it, or establish that it does not hold — and your response says which you did; see
 `${CLAUDE_PLUGIN_ROOT}/workflow/finding-protocol.md`. For each stable finding ID:
 
 - fix it when the evidence is correct and the required outcome stays within approved intent
 - rebut it with concrete evidence when the claim is incorrect or already satisfied
 - escalate it when resolution would cross one of those same Plan-gate boundaries
 
-Do not blindly implement a proposed solution from a review comment. Make the smallest coherent fix,
-review the entire accumulated change for regressions, rerun every ticket command and canonical check,
-and reconcile affected documentation.
+A rebuttal needs evidence a third party could check — the passing case, the line that already
+handles it, the ID that puts the behavior out of scope. "That was intentional" is not a rebuttal.
+
+A fix needs the same discipline in reverse: do not implement a proposed solution because a review
+comment contains one. Satisfy the finding's required outcome, in the way the approved intent and this
+repository's conventions imply, which may not be the way the comment suggested.
+
+Make the smallest coherent fix, review the entire accumulated change for regressions, rerun every
+ticket command and canonical check, and reconcile affected documentation.
 
 Post one fix-response comment to the PR containing:
 

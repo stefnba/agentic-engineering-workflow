@@ -45,6 +45,7 @@ case "$args" in
     awk -v h="$head" -v b="$base" '$1==h && $2==b {print NR}' "$MERGED"
     ;;
   "pr view"*) echo "${GH_STUB_BRANCH:-ticket/x/01} ${GH_STUB_BASE:-main}" ;;
+  "repo view"*) echo "https://forge.test/acme/widgets" ;;
   "pr merge"*) echo "$args" > "$GH_STUB_LOG" ;;
   *) exit 1 ;;
 esac
@@ -111,6 +112,35 @@ echo "== listing"
 ok "lists every bundle"             "$("$scripts/bundle-status.sh" | wc -l | tr -d ' ')" 2
 ok "per-ticket listing"             "$("$scripts/bundle-status.sh" "$multi" | tr -s ' ' | tr '\n' '|')" \
                                     "active $multi| done 01-persistence| doing 02-api| todo 03-ui|"
+
+echo "== pr links pin to the published bundle, not to the ticket branch"
+published=$(git rev-parse origin/main)
+( cd ".claude/worktrees/ticket/$multi/02" &&
+  printf 'depends_on: [01]\n---\napi, amended while implementing\n' > "work/bundles/$multi/tickets/02-api.md" &&
+  git commit -qam "docs(bundle): reconcile the ticket" )
+"$scripts/pr-links.sh" "$multi" 02 > "$root/links.out" 2>&1
+ok "pr-links exits 0"               "$?" 0
+ok "bundle link is a tree permalink" "$(sed -n 1p "$root/links.out")" \
+                                    "- Bundle: https://forge.test/acme/widgets/tree/$published/work/bundles/$multi"
+ok "ticket link is a blob permalink" "$(sed -n 2p "$root/links.out")" \
+                                    "- Ticket: https://forge.test/acme/widgets/blob/$published/work/bundles/$multi/tickets/02-api.md — 02"
+ok "base is the bundle branch"      "$(sed -n 3p "$root/links.out")" "- Base: \`bundle/$multi\`"
+( cd ".claude/worktrees/ticket/$multi/02" && "$scripts/pr-links.sh" "$multi" 02 | sed -n 1p ) \
+  > "$root/links-wt.out" 2>&1
+ok "same answer from the worktree"  "$(cat "$root/links-wt.out")" "$(sed -n 1p "$root/links.out")"
+"$scripts/pr-links.sh" "$solo" 01 | sed -n 2,3p > "$root/links-solo.out" 2>&1
+ok "solo bundle links ticket.md"    "$(sed -n 1p "$root/links-solo.out")" \
+                                    "- Ticket: https://forge.test/acme/widgets/blob/$published/work/bundles/$solo/ticket.md — 01"
+ok "and targets the integration target" "$(sed -n 2p "$root/links-solo.out")" "- Base: \`main\`"
+"$scripts/pr-links.sh" "$multi" 99 >/dev/null 2>&1
+ok "unknown ticket refuses (2)"     "$?" 2
+"$scripts/pr-links.sh" 2026-01-01-nope 01 >/dev/null 2>&1
+ok "unknown bundle refuses (2)"     "$?" 2
+mkdir -p "work/bundles/2026-01-01-local"
+printf 'depends_on: []\n---\nnever published\n' > "work/bundles/2026-01-01-local/ticket.md"
+"$scripts/pr-links.sh" 2026-01-01-local 01 >/dev/null 2>&1
+ok "unpublished bundle refuses (3)" "$?" 3
+rm -rf "work/bundles/2026-01-01-local"
 
 echo "== a stray file in tickets/ does not flip the branch strategy"
 stray=2026-08-17-stray

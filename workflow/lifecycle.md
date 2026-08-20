@@ -56,11 +56,13 @@ only runs when a human or an already-running session invokes it. Two kinds of se
   detached worktree instead, per [Git mechanics](./git-mechanics.md). Keeping it open is
   convenient, not required — the bundle lives in git and every status is derived, so Land runs just
   as well from a fresh session.
-- **One session per ticket**, in that ticket's own worktree, runs Implement and dispatches that
-  ticket's Review rounds. It opens only once every ticket it depends on is `done`; tickets with no
-  dependency between them run side by side. Review is dispatched from here as a fresh subagent: no
-  shared message history, but the same worktree, which is why a Reviewer verifies the head SHA and a
-  clean tree before judging.
+- **One session per ticket**, in that ticket's own worktree, runs Implement — the first pass and
+  every fix round — and dispatches that ticket's Review rounds. It opens only once every ticket it
+  depends on is `done`; tickets with no dependency between them run side by side. Review is the only
+  thing that forks out of it, as a fresh subagent: no shared message history, but the same worktree,
+  which is why a Reviewer verifies the head SHA and a clean tree before judging. Fixes stay in the
+  session because the human is in it and can steer them, and because the reasoning behind the code
+  is what answers a finding that is wrong.
 
 **The human dispatches stages.** Discovery, shaping, each ticket's implementation, and Land start
 on explicit human dispatch. Every stage ends by reporting the suggested next move — the
@@ -77,8 +79,8 @@ script starting the next subagent inline, not a separate coordinator reacting af
   revises and re-critique follows until no blocker remains, then the bundle goes to the human Plan
   gate.
 - Implement and Review: opening or updating the PR automatically dispatches a fresh-context review
-  round; a round with findings automatically dispatches a fix-mode Implementer, whose response
-  automatically dispatches the next round. The loop ends only per the convergence rules — ready for
+  round; a round with findings returns the ticket to its own implementation session in fix mode,
+  whose PR response automatically dispatches the next round. The loop ends only per the convergence rules — ready for
   human review, escalation, or the round limit — and always terminates at the human Accept gate or
   an escalation, never at a merge.
 
@@ -92,8 +94,9 @@ agent's judgment — execute state transitions so they are serialized and audita
   worktree. Creating the branch _is_ the claim, so git itself serializes competing claims — no lock
   and no coordinator. [Git mechanics](./git-mechanics.md) owns the procedure, the branch a worktree
   is cut from, and bundle-branch creation.
-- **Dispatch mechanics:** start each Architect, Critic, Implementer, and Reviewer with the required
-  fresh context and permissions, and record review-round numbers for fix and re-review runs.
+- **Dispatch mechanics:** start each Architect, Critic, Implementer, and Reviewer with the context
+  and permissions its run conditions require, and record review-round numbers for fix and re-review
+  runs.
 - **Merge:** after human Accept, merge the ticket PR into its target. The merge is the last write —
   `done` follows from it and is never recorded afterward. Landing a finished bundle branch on the
   integration target is a separate Land step; [Git mechanics](./git-mechanics.md) owns both merges
@@ -160,13 +163,13 @@ evidence, and introduces no requirement or cross-ticket decision absent from app
 
 **Objective:** turn one approved ticket into a verified and reconciled implementation PR.
 
-**Run conditions:** the Implementer runs in a fresh context once per dispatched ticket, and again in
-fix mode when a review round returns findings. Each run receives the approved bundle, its assigned
-ticket, repository conventions, the current PR when one exists, and the branch and worktree the claim
-already prepared. It never selects or claims its own ticket.
+**Run conditions:** the Implementer runs in a fresh context once per dispatched ticket and stays in
+it through every fix round — one ticket, one branch, one worktree, one session. It receives the
+approved bundle, its assigned ticket, repository conventions, the current PR when one exists, and the
+branch and worktree the claim already prepared. It never selects or claims its own ticket.
 
-The Implementer works in a fresh session on one ticket, branch, and worktree. It reads the approved
-intent, optional plan, ticket, relevant durable docs, and repository conventions before editing.
+It reads the approved intent, optional plan, ticket, relevant durable docs, and repository
+conventions before editing.
 
 Implementation includes:
 
@@ -231,7 +234,7 @@ Implement → verify + reconcile → open PR
                    fix required             no blockers
                          │                       │
                          ▼                       ▼
-           fresh Implementer (fix mode)   final review summary
+              same session, fix mode      final review summary
                          │                       │
                          ▼                       ▼
              verify + PR response          human Accept
@@ -245,12 +248,24 @@ structured round summary to the PR and uses inline comments only where a precise
 evidence. Findings receive stable IDs such as `R1-F1`; later rounds preserve those IDs when recording
 their disposition.
 
-A fix request starts a fresh Implementer context in fix mode and returns the ticket to Implement
-without changing its `doing` status. The Implementer checks every finding against the approved
-intent, plan, and ticket rather than blindly following the comment. It fixes the finding, rebuts it
-with evidence, or escalates it because resolution requires a material planning decision. After
-rerunning all required checks, it posts one PR response mapping every finding ID to its disposition,
-changes, verification results, and new head SHA.
+A fix request returns the ticket to Implement — to the same session that wrote the diff, in fix mode,
+without changing its `doing` status.
+
+Authorship is why fix mode stays there, and it is also what fix mode has to resist, in both
+directions:
+
+- **Defending the diff** — a rebuttal resting on what the author meant rather than on evidence a
+  third party can check. If the intent is real it is in the bundle; if it is not in the bundle, it is
+  a Plan-gate question and not a rebuttal.
+- **Deferring to the review** — implementing what a comment proposed because a reviewer proposed it.
+  A finding is an argument, not an instruction: its required outcome binds, its suggested fix does
+  not.
+
+Both are avoided the same way. The Implementer checks every finding against the approved intent,
+plan, and ticket and disposes it on that evidence rather than on who raised it: it fixes the finding,
+rebuts it with evidence, or escalates it because resolution requires a material planning decision.
+After rerunning all required checks, it posts one PR response mapping every finding ID to its
+disposition, changes, verification results, and new head SHA.
 
 The next Reviewer checks every prior disposition and reviews the complete PR again, not only the
 latest patch. New findings are limited to material issues introduced by the fix or genuinely missed

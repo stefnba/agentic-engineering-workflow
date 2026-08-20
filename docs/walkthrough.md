@@ -90,9 +90,10 @@ worktree, so it first confirms it's looking at the exact PR head with nothing un
 rather than review unpushed work. Then, without you:
 
 - The reviewer posts its findings to the PR and returns a summary to the tab.
-- The implementer works through them: it fixes, or rebuts with evidence, or escalates anything that
-  would need a planning decision. Not every finding must be fixed — some are risks that carry forward
-  for you to accept at merge time ([Lifecycle](../workflow/lifecycle.md) defines the two kinds).
+- The implementer works through them — still this tab, so you can weigh in on any of them: it fixes,
+  or rebuts with evidence, or escalates anything that would need a planning decision. Not every
+  finding must be fixed — some are risks that carry forward for you to accept at merge time
+  ([Lifecycle](../workflow/lifecycle.md) defines the two kinds).
 - It posts a fix summary at the new head, which kicks off the next round. The loop is bounded; if it
   can't converge, it reports that to you instead of grinding
   ([Lifecycle](../workflow/lifecycle.md) has the limits).
