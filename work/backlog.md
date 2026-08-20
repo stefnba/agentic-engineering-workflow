@@ -12,24 +12,25 @@ Candidate work and follow-ups nobody has picked yet.
   prompt. Both prompts and `workflow/lifecycle.md`'s Run conditions say so plainly rather than
   overclaiming. Close it with a hook or a permission rule, and the same question applies to the
   Architect's "write access only to the draft bundle" boundary.
-- [follow-up] [skills] `bundle-git` has no Land-side script: nothing lands a bundle branch on the integration
-  target. The rules it must implement are settled — see "Landing a bundle" in
-  `workflow/git-mechanics.md` — but nothing enforces them, and `TICKET_MERGE_METHOD` deliberately does not
-  cover the land.
-- [follow-up] [skills] [docs] walkthrough.md names skills that still don't exist: `/pick`, `/scan-codebase`,
-  `/complete-ticket`, `/land`. `/pick`, `/interview-me`, `/shape`, and `/critique` now do. `bundle-git` owns
-  claim, status, and merge, so `/complete-ticket` should call its script rather than reimplementing
-  the merge — and the internal, non-user-facing dispatch skills still need defining too, not just
+- [follow-up] [skills] [workflow] `bundle-git` has no Land-side script: nothing lands a bundle branch on the
+  integration target, and nothing does the branch and worktree cleanup `workflow/git-mechanics.md` already
+  says the skill owns. The rules are settled — see "Landing a bundle" there — but nothing enforces them, and
+  `TICKET_MERGE_METHOD` deliberately does not cover the land. It also owns Land's worktree on the bundle
+  branch: create it, refuse a stale one the way `claim-ticket.sh` does, and remove it from outside itself.
+  (The undefined "sync" `git-mechanics.md` also claimed is gone.) For the cleanup half,
+  `git show old-workflow:skills/bundle-git/SKILL.md` already designed it — the merged/open-pr/in-flight
+  classification, `gh pr list --head` rather than ancestry because a squash leaves none, and `branch -D`
+  for the same reason.
+- [drift] [skills] [docs] `README.md` and `docs/walkthrough.md` name skills that hold nothing yet —
+  `scan-codebase`, `research`, `complete-ticket`, and the stage drivers `implement`, `review`, and `land`.
+  Whoever builds one claims its name from the README table. Two constraints are already settled:
+  `bundle-git` owns claim, status, and merge, so `/complete-ticket` calls its script rather than
+  reimplementing the merge; and the internal, non-user-facing dispatch skills need defining too, not just
   the slash commands a human types.
-- [follow-up] [skills] Make `docs/conventions/git.md` a setup-skill template (`skills/setup/templates/git.md`)
-  with this repo's copy as the dogfooded instance, same relationship as `work/backlog.md`.
 - [follow-up] [skills] `shape` publishes the approved bundle by hand — `git add`/`commit`/`push` from the
   prompt, sourcing `bundle-git`'s `_config.sh` for `INTEGRATION_TARGET`. Every other state
   transition is a script; this one is prose, so a collision retry or a wrong target branch depends
   on the model following instructions. Consider `bundle-git/scripts/publish-bundle.sh`.
-- [drift] [workflow] [skills] `workflow/git-mechanics.md` says the `bundle-git` skill owns bundle branch creation and
-  cleanup, but the skill only creates the bundle branch and removes a ticket's worktree. Land's
-  branch and worktree cleanup is unimplemented. (The undefined "sync" it also claimed is gone.)
 - [follow-up] [skills] `bundle-git`'s claim is verified over the `git://` smart protocol, never against
   github.com over HTTPS, and the chain claim → PR → `/complete-ticket` → derived `done` has never run
   joined — only its two halves separately. One real push settles both. Smaller gaps:
@@ -57,17 +58,41 @@ Candidate work and follow-ups nobody has picked yet.
   recollection as recollection (including saying so when context was compacted). Don't name it
   `/status` and don't have it restate derived ticket status — `bundle-status.sh` already answers
   that, and it's a different question.
-- [drift] [skills] [docs] Skill names are settled in `README.md` and `docs/walkthrough.md`, but the unbuilt ones
-  hold nothing: `scan-codebase` (`audit` on the `old-workflow` tag), `backlog`, `pick`, `research`,
-  and the stage drivers. Whoever implements each should claim its name from the README table.
-- [follow-up] [skills] Four skills stay on the `old-workflow` tag because they encode the superseded
-  contract: `backlog`, `pick`, `research`, and `audit` (→ `scan-codebase`). Nothing blocks them now
-  that the Ship→Land rename and the Finding-protocol extraction are both done — write them fresh
-  against `workflow/`, with `git show old-workflow:skills/<name>/SKILL.md` as reference, rather
-  than restoring and patching paths. The stage drivers (`shape`, `critique`, `implement`, `review`,
-  `land`) are a full rewrite regardless.
-- [follow-up] [skills] A consuming repo has no read path into `workflow/` outside a stage skill. The
-  installed `AGENTS.md` pointer now names the plugin and sends the agent through the stage skills,
-  because no placeholder resolves in project instructions — but a session that just wants to read
-  the contract (or `docs/walkthrough.md`) has nowhere to go. Either ship a reference skill that
-  loads `workflow/lifecycle.md` on demand, or accept that the stage skills are the only entry.
+- [follow-up] [skills] Two skills stay on the `old-workflow` tag because they encode the superseded
+  contract: `research` and `audit` (→ `scan-codebase`), along with the `researcher` agent they fork
+  into. Write them fresh against `workflow/`, with `git show old-workflow:skills/<name>/SKILL.md` as
+  reference, rather than restoring and patching paths; `researcher` preloads `backlog` via its
+  `skills:` field, which now exists. Open first: `audit` wrote a `docs/research/audit-*.md` plus
+  backlog lines autonomously, but `docs/walkthrough.md` and `workflow/artifacts.md` now say a
+  codebase scan's findings stay inline in chat and get triaged live — settle which before writing
+  it. The stage drivers (`implement`, `review`, `land`) are a full rewrite regardless.
+- [follow-up] [skills] A consuming repo has no read path into `workflow/` at all. The installed `AGENTS.md`
+  pointer deliberately stops at naming the plugin, `docs/conventions/git.md`, `work/config.conf`, and the
+  two caretaker skills: no placeholder resolves in project instructions, and the line routing every stage
+  through its own skill was dropped on purpose. So a session that wants to read the contract — or
+  `docs/walkthrough.md` — has nowhere to go, and an agent that never invokes a stage skill never learns
+  the lifecycle exists. Ship a reference skill that loads `workflow/lifecycle.md` on demand, or accept
+  that the stage skills are the only entry.
+- [follow-up] [skills] `skills/bundle-git/tests/run.sh` pins that a stray file _inside_ `tickets/` can't flip
+  the branch strategy, but nothing pins a sibling directory under `work/bundles/<id>/`. `ticket_base` is
+  safe today by inspection; add the case before any design puts a directory there.
+- [follow-up] [skills] `skills/pick/SKILL.md` grants `Skill(backlog *)` in `allowed-tools`, copied from the
+  `old-workflow` tag and never exercised. If the scoped form doesn't grant, pick's prune round silently
+  loses its only write path — it delegates every deletion to the `backlog` skill.
+- [drift] [docs] The 16 numbered decision records were deleted wholesale in `d63c87c`, which `AGENTS.md`
+  forbids — supersede, never delete. Rules the current docs assert flatly now carry no recorded rationale:
+  bundles-deleted-no-archive, colocated system docs, shape creates the full ticket set, date-slug ids,
+  tickets as files, specs as target state. `git show old-workflow:docs/decisions/` has them; 0004, 0005,
+  0015 and 0016 are genuinely superseded.
+- [drift] [docs] `skills/record-decision/templates/decision-record.md` mandates YAML frontmatter with
+  `areas:`, and `workflow/artifacts.md` reads the area vocabulary from records' frontmatter — but two of
+  the three records use a prose byline and none carries `areas:`, so that vocabulary has no source. Old
+  record 0005 settled the format and was one of the deleted ones.
+- [drift] [skills] [docs] The skill and agent authoring conventions from the deleted `docs/skills.md` are
+  documented nowhere, though every skill here follows them: inline vs `context: fork`, path-scoped write
+  boundaries as a PreToolUse hook rather than a tool list, `background: false` when someone waits,
+  `disable-model-invocation` for anything crossing a human gate, agents own who / skills own when, and
+  four plugin-compatibility rules. The unbuilt stage drivers need them.
+- [idea] [skills] `shape` picks the test seam while drafting and confirms it in the step-5 batch; the
+  `old-workflow` shape confirmed it before drafting, because acceptance criteria are phrased at the seam
+  and moving it late rewrites the spec around it.
