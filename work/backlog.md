@@ -1,6 +1,6 @@
 # Backlog
 
-Work on the reference material itself. Unsorted collection dump — order carries no meaning.
+Candidate work and follow-ups nobody has picked yet.
 
 ## Items
 

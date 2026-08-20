@@ -23,6 +23,8 @@ Installing this into a repo of your own:
    | ------------------------- | ----------------------------------------------------------------------------------- |
    | `work/config.conf`        | settings the scripts read — from [the template](skills/setup/templates/config.conf) |
    | `docs/conventions/git.md` | commit and PR conventions a human follows                                           |
+   | `work/backlog.md`         | empty; unpicked follow-ups and noticed drift accumulate here                        |
+   | `GLOSSARY.md`             | empty; your domain's canonical terms, added as they're settled                      |
    | `AGENTS.md`               | one pointer line naming the workflow                                                |
    | `.gitignore`              | your `WORKTREE_DIR`, so ticket worktrees stay untracked                             |
 

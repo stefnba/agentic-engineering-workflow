@@ -49,16 +49,17 @@ Authority is axis-specific, not one global document hierarchy:
   priority; the Pick gate owns selection.
 - **Repository operation:** `AGENTS.md` points agents to owning instructions, and the applicable
   convention document wins for its operation — see the Authority table above for each document's
-  scope. In a monorepo, the nearest package `AGENTS.md` adds area-specific instructions to the root
-  file. Tool-specific instruction files reference `AGENTS.md` rather than duplicating it.
+  scope. Tool-specific instruction files reference `AGENTS.md` rather than duplicating it, and
+  [Monorepos](#monorepos) below owns how a package's file relates to the root one.
 - **Terminology:** the applicable `GLOSSARY.md` owns canonical project-domain terms and avoided
   synonyms. Agent prose and code identifiers use its canonical terms and never an avoided synonym;
   Review judges adherence without a separate mechanical gate. Workflow and artifact terms remain
   owned by their defining documents. If output and a glossary conflict, surface both readings instead
   of silently choosing one. A rename or redefinition edits the mutable glossary in place in the same
-  PR and moves the former term to its Avoid list. In a monorepo, the closest domain glossary applies
-  and the root glossary owns cross-domain vocabulary and links the domain glossaries. A repository
-  without a glossary does not need one created solely for this workflow.
+  PR and moves the former term to its Avoid list; [Monorepos](#monorepos) below owns which glossary
+  applies when there is more than one. Installing the workflow creates the root glossary empty; a
+  repository whose domain earns no canonical term keeps it that way, and no stage requires an
+  entry.
 - **Decision history:** decision records are immutable. Supersede a decision with a new record; never
   edit the old record to make history look current. A repo-wide terminology rename is the one
   exception and sweeps records too: renaming a thing changes no decision made about it, and a record
@@ -75,6 +76,32 @@ Authority is axis-specific, not one global document hierarchy:
 Correct factual drift in the artifact that owns the fact. A correction material enough to reopen an
 approved decision returns to the Plan gate instead — [Lifecycle](./lifecycle.md) owns which changes
 those are.
+
+## Monorepos
+
+A repository with more than one workspace package splits some artifacts per package and keeps the
+rest at the root. Which side an artifact falls on is fixed, not a per-repository choice:
+
+| Artifact                                                 | Where                |
+| -------------------------------------------------------- | -------------------- |
+| `work/config.conf`, `work/backlog.md`, `work/bundles/`   | root only            |
+| `docs/conventions/`, `docs/decisions/`, `docs/research/` | root only            |
+| `AGENTS.md`, `GLOSSARY.md`, durable system docs          | root and per package |
+
+One backlog and one bundle tree serve the whole repository. A bundle's tickets routinely cross
+packages, so a per-package split would either duplicate the bundle or hide the half of it that
+lives elsewhere; the area terms on a line or in a record are what say which package it concerns.
+
+**The nearest file wins by adding, never by replacing.** A package `AGENTS.md` carries what is
+specific to that package on top of the root file, and the closest `GLOSSARY.md` owns a term its own
+domain defines while the root owns vocabulary shared across domains. A package file that restates
+the root's content is the failure mode — two copies, and no signal which one went stale.
+
+A domain's `GLOSSARY.md` sits at that domain's root. The root glossary then carries a `Domains`
+section linking each one and stating how the domains relate: there is no separate map file, and the
+section exists only once a sub-glossary does. Which glossary a term belongs in follows from the
+term's subject, and an unclear case is a question for the human rather than a guess — a term filed
+in the wrong domain is invisible to everyone working in the right one.
 
 ## Bundle contents
 
@@ -119,6 +146,27 @@ and the folder is a log nobody reads.
 A choice with no rejected alternative was a default, not a decision, and belongs with its owner: a
 convention in `docs/conventions/`, a term in `GLOSSARY.md`, an unpicked follow-up in
 `work/backlog.md`, current behavior in the durable system docs.
+
+## What earns a backlog line
+
+A line is a pointer to a decision someone makes later, so it earns its place only when all three
+hold:
+
+- **It outlives the session that noticed it.** Something fixable in two minutes, in a file already
+  open, gets fixed.
+- **It still means something in three weeks.** A line nobody can decode is worse than no line: it
+  occupies space and creates a small obligation to work out what it meant.
+- **It needs the Pick gate.** It is work someone must choose to do — not a fact, an open question,
+  or a preference.
+
+What misses the bar has an owner already: a term dispute goes to `GLOSSARY.md`, a settled rationale
+to a decision record, an unsettled question to the human, work a live bundle already covers to that
+bundle. Taste with no referent behind it goes nowhere — the construction that keeps a nitpick out of
+a finding ([Finding protocol](./finding-protocol.md)) keeps it out of here too.
+
+**A line states the problem, never the solution.** The solution is what shaping is for, and one
+written now is stale by the time it is read. A line may carry the evidence that proves its claim — a
+drift nobody can cheaply re-verify is worth the extra lines — but never a design for the fix.
 
 ## Backlog tags
 

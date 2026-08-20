@@ -6,10 +6,16 @@ the skill that loads it, and this repo's own files by relative link. -->
 
 ## Agentic coding workflow
 
-This repository uses the agentic coding workflow, installed as the `agentic-workflow` plugin. Start
-every stage by invoking that stage's skill; each one loads the workflow contract itself.
+This repository uses the agentic coding workflow, installed as the `agentic-workflow` plugin.
 
 Read [docs/conventions/git.md](docs/conventions/git.md) before any commit, branch, worktree, or PR.
 
 Read [work/config.conf](work/config.conf) before assuming an integration target, merge method, or
 worktree path — it holds this repository's values, and the workflow's scripts run on them.
+
+Two files outlive every bundle:
+
+- [work/backlog.md](work/backlog.md) — candidate work and follow-ups nobody has picked yet. Don't
+  edit it directly; invoke the `backlog` skill to add, complete, or look up a line.
+- [GLOSSARY.md](GLOSSARY.md) — this repository's canonical domain terms and the synonyms it
+  rejects. Use its terms in prose and identifiers; invoke the `glossary` skill to add or rename one.

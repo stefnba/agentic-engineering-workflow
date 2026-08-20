@@ -8,7 +8,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 # Glossary
 
 `GLOSSARY.md` is a repo's canonical domain vocabulary — one entry per term, each a
-one-to-two-sentence definition of what the term *is* (not what it does) plus an _Avoid_ list
+one-to-two-sentence definition of what the term _is_ (not what it does) plus an _Avoid_ list
 of rejected synonyms. Only terms specific to the project's domain qualify: general
 programming concepts (timeouts, error types, utility patterns) are excluded even when heavily
 used. The file holds vocabulary only — no implementation details, no spec content, no scratch
@@ -16,18 +16,22 @@ notes.
 
 ## Before any edit
 
-**Read the target glossary in full first** (see Routing below for which one). If it doesn't
-exist yet, that's fine — never nag about a missing glossary. Create it only lazily, on the
-first confirmed capture, from `${CLAUDE_SKILL_DIR}/assets/template.md`.
+**Read the target glossary in full first** (see Routing below for which one). The root
+`GLOSSARY.md` normally exists (created by `setup` skill); an empty one is the steady state for a
+repo that hasn't earned a term yet, so never nag about entries. Where no file exists — a domain
+glossary, or a root one in a repo that skipped `setup` — create it on the first confirmed capture,
+as a `# Glossary` heading and that entry in the form above. Nothing else goes in it: a heading with
+no entry under it is a file worth not creating yet.
 
 ## Routing (monorepo)
 
-A term specific to one workspace package's domain belongs in that domain's own
-`GLOSSARY.md`, at the domain root. A cross-cutting term belongs in the root
-`${CLAUDE_PROJECT_DIR}/GLOSSARY.md`, which also carries a Domains section linking
-each sub-glossary and stating the relationships between domains — no separate map
-file, and the section exists only when sub-glossaries do. Infer which glossary a
-term belongs to from the topic; ask when it's unclear.
+The **Monorepos** section of `${CLAUDE_PLUGIN_ROOT}/workflow/artifacts.md` owns which glossary a
+term belongs in, and what the root's `Domains` section holds. Read it before capturing anything in
+a repo that has more than one `GLOSSARY.md`, or is about to.
+
+What that leaves to you: infer the target from the term's subject and say which file you picked
+when you propose the entry, so a wrong read is caught before it is written. Never create a domain
+glossary for a term the root already covers — sharpen the root entry instead.
 
 ## Capture
 

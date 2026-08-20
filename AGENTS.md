@@ -38,7 +38,7 @@ on GitHub:
 
 ## Conventions this repo applies to itself
 
-- **The `work/` tree is live here**, dogfooding its own format: new ideas, noticed drift, and follow-ups become lines in [work/backlog.md](work/backlog.md) (tags and format defined at the top of the file) — not TODOs scattered in other files.
+- **The `work/` tree is live here**, dogfooding its own format: new ideas, noticed drift, and follow-ups become lines in [work/backlog.md](work/backlog.md) (format, kinds, and areas owned by [workflow/artifacts.md](workflow/artifacts.md)) — not TODOs scattered in other files.
 - **[GLOSSARY.md](GLOSSARY.md) is live here too**, near-empty by design — only terms no owning doc already defines; artifact terms (bundle, spec, ticket, backlog) stay owned by [workflow/artifacts.md](workflow/artifacts.md).
 - **Decision records are immutable.** Supersede a `docs/decisions/` record with a new one; never edit it — the sole exception is carrying a repo-wide terminology rename through, which changes no decision.
 - **One copy.** Docs reference each other instead of restating. When adding material, link to the owning doc; if nothing owns it yet, decide where it belongs before writing. A doc may name a rule or state it, never both — where a "see X" already points at the owner, the surrounding prose stays a clause, not a paragraph. Never duplicate a number, a list, or a setting name across docs; those are what actually drift.
