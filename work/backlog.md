@@ -66,3 +66,8 @@ Work on the reference material itself. Unsorted collection dump — order carrie
   against `workflow/`, with `git show old-workflow:skills/<name>/SKILL.md` as reference, rather
   than restoring and patching paths. The stage drivers (`shape`, `critique`, `implement`, `review`,
   `land`) are a full rewrite regardless.
+- [follow-up] [skills] A consuming repo has no read path into `workflow/` outside a stage skill. The
+  installed `AGENTS.md` pointer now names the plugin and sends the agent through the stage skills,
+  because no placeholder resolves in project instructions — but a session that just wants to read
+  the contract (or `docs/walkthrough.md`) has nowhere to go. Either ship a reference skill that
+  loads `workflow/lifecycle.md` on demand, or accept that the stage skills are the only entry.

@@ -34,6 +34,7 @@ on GitHub:
 - the skill's own bundled file → `${CLAUDE_SKILL_DIR}/<path>`
 - the consuming repo's file → `${CLAUDE_PROJECT_DIR}/docs/conventions/git.md`
 - doc to doc inside the repo → plain relative, so GitHub renders it
+- a consuming repo's `AGENTS.md` → no placeholder at all; project instructions expand none of them, so name the skill that loads the plugin file and link the repo's own files relatively
 
 ## Conventions this repo applies to itself
 
