@@ -39,17 +39,6 @@ Candidate work and follow-ups nobody has picked yet.
   fails open and lets a dependent ticket start early — so the rule reaches whoever writes a ticket
   from the template, and nothing catches a hand-edit that ignores it. (The sibling `ls tickets`
   count is fixed: `_config.sh`'s `ticket_base` globs `NN-<slug>.md`, with a regression test.)
-- [idea] [skills] Add a session-recap skill (`/recap`), callable from any session at any point. Reports the
-  flow of the chat session itself — not repository, bundle, or ticket state: what this session is
-  about, a very brief digest of what was discussed, what was suggested, what's already settled or
-  done in the conversation, and which threads are still open. Earns its keep because the workflow
-  deliberately leaves this unpersisted — narrowing "produces no artifact", scan findings stay
-  "inline in chat only", Reviewer backlog candidates have no persistence mechanism — so a recap
-  surfaces it before a tab switch or context compaction loses it. Read-only reporting only: it may
-  name the human gate that is due but never passes one and dispatches nothing, and it marks
-  recollection as recollection (including saying so when context was compacted). Don't name it
-  `/status` and don't have it restate derived ticket status — `bundle-status.sh` already answers
-  that, and it's a different question.
 - [follow-up] [skills] Two skills stay on the `old-workflow` tag because they encode the superseded
   contract: `research` and `audit` (→ `scan-codebase`), along with the `researcher` agent they fork
   into. Write them fresh against `workflow/`, with `git show old-workflow:skills/<name>/SKILL.md` as
