@@ -15,7 +15,8 @@ Work on the reference material itself. Unsorted collection dump — order carrie
 - [follow-up] [skills] `bundle-git` has no Land-side script: nothing lands a bundle branch on the integration
   target. The rules it must implement are settled — see "Landing a bundle" in
   `workflow/git-mechanics.md` — but nothing enforces them, and `TICKET_MERGE_METHOD` deliberately does not
-  cover the land.- [follow-up] [skills] [docs] walkthrough.md names skills that still don't exist: `/pick`, `/scan-codebase`,
+  cover the land.
+- [follow-up] [skills] [docs] walkthrough.md names skills that still don't exist: `/pick`, `/scan-codebase`,
   `/complete-ticket`, `/land`. `/interview-me`, `/shape`, and `/critique` now do. `bundle-git` owns
   claim, status, and merge, so `/complete-ticket` should call its script rather than reimplementing
   the merge — and the internal, non-user-facing dispatch skills still need defining too, not just

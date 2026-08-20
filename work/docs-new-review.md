@@ -2,9 +2,8 @@
 
 Read-through of the workflow docs, agent prompts, and `bundle-git`. Written against the old
 `docs/new/` tree, re-verified against the current layout (`workflow/`, `docs/`, `work/config.conf`).
-A second independent pass on 2026-08-18 validated the fixes and reopened one of them. Only open
-items remain here — fixed and dismissed items are pruned as they resolve, and git history holds
-what they said.
+A second independent pass on 2026-08-18 validated the fixes. Only open items remain here — an item
+is pruned once it resolves or is promoted, and git history holds what it said.
 
 Not triaged, not agreed work. Promote items to [backlog.md](backlog.md) as they get accepted.
 
@@ -41,16 +40,3 @@ behind. Applies to single-ticket bundles off a moving integration target too.
 
 The bundle branch now has exactly such a rule — [Land](../workflow/lifecycle.md#5-land) step 5
 merges a moved integration target in before landing. A ticket branch has no equivalent.
-
-### 9. Reviewer independence: stated honestly now, still not enforced
-
-Reopened by the second review pass. What landed: Review gained a **Run conditions** paragraph
-([lifecycle.md](../workflow/lifecycle.md#4-review)) like Shape and Implement already had; Reviewer
-and Critic gained `tools:` allowlists; the Reviewer confirms the assigned SHA against the forge and
-that no tracked file is modified before judging; walkthrough notes the shared worktree.
-
-What did not land: both agents keep `Bash`, because verification and repository reading need a shell,
-so nothing structurally prevents a push, approve, or merge. The allowlist withholds file editing and
-nothing else. Every prompt and the Run conditions paragraphs now say that plainly instead of claiming
-the restriction is structural — but the gap itself needs a hook or a permission rule, tracked in
-[backlog.md](backlog.md).
