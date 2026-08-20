@@ -160,8 +160,10 @@ domain, API, and UI layers; few files is not the goal.
 Horizontal foundation work is an exception. Use it only when a vertical slice cannot be built
 safely first. The ticket must name the later slice it enables and carry independent verification.
 For refactors and migrations, use expand → migrate → contract while keeping each intermediate state
-supported. When the approved outcome is "behavior unchanged", the plan mandates characterization
-tests that pin current behavior, and the ticket that adds them precedes every refactoring ticket.
+supported. When the approved outcome is "behavior unchanged", characterization tests that pin current
+behavior are mandatory, and they bind the decomposition rather than any one document: with a plan,
+it names the slice that adds them; without one, a `depends_on` edge puts them ahead of every
+refactoring ticket, and in a single-ticket bundle they are that ticket's pre-change evidence.
 
 ## Dependencies and parallelization
 

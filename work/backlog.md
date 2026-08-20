@@ -39,8 +39,6 @@ Candidate work and follow-ups nobody has picked yet.
   fails open and lets a dependent ticket start early — so the rule reaches whoever writes a ticket
   from the template, and nothing catches a hand-edit that ignores it. (The sibling `ls tickets`
   count is fixed: `_config.sh`'s `ticket_base` globs `NN-<slug>.md`, with a regression test.)
-- [drift] [workflow] `workflow/bundle.md` puts the characterization-test mandate on the plan, but a refactor on
-  the intent-plus-tickets route has no plan, so the mandate has no home there.
 - [idea] [skills] Add a session-recap skill (`/recap`), callable from any session at any point. Reports the
   flow of the chat session itself — not repository, bundle, or ticket state: what this session is
   about, a very brief digest of what was discussed, what was suggested, what's already settled or
@@ -75,6 +73,16 @@ Candidate work and follow-ups nobody has picked yet.
   `2026-08-18-consuming-repo-layout.md` and `2026-08-18-script-read-settings.md` use a prose byline and
   `2026-08-18-fixed-bundle-land.md` has frontmatter without `areas:`. All three are immutable, so the fix
   is not an edit: either supersede them or accept that the vocabulary reads from the rest.
-- [idea] [skills] `shape` picks the test seam while drafting and confirms it in the step-5 batch; the
-  `old-workflow` shape confirmed it before drafting, because acceptance criteria are phrased at the seam
-  and moving it late rewrites the spec around it.
+- [idea] [skills] `shape` picks the test seam while filling `spec.md`'s Test intent in step 4 and confirms
+  it in step 5's batch — after the Behavioral Requirements and Acceptance Criteria above it are already
+  written. The `old-workflow` shape had a dedicated step 3, "Sketch the test seams and confirm with
+  user", before creating the bundle at all, for the stated reason that AC are phrased at the seam, so
+  picking it late means rewriting the spec around it. Restoring that ordering costs one round-trip
+  before drafting.
+- [drift] [workflow] `workflow/artifacts.md`'s Areas section derives the area vocabulary from use — "read
+  the backlog's lines and the records' frontmatter, reuse the closest term, coin one only when none
+  fits" — but `setup` installs `work/backlog.md` with an empty `## Items` and creates no
+  `docs/decisions/` at all, so in a fresh consuming repo that read returns nothing and the coin branch
+  fires on every line with nothing to calibrate against. The deleted
+  `skills/backlog/references/entry-format.md` named the failure ("usage is a subset of what's valid");
+  nothing does now.

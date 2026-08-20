@@ -184,9 +184,10 @@ code, and not the repository's canonical checks, which stay canonical in CI.
 - Locked tests: the scope of any test authored outside the implementing agent. lifecycle.md owns when
   that exception is admissible and who may run or modify them. Write "none" when it does not apply.
 
-When the outcome is "behavior unchanged", the characterization-test mandate belongs to the plan —
-see Vertical slicing in ${CLAUDE_PLUGIN_ROOT}/workflow/bundle.md. State the outcome here; do not
-restate the mandate. -->
+When the outcome is "behavior unchanged", characterization tests are mandatory and bind the
+decomposition, not this document — see Vertical slicing in
+${CLAUDE_PLUGIN_ROOT}/workflow/bundle.md for where they land on each route. State the outcome here;
+do not restate the mandate. -->
 
 - Seam: <observable boundary the acceptance tests attach to>
 - Levels: <what is proven where>

@@ -97,8 +97,9 @@ and the risk cases: this section owns what this repository makes of them. Prior 
 harness or fixture work a slice must build first, and which slice carries it.
 
 Required when the approved outcome is "behavior unchanged" — Vertical slicing in
-${CLAUDE_PLUGIN_ROOT}/workflow/bundle.md puts the characterization-test mandate on the plan, and this
-is where it lands, naming the slice that pins current behavior before any slice changes it.
+${CLAUDE_PLUGIN_ROOT}/workflow/bundle.md makes characterization tests mandatory then, and where a
+plan exists this is where they land: name the slice that pins current behavior before any slice
+changes it.
 Otherwise optional: delete it when existing test infrastructure covers the change with no
 preparation. -->
 
