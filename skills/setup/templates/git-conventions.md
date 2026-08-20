@@ -6,7 +6,8 @@ This repository's git conventions: rules that apply to any git work.
 
 Conventional Commits — `type(scope): subject`.
 
-- Types, exactly these seven: feat, fix, refactor, docs, test, chore, ci.
+- Types, exactly these eight: feat, fix, refactor, docs, test, chore, ci, bundle.
+- `bundle` is reserved for commits on workflow artifacts under `work/` — scopeless, and never mixed with a change to anything else.
 - Subject imperative, lowercase after the colon, ≤ 72 characters.
 - Body only when the why isn't obvious from the diff.
 - One logical change per commit.
