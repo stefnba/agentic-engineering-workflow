@@ -8,7 +8,7 @@ Status: accepted
 Two different things get written into a consuming repo:
 
 - **Workflow machinery** — config, backlog, in-flight bundles. Meaningless once you uninstall the
-  workflow; bundles are explicitly deleted at Ship.
+  workflow; bundles are explicitly deleted at Land.
 - **Repo knowledge the workflow happens to produce** — ADRs, research. These are the repo's own
   documentation. Uninstall the workflow and you keep every one of them.
 

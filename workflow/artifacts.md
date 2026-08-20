@@ -60,7 +60,9 @@ Authority is axis-specific, not one global document hierarchy:
   and the root glossary owns cross-domain vocabulary and links the domain glossaries. A repository
   without a glossary does not need one created solely for this workflow.
 - **Decision history:** decision records are immutable. Supersede a decision with a new record; never
-  edit the old record to make history look current.
+  edit the old record to make history look current. A repo-wide terminology rename is the one
+  exception and sweeps records too: renaming a thing changes no decision made about it, and a record
+  left in the old vocabulary reads as if it governed something else.
 - **Process versus prompt:** workflow, artifact, and repository convention documents outrank agent
   prompts. Prompts load those owners and contain only role-specific judgment, escalation, and output
   instructions.

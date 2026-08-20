@@ -12,23 +12,11 @@ Work on the reference material itself. Unsorted collection dump — order carrie
   prompt. Both prompts and `workflow/lifecycle.md`'s Run conditions say so plainly rather than
   overclaiming. Close it with a hook or a permission rule, and the same question applies to the
   Architect's "write access only to the draft bundle" boundary.
-- [follow-up] [skills] `bundle-git` has no Ship-side script: nothing lands a bundle branch on the integration
+- [follow-up] [skills] `bundle-git` has no Land-side script: nothing lands a bundle branch on the integration
   target. The rules it must implement are settled — see "Landing a bundle" in
   `workflow/git-mechanics.md` — but nothing enforces them, and `TICKET_MERGE_METHOD` deliberately does not
-  cover the land.
-- [follow-up] [workflow] [skills] [docs] Rename the Ship stage to Land — "ship" implies production release, which the workflow
-  explicitly doesn't own (the integration target may be `dev`, promotion to the protected branch is
-  a separate release process); "lands on the integration target" is already the docs' own phrasing.
-  Sweep is wider than it looks — stage-sense "Ship" also sits in all three shape templates
-  (`spec.md`, `plan.md`, `spike.md`), `bundle-git/SKILL.md`, `setup/references/prerequisites.md`,
-  `git-mechanics.md`, `shaping-routes.md`, and the README skill table, besides lifecycle.md,
-  walkthrough.md, artifacts.md ("Shipped" lifetime state → "Landed"), bundle.md, AGENTS.md, and the
-  planned `/ship` skill name (→ `/land`). Decide first what happens to
-  `docs/decisions/2026-08-18-fixed-bundle-land.md`: it carries eight stage-sense occurrences and
-  decision records are immutable, so either it stays frozen with the old term or a superseding
-  record renames the stage.
-- [follow-up] [skills] [docs] walkthrough.md names skills that still don't exist: `/pick`, `/scan-codebase`,
-  `/complete-ticket`, `/ship`. `/interview-me`, `/shape`, and `/critique` now do. `bundle-git` owns
+  cover the land.- [follow-up] [skills] [docs] walkthrough.md names skills that still don't exist: `/pick`, `/scan-codebase`,
+  `/complete-ticket`, `/land`. `/interview-me`, `/shape`, and `/critique` now do. `bundle-git` owns
   claim, status, and merge, so `/complete-ticket` should call its script rather than reimplementing
   the merge — and the internal, non-user-facing dispatch skills still need defining too, not just
   the slash commands a human types.
@@ -39,7 +27,7 @@ Work on the reference material itself. Unsorted collection dump — order carrie
   transition is a script; this one is prose, so a collision retry or a wrong target branch depends
   on the model following instructions. Consider `bundle-git/scripts/publish-bundle.sh`.
 - [drift] [workflow] [skills] `workflow/git-mechanics.md` says the `bundle-git` skill owns bundle branch creation and
-  cleanup, but the skill only creates the bundle branch and removes a ticket's worktree. Ship's
+  cleanup, but the skill only creates the bundle branch and removes a ticket's worktree. Land's
   branch and worktree cleanup is unimplemented. (The undefined "sync" it also claimed is gone.)
 - [follow-up] [skills] `bundle-git`'s claim is verified over the `git://` smart protocol, never against
   github.com over HTTPS, and the chain claim → PR → `/complete-ticket` → derived `done` has never run
@@ -72,8 +60,8 @@ Work on the reference material itself. Unsorted collection dump — order carrie
   hold nothing: `scan-codebase` (`audit` on the `old-workflow` tag), `backlog`, `pick`, `research`,
   and the stage drivers. Whoever implements each should claim its name from the README table.
 - [follow-up] [skills] Four skills stay on the `old-workflow` tag because they encode the superseded
-  contract: `backlog`, `pick`, `research`, and `audit` (→ `scan-codebase`). Only the Ship→Land
-  rename still blocks them now that the Finding protocol is extracted — write them fresh against
-  `workflow/` afterwards, with `git show old-workflow:skills/<name>/SKILL.md` as reference, rather
+  contract: `backlog`, `pick`, `research`, and `audit` (→ `scan-codebase`). Nothing blocks them now
+  that the Ship→Land rename and the Finding-protocol extraction are both done — write them fresh
+  against `workflow/`, with `git show old-workflow:skills/<name>/SKILL.md` as reference, rather
   than restoring and patching paths. The stage drivers (`shape`, `critique`, `implement`, `review`,
-  `ship`) are a full rewrite regardless.
+  `land`) are a full rewrite regardless.
