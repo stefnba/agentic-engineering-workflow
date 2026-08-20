@@ -17,14 +17,10 @@ Candidate work and follow-ups nobody has picked yet.
   merged, open PR, in flight — and refused to touch anything unmerged. Add that classification:
   `gh pr list --head` rather than ancestry, because a squash merge leaves none.
 - [drift] [skills] [docs] `README.md` and `docs/walkthrough.md` name skills that hold nothing yet —
-  `scan-codebase`, `research`, `complete-ticket`, and the stage driver `review`. (`land` now exists.)
-  Whoever builds one claims its name from the README table. Two constraints are already settled:
+  `scan-codebase`, `research`, and `complete-ticket`. (`land` and `review` now exist.)
+  Whoever builds one claims its name from the README table. One constraint is already settled:
   `bundle-git` owns claim, status, and merge, so `/complete-ticket` calls its script rather than
-  reimplementing the merge; and the internal, non-user-facing dispatch skills need defining too, not just
-  the slash commands a human types. `review` is load-bearing now: `skills/implement/SKILL.md` dispatches
-  the `reviewer` agent directly, so round numbering, the head-SHA handoff, and the read-only boundary are
-  written into the caller instead of owned once — and `shape`/`critique` shows the shape the pair should
-  have.
+  reimplementing the merge.
 - [follow-up] [skills] `shape` publishes the approved bundle by hand — `git add`/`commit`/`push` from the
   prompt, sourcing `bundle-git`'s `_config.sh` for `INTEGRATION_TARGET`. Every other state
   transition is a script; this one is prose, so a collision retry or a wrong target branch depends
@@ -74,21 +70,11 @@ Candidate work and follow-ups nobody has picked yet.
 - [follow-up] [skills] `skills/bundle-git/tests/run.sh` pins that a stray file _inside_ `tickets/` can't flip
   the branch strategy, but nothing pins a sibling directory under `work/bundles/<id>/`. `ticket_base` is
   safe today by inspection; add the case before any design puts a directory there.
-- [drift] [docs] The 16 numbered decision records were deleted wholesale in `d63c87c`, which `AGENTS.md`
-  forbids — supersede, never delete. Rules the current docs assert flatly now carry no recorded rationale:
-  bundles-deleted-no-archive, colocated system docs, shape creates the full ticket set, date-slug ids,
-  tickets as files, specs as target state. `git show old-workflow:docs/decisions/` has them; 0004, 0005,
-  0015 and 0016 are genuinely superseded.
 - [drift] [docs] `skills/record-decision/templates/decision-record.md` mandates YAML frontmatter with
-  `areas:`, and `workflow/artifacts.md` reads the area vocabulary from records' frontmatter — but of the
-  four records, two use a prose byline, a third has frontmatter without `areas:`, and only
-  `2026-08-20-land-worktree.md` carries the field, so that vocabulary has one source. Old record 0005
-  settled the format and was one of the deleted ones.
-- [drift] [skills] [docs] The skill and agent authoring conventions from the deleted `docs/skills.md` are
-  documented nowhere, though every skill here follows them: inline vs `context: fork`, path-scoped write
-  boundaries as a PreToolUse hook rather than a tool list, `background: false` when someone waits,
-  `disable-model-invocation` for anything crossing a human gate, agents own who / skills own when, and
-  four plugin-compatibility rules. The unbuilt stage drivers need them.
+  `areas:`, and `workflow/artifacts.md` reads the area vocabulary from records' frontmatter — but
+  `2026-08-18-consuming-repo-layout.md` and `2026-08-18-script-read-settings.md` use a prose byline and
+  `2026-08-18-fixed-bundle-land.md` has frontmatter without `areas:`. All three are immutable, so the fix
+  is not an edit: either supersede them or accept that the vocabulary reads from the rest.
 - [idea] [skills] `shape` picks the test seam while drafting and confirms it in the step-5 batch; the
   `old-workflow` shape confirmed it before drafting, because acceptance criteria are phrased at the seam
   and moving it late rewrites the spec around it.
