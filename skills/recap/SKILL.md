@@ -1,7 +1,7 @@
 ---
 name: recap
 description: Report this conversation back to the human — its subject, what it settled, what is still open. Use when the user asks where things stand, what has been covered or decided so far, what is still open, what they were working on, or says "catch me up", "remind me", "where were we", "summarize this session" — including after a long gap, a switch back to an old tab, or a context compaction. Not for writing a resumable document for a fresh agent, which is `handoff`, and not for repository, bundle, or ticket state, which `bundle-git` derives.
-disallowed-tools: Read, Write, Edit, NotebookEdit, Glob, Grep, Bash, BashOutput, KillShell, WebFetch, WebSearch, Task, Agent, Skill, SlashCommand, TodoWrite
+disallowed-tools: Agent, Artifact, Bash, CronCreate, CronDelete, CronList, Edit, EnterWorktree, ExitWorktree, Glob, Grep, LSP, ListAgents, ListMcpResourcesTool, Monitor, NotebookEdit, PowerShell, PushNotification, Read, ReadMcpResourceTool, RemoteTrigger, ReportFindings, ScheduleWakeup, SendMessage, SendUserFile, ShareOnboardingGuide, Skill, TaskCreate, TaskGet, TaskList, TaskOutput, TaskStop, TaskUpdate, TodoWrite, ToolSearch, WaitForMcpServers, WebFetch, WebSearch, Workflow, Write
 ---
 
 # Recap this conversation
@@ -18,12 +18,15 @@ nothing, dispatch nothing. What the conversation does not establish, the recap d
 would settle it. Going to check turns a recap into a fresh investigation, and the human asked what
 was said.
 
-**Part of that is structural, and the rest is on you.** The `disallowed-tools` field above removes
-the reading, writing, running, searching, and dispatching tools from the pool while this skill is
-active. It reaches no further: a tool it does not name — one added since, one an MCP server supplies
-— stays callable, and so does everything on the next turn, because the restriction clears at the
-next user message. Hold to those anyway; the withholding is the point of the skill, not a side
-effect of a field.
+**Part of that is structural, and the rest is on you.** The `disallowed-tools` field above names
+every built-in tool that reads, writes, runs, searches, or dispatches, and removes each one from the
+pool while this skill is active. The four built-ins left available — `AskUserQuestion`,
+`EnterPlanMode`, `ExitPlanMode`, `EndConversation` — do none of those things.
+
+**The field reaches no further than the names in it.** A tool added to the platform since this list
+was written, a tool an MCP server supplies, and every turn after this one — the restriction clears
+at the next user message — stay callable. Hold to the boundary there anyway: the withholding is the
+point of the skill, not a side effect of a field.
 
 ## What the report says
 
