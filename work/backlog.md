@@ -12,21 +12,19 @@ Candidate work and follow-ups nobody has picked yet.
   prompt. Both prompts and `workflow/lifecycle.md`'s Run conditions say so plainly rather than
   overclaiming. Close it with a hook or a permission rule, and the same question applies to the
   Architect's "write access only to the draft bundle" boundary.
-- [follow-up] [skills] [workflow] `bundle-git` has no Land-side script: nothing lands a bundle branch on the
-  integration target, and nothing does the branch and worktree cleanup `workflow/git-mechanics.md` already
-  says the skill owns. The rules are settled — see "Landing a bundle" there — but nothing enforces them, and
-  `TICKET_MERGE_METHOD` deliberately does not cover the land. It also owns Land's worktree on the bundle
-  branch: create it, refuse a stale one the way `claim-ticket.sh` does, and remove it from outside itself.
-  (The undefined "sync" `git-mechanics.md` also claimed is gone.) For the cleanup half,
-  `git show old-workflow:skills/bundle-git/SKILL.md` already designed it — the merged/open-pr/in-flight
-  classification, `gh pr list --head` rather than ancestry because a squash leaves none, and `branch -D`
-  for the same reason.
+- [follow-up] [skills] `land-bundle.sh cleanup` deletes every ticket branch and the bundle branch
+  unconditionally, where `git show old-workflow:skills/bundle-git/SKILL.md` classified them first —
+  merged, open PR, in flight — and refused to touch anything unmerged. Add that classification:
+  `gh pr list --head` rather than ancestry, because a squash merge leaves none.
 - [drift] [skills] [docs] `README.md` and `docs/walkthrough.md` name skills that hold nothing yet —
-  `scan-codebase`, `research`, `complete-ticket`, and the stage drivers `implement`, `review`, and `land`.
+  `scan-codebase`, `research`, `complete-ticket`, and the stage driver `review`. (`land` now exists.)
   Whoever builds one claims its name from the README table. Two constraints are already settled:
   `bundle-git` owns claim, status, and merge, so `/complete-ticket` calls its script rather than
   reimplementing the merge; and the internal, non-user-facing dispatch skills need defining too, not just
-  the slash commands a human types.
+  the slash commands a human types. `review` is load-bearing now: `skills/implement/SKILL.md` dispatches
+  the `reviewer` agent directly, so round numbering, the head-SHA handoff, and the read-only boundary are
+  written into the caller instead of owned once — and `shape`/`critique` shows the shape the pair should
+  have.
 - [follow-up] [skills] `shape` publishes the approved bundle by hand — `git add`/`commit`/`push` from the
   prompt, sourcing `bundle-git`'s `_config.sh` for `INTEGRATION_TARGET`. Every other state
   transition is a script; this one is prose, so a collision retry or a wrong target branch depends
@@ -65,7 +63,7 @@ Candidate work and follow-ups nobody has picked yet.
   `skills:` field, which now exists. Open first: `audit` wrote a `docs/research/audit-*.md` plus
   backlog lines autonomously, but `docs/walkthrough.md` and `workflow/artifacts.md` now say a
   codebase scan's findings stay inline in chat and get triaged live — settle which before writing
-  it. The stage drivers (`implement`, `review`, `land`) are a full rewrite regardless.
+  it.
 - [follow-up] [skills] A consuming repo has no read path into `workflow/` at all. The installed `AGENTS.md`
   pointer deliberately stops at naming the plugin, `docs/conventions/git.md`, `work/config.conf`, and the
   two caretaker skills: no placeholder resolves in project instructions, and the line routing every stage
