@@ -168,8 +168,8 @@ behavior rather than mirroring implementation structure.
 
 ## Scope Discipline
 
-Document unrelated problems without fixing them. Add required follow-up work through the workflow's
-backlog mechanism.
+Document unrelated problems without fixing them. Offer required follow-up work through the `backlog`
+skill, which owns what earns a line.
 
 ## Output
 

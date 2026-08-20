@@ -17,7 +17,7 @@ Candidate work and follow-ups nobody has picked yet.
   `workflow/git-mechanics.md` — but nothing enforces them, and `TICKET_MERGE_METHOD` deliberately does not
   cover the land.
 - [follow-up] [skills] [docs] walkthrough.md names skills that still don't exist: `/pick`, `/scan-codebase`,
-  `/complete-ticket`, `/land`. `/interview-me`, `/shape`, and `/critique` now do. `bundle-git` owns
+  `/complete-ticket`, `/land`. `/pick`, `/interview-me`, `/shape`, and `/critique` now do. `bundle-git` owns
   claim, status, and merge, so `/complete-ticket` should call its script rather than reimplementing
   the merge — and the internal, non-user-facing dispatch skills still need defining too, not just
   the slash commands a human types.

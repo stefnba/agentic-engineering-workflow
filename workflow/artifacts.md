@@ -168,6 +168,11 @@ a finding ([Finding protocol](./finding-protocol.md)) keeps it out of here too.
 written now is stale by the time it is read. A line may carry the evidence that proves its claim — a
 drift nobody can cheaply re-verify is worth the extra lines — but never a design for the fix.
 
+**A line carries what is outstanding, never a ledger of what is already done.** When part of its
+scope lands, delete that part rather than moving it into an "already handled" clause. The repository
+answers what exists; a line that also answers it has to be maintained every time something lands,
+and goes stale the first time nobody does.
+
 ## Backlog tags
 
 Every repository uses the same three **kind** tags, because they classify a line's standing in this
