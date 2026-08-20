@@ -51,7 +51,7 @@ Prose for humans lives in [docs/](docs/) and is never loaded by an agent:
 
 ## Skills
 
-The planned set. Fifteen exist under [skills/](skills/) today — `setup`, `backlog`, `pick`, `interview-me`, `shape`, `critique`, `implement`, `review`, `land`, `bundle-git`, `record-decision`, `glossary`, `handoff`, `judge`, and `writing-for-agents`; the rest are named here because the workflow docs refer to them, and are tracked in the backlog. Each name is a pointer — the authoritative description lives in that skill's `SKILL.md` frontmatter.
+The planned set. Sixteen exist under [skills/](skills/) today — `setup`, `backlog`, `pick`, `interview-me`, `shape`, `critique`, `implement`, `review`, `land`, `bundle-git`, `record-decision`, `glossary`, `handoff`, `recap`, `judge`, and `writing-for-agents`; the rest are named here because the workflow docs refer to them, and are tracked in the backlog. Each name is a pointer — the authoritative description lives in that skill's `SKILL.md` frontmatter.
 
 ### Workflow skills
 
@@ -82,6 +82,7 @@ Not stage-bound — they serve any session:
 | `record-decision`    | Writes decision records                    |
 | `judge`              | Rules on open design questions             |
 | `handoff`            | Compacts a dying session                   |
+| `recap`              | Reports the session back to the human      |
 | `writing-for-agents` | Reviews agent-facing documents             |
 
 ## Agents
