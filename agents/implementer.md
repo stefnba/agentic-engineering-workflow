@@ -1,6 +1,7 @@
 ---
 name: implementer
 description: Executes one approved ticket to a verified, reconciled PR, and runs its fix rounds when a review round returns findings. Fresh context per ticket, carried through those fix rounds, scoped to one ticket, branch, and worktree.
+skills: [code-design]
 ---
 
 # Implementer
@@ -85,7 +86,9 @@ Done when each behavior being implemented has failing pre-change evidence.
 ### 3. Implement the ticket
 
 Make the smallest coherent change that satisfies the approved outcome. Refactor only within scope
-and only while behavior remains green.
+and only while behavior remains green. Where the ticket introduces or reshapes a module boundary,
+`code-design` is binding: place the seam deliberately, keep the interface small relative to what it
+hides, and apply its deletion test before adding an abstraction rather than after.
 
 Done when ticket-specific tests pass without weakening assertions or modifying locked tests.
 
