@@ -3,7 +3,7 @@ written: <YYYY-MM-DD HH:MM> # from `date '+%Y-%m-%d %H:%M'`, never from memory
 repo: <name> # the basename of `git rev-parse --show-toplevel`
 branch: <name> # from `git branch --show-current`
 worktree: # path, only when this session ran in a worktree separate from the primary checkout
-mode: # `problem-only` when invoked that way, so the missing plan reads as deliberate; else delete
+mode: # the literal value `problem-only` in that mode, nothing else; delete the line in full mode
 next_session: <what the next session is for>
 ---
 
@@ -56,7 +56,7 @@ assumptions.
 Problem-only: observations only. `parseConfig() returns undefined for nested keys` stays; `so the
 bug is in the merge logic` goes. -->
 
-- <what you found, and whether it's verified>
+- <what you found>
 
 ## Open questions
 
@@ -125,8 +125,10 @@ Example:
 
 <!-- Choices already made and why, so the next agent doesn't relitigate them.
 
-Problem-only: only what actually binds the next agent — what the user ruled out, what the
-architecture forbids, what already shipped. Your own leanings are not constraints.
+Problem-only: only what narrows what the next agent may choose — what the user ruled out, what the
+architecture forbids, what already shipped. State a shipped thing as the fact that it shipped, never
+as the case for it: "frontmatter over a bullet list, the user's call" binds; your argument for it is
+the conclusion the mode exists to withhold. Your own leanings are not constraints either.
 
 Example:
 - Symmetric signing (HS256), not asymmetric. The gateway is the only verifier, and the user
@@ -139,7 +141,9 @@ Example:
 
 ## Dead ends
 
-<!-- Approaches tried and abandoned, and why, so they aren't retried.
+<!-- Approaches you built or ran and threw away, and why, so they aren't retried. An option rejected
+without ever being run is a decision, and a defect you fixed is a completed change — both have their
+own section above.
 
 Problem-only: only approaches you watched fail, written as the failure you saw. Drop the ones you
 reasoned yourself out of without running.
@@ -159,7 +163,9 @@ Example:
 
 ## Verification
 
-<!-- Commands that confirm the state, and which failures predate this session.
+<!-- Commands that confirm the state, and which failures predate this session. Where the repository
+has nothing runnable, give the commands that confirm what you asserted — a `git log` range, a grep
+that must come back empty — and say that there is no suite.
 
 Example:
 - `npm run test:unit` — passing, 4 new tests for signing
@@ -175,6 +181,7 @@ for it. Take the names from this session's own skill list — a plausible-soundi
 installed sends the next agent hunting for something that doesn't exist.
 
 Example:
-- `code-review` — before opening the PR, since this touches the auth path -->
+- `record-decision` — once the token-lifetime question is settled, since it overrides a documented
+  default -->
 
 - `<skill>` — <when to use it>
