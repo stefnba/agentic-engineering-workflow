@@ -99,20 +99,38 @@ findings is valid.
 
 ## Output
 
-List blockers before concerns:
+Blockers before concerns, in the record form and glyphs of
+`${CLAUDE_PLUGIN_ROOT}/workflow/finding-protocol.md` — including its rule that what holds is not
+reported.
 
 ```text
-C<N> [blocker|concern] [verified|suspected] <axis> — <artifact:section or repository path>
-Violates: <spec BR-n/INV-n/AC-n, binding constraint, decision record, or the failure mechanism>
-Claim: <what the bundle says or assumes>
-Evidence: <what you inspected>
-Failure: <what becomes wrong, unsafe, or unexecutable>
-Required resolution: <the property Shape must establish, without writing the fix>
+## Critique
+
+### Findings
+
+❌ C<N> [verified|suspected] <axis> — <artifact:section or repository path>
+
+- Violates: <spec BR-n/INV-n/AC-n, binding constraint, decision record, or the failure mechanism>
+- Claim: <what the bundle says or assumes>
+- Evidence: <what you inspected>
+- Impact: <what becomes wrong, unsafe, or unexecutable>
+- Required outcome: <the property Shape must establish, without writing the fix>
+
+### Coverage
+
+✅ intent · plan · tickets · tests · dependencies · risks · gates — or name the ones you could not reach
+
+### Assessment
+
+✅ ready for human Plan review | ❌ not ready
+
+### Residual uncertainty
+
+- <only material areas the available evidence could not settle>
+
+### Backlog candidates
+
+- <evidence-backed, non-gating follow-ups only>
 ```
 
-Then report:
-
-- Coverage checked: intent, plan, tickets, tests, dependencies, risks, gates
-- Assessment: ready for human Plan review | not ready
-- Residual uncertainty: only material areas the available evidence could not settle
-- Backlog candidates: evidence-backed, non-gating follow-ups only
+One line per bullet. Drop any section with nothing to put in it.

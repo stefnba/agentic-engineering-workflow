@@ -1,7 +1,6 @@
 # Finding protocol
 
-What a Critic or Reviewer may report, and what survives a round. Both load this document; neither
-needs the rest of [Lifecycle](./lifecycle.md), which sequences the rounds and owns the gates.
+What a Critic or Reviewer may report, and what survives a round. Both load this document.
 
 A finding is an argument addressed to a human gate. Everything below exists to keep it that — an
 argument the human can act on — rather than a list of things an agent noticed.
@@ -54,6 +53,23 @@ But flag them honestly, because the flag is what the fix round acts on: **fix mo
 suspected finding before fixing it or rebutting it**, and says which it did. A suspected finding
 that survives into an accepted change without ever being confirmed is a gap in the record, not a
 resolved item.
+
+## Record form
+
+A finding is written as a block: an identifier line — ID, severity, confidence, axis, and where it
+lives — then one line each for what it violates, what the work claims, the evidence, the impact, and
+the outcome a fix must establish. Each agent's prompt carries the exact block. The ID prefix is what
+differs, because the stages count differently: `C<N>` for a bundle critique, which runs once, and
+`R<round>-F<N>` at PR time, where an ID must survive into the next round.
+
+Severity carries a glyph, so that a human scanning the record and an agent parsing it read the same
+line: ❌ blocker, ⚠️ concern, ✅ passed or closed.
+
+**A report carries only what the next fix round or the next human gate acts on.** A check that
+passed and raised no finding does not appear — a rerun verification table is the exception, because
+it is the evidence of record. Do not restate what holds, inventory what you inspected, or assign
+fault for a finding; that derivation belongs in the reporting agent's context, not in the record. A
+report padded with passing checks buries the two lines someone has to act on.
 
 ## Across rounds
 

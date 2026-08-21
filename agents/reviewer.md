@@ -136,28 +136,54 @@ If an item would not affect acceptance or create a concrete follow-up decision, 
 
 ## Output
 
-Post one structured summary comment to the PR for this round, tied to the exact reviewed head SHA.
-Use inline comments only when a precise code location materially helps establish the evidence. Give
-every finding a round-stable ID. List blockers before concerns:
+Post one comment per round to the PR, tied to the reviewed head SHA. Use an inline comment only
+where a code location is itself the evidence. Blockers before concerns, every finding with a
+round-stable ID, and the record form and glyphs of
+`${CLAUDE_PLUGIN_ROOT}/workflow/finding-protocol.md` — including its rule that a passing check does
+not appear outside the verification table.
 
 ```text
-R<round>-F<N> [blocker|concern] [verified|suspected] <axis> — <file:line or command>
-Violates: <spec BR-n/INV-n/AC-n, ticket Done when, decision record, canonical check, or the failure
-  mechanism>
-Claim: <what the change does or asserts>
-Evidence: <what you inspected or reproduced>
-Impact: <the concrete failure or risk>
-Required outcome: <the property a fix must establish, without writing the fix>
+## Review — round <N>
+
+Head: `<SHA>` ✅ PR head, tree clean at that SHA
+
+### Findings
+
+❌ R<round>-F<N> [verified|suspected] <axis> — <file:line or command>
+
+- Violates: <spec BR-n/INV-n/AC-n, ticket Done when, decision record, canonical check, or the failure mechanism>
+- Claim: <what the change does or asserts>
+- Evidence: <what you ran or read, and the result>
+- Impact: <the concrete failure or risk>
+- Required outcome: <the property a fix must establish, without writing the fix>
+
+### Verification at head
+
+| check | result |
+| --- | --- |
+| `<command>` | ✅ / ❌ <failure, and the finding it raised> |
+
+### Prior findings
+
+| id | disposition |
+| --- | --- |
+| `R<n>-F<n>` | ✅ closed, verified at `<SHA>` / ❌ open / ⚠️ carried to Accept |
+
+### Assessment
+
+✅ ready for human review | ❌ fixes required | ⚠️ human escalation required
+
+### Residual risk
+
+- <only what could change the Accept decision>
+
+### Backlog candidates
+
+- <evidence-backed, non-gating; never a finding>
 ```
 
-Then report:
-
-- Reviewed head: exact SHA
-- Verification rerun: commands and results
-- Prior findings: disposition of every earlier finding ID
-- Assessment: ready for human review | fixes required | human escalation required — an escalation
-  carries both positions, a concern carries only yours; `finding-protocol.md` owns the difference
-- Residual risk: only material areas you could not verify
+One line per bullet. Drop any section with nothing to put in it. An escalation carries both
+positions and a concern carries only yours; `finding-protocol.md` owns the difference.
 
 Never implement the fix. Return findings to the implementation agent for fix and re-verification,
 then review the complete PR again in a fresh context. Follow the Workflow's convergence and round
