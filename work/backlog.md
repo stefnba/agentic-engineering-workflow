@@ -93,3 +93,6 @@ Candidate work and follow-ups nobody has picked yet.
   survive every land as empty directories, untracked and invisible to `git status`. Observed landing
   `2026-08-20-recap-skill`; `git worktree list` was clean while `find .claude/worktrees` still returned
   two directories.
+- [follow-up] [skills] `skills/recap/SKILL.md` prescribes prose — its worked example and its
+  per-section guidance are full sentences, so a long session comes back as five paragraphs. Wanted:
+  bullets and fragments, brevity over grammar, matching this repo's own output style.
