@@ -11,12 +11,12 @@ This repo collects agentic-coding practices — workflow design, documentation s
 This repo is also the plugin: its root is the plugin root, so everything here ships to consuming
 repos. Three layers, distinguished by who may change a file:
 
-| Path                              | Layer                                             | Changed by                 |
-| --------------------------------- | ------------------------------------------------- | -------------------------- |
-| `workflow/`, `agents/`, `skills/` | plugin — the workflow contract and its components | the workflow author        |
-| `docs/conventions/*.md`           | rules a consuming repo owns, installed by `setup` | the consuming repo's owner |
-| `work/config.conf`                | settings a consuming repo owns that scripts read  | the consuming repo's owner |
-| `docs/*.md`, `docs/decisions/`    | published narrative, never loaded by an agent     | the workflow author        |
+| Path                                                | Layer                                             | Changed by                 |
+| --------------------------------------------------- | ------------------------------------------------- | -------------------------- |
+| `workflow/`, `agents/`, `skills/`, `output-styles/` | plugin — the workflow contract and its components | the workflow author        |
+| `docs/conventions/*.md`                             | rules a consuming repo owns, installed by `setup` | the consuming repo's owner |
+| `work/config.conf`                                  | settings a consuming repo owns that scripts read  | the consuming repo's owner |
+| `docs/*.md`, `docs/decisions/`                      | published narrative, never loaded by an agent     | the workflow author        |
 
 Each layer has its own directory, so placement answers the question the table asks: a rule the
 workflow owns goes in `workflow/`, a convention a repository owns goes in `docs/conventions/`,
@@ -37,10 +37,3 @@ it before adding either.
 - **One copy.** Docs reference each other instead of restating. When adding material, link to the owning doc; if nothing owns it yet, decide where it belongs before writing. A doc may name a rule or state it, never both — where a "see X" already points at the owner, the surrounding prose stays a clause, not a paragraph. Never duplicate a number, a list, or a setting name across docs; those are what actually drift.
 - **Guides own nothing.** [docs/walkthrough.md](docs/walkthrough.md) is navigational — which skill, which session, what you do at a handoff. Every rule it touches lives in `workflow/` and is linked, never restated, and no `workflow/` doc depends on it.
 - Read [docs/conventions/git.md](docs/conventions/git.md) before any git operation — it holds this repo's commit and PR conventions and the plain-git worktree rule. Settings the scripts read live in [work/config.conf](work/config.conf); [workflow/git-mechanics.md](workflow/git-mechanics.md) owns the procedures that consume both.
-
-## Output style
-
-- **Trim to what's needed** — cut filler, don't restate the question, don't summarize what was just done.
-- **Use bullets, numbered lists, or headings** for anything with more than one part (steps, options, comparisons).
-- Use a short paragraph only for a single point that doesn't decompose into list items.
-- **Favor brevity** over polished grammar; fragments are fine.

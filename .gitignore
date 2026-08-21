@@ -7,7 +7,7 @@
 .idea/
 *.swp
 
-# Claude Code local state (settings.json and the skills/agents symlinks stay tracked)
+# Claude Code local state (settings.json and the skills/agents/output-styles symlinks stay tracked)
 .claude/worktrees
 .claude/settings.local.json
 .claude/*.local.json

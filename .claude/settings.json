@@ -23,6 +23,7 @@
       "Read(config/credentials.json)"
     ]
   },
+  "outputStyle": "crisp",
   "disableBundledSkills": true,
   "disableWorkflows": true,
   "disableRemoteControl": true,

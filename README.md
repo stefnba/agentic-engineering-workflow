@@ -97,6 +97,12 @@ The subagents forked skills run in, under [agents/](agents/):
 | `implementer` | Executes one ticket to a PR, and fix rounds                                           |
 | `reviewer`    | Judges a ticket's PR. Run read-only in a fresh context with no authorship of the diff |
 
+## Output style
+
+One, under [output-styles/](output-styles/). `crisp` keeps responses short and high-level by
+default, caps a decision at 3 options plus a recommendation, and applies to the main conversation
+only, never to a forked agent. Select it with `"outputStyle": "crisp"` in `.claude/settings.json`.
+
 ## Status
 
 Work in progress — the workflow stages are still being designed, and the docs and skills have drifted in places (tracked in the backlog).

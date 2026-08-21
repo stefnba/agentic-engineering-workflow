@@ -104,13 +104,13 @@ MCP servers go in `.mcp.json` at the repo root — **not** nested under a `mcp` 
 
 Different from everything above — output styles change _how Claude responds_ (role, tone, output format), not what tools it has. They modify the system prompt, same mechanism as the token-reduction settings, so they're worth knowing about even if your repo doesn't need one yet. For project conventions/codebase context, use `CLAUDE.md` instead — output styles are for changing Claude's voice or default format, not teaching it about the repo.
 
-Three built-in styles beyond the default: **Proactive** (acts on reasonable assumptions instead of pausing), **Explanatory** (adds educational "Insights" while coding), **Learning** (leaves `TODO(human)` markers for you to fill in). Set one with:
+Four built-in styles beyond the default: **Proactive** (acts on reasonable assumptions instead of pausing), **Concise** (leads with the result, keeps responses short), **Explanatory** (adds educational "Insights" while coding), **Learning** (leaves `TODO(human)` markers for you to fill in). Set one with:
 
 ```json
 "outputStyle": "Explanatory"
 ```
 
-Custom styles are Markdown files with frontmatter, stored in `.claude/output-styles/`. Full reference, including how to keep vs. drop Claude Code's built-in coding instructions: [Output styles](https://code.claude.com/docs/en/output-styles).
+Custom styles are Markdown files with frontmatter, stored in `.claude/output-styles/`; a plugin ships them in `output-styles/` at its root, and this one ships [`crisp`](../output-styles/crisp.md). Set it the same way — `"outputStyle": "crisp"`. Either way the style reaches the main conversation only, not a subagent, and a change takes effect at the next session. Full reference, including how to keep vs. drop Claude Code's built-in coding instructions: [Output styles](https://code.claude.com/docs/en/output-styles).
 
 ### Verify it's working
 
