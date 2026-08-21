@@ -30,38 +30,61 @@ point of the skill, not a side effect of a field.
 
 ## What the report says
 
-One message, in this shape and with nothing around it:
+**One message, in the shape below, with nothing around it.** Fill every part; the comments are fill
+guidance and never reach the human. Keep the blank lines — heading, blank, content, blank.
 
 ```markdown
-**From memory of this conversation — not checked against the repository.**
+Here's the recap:
 
-**Subject** — the auth-token refactor: replacing the hand-rolled session cookie with signed tokens.
+## Subject
 
-**Discussed** — three storage options for the signing key; whether existing sessions need a
-migration; a suggestion to log verification failures at warn level.
+<!-- One sentence. Example:
+auth-token refactor: hand-rolled session cookie → signed tokens. -->
 
-**Settled** — the key goes in the existing secrets file, not a new one. Existing sessions expire
-rather than migrate. Nothing has been written yet.
+<what this session is about>
 
-**Open** — the log level for verification failures. Whether the refresh window is 24 hours or 7 days.
+## Discussed
 
-**Gate** — the Plan gate is due: the bundle draft was called complete. It may have moved since.
+<!-- What came up and what was suggested. Compress hardest here — this is the part that runs long.
+Example:
+- three storage options for the signing key
+- whether existing sessions need a migration
+- logging verification failures at warn level -->
+
+- <item>
+
+## Settled
+
+<!-- What the conversation decided or completed, kept apart from what it only floated. From what the
+conversation says was settled, never from what the repository would show. Example:
+- key goes in the existing secrets file, not a new one
+- existing sessions expire rather than migrate
+- nothing written yet -->
+
+- <item>
+
+## Open
+
+<!-- Threads with no resolution yet. Example:
+- log level for verification failures
+- refresh window — 24 hours or 7 days -->
+
+- <item>
+
+## Gate
+
+<the due gate, marked as possibly moved since>
+
+<!-- Only under the condition in Gates below; delete the heading with it otherwise. Example:
+Plan gate due: the bundle draft was called complete. May have moved since. -->
 ```
 
-**Subject** — what this session is about, in a line or two.
+**Bullets and fragments, not prose.** One bullet per item, a line or so each; drop articles and
+linking verbs before you drop items. `Subject` is one sentence and `Gate` one line — everything else
+is a list. A long session comes back as a scannable report, never as paragraphs.
 
-**Discussed** — a brief digest of what came up and what was suggested. Compress; this part is the
-one that runs long.
-
-**Settled** — what the conversation decided or completed, kept separate from what it only floated.
-Answer it from what the conversation says was settled, never from what the repository would show.
-
-**Open** — the threads that have no resolution yet.
-
-**Gate** — see below.
-
-**Say a part is empty rather than dropping it**: "nothing settled yet" reports; a missing line reads
-as forgotten. The gate line is the exception — it appears only under the condition below.
+**Say a part is empty rather than dropping it**: a heading over "nothing settled yet" reports; a
+missing heading reads as forgotten. `Gate` is the only part that disappears when it does not apply.
 
 ## Gates
 
@@ -77,9 +100,10 @@ recap as satisfying a gate. The three gates are the human's alone
 
 ## Report honestly
 
-**Frame it as recollection, not as checked fact** — the opening line of the shape above does this,
-and the body stays consistent with it. Nothing here has been verified, and a long session's recall
-drifts.
+**Frame it as recollection, not as checked fact.** The report carries no banner saying so, so the
+hedging has to live in the lines themselves — say which parts you are unsure of rather than
+levelling everything to the same confidence. Nothing here has been verified, and a long session's
+recall drifts.
 
 **Say so when the earliest thing you can see is a summary** rather than the conversation's own
 start: what came before it is compacted, and the recap covers only what survived.
