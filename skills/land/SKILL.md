@@ -120,6 +120,29 @@ Branches a forge already deleted on merge are skipped, not treated as an error.
 
 ### 7. Hand back
 
-Report, in this order: what landed on the integration target and at which SHA, what was absorbed and
-into which doc, what the backlog gained and what it lost, and anything you had to surface rather
-than resolve.
+**Query the end state before reporting it.** `cleanup` exiting `0` proves it ran, not that nothing
+survived it — a branch the forge already removed and a branch it refused to remove both leave that
+exit code, and `git worktree remove` deletes the leaf it was given while its parent directories
+stay. Run these from the repository root and report what they return, not what you expected:
+
+```text
+. ${CLAUDE_PLUGIN_ROOT}/skills/bundle-git/scripts/_config.sh   # for $WORKTREE_DIR
+git fetch --prune origin && git ls-remote --heads origin       # ticket and bundle branches
+git worktree list                                              # every registered worktree
+find "$WORKTREE_DIR" -mindepth 1                               # directories git no longer tracks
+ls work/bundles/                                               # the bundle itself
+```
+
+Then fill every slot — an empty one says `none`, because a missing line reads as forgotten:
+
+```text
+Landed     <bundle-id> on <target> at <sha>
+Absorbed   <what moved, into which doc>
+Backlog    +<lines added>  −<lines retired>
+Removed    branches ✅  worktrees ✅  bundle ✅
+Surfaced   <what you hit and handed back rather than resolved>
+```
+
+A ✅ is the query's answer, so it is yours to withhold: replace any that is not clean with what is
+still there and why, and route it through the `backlog` skill when it is a gap rather than a one-off.
+`${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md`'s Land Done-when is what these queries test.
