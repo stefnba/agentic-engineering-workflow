@@ -88,3 +88,8 @@ Candidate work and follow-ups nobody has picked yet.
   `9f5537b` with `0c40854` not an ancestor, which the script would have refused with exit `2`. Branch
   protection is not available as a cover: `skills/setup/references/prerequisites.md` routes a protected
   default branch onto an unprotected integration target.
+- [follow-up] [skills] `land-bundle.sh cleanup` leaves the worktree scaffolding on disk: `git worktree
+  remove` deletes the leaf it is given, so `.claude/worktrees/ticket/<bundle-id>/` and its parent
+  survive every land as empty directories, untracked and invisible to `git status`. Observed landing
+  `2026-08-20-recap-skill`; `git worktree list` was clean while `find .claude/worktrees` still returned
+  two directories.
