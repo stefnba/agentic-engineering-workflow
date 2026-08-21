@@ -38,6 +38,8 @@ Writing pointers:
 - State what the material is and the distinct cases that should trigger reading it. Collapse synonyms — two phrasings of the same case are one trigger written twice.
 - Describe triggering _conditions_, not the target's workflow. A pointer that summarizes the process invites the agent to follow the summary and skip the document.
 - Front-load the words the agent will actually have in context when the condition arises: error messages, task phrasings, file types.
+- Hoist the pointers every path needs into one read-these-first list — six pointers sitting at the steps that consume them spend six round trips before any work starts. Leave at its branch a file only some paths reach, or one that exactly one step consumes: the information hierarchy's branching test, applied to when a file is read.
+- Point at a file once: the first mention carries the path and the instruction to read it, later mentions the bare name and section ("`lifecycle.md`, Test ownership"). A repeated full path reads as a fresh instruction to open what is already in context.
 
 ```markdown
 # Vague — "relevant" is not a condition the agent can test; never fires

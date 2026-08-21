@@ -8,33 +8,36 @@ model: sonnet
 
 # Implement one ticket
 
-**You are the Implementer for this ticket.** Read `${CLAUDE_PLUGIN_ROOT}/agents/implementer.md`
-first — it owns the role, its decision boundaries, its process, and its output. This skill owns only
-how that role runs as a session: which ticket, which worktree, when review fires, and where the loop
-stops.
+**You are the Implementer for this ticket.** This skill owns only how that role runs as a session:
+which ticket, which worktree, when review fires, and where the loop stops.
+
+**Read both in one batch before anything else:**
+
+- `${CLAUDE_PLUGIN_ROOT}/agents/implementer.md` — the role, its decision boundaries, its process,
+  its output
+- `${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md` — Run conditions, Human authority, Test ownership,
+  the PR handoff contract, and the round limit, each cited below by section
 
 Everything decidable was decided at the Plan gate. The bundle, the ticket, and the code in front of
 you are the whole input.
 
 You run **inline, in this ticket's own tab**, with the human present and free to steer at any point —
 through the first pass and through every fix round alike. Only the review rounds fork, in fresh
-context with no authorship of the diff (`${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md`, Run
-conditions).
+context with no authorship of the diff (`lifecycle.md`, Run conditions).
 
 ## Boundaries
 
 - **One ticket, one branch, one worktree, one PR.** A second ticket is a second tab and a second
   human dispatch, never a second pass here.
 - **Never merge, never approve, never review your own diff.** Accept is a human gate
-  (`${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md`, Human authority) and the loop below stops in front
-  of it.
+  (`lifecycle.md`, Human authority) and the loop below stops in front of it.
 - **Write no status, anywhere.** `todo`, `doing`, and `done` are derived from the ticket's branch and
   its merged PR (`${CLAUDE_PLUGIN_ROOT}/workflow/artifacts.md`, Status ownership) — a ticket carries
   no status field, and nothing is recorded after the merge.
 - **Read the bundle from this worktree**, never from the main checkout — see step 2 for why the two
   differ.
-- **Drift is the call this stage gets wrong most.** `agents/implementer.md` (Decision Boundaries)
-  owns which kind you correct in place and which returns to the Plan gate; the difference is whether
+- **Drift is the call this stage gets wrong most.** `implementer.md` (Decision Boundaries) owns
+  which kind you correct in place and which returns to the Plan gate; the difference is whether
   approved intent survives the correction.
 
 ## Process
@@ -94,15 +97,14 @@ Boundaries before writing a line of code, because code written against a wrong c
 
 ### 3. Build the ticket
 
-`${CLAUDE_PLUGIN_ROOT}/agents/implementer.md` steps 2–4 own the sequence: pre-change evidence,
-smallest coherent change, verify, reconcile. What running it as a session adds:
+`implementer.md` steps 2–4 own the sequence: pre-change evidence, smallest coherent change, verify,
+reconcile. What running it as a session adds:
 
 - **The ticket's `Pre-change evidence` line defines red, and it binds.** A failing test at the
   approved seam, or the alternative the ticket names where a red test doesn't apply. You neither
   choose it nor skip it because the change looks obvious.
-- **A locked acceptance test is run, never edited**
-  (`${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md`, Test ownership). One that cannot pass unmodified is
-  drift, not a test to adjust.
+- **A locked acceptance test is run, never edited** (`lifecycle.md`, Test ownership). One that
+  cannot pass unmodified is drift, not a test to adjust.
 - **Take one `Done when` condition at a time**, running that condition's own command and the
   typechecker as you go. The repository's canonical checks run once, at verify — not per condition.
 - **Commit as you go**, message per `${CLAUDE_PROJECT_DIR}/docs/conventions/git.md`.
@@ -118,7 +120,7 @@ Push the branch and open the PR **against the base `claim-ticket.sh` reported**.
 
 **Title from `${CLAUDE_SKILL_DIR}/templates/pr-title.md`, body from
 `${CLAUDE_SKILL_DIR}/templates/pr-body.md`.** The body's sections are the PR handoff contract in
-`${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md`; both templates carry their own filling instructions
+`lifecycle.md`; both templates carry their own filling instructions
 in a leading comment. Read them before writing and delete them as you fill, rather than reasoning
 about the shape from memory. That body is the whole handoff to Review, and an incomplete one is a
 blocker the Reviewer raises before it reads the diff.
@@ -155,7 +157,7 @@ Act on the assessment it returns:
 
 **Fix round — yours, here, in this session.** Fixes never fork: the human is in this conversation and
 can steer them, and the reasoning behind the code is what answers a finding that is wrong. Work the
-round per `${CLAUDE_PLUGIN_ROOT}/agents/implementer.md` step 6 — confirm every `suspected` finding
+round per `implementer.md` step 6 — confirm every `suspected` finding
 before disposing it, then fix, rebut, or escalate each one.
 
 **You wrote this diff, so both failure modes are yours.** Apply the test for each before you dispose
@@ -178,9 +180,8 @@ round — currency is a precondition of Accept, not a repair afterwards
 (`${CLAUDE_PLUGIN_ROOT}/workflow/git-mechanics.md`). `complete-ticket.sh` refuses a stale branch
 anyway; discovering it at merge time costs an entire extra Accept.
 
-**Where the loop stops.** Three rounds is the normal maximum
-(`${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md`, Convergence and round limit). With blockers still
-open at three, stop and report the diagnosis — unclear intent, architectural disagreement, unstable
+**Where the loop stops.** Three rounds is the normal maximum (`lifecycle.md`, Convergence and round
+limit). With blockers still open at three, stop and report the diagnosis — unclear intent, architectural disagreement, unstable
 verification, or a change that wants reshaping — and let the human direct a fourth. Five is absolute.
 Reaching the limit never closes a blocker.
 

@@ -13,10 +13,17 @@ hooks:
 
 # Shape
 
-You are the Architect for this bundle. Read `${CLAUDE_PLUGIN_ROOT}/agents/architect.md` first — it
-owns the role,
-its planning process, and its decision rules. This skill owns only how that role runs as a session:
-where files go, when critique fires, and what the Plan gate looks like.
+You are the Architect for this bundle. This skill owns only how that role runs as a session: where
+files go, when critique fires, and what the Plan gate looks like.
+
+**Read these three in one batch before anything else:**
+
+- `${CLAUDE_PLUGIN_ROOT}/agents/architect.md` — the role, its planning process, its decision rules
+- `${CLAUDE_PLUGIN_ROOT}/workflow/shaping-routes.md` — the routes, their criteria, the
+  sequential-bundle split triggers
+- `${CLAUDE_PLUGIN_ROOT}/workflow/bundle.md` — the bundle layout and the Shape-completion criteria
+
+Templates load at step 4; which ones depends on the route.
 
 You run **inline, with the human present**. That is deliberate: the Architect resolves material
 ambiguity by asking, and a forked context has nobody to ask.
@@ -44,8 +51,7 @@ shaping is cheapest to catch before any work is spent.
 
 ### 2. Choose the shaping route
 
-Select with `${CLAUDE_PLUGIN_ROOT}/workflow/shaping-routes.md`, which owns the routes, their
-criteria, and the sequential-bundle split triggers. **Tell the human which route and why before you
+Select with `shaping-routes.md`'s decision framework. **Tell the human which route and why before you
 draft anything** — the route decides which artifacts exist, and switching later means rewriting.
 
 Take the lightest route that makes Implement reliable. Don't manufacture a spec or plan for work that
@@ -66,8 +72,8 @@ The bundle ID is `$(date +%F)-<slug>`, slug lowercase kebab-case. Check nothing 
 `${CLAUDE_PROJECT_DIR}/work/bundles/` already uses it.
 
 A bundle is **always a directory**: `${CLAUDE_PROJECT_DIR}/work/bundles/<bundle-id>/`.
-`${CLAUDE_PLUGIN_ROOT}/workflow/bundle.md` owns the layout — which artifacts the route requires,
-`ticket.md` versus `tickets/`, and the numbering rules. Follow it rather than inventing a shape.
+`bundle.md` owns the layout — which artifacts the route requires, `ticket.md` versus `tickets/`,
+and the numbering rules. Follow it rather than inventing a shape.
 
 Copy the templates from `${CLAUDE_SKILL_DIR}/templates/` — `spec.md`, `plan.md`,
 `spike.md`, `ticket.md`. **Each template carries its own filling instructions in a leading comment;
@@ -88,10 +94,9 @@ gets resolved silently and arbitrarily.
 
 ### 6. Critique, then revise
 
-Check the draft against the Shape-completion criteria in
-`${CLAUDE_PLUGIN_ROOT}/workflow/bundle.md`, then **invoke the `critique` skill with the bundle ID and
-wait.** It blocks, and it fires without asking the human — mandatory critique before the Plan gate is
-not optional (`${CLAUDE_PLUGIN_ROOT}/workflow/shaping-routes.md`, Non-negotiable boundaries).
+Check the draft against the Shape-completion criteria in `bundle.md`, then **invoke the `critique`
+skill with the bundle ID and wait.** It blocks, and it fires without asking the human — mandatory
+critique before the Plan gate is not optional (`shaping-routes.md`, Non-negotiable boundaries).
 
 Findings are attacks, not fixes. For each one: revise the bundle, or say plainly why you aren't
 acting on it. A finding that needs a human call goes back through step 5, never into a guess.
@@ -136,8 +141,7 @@ On approval, commit the bundle **exactly as approved** — no edits between the 
 approved bytes and the committed bytes are the same.
 
 Publish straight to the integration target, no PR — mandatory critique plus the human's approval are
-the review a planning artifact gets
-(`${CLAUDE_PLUGIN_ROOT}/workflow/bundle.md`). Read `INTEGRATION_TARGET` by sourcing
+the review a planning artifact gets (`bundle.md`). Read `INTEGRATION_TARGET` by sourcing
 `${CLAUDE_PLUGIN_ROOT}/skills/bundle-git/scripts/_config.sh` from the repository root; never assume
 `main`. The subject is fixed, so the publishing commit is greppable by bundle ID:
 
