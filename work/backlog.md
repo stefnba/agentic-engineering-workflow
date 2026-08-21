@@ -75,3 +75,16 @@ Candidate work and follow-ups nobody has picked yet.
   fires on every line with nothing to calibrate against. The deleted
   `skills/backlog/references/entry-format.md` named the failure ("usage is a subset of what's valid");
   nothing does now.
+- [follow-up] [skills] Five skills' `allowed-tools` was written against the reading
+  `workflow/components.md` now corrects — `backlog`, `glossary`, `pick`, `interview-me` and `setup` list
+  tools as though the field withholds what it omits. It only pre-approves; `disallowed-tools` is what
+  removes a tool from the pool. The recap bundle's NG-7 deferred the audit to here.
+- [follow-up] [skills] `skills/recap/SKILL.md`'s `disallowed-tools` is a snapshot of the built-in tool set
+  on 2026-08-20 and nothing re-derives it. Review round 1 already caught the first draft naming four
+  tools that no longer exist and missing a dozen that do; the next platform change puts the list back in
+  that state silently, and anything added after it stays callable.
+- [follow-up] [workflow] A ticket PR merged from the forge bypasses `complete-ticket.sh` entirely — both
+  the `merge-base --is-ancestor` currency gate and `--match-head-commit`. Observed on PR #11, merged at
+  `9f5537b` with `0c40854` not an ancestor, which the script would have refused with exit `2`. Branch
+  protection is not available as a cover: `skills/setup/references/prerequisites.md` routes a protected
+  default branch onto an unprotected integration target.
