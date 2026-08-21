@@ -1,10 +1,10 @@
 ---
-written: <YYYY-MM-DD HH:MM> # from `date '+%Y-%m-%d %H:%M'`, never from memory
+written: <YYYY-MM-DD HH:MM> # the left half of the one `date` call in SKILL.md's checks
 repo: <name> # the basename of `git rev-parse --show-toplevel`
 branch: <name> # from `git branch --show-current`
-worktree: # path, only when this session ran in a worktree separate from the primary checkout
+worktree: <path> # only when this session ran in a worktree separate from the primary checkout
 mode: # the literal value `problem-only` in that mode, nothing else; delete the line in full mode
-next_session: <what the next session is for>
+next_session: <what the next session is for — from the arguments, written as a goal>
 ---
 
 <!--
@@ -15,6 +15,9 @@ session may have no working tree, an implementation session no open questions. S
 key that doesn't apply: delete the line.
 
 Keep the section order as written — it is what makes two handoffs comparable.
+
+Write repository paths relative to the repo root, which `repo:` and `branch:` anchor. Mark unchecked
+claims as SKILL.md's "Check before you describe" requires; the sections below don't repeat the rule.
 
 Length tracks the complexity of the work; most handoffs land well under 150 lines. Write for an
 agent, not a human — no progress-report framing, no assessment of how the session went.
@@ -29,6 +32,14 @@ file's contents, a commit that exists, a constraint the user stated — facts, a
 diagnosis, your plan, your ranking of the approaches, your hunch about the cause — inference, all of
 which goes. The sections below carry their own problem-only note where the mode changes them; where
 there is none, the section is unaffected.
+
+What the mode does to the section set, up front: Next steps is omitted entirely, and Objective,
+Findings, Ground covered, Decisions and constraints, and Dead ends narrow as their own notes say.
+That the next agent has to re-derive the plan is the point of the mode, not a hole in the handoff.
+
+Someone else's conclusion — a reviewer's finding, another agent's diagnosis — is their inference and
+your observation. Report that it was made and point at where it is written down, rather than
+reproducing the reasoning.
 
 The examples throughout are one running handoff, "Move session auth from cookies to signed tokens",
 and are invented — never reuse their paths, SHAs, or timestamps.
@@ -51,7 +62,9 @@ needing a cookie jar. Scope is the gateway only — the downstream services keep
 ## Findings
 
 <!-- What you learned that wasn't already known: how the system actually behaves, contra
-assumptions.
+assumptions. This section and its two neighbours split by what the item is: where you searched goes
+in Ground covered, what the search showed goes here, what it leaves undecided goes in Open
+questions.
 
 Problem-only: observations only. `parseConfig() returns undefined for nested keys` stays; `so the
 bug is in the merge logic` goes. -->
@@ -64,7 +77,7 @@ bug is in the merge logic` goes. -->
 
 Example:
 - Does the mobile team actually expect a 15-minute token lifetime? A comment in
-  `docs/mobile-auth-notes.md` implies it, but nobody has confirmed it — treat as unverified. -->
+  `docs/mobile-auth-notes.md` implies it, but nobody has confirmed it. -->
 
 - <question> — <who owns it, or how to settle it>
 
@@ -100,7 +113,8 @@ suite passes for the wrong reason — every request currently authenticates. Don
 
 ## What's been done
 
-<!-- Commits and completed changes, by SHA or path. One line each, no narrative.
+<!-- Commits and completed changes, by SHA or path: what each one did in one line, never what is in
+it — `git show` gives that, and this section is the index into it, not a copy.
 
 Example:
 - `a3f91c2` — added `TokenSigner` and its unit tests
@@ -141,9 +155,10 @@ Example:
 
 ## Dead ends
 
-<!-- Approaches you built or ran and threw away, and why, so they aren't retried. An option rejected
-without ever being run is a decision, and a defect you fixed is a completed change — both have their
-own section above.
+<!-- Approaches abandoned because they didn't work, and the failure you saw, so they aren't retried.
+The test is why it was dropped, not whether it ran: what the user, the architecture, or a preference
+ruled out is a decision, and a defect you found and fixed is a completed change — both have their own
+section above.
 
 Problem-only: only approaches you watched fail, written as the failure you saw. Drop the ones you
 reasoned yourself out of without running.
@@ -173,12 +188,14 @@ Example:
 - `test/rate-limit.spec.ts:88` was already failing on `main` before this work started. -->
 
 - `<command>` — <expected result>
+- <or, where the repository has no suite: the plain statement that there is none>
 
 ## Suggested skills
 
 <!-- Skills relevant to what's next, each with the condition that should make the next agent reach
-for it. Take the names from this session's own skill list — a plausible-sounding name that isn't
-installed sends the next agent hunting for something that doesn't exist.
+for it. Copy each name exactly as this session's own skill list spells it, qualifier and all
+(`code-review:code-review`, not `code-review`) — a plausible-sounding name that isn't installed sends
+the next agent hunting for something that doesn't exist.
 
 Example:
 - `record-decision` — once the token-lifetime question is settled, since it overrides a documented
