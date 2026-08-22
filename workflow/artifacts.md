@@ -5,27 +5,33 @@ useful. A bundle contains the minimum artifact set its shaping route requires.
 
 ## Authority
 
-| Artifact                  | Layer          | Question it owns                                                                    | It does not own                                           |
-| ------------------------- | -------------- | ----------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| `work/backlog.md`         | repository     | What candidate work or follow-up remains unpicked?                                  | Priority, approval, or implementation scope               |
-| Discovery evidence        | chat or bundle | What did we observe or learn?                                                       | Commitment, priority, or implementation scope             |
-| Intent artifact           | bundle         | What outcome, behavior, constraints, and invariants did the human approve?          | Current implementation facts or interior design           |
-| Engineering plan          | bundle         | How will this repository realize and decompose the approved intent?                 | Behavior or requirements absent from intent               |
-| Ticket                    | bundle         | What may one agent change, what does it depend on, and what evidence makes it done? | Cross-ticket architecture or unapproved product decisions |
-| PR and CI                 | forge          | What changed, what checks ran, what was reviewed, and what is the current state?    | Intent, decomposition, or durable system truth            |
-| Durable system docs       | repository     | How is the current system intended to work now?                                     | In-flight plans or historical feature state               |
-| Decision record           | repository     | Which durable, consequential choice was made and why?                               | Work status or step-by-step implementation                |
-| `docs/research/`          | repository     | What durable reference did investigation establish?                                 | Evidence for one bundle, which lives with that bundle     |
-| `GLOSSARY.md`             | repository     | Which project-domain terms and rejected synonyms are canonical?                     | General programming or workflow-artifact terminology      |
-| `AGENTS.md`               | repository     | Which repository or package conventions and gotchas must every agent follow?        | Domain behavior or workflows owned by linked documents    |
-| `docs/conventions/git.md` | repository     | Which git conventions must a human follow here?                                     | Anything a script reads — that is `work/config.conf`      |
-| `work/config.conf`        | repository     | Which settings do the workflow's scripts run with?                                  | Conventions no script consumes                            |
-| Git mechanics             | workflow       | How are worktrees based, tickets claimed, and bundle branches created race-safely?  | Any value a repository declares for itself                |
-| Agent prompt              | workflow       | How does one role judge, act, escalate, and report within the loaded workflow?      | Lifecycle, artifact authority, or repository conventions  |
-| Component conventions     | workflow       | How is a role packaged as a skill or agent — invocation, permissions, references?   | What that role itself judges, decides, or reports         |
+### In flight
 
-`bundle` artifacts are deleted at Land ([Bundles](#bundles) below); `repository` artifacts are
-durable; `workflow` documents ship with the plugin; the forge keeps PRs after branch cleanup.
+| Artifact                    | Question it owns                                                                    | It does not own                                           |
+| --------------------------- | ----------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| Backlog (`work/backlog.md`) | What candidate work or follow-up remains unpicked?                                  | Priority, approval, or implementation scope               |
+| Discovery evidence          | What did we observe or learn?                                                       | Commitment, priority, or implementation scope             |
+| Intent artifact             | What outcome, behavior, constraints, and invariants did the human approve?          | Current implementation facts or interior design           |
+| Engineering plan            | How will this repository realize and decompose the approved intent?                 | Behavior or requirements absent from intent               |
+| Ticket                      | What may one agent change, what does it depend on, and what evidence makes it done? | Cross-ticket architecture or unapproved product decisions |
+| PR and CI                   | What changed, what checks ran, what was reviewed, and what is the current state?    | Intent, decomposition, or durable system truth            |
+
+The intent artifact, engineering plan, and ticket are the bundle's contents and are deleted at Land
+([Bundles](#bundles) below). The backlog is a durable repository file, the forge keeps a merged PR
+after branch cleanup, and discovery evidence may live only in chat
+([Discovery evidence](#discovery-evidence) below).
+
+### Durable
+
+| Artifact                                    | Question it owns                                                             | It does not own                                        |
+| ------------------------------------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------ |
+| Durable system docs                         | How is the current system intended to work now?                              | In-flight plans or historical feature state            |
+| Decision record (`docs/decisions/`)         | Which durable, consequential choice was made and why?                        | Work status or step-by-step implementation             |
+| Research doc (`docs/research/`)             | What durable reference did investigation establish?                          | Evidence for one bundle, which lives with that bundle  |
+| Glossary (`GLOSSARY.md`)                    | Which project-domain terms and rejected synonyms are canonical?              | General programming or workflow-artifact terminology   |
+| Agent instructions (`AGENTS.md`)            | Which repository or package conventions and gotchas must every agent follow? | Domain behavior or workflows owned by linked documents |
+| Git conventions (`docs/conventions/git.md`) | Which git conventions must a human follow here?                              | Anything a script reads — that is `work/config.conf`   |
+| Script settings (`work/config.conf`)        | Which settings do the workflow's scripts run with?                           | Conventions no script consumes                         |
 
 ## Conflict rules
 
@@ -39,21 +45,15 @@ Authority is axis-specific, not one global document hierarchy:
   intent and plan.
 - **Execution and review state:** the PR and CI system win. Do not copy transient PR states into spec
   or plan metadata.
-- **Candidate work:** the backlog owns unpicked follow-ups, but a line there grants no approval or
-  priority; the Pick gate owns selection.
-- **Repository operation:** `AGENTS.md` points agents to owning instructions, and the applicable
-  convention document wins for its operation — see the Authority table above for each document's
-  scope. Tool-specific instruction files reference `AGENTS.md` rather than duplicating it, and
-  [Monorepos](#monorepos) below owns how a package's file relates to the root one.
+- **Repository operation:** the applicable convention document wins for its operation; `AGENTS.md`
+  and tool-specific instruction files point at the owning instructions rather than restating them,
+  and [Monorepos](#monorepos) below owns how a package's file relates to the root one.
 - **Terminology:** the applicable `GLOSSARY.md` owns canonical project-domain terms and avoided
-  synonyms. Agent prose and code identifiers use its canonical terms and never an avoided synonym;
-  Review judges adherence without a separate mechanical gate. Workflow and artifact terms remain
-  owned by their defining documents. If output and a glossary conflict, surface both readings instead
-  of silently choosing one. A rename or redefinition edits the mutable glossary in place in the same
-  PR and moves the former term to its Avoid list; [Monorepos](#monorepos) below owns which glossary
-  applies when there is more than one. Installing the workflow creates the root glossary empty; a
-  repository whose domain earns no canonical term keeps it that way, and no stage requires an
-  entry.
+  synonyms; workflow and artifact terms remain owned by their defining documents. Agent prose and
+  code identifiers use canonical terms and never an avoided synonym; Review judges adherence without
+  a separate mechanical gate. If output and a glossary conflict, surface both readings instead of
+  silently choosing one; [Monorepos](#monorepos) below owns which glossary applies when there is
+  more than one.
 - **Decision history:** decision records are immutable. Supersede a decision with a new record; never
   edit the old record to make history look current. A repo-wide terminology rename is the one
   exception and sweeps records too: renaming a thing changes no decision made about it, and a record
@@ -64,8 +64,6 @@ Authority is axis-specific, not one global document hierarchy:
 - **Current system claims during active work:** durable colocated system docs outrank the bundle. If
   code or tests contradict those docs, surface the drift and reconcile it; never silently choose the
   bundle's version.
-- **Landed system:** code, tests, and durable docs replace the bundle. The bundle is not permanent
-  documentation.
 
 Correct factual drift in the artifact that owns the fact. A correction material enough to reopen an
 approved decision returns to the Plan gate instead — [Lifecycle](./lifecycle.md) owns which changes
