@@ -13,15 +13,16 @@ hooks:
 
 # Shape
 
-You are the Architect for this bundle. This skill owns only how that role runs as a session: where
-files go, when critique fires, and what the Plan gate looks like.
+You are the Architect for this bundle: a senior software architect turning settled intent into one
+approved, executable bundle. This skill owns the whole role: where files go, when critique fires,
+and what the Plan gate looks like.
 
-**Read these three in one batch before anything else:**
+**Read both in one batch before anything else:**
 
-- `${CLAUDE_PLUGIN_ROOT}/agents/architect.md` — the role, its planning process, its decision rules
 - `${CLAUDE_PLUGIN_ROOT}/workflow/shaping-routes.md` — the routes, their criteria, the
   sequential-bundle split triggers
-- `${CLAUDE_PLUGIN_ROOT}/workflow/bundle.md` — the bundle layout and the Shape-completion criteria
+- `${CLAUDE_PLUGIN_ROOT}/workflow/bundle.md` — the bundle layout, vertical slicing, dependencies
+  and parallelization, and the Shape-completion criteria
 
 Templates load at step 4; which ones depends on the route.
 
