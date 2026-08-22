@@ -36,14 +36,21 @@ An action skill orchestrates one task: obtain the input, tell the agent what thi
 the result. The test for where a step belongs: would it change if a different action skill
 dispatched the same agent? Then it lives in the action skill and travels in the dispatch prompt.
 
-The dispatch prompt is the real interface between an action skill and its agent. Keep its parts
-consistent across callers, so the generic agent body can rely on them.
+The dispatch prompt is the real interface between an action skill and its agent, and the default
+form makes it deterministic: `context: fork` with `agent:` turns the skill body into the dispatch
+prompt verbatim. A skill that must stay inline and still delegate composes an Agent-tool prompt
+instead; keep its parts consistent with the forked form, so the generic agent body can rely on
+them.
 
 ### Agents
 
 The agent body is the caller-independent contract: how to treat input, what counts as done at each
 step, and the output contract — stated once, because the final message is all the dispatching
 session sees. A step every caller needs stays in the body.
+
+A subagent also loads the consuming repo's `CLAUDE.md`, which the plugin does not control and which
+can contradict a preloaded skill — state a binding rule as binding rather than assuming an
+uncontested context.
 
 ## Reference skill or `workflow/` doc
 
@@ -93,11 +100,14 @@ background only where the work is fire-and-forget.
   skill edits only the artifact it owns" is a skill-scoped
   [`PreToolUse` hook](https://code.claude.com/docs/en/hooks)
   denying `Edit`/`Write` outside the allowed paths. The same holds for an agent: where it may write
-  is a hook, never its tool list.
-- **Say which half is structural.** A withholding field reaches only the tools it names, and on a
-  skill only until the next user message; a tool added later, an MCP tool, and `EndConversation`
-  stay callable regardless. That residue is prompt-level and the component states it plainly rather
-  than claiming enforcement it does not have.
+  is a hook, never its tool list. A skill's hooks persist for the rest of the session after
+  invocation, not just its turn — scope the fence in the hook's own script or register it
+  `once: true`, or the fence outlives the skill.
+- **Say which half is structural.** A withholding field's exact reach — pattern support, lifetime,
+  what stays callable regardless — is the
+  [permissions docs](https://code.claude.com/docs/en/permissions)' to define, and it is never
+  everything. Whatever restraint remains is prompt-level, and the component states it plainly
+  rather than claiming enforcement it does not have.
 - **Every skill that crosses a human gate is manual** (`disable-model-invocation: true`). A skill
   invoked by another skill, or by context, stays model-invocable.
 
