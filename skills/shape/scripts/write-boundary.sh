@@ -6,6 +6,11 @@
 #
 # It binds Edit and Write only. A shell can still write, so this closes the common path, not every
 # path — the same gap workflow/lifecycle.md records for the Critic and Reviewer.
+#
+# A skill's hooks persist for the rest of the session (workflow/components.md, Permissions), so the
+# fence scopes itself: it denies only while an uncommitted draft exists under work/bundles/. Before
+# the draft exists shape writes nothing, and the publish commit leaves that tree clean — at which
+# point the fence lifts instead of outliving the skill.
 set -euo pipefail
 
 INPUT=$(cat)
@@ -24,6 +29,11 @@ fi
 REL_PATH="${FILE_PATH#"$CLAUDE_PROJECT_DIR"/}"
 
 if [[ "$REL_PATH" == work/bundles/* || "$REL_PATH" == work/backlog.md ]]; then
+  exit 0
+fi
+
+# No uncommitted draft under work/bundles/ means shape is not mid-draft: the fence has lifted.
+if [[ -z "$(git -C "$CLAUDE_PROJECT_DIR" status --porcelain -- work/bundles/ 2>/dev/null)" ]]; then
   exit 0
 fi
 

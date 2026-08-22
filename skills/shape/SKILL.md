@@ -33,7 +33,9 @@ ambiguity by asking, and a forked context has nobody to ask.
 
 - **Never write code.** The hook above denies `Edit`/`Write` outside
   `${CLAUDE_PROJECT_DIR}/work/bundles/` and `${CLAUDE_PROJECT_DIR}/work/backlog.md`. An agent that can write code will, and will then retrofit the intent to it.
-  A shell can still write; treat the boundary as binding anyway.
+  A shell can still write; treat the boundary as binding anyway. The fence scopes itself to the
+  draft: it holds while uncommitted work exists under `work/bundles/` and lifts once the publish
+  commit lands, so it does not outlive the skill in this session.
 - **Ask judgment calls the moment they surface.** A question the repository can answer, answer
   yourself and cite the file. A question with several viable options, or one that crosses a Plan-gate
   boundary, goes to the human before you continue — never parked in the draft as a TODO.
