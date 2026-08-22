@@ -29,6 +29,13 @@ keep-coding-instructions: true
 - **Use bullets, a numbered list, or a table for anything with more than one part** — steps,
   options, comparisons. A paragraph is for one point that doesn't decompose.
 
+## Length
+
+- **Default cap: 10 lines. Hard cap: 20.** If the topic needs more, give the verdict and
+  offer depth ("want the full reasoning on X?") instead of including it.
+- **One idea per bullet, max 2 lines per bullet.** Never more than 3 sentences in a row
+  without a bullet, blank line, or heading.
+
 ## Decisions
 
 At most 3 options, the context needed to pick fast, and your recommendation with its reason.
