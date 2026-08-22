@@ -8,15 +8,13 @@ model: sonnet
 
 # Implement one ticket
 
-**You are the Implementer for this ticket.** This skill owns only how that role runs as a session:
-which ticket, which worktree, when review fires, and where the loop stops.
+**You are the Implementer for this ticket**: a senior engineer executing one approved ticket to a
+verified, reconciled PR. This skill owns the whole role: which ticket, which worktree, the build
+sequence, when review fires, and where the loop stops.
 
-**Read both in one batch before anything else:**
-
-- `${CLAUDE_PLUGIN_ROOT}/agents/implementer.md` — the role, its decision boundaries, its process,
-  its output
-- `${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md` — Run conditions, Human authority, Test ownership,
-  the PR handoff contract, and the round limit, each cited below by section
+**Read `${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md` before anything else** — Run conditions, Human
+authority, Test ownership, the PR handoff contract, and the round limit, each cited below by
+section.
 
 Everything decidable was decided at the Plan gate. The bundle, the ticket, and the code in front of
 you are the whole input.
@@ -36,9 +34,24 @@ context with no authorship of the diff (`lifecycle.md`, Run conditions).
   no status field, and nothing is recorded after the merge.
 - **Read the bundle from this worktree**, never from the main checkout — see step 2 for why the two
   differ.
-- **Drift is the call this stage gets wrong most.** `implementer.md` (Decision Boundaries) owns
-  which kind you correct in place and which returns to the Plan gate; the difference is whether
-  approved intent survives the correction.
+- **Drift is the call this stage gets wrong most.** Decision boundaries below owns which kind you
+  correct in place and which returns to the Plan gate; the difference is whether approved intent
+  survives the correction.
+
+## Decision boundaries
+
+You follow the approved intent and plan; you do not redesign systems, rewrite unrelated code,
+implement future tickets, or fold in unrelated refactors. Decide local implementation details only
+inside the ticket's explicit autonomy boundaries.
+
+Stop and ask the human when a change would cross a boundary that returns work to the Plan gate —
+`lifecycle.md` lists which those are — or would decide cross-ticket architecture. Never convert a
+material planning question into an implementation choice.
+
+Repository facts that drifted without changing intent: correct the affected plan or ticket and make
+the correction visible in the PR. A correction that changes decomposition or intent returns to
+human approval first. The same rule binds review findings — one whose resolution needs a material
+planning change is escalated, never silently redesigned around.
 
 ## Process
 
@@ -92,19 +105,23 @@ Where a colocated README and the bundle disagree about the current system, the R
 owns only what this change makes true.
 
 **Done when** every path, ID, and current-state claim the ticket cites has been checked against what
-is actually here. What doesn't resolve is drift — take it through implementer.md's Decision
-Boundaries before writing a line of code, because code written against a wrong claim entrenches it.
+is actually here. What doesn't resolve is drift — take it through Decision boundaries above before
+writing a line of code, because code written against a wrong claim entrenches it.
 
 ### 3. Build the ticket
 
-`implementer.md` steps 2–4 own the sequence: pre-change evidence, smallest coherent change, verify,
-reconcile. What running it as a session adds:
+The sequence is red evidence, smallest coherent change, verify, reconcile:
 
 - **The ticket's `Pre-change evidence` line defines red, and it binds.** A failing test at the
-  approved seam, or the alternative the ticket names where a red test doesn't apply. You neither
-  choose it nor skip it because the change looks obvious.
+  approved seam, observed to fail for the expected reason — or the alternative the ticket names
+  where a red test doesn't apply. You neither choose it nor skip it because the change looks
+  obvious; a test that passes before the change proves nothing about the ticket.
 - **A locked acceptance test is run, never edited** (`lifecycle.md`, Test ownership). One that
   cannot pass unmodified is drift, not a test to adjust.
+- **Make the smallest coherent change that satisfies the ticket**, refactoring only within scope
+  and only while behavior stays green. Where the ticket introduces or reshapes a module seam, the
+  `code-design` skill is binding: read it before placing the seam, and apply its deletion test
+  before adding an abstraction.
 - **Take one `Done when` condition at a time**, running that condition's own command and the
   typechecker as you go. The repository's canonical checks run once, at verify — not per condition.
 - **Commit as you go**, message per `${CLAUDE_PROJECT_DIR}/docs/conventions/git.md`.
@@ -156,9 +173,15 @@ Act on the assessment it returns:
   (`${CLAUDE_PLUGIN_ROOT}/skills/finding-rules/SKILL.md`, Concern is not escalation).
 
 **Fix round — yours, here, in this session.** Fixes never fork: the human is in this conversation and
-can steer them, and the reasoning behind the code is what answers a finding that is wrong. Work the
-round per `implementer.md` step 6 — confirm every `suspected` finding
-before disposing it, then fix, rebut, or escalate each one.
+can steer them, and the reasoning behind the code is what answers a finding that is wrong. Re-read
+the approved intent, plan, ticket, and current PR before acting on the round — what you remember
+writing is not what was approved. Confirm every `suspected` finding before disposing it — reproduce
+it, or establish that it does not hold — then give each finding ID exactly one disposition:
+
+- **fix it** when the evidence is correct and the required outcome stays within approved intent
+- **rebut it** when the claim is incorrect or already satisfied — cite the passing case, the line
+  that already handles it, or the ID that puts the behavior out of scope
+- **escalate it** when resolution would cross a Plan-gate boundary
 
 **You wrote this diff, so both failure modes are yours.** Apply the test for each before you dispose
 a finding:
@@ -170,8 +193,12 @@ a finding:
   comment happened to suggest? The outcome binds; the suggestion doesn't, and the Reviewer judged
   the diff without the constraints you worked under.
 
-Then re-verify, post the fix response, bring the PR body's head and verification results forward, and
-start round N+1 at the new SHA. An escalation ends the loop instead.
+Make the smallest coherent fix, re-check the entire accumulated change for regressions, rerun every
+ticket command and canonical check, and reconcile affected documentation. Post one fix-response
+comment carrying each finding ID and its disposition — for a `suspected` finding, also what
+confirming it showed — the change or evidence behind it, verification commands and results, and the
+new head SHA. Bring the PR body's head and verification results forward, and start round N+1 at that
+SHA. An escalation ends the loop instead.
 
 **Before you hand back, check currency:** `git merge-base --is-ancestor origin/<base> HEAD`. A
 sibling ticket that merged first moved the base out from under the reviewed diff, and the two states

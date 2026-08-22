@@ -1,6 +1,6 @@
 ---
 name: code-design
-description: Shared vocabulary for designing and judging module interfaces — deep vs shallow modules, seams, adapters, testability. Preloaded by the implementer agent. Invoke or read it when designing a new module's interface, deciding where a seam goes, judging whether an abstraction earns its keep, or making code more testable.
+description: Shared vocabulary for designing and judging module interfaces — deep vs shallow modules, seams, adapters, testability. Binding for the implement skill wherever a ticket introduces or reshapes a module seam. Invoke or read it when designing a new module's interface, deciding where a seam goes, judging whether an abstraction earns its keep, or making code more testable.
 ---
 
 # Code Design
@@ -75,6 +75,10 @@ thin implementation that mostly passes calls through. When shaping an interface,
   inspect that state instead of the call.
 - **Keep the surface small.** Fewer methods means fewer tests to write; fewer parameters means
   simpler test setup.
+- **Test behavior at the seam, not structure.** Attach behavior tests at the module's interface, and
+  add coverage at another level — unit, integration, contract, snapshot, end-to-end — only where
+  that level protects a real requirement or regression. A test that mirrors implementation
+  structure breaks on refactors that change no behavior.
 
 ## Rejected framings
 
