@@ -38,10 +38,6 @@ solely to prove that the stage happened.
 - [Human authority](#human-authority) — the three gates no agent may pass
 - [Test ownership](#test-ownership) — which role owns which part of testing
 
-Findings are governed separately: [Finding rules](../skills/finding-rules/SKILL.md) owns the severities,
-what a finding must name, and what survives a round. Critic and Reviewer load it without loading
-this document.
-
 ## Coordination
 
 Coordination is split between the human and deterministic skill scripts — there is no coordinator
@@ -53,7 +49,7 @@ only runs when a human or an already-running session invokes it. Two kinds of se
 
 - **One session per bundle**, long-lived, runs Discover, Shape, and later Land. Its working directory
   stays on the integration target and never checks out a ticket or bundle branch — Land works in a
-  detached worktree instead, per [Git mechanics](./git-mechanics.md). Keeping it open is
+  detached worktree instead. Keeping it open is
   convenient, not required — the bundle lives in git and every status is derived, so Land runs just
   as well from a fresh session.
 - **One session per ticket**, in that ticket's own worktree, runs Implement — the first pass and
@@ -92,15 +88,13 @@ agent's judgment — execute state transitions so they are serialized and audita
 
 - **Claim:** check that every dependency is `done`, then create the ticket branch and cut its
   worktree. Creating the branch _is_ the claim, so git itself serializes competing claims — no lock
-  and no coordinator. [Git mechanics](./git-mechanics.md) owns the procedure, the branch a worktree
-  is cut from, and bundle-branch creation.
+  and no coordinator.
 - **Dispatch mechanics:** start each Architect, Critic, Implementer, and Reviewer with the context
   and permissions its run conditions require, and record review-round numbers for fix and re-review
   runs.
 - **Merge:** after human Accept, merge the ticket PR into its target. The merge is the last write —
   `done` follows from it and is never recorded afterward. Landing a finished bundle branch on the
-  integration target is a separate Land step; [Git mechanics](./git-mechanics.md) owns both merges
-  and why only one of them is configurable.
+  integration target is a separate Land step.
 
 These skill scripts never own product or technical judgment and cannot pass a human gate: Pick,
 Plan, and Accept are explicit human decisions, observed and never inferred. The Implementer never
@@ -131,12 +125,11 @@ resolved during Shape.
 **Objective:** create one critic-reviewed, human-approved bundle that every assigned agent can
 execute without silently making product or cross-ticket design decisions.
 
-Select the route using [Shaping routes](./shaping-routes.md), the single owner of route selection and
-sequential-bundle criteria.
+Select the route using [Shaping routes](./shaping-routes.md).
 
 Intent, planning, and ticket generation are feedback substeps inside Shape, not stages — a plan or
 ticket that exposes a missing behavioral decision returns to the intent artifact before Shape
-continues. [Work bundles](./bundle.md) owns that loop and the criteria that complete Shape.
+continues.
 
 **Keep bundles bounded:** Shape creates the complete executable ticket set for one coherent outcome.
 An outcome too large to shape honestly at once splits into sequential bundles by those criteria,
@@ -190,8 +183,7 @@ returns to the Plan gate.
 ### PR handoff contract
 
 The PR is the main implementation and review surface, not the source of approved intent, and —
-because Land deletes the bundle — the permanent bridge back to the planning record.
-[Artifacts](./artifacts.md) owns both roles and why the links must outlive that record. Its body
+because Land deletes the bundle — the permanent bridge back to the planning record. Its body
 must contain:
 
 - immutable commit permalinks to the complete approved bundle and exact implemented ticket
@@ -294,8 +286,8 @@ The final Reviewer comment is tied to the reviewed head SHA and states:
 - remaining limitations or material areas that could not be verified
 
 **Accept gate:** the human accepts the independently reviewed PR and explicitly disposes any open
-concerns; an accepted concern leaves a durable trace rather than evaporating, per
-[Finding rules](../skills/finding-rules/SKILL.md). Acceptance authorizes the merge, performed according to
+concerns; an accepted concern leaves a durable trace rather than
+evaporating. Acceptance authorizes the merge, performed according to
 the repository's Git conventions; the ticket reads as `done` once that merge lands on the PR's
 target branch.
 Accept applies to the exact reviewed head SHA; any subsequent implementation change invalidates it
@@ -314,7 +306,7 @@ Land begins only when every ticket is `done` and the human triggers it. Then, in
    ticket, queried remotely — the bundle branch for a multi-ticket bundle, the integration target for
    a single-ticket one, whose only PR already merged there. This gates every step below. Then open
    the land: a detached worktree on the integration target with the bundle branch merged into it, so
-   every step after this one works there ([Git mechanics](./git-mechanics.md)).
+   every step after this one works there.
 2. **Reconcile durable knowledge.** Move bundle-level knowledge no single ticket owned into durable
    system docs, terminology, and decision records. What a ticket's own diff made false was already
    reconciled in that ticket's PR; anything left here is knowledge that only became true once every
@@ -329,8 +321,8 @@ Land begins only when every ticket is `done` and the human triggers it. Then, in
    carries Land's own commits and the bundle merge, so no CI run has seen it. Land's own commits
    change documentation, backlog, and bundle files only; a Land step that would change behavior is
    not Land work and returns to the Plan gate.
-6. **Publish that state** on the configured integration target — [Git mechanics](./git-mechanics.md)
-   owns the land rules. **If the target moved while Land worked, merging it in returns to step 5**,
+6. **Publish that state** on the configured integration target.
+   **If the target moved while Land worked, merging it in returns to step 5**,
    because the merged state is one no check has run against. That loop repeats until the publish
    succeeds; skipping the re-run is what it exists to prevent.
 7. **Remove the leftovers in git:** whichever ticket branches, bundle branch, and worktrees still

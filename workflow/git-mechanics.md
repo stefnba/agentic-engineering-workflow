@@ -31,8 +31,7 @@ can change; the PRs already merged against a base cannot.
 ## Status is derived
 
 Every bundle and ticket status is computed from the remote branches and the ticket PRs' merge
-records at the moment it is asked for; nothing stores one. [Artifacts](./artifacts.md) owns why,
-and defines what each state means.
+records at the moment it is asked for; nothing stores one.
 
 To cancel a ticket, delete its remote branch and remove its worktree; it reads as `todo` again. A
 query that cannot reach the forge reports `unknown` rather than guessing — never read that as
@@ -44,8 +43,7 @@ query that cannot reach the forge reports `unknown` rather than guessing — nev
 target** — the approved state, not the amended copy a ticket branch carries. That commit also
 outlives the branches: `TICKET_MERGE_METHOD=squash` means a ticket branch's own commits never reach
 the bundle branch, so a link pinned to one rests on the forge retaining the pull request, while the
-publish commit sits in the integration target's first-parent history. [Lifecycle](./lifecycle.md)
-(PR handoff contract) owns why the PR needs the links at all.
+publish commit sits in the integration target's first-parent history.
 
 ## Worktree base rule
 
@@ -155,6 +153,5 @@ it. The land must not collapse or rewrite them:
   state is one no check has run against.
 
 `TICKET_MERGE_METHOD` is named for its whole scope: ticket PRs, nothing else. The land is fixed, not
-a setting — it is what makes [Artifacts](./artifacts.md)'s "no landed-bundle archive; git history
-preserves temporary artifacts" true. [Lifecycle](./lifecycle.md) sequences these rules as Land's
-reconcile, re-verify, and land steps.
+a setting — it is what makes "no landed-bundle archive; git history preserves temporary artifacts"
+true.

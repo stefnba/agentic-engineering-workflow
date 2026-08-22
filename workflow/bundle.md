@@ -1,16 +1,8 @@
 # Work bundles
 
-[Artifacts](./artifacts.md) defines what a bundle is and owns its authority, precedence, status,
-and lifetime; [Lifecycle](./lifecycle.md) owns stages and gates. This document owns how intent,
-plan, and tickets cooperate inside Shape and execution.
+How intent, plan, and tickets cooperate inside Shape and execution.
 
 Use the literal formats in [`skills/shape/templates/`](../skills/shape/templates/).
-
-## Route and contents
-
-[Shaping routes](./shaping-routes.md) owns route selection, the artifact combination each route
-requires, and the sequential-bundle criteria — including when a ticket set is too large to shape at
-once. This document defines only how the selected artifacts cooperate inside a bundle.
 
 ## Naming and layout
 
@@ -54,8 +46,8 @@ Draft location is tool-local and uncommitted. After the Plan gate, skill scripts
 approved bundle under `work/bundles/` on the configured integration target using the repository's Git
 conventions — committed directly, never through a PR: mandatory critique plus the human's approval
 already are the review a planning artifact gets, and a PR on top adds ceremony without adding a
-gate. The path never moves — shaped and active are derived states, not directories (see
-[Artifacts](./artifacts.md)). Land deletes the bundle path; there is no archive.
+gate. The path never moves — shaped and active are derived states, not directories. Land deletes
+the bundle path; there is no archive.
 
 ## Shape feedback loop
 
@@ -85,7 +77,7 @@ continuing; never let a ticket silently decide it.
 A published bundle can be revised while its tickets are in flight, and it is revised where it was
 published: as an ordinary commit on the integration target, through a repeated Plan gate. Land
 deletes the bundle from the state it publishes, so a revision costs nothing at land time — the bundle
-never travels backwards into the branch that deleted it ([Git mechanics](./git-mechanics.md)).
+never travels backwards into the branch that deleted it.
 
 Two things a revision may not do, because in-flight work already depends on them:
 
@@ -184,30 +176,28 @@ Every ticket states what the Implementer may decide and what it must preserve. L
 helper design may be delegated within the ticket's scope.
 
 Escalate to the human when implementation would cross a boundary that returns work to the Plan gate,
-or would decide cross-ticket architecture. [Lifecycle](./lifecycle.md) owns which changes those are;
-a ticket adds only the boundaries specific to its own slice.
+or would decide cross-ticket architecture; a ticket adds only the boundaries specific to its own
+slice.
 
 ## Git and pull requests
 
-[Git mechanics](./git-mechanics.md) owns branch naming, branch strategy, the claim, the land, and the
-settings it reads from `${CLAUDE_PROJECT_DIR}/work/config.conf`. This section owns only what a
-bundle's shape implies: which branches and pull requests exist, and what each one targets.
+This section owns only what a bundle's shape implies: which branches and pull requests exist, and
+what each one targets.
 
 ### Single-ticket bundle
 
 One ticket branch and worktree, based on the configured integration target, and one PR into that
 target. Do not create a bundle branch with one child: there is no second ticket for it to integrate,
 and that one PR already put the work on the target. Land still runs — with no bundle branch it has
-nothing to merge, so its reconciliation and deletion commits go straight to the integration target
-(see [Lifecycle](./lifecycle.md), which owns which of its steps that shape skips).
+nothing to merge, so its reconciliation and deletion commits go straight to the integration target.
 
 ### Multi-ticket bundle
 
 One bundle branch off the configured integration target, and per ticket one branch, worktree, and PR
 into that bundle branch. Content reaches the bundle branch only through an accepted ticket PR, and
 nothing else ever writes to it — not even Land, which merges it into a detached worktree on the
-integration target and reconciles, drains and deletes the bundle there before publishing (see
-[Git mechanics](./git-mechanics.md)). Then it removes the branches and worktrees.
+integration target and reconciles, drains and deletes the bundle there before publishing. Then it
+removes the branches and worktrees.
 
 ### Incident or hotfix
 

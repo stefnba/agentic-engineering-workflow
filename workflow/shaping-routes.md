@@ -2,11 +2,9 @@
 
 A **shaping route** is the lightest path through Discover and Shape that still makes implementation
 reliable: which artifacts one picked outcome needs, and when to split it into sequential bundles.
-This document is the single owner of both; no other document keeps a second route table or split
-trigger list.
 
-Choosing a lighter route never changes the five lifecycle stages in [Lifecycle](./lifecycle.md) —
-see [Non-negotiable boundaries](#non-negotiable-boundaries) below for what a route may never remove.
+Choosing a lighter route never changes the five lifecycle stages — see
+[Non-negotiable boundaries](#non-negotiable-boundaries) below for what a route may never remove.
 
 There are five routes. Use these names verbatim — in prose, in an Architect's route statement, and in
 any document that refers to a route:
@@ -17,8 +15,7 @@ any document that refers to a route:
 - **Intent, plan, and tickets**
 - **Sequential bundles**
 
-"Intent" is the intent artifact role defined in [Artifacts](./artifacts.md), usually `spec.md` — not
-one mandatory filename.
+"Intent" is the intent artifact role, usually `spec.md` — not one mandatory filename.
 
 ## Decision framework
 
@@ -156,5 +153,3 @@ A lighter route removes unnecessary artifacts, not safeguards. Whatever the rout
 - Review remains fresh-context, independent, and read-only. Its depth scales with the change's scope,
   impact, and risk; its existence does not.
 - Land still absorbs durable knowledge and deletes the complete bundle.
-
-[Lifecycle](./lifecycle.md) owns every rule in that list; a route narrows none of them.
