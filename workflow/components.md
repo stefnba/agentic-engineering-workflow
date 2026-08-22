@@ -39,8 +39,9 @@ dispatched the same agent? Then it lives in the action skill and travels in the 
 The dispatch prompt is the real interface between an action skill and its agent, and the default
 form makes it deterministic: `context: fork` with `agent:` turns the skill body into the dispatch
 prompt verbatim. A skill that must stay inline and still delegate composes an Agent-tool prompt
-instead; keep its parts consistent with the forked form, so the generic agent body can rely on
-them.
+instead; keep its parts consistent with the forked form. Every action skill dispatching the same
+agent uses the same labeled parts, so the generic agent body can rely on the prompt's shape no
+matter who sent it.
 
 ### Agents
 
