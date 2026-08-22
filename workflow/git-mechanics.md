@@ -1,7 +1,8 @@
 # Git mechanics
 
 How the workflow uses git. These rules are identical in every consuming repo and are what the
-`bundle-git` skill's scripts implement — changing them changes the scripts' behavior.
+plugin's `scripts/` implement (the `bundle-git` skill is their interface contract) — changing them
+changes the scripts' behavior.
 
 The settings they operate on are read from `${CLAUDE_PROJECT_DIR}/work/config.conf`:
 `INTEGRATION_TARGET`, `TICKET_MERGE_METHOD`, `WORKTREE_DIR`. `${CLAUDE_PROJECT_DIR}/docs/conventions/git.md`
@@ -28,10 +29,10 @@ can change; the PRs already merged against a base cannot.
 
 ## Worktree base rule
 
-A branch is cut from the branch its work will PR into — for bundle work the `bundle-git` skill
-derives that target; outside a bundle it is the configured integration target.
+A branch is cut from the branch its work will PR into — for bundle work the `bundle-git` scripts
+derive that target; outside a bundle it is the configured integration target.
 
-**Bundle branches and worktrees go through the `bundle-git` skill.** It owns their creation and
+**Bundle branches and worktrees go through the `bundle-git` scripts.** They own their creation and
 cleanup, deriving every name from the bundle's shape and the settings above. Worktrees outside a
 bundle follow the base rule directly.
 

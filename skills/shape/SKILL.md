@@ -145,7 +145,7 @@ approved bytes and the committed bytes are the same.
 
 Publish straight to the integration target, no PR — mandatory critique plus the human's approval are
 the review a planning artifact gets (`bundle.md`). Read `INTEGRATION_TARGET` by sourcing
-`${CLAUDE_PLUGIN_ROOT}/skills/bundle-git/scripts/_config.sh` from the repository root; never assume
+`${CLAUDE_PLUGIN_ROOT}/scripts/_config.sh` from the repository root; never assume
 `main`. The subject is fixed, so the publishing commit is greppable by bundle ID:
 
 ```text
@@ -172,7 +172,7 @@ costs a rename, not a rewrite.
 Report the published bundle path and, for each currently unblocked ticket, the claim command:
 
 ```text
-${CLAUDE_PLUGIN_ROOT}/skills/bundle-git/scripts/claim-ticket.sh <bundle-id> <NN>
+${CLAUDE_PLUGIN_ROOT}/scripts/claim-ticket.sh <bundle-id> <NN>
 ```
 
 Then stop. Starting a ticket is the human's dispatch, and the bundle branch is created by the first

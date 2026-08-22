@@ -12,10 +12,11 @@ Deterministic git mechanics for bundle work.
   scripts implement.
 - `${CLAUDE_PLUGIN_ROOT}/workflow/artifacts.md` — why status is derived rather than stored.
 
-Run every script from the repository root, invoked as `${CLAUDE_SKILL_DIR}/scripts/<name>.sh`.
+The scripts live at the plugin root, shared with the stage skills that run them directly. Run every
+script from the repository root, invoked as `${CLAUDE_PLUGIN_ROOT}/scripts/<name>.sh`.
 Settings and their defaults come from `${CLAUDE_PROJECT_DIR}/work/config.conf`, which documents
 itself; an environment variable of the same name outranks the file.
-`${CLAUDE_SKILL_DIR}/scripts/_config.sh` reads them, holds the branch names, and is sourced by the
+`${CLAUDE_PLUGIN_ROOT}/scripts/_config.sh` reads them, holds the branch names, and is sourced by the
 others rather than run on its own.
 
 | Script                                       | Purpose                                                                         |
@@ -31,11 +32,11 @@ others rather than run on its own.
 | `scripts/land-bundle.sh cleanup <bundle-id>` | Delete the bundle's branches and remove its worktrees.                          |
 
 ```console
-$ ${CLAUDE_SKILL_DIR}/scripts/bundle-status.sh
+$ ${CLAUDE_PLUGIN_ROOT}/scripts/bundle-status.sh
 active   2026-08-17-add-invites
 shaped   2026-08-17-add-2fa
 
-$ ${CLAUDE_SKILL_DIR}/scripts/bundle-status.sh 2026-08-17-add-invites
+$ ${CLAUDE_PLUGIN_ROOT}/scripts/bundle-status.sh 2026-08-17-add-invites
 active   2026-08-17-add-invites
   done     01-persistence
   doing    02-api
@@ -64,7 +65,8 @@ at all.
 
 ## Tests
 
-`tests/run.sh` runs the scripts against a local `git daemon` with a stubbed `gh` — no network, and
+`${CLAUDE_PLUGIN_ROOT}/scripts/tests/run.sh` runs the scripts against a local `git daemon` with a
+stubbed `gh` — no network, and
 nothing written outside a temp dir. It covers a ten-way claim race, the dependency gate, both bundle
 shapes, listing, an unreachable forge, permalinks pinned past a branch amendment, the flags passed to
 the merge, the staleness refusal, and a full land — gate, detached worktree, the moved-target loop, the backlog union, and cleanup. Exits

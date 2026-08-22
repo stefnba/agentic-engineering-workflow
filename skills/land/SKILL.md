@@ -43,7 +43,7 @@ don't guess.
 Then run, from the repository root:
 
 ```text
-${CLAUDE_PLUGIN_ROOT}/skills/bundle-git/scripts/land-bundle.sh start <bundle-id>
+${CLAUDE_PLUGIN_ROOT}/scripts/land-bundle.sh start <bundle-id>
 ```
 
 It gates the whole stage: every ticket `done` from its PR record, no stale land worktree, then a
@@ -100,7 +100,7 @@ Red means stop and report; nothing is pushed yet, so abandoning costs a director
 Green, then:
 
 ```text
-${CLAUDE_PLUGIN_ROOT}/skills/bundle-git/scripts/land-bundle.sh push <bundle-id>
+${CLAUDE_PLUGIN_ROOT}/scripts/land-bundle.sh push <bundle-id>
 ```
 
 **Exit `6` is not a failure — it is the loop.** The integration target moved while you were working,
@@ -112,7 +112,7 @@ publish it for you.
 ### 6. Remove the leftovers
 
 ```text
-${CLAUDE_PLUGIN_ROOT}/skills/bundle-git/scripts/land-bundle.sh cleanup <bundle-id>
+${CLAUDE_PLUGIN_ROOT}/scripts/land-bundle.sh cleanup <bundle-id>
 ```
 
 Ticket branches, the bundle branch, every worktree — Land's own last, and from the repository root.
@@ -126,7 +126,7 @@ exit code, and `git worktree remove` deletes the leaf it was given while its par
 stay. Run these from the repository root and report what they return, not what you expected:
 
 ```text
-. ${CLAUDE_PLUGIN_ROOT}/skills/bundle-git/scripts/_config.sh   # for $WORKTREE_DIR
+. ${CLAUDE_PLUGIN_ROOT}/scripts/_config.sh   # for $WORKTREE_DIR
 git fetch --prune origin && git ls-remote --heads origin       # ticket and bundle branches
 git worktree list                                              # every registered worktree
 find "$WORKTREE_DIR" -mindepth 1                               # directories git no longer tracks

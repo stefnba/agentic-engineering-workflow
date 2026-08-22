@@ -123,7 +123,10 @@ belongs in that agent or in a skill it preloads.
 ## Supporting material
 
 One consumer keeps supporting material in that skill's own folder; a second consumer promotes it —
-the tests in Reference skill or `workflow/` doc pick the target. Keep the `SKILL.md` body itself as
+the tests in Reference skill or `workflow/` doc pick the target. Executables are the exception to
+both targets: a script more than one skill runs lives in the plugin root's `scripts/`, executed by
+path, because prose homes can't hold something a skill must run and reaching into another skill's
+folder hides the shared seam. Keep the `SKILL.md` body itself as
 lean as possible (under 500 lines). Heavy material goes in the skill's folder behind a pointer, see
 [Add supporting files](https://code.claude.com/docs/en/skills#add-supporting-files).
 
@@ -132,6 +135,7 @@ lean as possible (under 500 lines). Heavy material goes in the skill's folder be
 A bare relative path resolves differently at runtime than on GitHub:
 
 - plugin file from a `SKILL.md` → `${CLAUDE_PLUGIN_ROOT}/workflow/<file>.md`
+- a shared plugin script → `${CLAUDE_PLUGIN_ROOT}/scripts/<name>.sh`
 - the skill's own bundled file → `${CLAUDE_SKILL_DIR}/<path>`
 - the consuming repo's file → `${CLAUDE_PROJECT_DIR}/docs/conventions/git.md`
 - doc to doc inside the repo → plain relative, so GitHub renders it

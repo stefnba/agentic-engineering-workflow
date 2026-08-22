@@ -20,7 +20,7 @@ is nothing to pick, and intent the human brings directly skips the backlog for `
 `/shape` anyway.
 
 **Check what's already in flight** with
-`${CLAUDE_PLUGIN_ROOT}/skills/bundle-git/scripts/bundle-status.sh`, run from the repository root. It
+`${CLAUDE_PLUGIN_ROOT}/scripts/bundle-status.sh`, run from the repository root. It
 renders as the first line of the block below, stated as fact: starting something new competes with
 finishing those, but whether that matters is the human's call.
 

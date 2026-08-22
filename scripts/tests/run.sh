@@ -4,10 +4,10 @@
 # No network and nothing touched outside a temp dir: a local `git daemon` serves the smart protocol
 # (the same family GitHub serves over HTTPS), and `gh` is stubbed by a file listing merged PRs.
 #
-#   usage: tests/run.sh          exits non-zero if any check fails
+#   usage: scripts/tests/run.sh  exits non-zero if any check fails
 set -uo pipefail
 
-scripts="$(cd "$(dirname "$0")/../scripts" && pwd)"
+scripts="$(cd "$(dirname "$0")/.." && pwd)"
 pass=0
 fail=0
 

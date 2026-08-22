@@ -11,12 +11,12 @@ This repo collects agentic-coding practices — workflow design, documentation s
 This repo is also the plugin: its root is the plugin root, so everything here ships to consuming
 repos. Three layers, distinguished by who may change a file:
 
-| Path                                                | Layer                                             | Changed by                 |
-| --------------------------------------------------- | ------------------------------------------------- | -------------------------- |
-| `workflow/`, `agents/`, `skills/`, `output-styles/` | plugin — the workflow contract and its components | the workflow author        |
-| `docs/conventions/*.md`                             | rules a consuming repo owns, installed by `setup` | the consuming repo's owner |
-| `work/config.conf`                                  | settings a consuming repo owns that scripts read  | the consuming repo's owner |
-| `docs/*.md`, `docs/decisions/`                      | published narrative, never loaded by an agent     | the workflow author        |
+| Path                                                            | Layer                                             | Changed by                 |
+| --------------------------------------------------------------- | ------------------------------------------------- | -------------------------- |
+| `workflow/`, `agents/`, `skills/`, `scripts/`, `output-styles/` | plugin — the workflow contract and its components | the workflow author        |
+| `docs/conventions/*.md`                                         | rules a consuming repo owns, installed by `setup` | the consuming repo's owner |
+| `work/config.conf`                                              | settings a consuming repo owns that scripts read  | the consuming repo's owner |
+| `docs/*.md`, `docs/decisions/`                                  | published narrative, never loaded by an agent     | the workflow author        |
 
 Each layer has its own directory, so placement answers the question the table asks: a rule the
 workflow owns goes in `workflow/`, a convention a repository owns goes in `docs/conventions/`,

@@ -40,7 +40,7 @@ is due — recalled from the conversation alone, with nothing read, run, or writ
 
 <!-- Do not write these three lines by hand. Run, from this worktree:
 
-    ${CLAUDE_PLUGIN_ROOT}/skills/bundle-git/scripts/pr-links.sh <bundle-id> <NN>
+    ${CLAUDE_PLUGIN_ROOT}/scripts/pr-links.sh <bundle-id> <NN>
 
 and paste what it prints. It pins both links to the commit that published the approved bundle on the
 integration target, for two reasons that are easy to miss by hand. That commit is the state the Plan
