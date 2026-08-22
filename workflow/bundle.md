@@ -72,6 +72,14 @@ continuing; never let a ticket silently decide it.
 5. A fresh-context Critic has attacked the bundle.
 6. The human has passed the Plan gate.
 
+## Lifetime
+
+- **Local draft:** unapproved and not shared as committed work.
+- **Shaped:** critic-reviewed and human-approved; implementation may start.
+- **Active:** at least one ticket has started.
+- **Landed:** every ticket is done, the outcome is on the integration target, and the bundle is
+  deleted.
+
 ## Revising a published bundle
 
 A published bundle can be revised while its tickets are in flight, and it is revised where it was

@@ -118,24 +118,17 @@ owns which artifacts a route requires and when to split sequential bundles.
 
 ### Status
 
-Under `work/`, commit artifact content — spec, plan, and ticket text. Execution state — bundle and
-ticket status, PR/CI state — is derived at the moment it is asked for and never stored;
-[Git mechanics](./git-mechanics.md) owns the mapping from branches and merge records to each state.
-
-Do not persist `ready`, `implemented`, `verifying`, `blocked`, or `changes_requested` either. Unmet
-ticket dependencies are derived from `depends_on`; an external blocker is raised on the PR or
-escalated to the human, never recorded as ticket metadata that can go stale.
+Under `work/`, commit artifact content — spec, plan, and ticket text. Never write execution state
+of any kind into an artifact file: bundle and ticket status, PR/CI state, and blocked-ness are
+derived at the moment they are asked for; [Git mechanics](./git-mechanics.md) owns the states and
+their derivation. Unmet ticket dependencies are derived from `depends_on`; an external blocker is
+raised on the PR or escalated to the human, never recorded as ticket metadata that can go stale.
 
 ### Lifetime
 
-- **Local draft:** unapproved and not shared as committed work.
-- **Shaped:** critic-reviewed and human-approved; implementation may start.
-- **Active:** at least one ticket has started.
-- **Landed:** every ticket is done, the outcome is on the integration target, and the bundle is
-  deleted — [Lifecycle](./lifecycle.md) owns the ordered Land procedure that moves what the bundle
-  held to its durable owners.
-
-There is no `done/` or landed-bundle archive. Git history preserves temporary artifacts.
+A bundle is disposable: Land deletes it, and there is no `done/` or landed-bundle archive — git
+history preserves temporary artifacts. [Work bundles](./bundle.md) owns the lifetime stages a
+bundle moves through.
 
 Each implementation PR is the permanent historical bridge from the landed change to its temporary
 planning context — which is why the links in its body have to outlive the bundle. The PR handoff
