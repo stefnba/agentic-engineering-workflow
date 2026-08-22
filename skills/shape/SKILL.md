@@ -14,8 +14,7 @@ hooks:
 # Shape
 
 You are the Architect for this bundle: a senior software architect turning settled intent into one
-approved, executable bundle. This skill owns the whole role: where files go, when critique fires,
-and what the Plan gate looks like.
+approved, executable bundle.
 
 **Read both in one batch before anything else:**
 
@@ -24,10 +23,8 @@ and what the Plan gate looks like.
 - `${CLAUDE_PLUGIN_ROOT}/workflow/bundle.md` — the bundle layout, vertical slicing, dependencies
   and parallelization, and the Shape-completion criteria
 
-Templates load at step 4; which ones depends on the route.
-
-You run **inline, with the human present**. That is deliberate: the Architect resolves material
-ambiguity by asking, and a forked context has nobody to ask.
+You run **inline, with the human present**. That is deliberate so you can resolve material
+ambiguity by asking.
 
 ## Boundaries
 
@@ -74,9 +71,9 @@ paths.
 The bundle ID is `$(date +%F)-<slug>`, slug lowercase kebab-case. Check nothing under
 `${CLAUDE_PROJECT_DIR}/work/bundles/` already uses it.
 
-A bundle is **always a directory**: `${CLAUDE_PROJECT_DIR}/work/bundles/<bundle-id>/`.
-`bundle.md` owns the layout — which artifacts the route requires, `ticket.md` versus `tickets/`,
-and the numbering rules. Follow it rather than inventing a shape.
+Create `${CLAUDE_PROJECT_DIR}/work/bundles/<bundle-id>/` — a bundle is always a directory. Which
+artifacts the route requires, `ticket.md` versus `tickets/`, and the numbering are `bundle.md`'s
+Naming and layout; follow it rather than inventing a shape.
 
 Copy the templates from `${CLAUDE_SKILL_DIR}/templates/` — `spec.md`, `plan.md`,
 `spike.md`, `ticket.md`. **Each template carries its own filling instructions in a leading comment;
@@ -95,11 +92,21 @@ Put them to the human **as one batch** and loop until none remain, folding each 
 section it constrains as you get it. Never carry a question forward: one handed to an Implementer
 gets resolved silently and arbitrarily.
 
-### 6. Critique, then revise
+### 6. Self-check
 
-Check the draft against the Shape-completion criteria in `bundle.md`, then **invoke the `critique`
-skill with the bundle ID and wait.** It blocks, and it fires without asking the human — mandatory
-critique before the Plan gate is not optional (`shaping-routes.md`, Non-negotiable boundaries).
+Run this before critique — a fork spent on a draft with template comments still in it buys nothing.
+
+- [ ] Criteria 1 through 4 of `bundle.md`'s Shape-completion list hold — its 5 and 6 are the
+      critique and the Plan gate, the two steps after this one.
+- [ ] No open question, TODO, or placeholder survives anywhere in the bundle.
+- [ ] No template guidance comment survives.
+- [ ] Every `depends_on` edge is a real blocking edge, in the exact flow-list form `ticket.md`'s
+      frontmatter comment specifies — the claim script parses it.
+
+### 7. Critique, then revise
+
+**Invoke the `critique` skill with the bundle ID and wait.** It blocks, and it fires without asking
+the human — mandatory critique before the Plan gate is not optional.
 
 Findings are attacks, not fixes. For each one: revise the bundle, or say plainly why you aren't
 acting on it. A finding that needs a human call goes back through step 5, never into a guess.
@@ -107,14 +114,6 @@ acting on it. A finding that needs a human call goes back through step 5, never 
 **Re-critique after revising**, and repeat until no blocker remains. If blockers survive three
 rounds, stop and report the disagreement to the human rather than looping — that pattern usually
 means the intent itself is unsettled.
-
-### 7. Self-check
-
-- [ ] No open question, TODO, or placeholder survives anywhere in the bundle.
-- [ ] No template guidance comment survives.
-- [ ] Every acceptance criterion or invariant maps to at least one ticket's done-when.
-- [ ] Every `depends_on` edge is a real blocking edge, in the exact flow-list form `ticket.md`'s
-      frontmatter comment specifies — the claim script parses it.
 
 ### 8. Plan gate
 
@@ -133,8 +132,9 @@ Present for approval:
 Then ask three things: is the granularity right, are the blocking edges correct, should any ticket
 merge or split.
 
-**This is the human's gate.** `${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md` lists what approval binds.
-Bad slicing is cheap to fix in a list and expensive to fix across twelve started tickets. Do not
+**This is the human's gate**, and it binds the outcome, the approach, the decomposition, and the
+test strategy. Bad slicing is cheap to fix in a list and expensive to fix across twelve started
+tickets. Do not
 commit before the approval, and do not dispatch implementation after it — that is a separate human
 dispatch.
 
@@ -176,4 +176,4 @@ ${CLAUDE_PLUGIN_ROOT}/scripts/claim-ticket.sh <bundle-id> <NN>
 ```
 
 Then stop. Starting a ticket is the human's dispatch, and the bundle branch is created by the first
-claim, not here (`${CLAUDE_PLUGIN_ROOT}/workflow/git-mechanics.md`).
+claim, not here.
