@@ -1,7 +1,8 @@
 # Components
 
-How the workflow's roles become skills, agents, and the session's own voice: what invokes one, how
-its permissions are expressed, where its supporting files go, and what it may reference.
+How the workflow's roles become skills, agents, and the session's own voice: where a role's
+knowledge lives, what invokes one, how its permissions are expressed, where its supporting files go,
+and what it may reference.
 
 **Every path here ships**. This repository _is_ the plugin, so a component written against this tree's
 layout has to resolve identically in a consuming repo.
@@ -10,15 +11,14 @@ layout has to resolve identically in a consuming repo.
 
 **Skills are about knowledge. Agents are about context isolation, parallelism and specifying tool
 set. If they need knowledge, agents preload skills.** The placement test: a paragraph useful outside
-this one agent belongs in a skill.
-
-For more info, see [Steering Claude Code](https://claude.com/blog/steering-claude-code-skills-hooks-rules-subagents-and-more).
+this one agent belongs in a skill
+([Steering Claude Code](https://claude.com/blog/steering-claude-code-skills-hooks-rules-subagents-and-more)).
 
 ## What goes where
 
 | Layer               | Contains                                                                                                         | Sizing                                                                                                                                 |
 | ------------------- | ---------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| **Reference skill** | Domain knowledge: rules, checklists, templates                                                                   | Lean body; heavy material behind a pointer in the skill's folder — Supporting material owns why                                        |
+| **Reference skill** | Domain knowledge: rules, checklists, templates                                                                   | Lean body; heavy material behind a pointer in the skill's folder — see Supporting material                                             |
 | **Action skill**    | The _when_: what invokes it, which gate it sits in front of, inline or fork — and the procedure around them      | Thin: obtain the input, dispatch, handle the result — restating no knowledge                                                           |
 | **Agent**           | The _who_: role and boundaries, process shape, completion criteria, output contract, `tools`, `model`, `skills:` | Generic, one per role: a run needing a different procedure gets a different action skill or dispatch prompt, never a second agent file |
 
@@ -54,7 +54,8 @@ the material, not how many consumers there are:
   [`skills:` field](https://code.claude.com/docs/en/sub-agents) lands it in a forked agent's system
   prompt before the first action — nothing depends on the agent choosing to read — and a
   description in context lets the model pull it in when a situation matches. One consumer needing
-  either, guaranteed delivery or discovery, makes the material a reference skill.
+  either, guaranteed delivery or discovery, makes the material a reference skill; every other
+  consumer reads the same `SKILL.md` at the step that needs it, as any inline skill can.
 - A **`workflow/` doc** is reachable only through its pointers — a "read X before Y" link at the
   step or branch that consumes it. That is enough exactly when every consumer is such a step, and
   it keeps skill bodies lean.
@@ -64,10 +65,6 @@ definitions and rules that mean nothing outside it — its artifacts, stages, an
 skill is self-contained craft knowledge — how to write a defensible finding, what makes a module
 boundary sound — that would hold under any workflow. When the two tests disagree, delivery wins:
 contract material an agent needs guaranteed moves into the skill whole.
-
-Mixed consumers follow the first rule: one agent needing the material before its first action makes
-it a reference skill; a consumer that needs it only at one step reads the same `SKILL.md` at that
-step, as any inline skill can.
 
 **The winner owns the only copy.** A skill that restates a `workflow/` document so it can be
 preloaded drifts within a few edits. Material that crosses the line moves and leaves nothing behind.
@@ -107,7 +104,7 @@ background only where the work is fire-and-forget.
 ## Output styles own the voice, not the role
 
 An **output style** (`output-styles/*.md`, installed as `.claude/output-styles/`,
-see [docs](https://code.claude.com/docs/en/output-styles)) rewrites the main
+[output styles docs](https://code.claude.com/docs/en/output-styles)) rewrites the main
 conversation's system prompt: how a response is shaped, never what a role does. It reaches no
 subagent — a forked agent runs its own system prompt — so a rule a role must obey
 belongs in that agent or in a skill it preloads.

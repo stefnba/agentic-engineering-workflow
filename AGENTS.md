@@ -27,9 +27,9 @@ config in `work/config.conf`, never prose in `docs/conventions/`
 (see [docs/decisions/2026-08-18-script-read-settings.md](docs/decisions/2026-08-18-script-read-settings.md)).
 
 Building or changing a skill or an agent has its own contract in
-[workflow/components.md](workflow/components.md) — inline versus forked, write boundaries as hooks,
-where supporting material goes, which link form resolves at runtime, and the four plugin rules. Read
-it before adding either.
+[workflow/components.md](workflow/components.md) — where knowledge lives (skill, agent, or
+`workflow/` doc), inline versus forked, write boundaries as hooks, where supporting material goes,
+which link form resolves at runtime, and the four plugin rules. Read it before adding either.
 
 ## Conventions this repo applies to itself
 
