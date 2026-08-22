@@ -75,7 +75,8 @@ preloaded drifts within a few edits. Material that crosses the line moves and le
 ## Inline or forked
 
 A skill runs **inline** when the human is part of the loop. A forked skill gets no conversation
-history and no user, so dialogue and approval cannot fork.
+history and no user, so dialogue and approval cannot fork — a forked component records a question
+it would have asked instead of asking it.
 
 A skill runs **`context: fork`** when the role requires isolation — fresh context, no authorship of
 what it judges — or when its work would flood the session's context. A judging role — a plan
@@ -113,8 +114,10 @@ belongs in that agent or in a skill it preloads.
 
 ## Supporting material
 
-Keep the `SKILL.md` body itself as lean as possible (under 500 lines). Heavy material goes in
-the skill's folder behind a pointer, see [Add supporting files](https://code.claude.com/docs/en/skills#add-supporting-files).
+One consumer keeps supporting material in that skill's own folder; a second consumer promotes it —
+the tests in Reference skill or `workflow/` doc pick the target. Keep the `SKILL.md` body itself as
+lean as possible (under 500 lines). Heavy material goes in the skill's folder behind a pointer, see
+[Add supporting files](https://code.claude.com/docs/en/skills#add-supporting-files).
 
 ## Reference by link form, not by guesswork
 
@@ -141,4 +144,6 @@ Four rules hold continuously:
    a cache.
 
 Where a Claude-Code-specific field isn't needed, prefer the portable
-[Agent Skills](https://agentskills.io) spec fields.
+[Agent Skills](https://agentskills.io) spec fields. `disallowed-tools` is the deliberate exception:
+the spec has no equivalent, and packaging a skill that carries it fails hard rather than dropping
+the field, so reach for it only where the withholding is the point.
