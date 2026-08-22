@@ -32,13 +32,17 @@ Skip this pass entirely in pure mode; the forking prompt says which mode you are
 
 Deliver as your final message, exactly this shape — no sentence before `## Question`, nothing after the last section:
 
-```text
+```markdown
 ## Question
+
 <the question as ruled on, one or two sentences>
 
 ## Options — first principles
+
 <!-- 2–4 options, written before any repo file was opened. Per option: -->
+
 ### <Option name>
+
 - What: <the approach in one line>
 - Rationale: <why it's a serious candidate>
 - Pros: <...>
@@ -46,13 +50,17 @@ Deliver as your final message, exactly this shape — no sentence before `## Que
 - Wins when: <the conditions under which this is the right pick>
 
 ## Recommendation — first principles
+
 <the picked option, and why it beats the runners-up>
 
 ## Divergence report
+
 <!-- Omit this section and the next in pure mode. One line per collision: -->
+
 - <path> — prescribes <X>; the recommendation implies <Y>; cost: <supersede/migrate/re-document what>
 <!-- No collisions found → state that plainly instead of the list. -->
 
 ## Reconciled recommendation
+
 <"Unchanged." — or the new pick, plus the specific repo fact that changed it>
 ```
