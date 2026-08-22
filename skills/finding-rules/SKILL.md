@@ -5,8 +5,7 @@ description: What a Critic or Reviewer may report and what survives a round — 
 
 # Finding rules
 
-What a Critic or Reviewer may report, and what survives a round. A fix round also reads it at the
-point it disposes a finding.
+What a Critic or Reviewer may report, and what survives a round.
 
 A finding is an argument addressed to a human gate. Everything below exists to keep it that — an
 argument the human can act on — rather than a list of things an agent noticed.
