@@ -1,8 +1,9 @@
 # Git mechanics
 
 How the workflow uses git. These rules are identical in every consuming repo and are what the
-plugin's `scripts/` implement (the `bundle-git` skill is their interface contract) — changing them
-changes the scripts' behavior.
+plugin's `scripts/` implement — changing them changes the scripts' behavior. The scripts' own
+interface contract (invocation, exit codes, tests) is `scripts/README.md`; the `bundle` skill routes
+conversational requests to them.
 
 The settings they operate on are read from `${CLAUDE_PROJECT_DIR}/work/config.conf`:
 `INTEGRATION_TARGET`, `TICKET_MERGE_METHOD`, `WORKTREE_DIR`. `${CLAUDE_PROJECT_DIR}/docs/conventions/git.md`
@@ -27,12 +28,31 @@ directly. **From the first claim onward the branch itself is the answer** — if
 exists on the remote, that is the base, whatever the ticket files now say. The count is a file that
 can change; the PRs already merged against a base cannot.
 
+## Status is derived
+
+Every bundle and ticket status is computed from the remote branches and the ticket PRs' merge
+records at the moment it is asked for; nothing stores one. [Artifacts](./artifacts.md) owns why,
+and defines what each state means.
+
+To cancel a ticket, delete its remote branch and remove its worktree; it reads as `todo` again. A
+query that cannot reach the forge reports `unknown` rather than guessing — never read that as
+`todo`.
+
+## Ticket PR permalinks
+
+**A ticket PR's permalinks pin to the commit that published the bundle on the integration
+target** — the approved state, not the amended copy a ticket branch carries. That commit also
+outlives the branches: `TICKET_MERGE_METHOD=squash` means a ticket branch's own commits never reach
+the bundle branch, so a link pinned to one rests on the forge retaining the pull request, while the
+publish commit sits in the integration target's first-parent history. [Lifecycle](./lifecycle.md)
+(PR handoff contract) owns why the PR needs the links at all.
+
 ## Worktree base rule
 
-A branch is cut from the branch its work will PR into — for bundle work the `bundle-git` scripts
+A branch is cut from the branch its work will PR into — for bundle work the bundle scripts
 derive that target; outside a bundle it is the configured integration target.
 
-**Bundle branches and worktrees go through the `bundle-git` scripts.** They own their creation and
+**Bundle branches and worktrees go through the bundle scripts.** They own their creation and
 cleanup, deriving every name from the bundle's shape and the settings above. Worktrees outside a
 bundle follow the base rule directly.
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Test the bundle-git scripts against a real git remote.
+# Test the bundle scripts against a real git remote.
 #
 # No network and nothing touched outside a temp dir: a local `git daemon` serves the smart protocol
 # (the same family GitHub serves over HTTPS), and `gh` is stubbed by a file listing merged PRs.

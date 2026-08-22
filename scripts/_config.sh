@@ -1,4 +1,4 @@
-# Shared settings for the bundle-git scripts. Sourced, not executed; run from the repository root.
+# Shared settings for the bundle scripts. Sourced, not executed; run from the repository root.
 #
 # Values a repository may change live in work/config.conf, which setup writes from the plugin's
 # skills/setup/templates/config.conf. Branch naming is not among them: status is derived by

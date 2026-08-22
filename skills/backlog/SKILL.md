@@ -28,7 +28,7 @@ Where no file exists — a repo that skipped `setup` — create it on the first 
 on is finished, then offer everything you collected as one batch, in the exact lines you would add:
 
 ```text
-+ [drift] [skills] `bundle-git` documents a `depends_on` form its claim script doesn't parse
++ [drift] [skills] `claim-ticket.sh` documents a `depends_on` form it doesn't parse
 + [follow-up] [docs] walkthrough.md names `/land`, which doesn't exist
 ```
 
