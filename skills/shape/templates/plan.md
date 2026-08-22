@@ -7,8 +7,7 @@ restate the tickets is not worth writing.
 Fill every retained section, delete these guidance comments as you go, and omit an optional section
 entirely rather than leaving an empty heading.
 
-The sections below are what this artifact owns; the Engineering plan section of
-${CLAUDE_PLUGIN_ROOT}/workflow/bundle.md owns the split against intent and tickets. Two boundaries are
+The sections below are what this artifact owns. Two boundaries are
 worth repeating because they are the ones plans cross: it cannot add behavior the approved intent
 does not contain, and it is not file-by-file pseudocode.
 
@@ -117,9 +116,7 @@ preparation. -->
 - Hard dependencies: real blocking edges only, the same definition the ticket's depends_on uses.
 
 Every row must be executable in one agent session. If you cannot tell that from the row, the slice is
-too big — split it before the Plan gate. What makes a slice valid, when horizontal work is
-admissible, and how refactors and migrations sequence live in Vertical slicing in
-${CLAUDE_PLUGIN_ROOT}/workflow/bundle.md. -->
+too big — split it before the Plan gate. -->
 
 | Slice | Outcome            | Intent refs | Produces           | Hard dependencies |
 | ----- | ------------------ | ----------- | ------------------ | ----------------- |

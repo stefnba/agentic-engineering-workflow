@@ -23,8 +23,7 @@ entirely rather than leaving an empty heading. Section names stay fixed so ticke
 critique can deep-link them.
 
 The sections below are what this artifact owns. It does not own current repository facts, file
-paths, ticket order, status, or interior implementation choices — see the Intent/spec section of
-${CLAUDE_PLUGIN_ROOT}/workflow/bundle.md for the full split.
+paths, ticket order, status, or interior implementation choices.
 
 Write target behavior in present tense; the spec describes the system as it will behave, not a
 promise about future work. Every sentence constrains behavior or gets deleted. Use the repository's
@@ -168,8 +167,8 @@ prior balance is shown marked stale with its original timestamp. -->
 
 ## Test intent
 
-<!-- What Shape owns about testing — test ownership across roles is defined in
-${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md; state here only what is specific to this bundle. Not test
+<!-- What Shape owns about testing — test ownership across roles is already defined workflow-wide;
+state here only what is specific to this bundle. Not test
 code, and not the repository's canonical checks, which stay canonical in CI.
 
 - Seam: the observable boundary the acceptance tests attach to. Prefer one that already exists, and
@@ -184,9 +183,7 @@ code, and not the repository's canonical checks, which stay canonical in CI.
   that exception is admissible and who may run or modify them. Write "none" when it does not apply.
 
 When the outcome is "behavior unchanged", characterization tests are mandatory and bind the
-decomposition, not this document — see Vertical slicing in
-${CLAUDE_PLUGIN_ROOT}/workflow/bundle.md for where they land on each route. State the outcome here;
-do not restate the mandate. -->
+decomposition, not this document. State the outcome here; do not restate the mandate. -->
 
 - Seam: <observable boundary the acceptance tests attach to>
 - Levels: <what is proven where>

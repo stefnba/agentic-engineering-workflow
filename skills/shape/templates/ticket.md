@@ -23,8 +23,7 @@ One ticket is one approved slice, one fresh agent session, and one pull request.
 clarify it, or merge it with the ticket it is really part of.
 
 File name, ticket number, and heading number follow Naming and layout in
-${CLAUDE_PLUGIN_ROOT}/workflow/bundle.md — `ticket.md` numbered 01 for a single-ticket bundle,
-`tickets/NN-<slug>.md` otherwise.
+${CLAUDE_PLUGIN_ROOT}/workflow/bundle.md.
 
 Those three keys are the whole frontmatter. Never add a status field — todo, doing, and done are
 derived from the ticket's branch and its merged PR — and never record an external blocker here; it
