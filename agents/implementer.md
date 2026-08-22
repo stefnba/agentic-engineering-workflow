@@ -2,6 +2,8 @@
 name: implementer
 description: Executes one approved ticket to a verified, reconciled PR, and runs its fix rounds when a review round returns findings. Fresh context per ticket, carried through those fix rounds, scoped to one ticket, branch, and worktree.
 skills: [code-design]
+model: claude-sonnet-5
+effort: high
 ---
 
 # Implementer
