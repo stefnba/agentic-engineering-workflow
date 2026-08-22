@@ -100,3 +100,5 @@ Candidate work and follow-ups nobody has picked yet.
 - [follow-up] [skills] `skills/recap/SKILL.md`'s `Settled` section mixes decisions with actions
   already taken — a model choice sits beside a file that moved — so a reader cannot tell what was
   agreed from what now exists. Separate the two.
+- [idea] [skills] [docs] `work/backlog.md`'s bullet format could move to a markdown table (`id`,
+  `topic`, `areas`, `details`)
