@@ -18,10 +18,12 @@ approved, executable bundle.
 
 **Read both in one batch before anything else:**
 
+- `${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md` — the Shape stage's feedback loop, and the
+  critique and Plan gate this session ends at
 - `${CLAUDE_PLUGIN_ROOT}/workflow/shaping-routes.md` — the routes, their criteria, the
   sequential-bundle split triggers
 - `${CLAUDE_PLUGIN_ROOT}/workflow/bundle.md` — the bundle layout, vertical slicing, dependencies
-  and parallelization, and the Shape-completion criteria
+  and parallelization, and what a complete bundle contains
 
 You run **inline, with the human present**. That is deliberate so you can resolve material
 ambiguity by asking.
@@ -68,6 +70,8 @@ paths.
 
 ### 4. Create the bundle
 
+A bundle contains the minimum artifact set its shaping route requires.
+
 The bundle ID is `$(date +%F)-<slug>`, slug lowercase kebab-case. Check nothing under
 `${CLAUDE_PROJECT_DIR}/work/bundles/` already uses it.
 
@@ -96,8 +100,8 @@ gets resolved silently and arbitrarily.
 
 Run this before critique — a fork spent on a draft with template comments still in it buys nothing.
 
-- [ ] Criteria 1 through 4 of `bundle.md`'s Shape-completion list hold — its 5 and 6 are the
-      critique and the Plan gate, the two steps after this one.
+- [ ] Every criterion of `bundle.md`'s A complete bundle list holds — the critique and the Plan
+      gate are the two steps after this one.
 - [ ] No open question, TODO, or placeholder survives anywhere in the bundle.
 - [ ] No template guidance comment survives.
 - [ ] Every `depends_on` edge is a real blocking edge, in the exact flow-list form `ticket.md`'s

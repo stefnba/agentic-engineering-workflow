@@ -1,5 +1,6 @@
 <!--
-The engineering plan: how this repository realizes and decomposes the approved intent.
+The engineering plan: the approach and decomposition that realize the approved intent in this
+repository at the least risk.
 
 Copy it into the bundle as plan.md when the chosen route requires a plan. A plan that would merely
 restate the tickets is not worth writing.
@@ -15,7 +16,7 @@ Reference intent by ID (BR, BC, INV, NG, AC) rather than restating it. This plan
 numbered PD-n and referenced the same way from tickets. Slice number = ticket number = the NN in the
 ticket's file name. Numbers are stable once approved.
 
-Before dispatching critique, check the bundle against the Shape-completion criteria in
+Before dispatching critique, check the bundle against A complete bundle in
 ${CLAUDE_PLUGIN_ROOT}/workflow/bundle.md. That check is the Architect's, and its result is not plan
 content: nothing in this file attests that the bundle is ready.
 -->

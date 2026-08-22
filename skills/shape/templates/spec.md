@@ -23,7 +23,9 @@ entirely rather than leaving an empty heading. Section names stay fixed so ticke
 critique can deep-link them.
 
 The sections below are what this artifact owns. It does not own current repository facts, file
-paths, ticket order, status, or interior implementation choices.
+paths, ticket order, status, or interior implementation choices — those belong to the plan, ticket,
+repository, or PR/CI; ${CLAUDE_PLUGIN_ROOT}/workflow/artifacts.md owns that authority split and
+what happens to this file at Land.
 
 Write target behavior in present tense; the spec describes the system as it will behave, not a
 promise about future work. Every sentence constrains behavior or gets deleted. Use the repository's
