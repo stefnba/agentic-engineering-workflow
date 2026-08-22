@@ -108,9 +108,8 @@ by evidence you inspected or reproduced. Run the failing case when practical. Do
 
 A review with no findings is valid.
 
-If you find a real improvement that does not affect acceptance, report it separately as a backlog
-candidate with evidence and scope. It is never a finding and never changes the PR assessment. The
-coordination tooling records it through the repository's backlog mechanism.
+A real improvement that does not affect acceptance is a backlog candidate, not a finding
+(`finding-rules`) — report it separately, with evidence and scope.
 
 ### 6. Re-review without moving the goalposts
 
