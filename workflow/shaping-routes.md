@@ -6,40 +6,11 @@ reliable: which artifacts one picked outcome needs, and when to split it into se
 Choosing a lighter route never changes the five lifecycle stages — see
 [Non-negotiable boundaries](#non-negotiable-boundaries) below for what a route may never remove.
 
-There are five routes. Use these names verbatim — in prose, in an Architect's route statement, and in
-any document that refers to a route:
+## The five routes
 
-- **Direct ticket**
-- **Investigation or spike**
-- **Intent plus tickets**
-- **Intent, plan, and tickets**
-- **Sequential bundles**
-
-"Intent" is the intent artifact role, usually `spec.md` — not one mandatory filename.
-
-## Decision framework
-
-Classify the work by uncertainty and impact, then increase rigor when coordination is high.
-
-|                 | Low uncertainty                                                   | High uncertainty                                       |
-| --------------- | ----------------------------------------------------------------- | ------------------------------------------------------ |
-| **Low impact**  | direct ticket                                                     | investigation or spike, then a direct ticket           |
-| **High impact** | intent plus tickets; add a plan when decomposition is non-obvious | investigation or spike, then intent, plan, and tickets |
-
-Coordination is a multiplier. Cross-service changes, shared schemas, migrations, several parallel
-agents, or multiple rollout steps usually require a plan even when the desired behavior is clear.
-
-Ask in order:
-
-1. **Is the problem understood?** If not, Discover through reproduction, investigation, or a spike.
-2. **Is the approved outcome obvious and bounded?** If not, write an intent artifact.
-3. **Is the repository-grounded approach and decomposition obvious?** If not, write a plan.
-4. **Can every ticket carry concrete done-when evidence now?** If not, split into sequential bundles.
-
-No artifact is mandatory by name. Each artifact must remove a named uncertainty or establish an
-execution boundary.
-
-## Routes
+Use these route names verbatim — in prose, in an Architect's route statement, and in any document
+that refers to a route. "Intent" is the intent artifact role, usually `spec.md` — not one mandatory
+filename.
 
 ### Direct ticket
 
@@ -122,6 +93,28 @@ Split rather than speculate when:
 
 Do not use sequential bundles to evade complete shaping. Every individual bundle still has its full
 ticket set and its own Plan gate before implementation.
+
+## Decision framework
+
+Classify the work by uncertainty and impact, then increase rigor when coordination is high.
+
+|                 | Low uncertainty                                                   | High uncertainty                                       |
+| --------------- | ----------------------------------------------------------------- | ------------------------------------------------------ |
+| **Low impact**  | direct ticket                                                     | investigation or spike, then a direct ticket           |
+| **High impact** | intent plus tickets; add a plan when decomposition is non-obvious | investigation or spike, then intent, plan, and tickets |
+
+Coordination is a multiplier. Cross-service changes, shared schemas, migrations, several parallel
+agents, or multiple rollout steps usually require a plan even when the desired behavior is clear.
+
+Ask in order:
+
+1. **Is the problem understood?** If not, Discover through reproduction, investigation, or a spike.
+2. **Is the approved outcome obvious and bounded?** If not, write an intent artifact.
+3. **Is the repository-grounded approach and decomposition obvious?** If not, write a plan.
+4. **Can every ticket carry concrete done-when evidence now?** If not, split into sequential bundles.
+
+No artifact is mandatory by name. Each artifact must remove a named uncertainty or establish an
+execution boundary.
 
 ## Work-type guidance
 
