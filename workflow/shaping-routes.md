@@ -142,6 +142,9 @@ The route name stays the same whatever form the intent artifact takes: a feature
 statement, target architecture plus invariants for a refactor, a migration objective, or a threat
 model for a security change.
 
+An incident or hotfix additionally follows the repository's emergency integration and release
+policy — the route decides only its artifacts.
+
 ## Non-negotiable boundaries
 
 A lighter route removes unnecessary artifacts, not safeguards. Whatever the route:

@@ -1,5 +1,8 @@
 # Lifecycle
 
+The state machine: stages, gates, and coordination. A rule about an artifact, a bundle, or a git
+operation lives with its subject document; this one owns only the sequencing between them.
+
 The workflow has five lifecycle stages. A stage exists when purpose, actor or context, permissions,
 output, or exit authority changes materially.
 
@@ -129,7 +132,17 @@ Select the route using [Shaping routes](./shaping-routes.md).
 
 Intent, planning, and ticket generation are feedback substeps inside Shape, not stages — a plan or
 ticket that exposes a missing behavioral decision returns to the intent artifact before Shape
-continues.
+continues:
+
+```text
+intent/spec → plan when needed → tickets
+      ▲              │               │
+      └──────── missing decision ────┘
+```
+
+Planning is repository-grounded, so it may reveal a migration decision, compatibility constraint,
+failure behavior, or invariant absent from intent. Resolve that gap in the owning artifact before
+continuing; never let a ticket silently decide it.
 
 **Keep bundles bounded:** Shape creates the complete executable ticket set for one coherent outcome.
 An outcome too large to shape honestly at once splits into sequential bundles by those criteria,

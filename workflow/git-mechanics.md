@@ -118,6 +118,12 @@ branch the ticket off it directly. If not, create it from the integration target
 push is rejected because the ref now exists — another ticket's claim won the race — fetch it and
 branch off that instead of failing.
 
+## Bundle-branch writes
+
+**Content reaches a bundle branch only through an accepted ticket PR.** Nothing else ever writes to
+it — not even Land, which merges the branch into a detached worktree on the integration target
+rather than committing on it (see Landing a bundle below).
+
 ## Backlog merges
 
 `work/backlog.md` is written from several branches at once by design — a Shape session appends a

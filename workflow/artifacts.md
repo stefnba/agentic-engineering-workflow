@@ -1,7 +1,7 @@
 # Artifacts
 
 Artifacts have one owner, answer one question, and live only as long as that question remains
-useful. A bundle contains the minimum artifact set its shaping route requires.
+useful.
 
 ## Authority
 
@@ -102,7 +102,7 @@ resurfacing. Drop a rejection with no durable reason behind it and let it resurf
 ### Contents
 
 A bundle is the disposable container for one coherent approved outcome. [Work bundles](./bundle.md)
-owns the possible contents and Shape-completion criteria; [Shaping routes](./shaping-routes.md)
+owns the layout and what a complete bundle contains; [Shaping routes](./shaping-routes.md)
 owns which artifacts a route requires and when to split sequential bundles.
 
 ### Intent artifact
@@ -115,6 +115,9 @@ owns which artifacts a route requires and when to split sequential bundles.
 - migration objective
 - security requirements
 - ticket that contains the complete intent for a small change
+
+Whatever the form, it answers one test: if two competent implementations differed internally, what
+must still be identical?
 
 ### Status
 

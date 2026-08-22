@@ -77,8 +77,8 @@ which builds the ticket including tests, runs its checks, and opens a PR with a 
 
 Which branch it's cut from and which branch its PR targets both follow from the bundle's shape — a
 single-ticket bundle works directly against the integration target, a multi-ticket bundle gets a
-bundle branch that every ticket PR merges into. [Work bundles](../workflow/bundle.md) has the mapping
-and [Git mechanics](../workflow/git-mechanics.md) the mechanics; you don't declare any of it.
+bundle branch that every ticket PR merges into. [Git mechanics](../workflow/git-mechanics.md) owns
+the mapping and the mechanics; you don't declare any of it.
 
 Only open a ticket's tab once every ticket it depends on is `done`.
 

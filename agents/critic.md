@@ -27,7 +27,10 @@ Read before judging:
 - the complete draft bundle
 - relevant code, tests, durable docs, glossary, and decisions
 - repository conventions
-- workflow, artifact authority, and bundle rules
+- `${CLAUDE_PLUGIN_ROOT}/workflow/bundle.md` — layout, completeness, slicing, and dependency rules
+- `${CLAUDE_PLUGIN_ROOT}/workflow/artifacts.md` — artifact authority and conflict rules
+- `${CLAUDE_PLUGIN_ROOT}/workflow/shaping-routes.md` — route criteria and the sequential-bundle
+  split triggers
 
 ## Critique Process
 
@@ -67,9 +70,8 @@ Check that every ticket is one coherent, independently reviewable outcome with c
 evidence, necessary dependencies, credible parallel claims, and bounded autonomy. Flag horizontal
 slices without a justified enabling role.
 
-Apply the complete sequential-bundle criteria in
-`${CLAUDE_PLUGIN_ROOT}/workflow/shaping-routes.md`. Treat a violation as a blocker rather than
-maintaining another local trigger list.
+Apply the complete sequential-bundle criteria in `shaping-routes.md`. Treat a violation as a
+blocker rather than maintaining another local trigger list.
 
 Done when acceptance coverage, dependency edges, one-ticket/one-PR identity, and bundle boundedness
 have all been challenged.
