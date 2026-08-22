@@ -93,6 +93,10 @@ Candidate work and follow-ups nobody has picked yet.
   survive every land as empty directories, untracked and invisible to `git status`. Observed landing
   `2026-08-20-recap-skill`; `git worktree list` was clean while `find .claude/worktrees` still returned
   two directories.
-- [follow-up] [skills] `skills/recap/SKILL.md` prescribes prose — its worked example and its
-  per-section guidance are full sentences, so a long session comes back as five paragraphs. Wanted:
-  bullets and fragments, brevity over grammar, matching this repo's own output style.
+- [follow-up] [skills] `setup` never turns the shipped output style on. Selecting `crisp` is one
+  `outputStyle` line in the consuming repo's `.claude/settings.json`, and nothing in the install list writes
+  or mentions it — so an installed plugin ships a voice nobody enables. Decide whether setup writes the line
+  or only names the style, and reflect it in `README.md`'s install table.
+- [follow-up] [skills] `skills/recap/SKILL.md`'s `Settled` section mixes decisions with actions
+  already taken — a model choice sits beside a file that moved — so a reader cannot tell what was
+  agreed from what now exists. Separate the two.
