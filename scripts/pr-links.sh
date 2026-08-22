@@ -16,7 +16,8 @@ if [ -f "work/bundles/$bundle/ticket.md" ]; then
 else
   ticket=$(ls "work/bundles/$bundle/tickets/$nn-"*.md 2>/dev/null | head -1 || true)
 fi
-[ -n "$ticket" ] || { echo "no such ticket: $bundle/$nn" >&2; exit 2; }
+[ -n "$ticket" ] ||
+  { echo "no such ticket: $bundle/$nn — NN is the two-digit number bundle-status.sh prints (e.g. 01)" >&2; exit 2; }
 
 git fetch -q origin
 
@@ -28,11 +29,11 @@ git fetch -q origin
 # version and not the original one.
 sha=$(git log -1 --format=%H "origin/$INTEGRATION_TARGET" -- "work/bundles/$bundle") || sha=""
 [ -n "$sha" ] ||
-  { echo "no commit on $INTEGRATION_TARGET touches work/bundles/$bundle" >&2; exit 3; }
+  { echo "bundle $bundle is not published on $INTEGRATION_TARGET — no approved commit to pin permalinks to" >&2; exit 3; }
 
 # --json url carries the host, so this works against an enterprise forge and not only github.com.
 repo=$(gh repo view --json url -q .url) ||
-  { echo "cannot reach the forge to resolve the repository URL" >&2; exit 4; }
+  { echo "cannot reach the forge to resolve the repository URL — fix the connection and re-run" >&2; exit 4; }
 
 # Markdown links, not bare URLs: the body is read rendered, and a 100-character permalink in the
 # middle of a line is noise a reader has to skip. The link text carries what identifies the target —

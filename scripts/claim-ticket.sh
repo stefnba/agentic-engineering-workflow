@@ -22,7 +22,8 @@ if [ -f "work/bundles/$bundle/ticket.md" ]; then
 else
   ticket=$(ls "work/bundles/$bundle/tickets/$nn-"*.md 2>/dev/null | head -1 || true)
 fi
-[ -n "$ticket" ] || { echo "no such ticket: $bundle/$nn" >&2; exit 2; }
+[ -n "$ticket" ] ||
+  { echo "no such ticket: $bundle/$nn — NN is the two-digit number bundle-status.sh prints (e.g. 01)" >&2; exit 2; }
 
 # A base that is not the target means a multi-ticket bundle, whose shared branch the first claim
 # creates.
@@ -39,12 +40,16 @@ fi
 for dep in $(sed -n 's/^depends_on: *\[\(.*\)\]/\1/p' "$ticket" | tr -d ' ' | tr ',' '\n'); do
   dep_status=$("$here/ticket-status.sh" "$bundle" "$dep") || dep_status=""
   [ -n "$dep_status" ] || dep_status=unknown
-  [ "$dep_status" = done ] ||
-    { echo "blocked: ticket $dep is $dep_status" >&2; exit 3; }
+  if [ "$dep_status" != done ]; then
+    echo "blocked: ticket $dep is $dep_status — claim only once every dependency is done" >&2
+    [ "$dep_status" = unknown ] &&
+      echo "unknown: the forge could not be queried — fix that connection; the dependency may already be done" >&2
+    exit 3
+  fi
 done
 
 if [ -e "$worktree" ]; then
-  echo "stale worktree at $worktree — remove it first" >&2
+  echo "stale worktree at $worktree — an earlier claim left it; have it removed, then retry" >&2
   exit 5
 fi
 
@@ -52,9 +57,9 @@ fi
 # pushed the same commit sees '=' and must stop. Capture the output instead of piping it: under
 # pipefail, `grep -q` exits early and SIGPIPEs the push.
 result=$(git push --porcelain origin "origin/$base:refs/heads/$branch" 2>&1) ||
-  { echo "ticket $bundle/$nn is already claimed" >&2; exit 4; }
+  { echo "ticket $bundle/$nn is already claimed — another session owns it; stop" >&2; exit 4; }
 grep -q '^\*' <<<"$result" ||
-  { echo "ticket $bundle/$nn is already claimed" >&2; exit 4; }
+  { echo "ticket $bundle/$nn is already claimed — another session owns it; stop" >&2; exit 4; }
 
 git fetch -q origin "+refs/heads/$branch:refs/remotes/origin/$branch"
 git worktree add -q "$worktree" "$branch"

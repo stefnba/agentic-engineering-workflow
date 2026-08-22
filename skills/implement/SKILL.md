@@ -57,16 +57,10 @@ ${CLAUDE_PLUGIN_ROOT}/scripts/claim-ticket.sh <bundle-id> <NN>
 ```
 
 Creating the branch _is_ the claim — that is what serializes two sessions reaching for the same
-ticket. Read a non-zero exit as a stop, not as something to retry around:
+ticket. Read a non-zero exit as a stop, not as something to retry around: its message states the
+reason and the next action — report it, and leave anything it says is in the way to the human.
 
-| Exit | Means                                                                                         |
-| ---- | --------------------------------------------------------------------------------------------- |
-| `2`  | no such ticket                                                                                |
-| `3`  | a dependency is not `done` — `unknown` means the forge was unreachable, not that work is left |
-| `4`  | already claimed — another session owns this ticket; stop                                      |
-| `5`  | a stale worktree is in the way — show the path and let the human clear it                     |
-
-It prints the branch, the branch it was cut from, and the worktree path. **The branch it was cut from
+On success it prints the branch, the branch it was cut from, and the worktree path. **The branch it was cut from
 is your PR's target** — never declared and never guessed. Move into the worktree; every step below
 runs there.
 

@@ -69,10 +69,10 @@ start)
   while read -r nn _; do
     [ -n "$nn" ] || continue
     st=$("$here/ticket-status.sh" "$bundle" "$nn") || st=unknown
-    [ "$st" = done ] || { echo "not landable: ticket $nn is $st" >&2; exit 3; }
+    [ "$st" = done ] || { echo "not landable: ticket $nn is $st — land only when every ticket is done (unknown means the forge, not the ticket)" >&2; exit 3; }
   done <<<"$(ticket_names "$bundle")"
 
-  [ -e "$land" ] && { echo "stale land worktree at $land — remove it first" >&2; exit 5; }
+  [ -e "$land" ] && { echo "stale land worktree at $land — a previous land left it; have it removed, then retry" >&2; exit 5; }
 
   git fetch -q origin
   # Detached, and it has to be: the session's own checkout already holds the integration target, and

@@ -28,26 +28,17 @@ the semantics, including cancelling and the `unknown` state.
 
 ## Exit codes
 
-Treat a non-zero exit as a stop, never as something to retry or work around.
+Treat a non-zero exit as a stop, never as something to retry or work around; the script's stderr
+states the reason and the next action, so nothing else needs a mapping. The numbers are contract
+only for scripts and tests that branch on them:
 
-**`claim-ticket.sh`** — `2` no such ticket · `3` a dependency is not `done` · `4` already claimed ·
-`5` stale worktree in the way. A `4` means another session owns that ticket. A `3` names the status it
-saw — `todo`, `doing`, or `unknown` when the forge could not be queried, which blocks the claim
-exactly as an unfinished dependency does and needs the forge fixed rather than the ticket waited on.
-
-**`pr-links.sh`** — `2` no such ticket · `3` the bundle is not on the integration target, so there is
-no approved commit to pin to · `4` the forge is unreachable.
-
-**`complete-ticket.sh`** — `2` the ticket branch is stale against its base: a sibling merged first, so
-the reviewed diff was verified against a base that has moved. Merge the base in, re-verify, and get a
-fresh Accept; the fix moves the head, which is why it cannot happen after the Accept it invalidates.
-
-**`land-bundle.sh`** — `2` no such bundle · `3` a ticket is not `done` · `4` nothing to land, a
-single-ticket bundle whose commits go to the session's own checkout · `5` a previous land left a
-worktree · `6` the integration target moved · `7` a merge conflict, left in place for the human.
-
-**`6` is a loop, not a failure.** `push` merged the moved target in and stopped rather than
-publishing a state no check has run against. Re-run the canonical checks, then `push` again.
+- `claim-ticket.sh` — `2` no such ticket · `3` dependency not `done` · `4` already claimed ·
+  `5` stale worktree
+- `pr-links.sh` — `2` no such ticket · `3` bundle not published · `4` forge unreachable
+- `complete-ticket.sh` — `2` stale against its base
+- `land-bundle.sh` — `2` no such bundle · `3` a ticket not `done` · `4` nothing to land
+  (single-ticket bundle) · `5` leftover land worktree · `6` target moved: not a failure but a loop —
+  re-run the canonical checks, then `push` again · `7` merge conflict, left for the human
 
 ## Tests
 

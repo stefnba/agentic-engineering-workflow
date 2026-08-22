@@ -50,15 +50,10 @@ It gates the whole stage: every ticket `done` from its PR record, no stale land 
 detached worktree on the integration target with the bundle branch merged in. **Every step below
 happens in the worktree it prints** — that tree is where the checks run and what gets published.
 
-Read a non-zero exit as a stop, not as something to work around:
-
-| Exit | Means                                                                                  |
-| ---- | -------------------------------------------------------------------------------------- |
-| `2`  | no such bundle                                                                         |
-| `3`  | a ticket is not `done` — Land is premature; `unknown` means the forge, not the ticket  |
-| `4`  | single-ticket bundle: no branch to land, so steps 2–4 commit in this checkout and push |
-| `5`  | a previous land left a worktree — show the path and let the human clear it             |
-| `7`  | merge conflict, left in place for the human                                            |
+Read a non-zero exit as a stop, not as something to work around: its message states the reason and
+the next action — report it, and leave anything it says is in the way to the human. One code routes
+instead of stopping: `4` means a single-ticket bundle with no branch to land, so steps 2–4 commit in
+this checkout and push.
 
 ### 2. Absorb what the durable docs still need
 

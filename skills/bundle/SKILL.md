@@ -23,8 +23,9 @@ cover.
 bundle, whose one file is `ticket.md`. A slug or unpadded number names a branch no status query
 reconstructs, so the scripts refuse it as `no such ticket`.
 
-Treat a non-zero exit as a stop and read its meaning in the README's exit codes — never retry or
-work around one. What each status means, how to cancel a ticket, and why `unknown` is not `todo`:
+Treat a non-zero exit as a stop, never something to retry or work around — its message states the
+reason and the next action; report it as printed. What each status means, how to cancel a ticket,
+and why `unknown` is not `todo`:
 `${CLAUDE_PLUGIN_ROOT}/workflow/git-mechanics.md`, Status is derived.
 
 Landing is a judgment sequence, not a routing row — REQUIRED: use the `land` skill for it; run
