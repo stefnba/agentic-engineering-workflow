@@ -163,5 +163,5 @@ it. The land must not collapse or rewrite them:
   state is one no check has run against.
 
 `TICKET_MERGE_METHOD` is named for its whole scope: ticket PRs, nothing else. The land is fixed, not
-a setting — it is what makes "no landed-bundle archive; git history preserves temporary artifacts"
-true.
+a setting — it is what makes [Artifacts](./artifacts.md)'s "no landed-bundle archive; git history
+preserves temporary artifacts" true.

@@ -286,10 +286,10 @@ The final Reviewer comment is tied to the reviewed head SHA and states:
 - remaining limitations or material areas that could not be verified
 
 **Accept gate:** the human accepts the independently reviewed PR and explicitly disposes any open
-concerns; an accepted concern leaves a durable trace rather than
-evaporating. Acceptance authorizes the merge, performed according to
-the repository's Git conventions; the ticket reads as `done` once that merge lands on the PR's
-target branch.
+concerns; an accepted concern leaves a durable trace rather than evaporating, per
+[Finding rules](../skills/finding-rules/SKILL.md). Acceptance authorizes the merge, performed
+according to the repository's Git conventions; the ticket reads as `done` once that merge lands on
+the PR's target branch.
 Accept applies to the exact reviewed head SHA; any subsequent implementation change invalidates it
 and requires verification and Review again.
 

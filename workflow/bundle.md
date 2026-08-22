@@ -184,11 +184,12 @@ Every ticket states what the Implementer may decide and what it must preserve. L
 helper design may be delegated within the ticket's scope.
 
 Escalate to the human when implementation would cross a boundary that returns work to the Plan gate,
-or would decide cross-ticket architecture; a ticket adds only the boundaries specific to its own
-slice.
+or would decide cross-ticket architecture. [Lifecycle](./lifecycle.md) owns which changes those are;
+a ticket adds only the boundaries specific to its own slice.
 
 ## Git and pull requests
 
+[Git mechanics](./git-mechanics.md) owns branch naming, branch strategy, the claim, and the land.
 This section owns only what a bundle's shape implies: which branches and pull requests exist, and
 what each one targets.
 
