@@ -153,7 +153,7 @@ Act on the assessment it returns:
 - **ready for human review** → step 6.
 - **fixes required** → fix round, below.
 - **human escalation required** → stop the loop and go to step 6 carrying both positions
-  (`${CLAUDE_PLUGIN_ROOT}/workflow/finding-protocol.md`, Concern is not escalation).
+  (`${CLAUDE_PLUGIN_ROOT}/skills/finding-rules/SKILL.md`, Concern is not escalation).
 
 **Fix round — yours, here, in this session.** Fixes never fork: the human is in this conversation and
 can steer them, and the reasoning behind the code is what answers a finding that is wrong. Work the
@@ -192,7 +192,7 @@ Report, in this order:
 - the PR, its current head SHA, and the final round's assessment
 - every finding ID and its disposition — and any escalation with both positions side by side
 - each open concern and what accepting it costs; the human disposes every one, and an accepted
-  concern leaves a durable trace (`${CLAUDE_PLUGIN_ROOT}/workflow/finding-protocol.md`)
+  concern leaves a durable trace (`${CLAUDE_PLUGIN_ROOT}/skills/finding-rules/SKILL.md`)
 - what reconcile touched
 - what you noticed outside scope — offer it through the `backlog` skill, which owns what earns a line
 

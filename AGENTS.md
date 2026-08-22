@@ -20,8 +20,10 @@ repos. Three layers, distinguished by who may change a file:
 
 Each layer has its own directory, so placement answers the question the table asks: a rule the
 workflow owns goes in `workflow/`, a convention a repository owns goes in `docs/conventions/`,
-and prose only a human reads goes in `docs/`. The one split that isn't by directory: anything a
-script consumes is machine-readable config in `work/config.conf`, never prose in `docs/conventions/`
+and prose only a human reads goes in `docs/`. Two splits aren't by directory: a workflow rule every
+invocation of an agent needs is a preloaded skill rather than a `workflow/` doc (see
+[workflow/components.md](workflow/components.md)), and anything a script consumes is machine-readable
+config in `work/config.conf`, never prose in `docs/conventions/`
 (see [docs/decisions/2026-08-18-script-read-settings.md](docs/decisions/2026-08-18-script-read-settings.md)).
 
 Building or changing a skill or an agent has its own contract in

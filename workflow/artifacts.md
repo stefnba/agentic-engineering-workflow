@@ -163,7 +163,7 @@ hold:
 What misses the bar has an owner already: a term dispute goes to `GLOSSARY.md`, a settled rationale
 to a decision record, an unsettled question to the human, work a live bundle already covers to that
 bundle. Taste with no referent behind it goes nowhere — the construction that keeps a nitpick out of
-a finding ([Finding protocol](./finding-protocol.md)) keeps it out of here too.
+a finding ([Finding rules](../skills/finding-rules/SKILL.md)) keeps it out of here too.
 
 **A line states the problem, never the solution.** The solution is what shaping is for, and one
 written now is stale by the time it is read. A line may carry the evidence that proves its claim — a

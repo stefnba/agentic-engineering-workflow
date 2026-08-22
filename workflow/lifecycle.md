@@ -38,7 +38,7 @@ solely to prove that the stage happened.
 - [Human authority](#human-authority) — the three gates no agent may pass
 - [Test ownership](#test-ownership) — which role owns which part of testing
 
-Findings are governed separately: [Finding protocol](./finding-protocol.md) owns the severities,
+Findings are governed separately: [Finding rules](../skills/finding-rules/SKILL.md) owns the severities,
 what a finding must name, and what survives a round. Critic and Reviewer load it without loading
 this document.
 
@@ -295,7 +295,7 @@ The final Reviewer comment is tied to the reviewed head SHA and states:
 
 **Accept gate:** the human accepts the independently reviewed PR and explicitly disposes any open
 concerns; an accepted concern leaves a durable trace rather than evaporating, per
-[Finding protocol](./finding-protocol.md). Acceptance authorizes the merge, performed according to
+[Finding rules](../skills/finding-rules/SKILL.md). Acceptance authorizes the merge, performed according to
 the repository's Git conventions; the ticket reads as `done` once that merge lands on the PR's
 target branch.
 Accept applies to the exact reviewed head SHA; any subsequent implementation change invalidates it

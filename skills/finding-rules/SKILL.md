@@ -1,6 +1,12 @@
-# Finding protocol
+---
+name: finding-rules
+description: What a Critic or Reviewer may report and what survives a round — the two severities, the violated-referent rule, confidence flags, the record form, and the rules across rounds. Preloaded by the critic and reviewer agents; invoke or read it when writing, disposing, rebutting, or escalating a finding.
+---
 
-What a Critic or Reviewer may report, and what survives a round. Both load this document.
+# Finding rules
+
+What a Critic or Reviewer may report, and what survives a round. The `critic` and `reviewer` agents
+preload it through their `skills:` field; a fix round reads it at the point it disposes a finding.
 
 A finding is an argument addressed to a human gate. Everything below exists to keep it that — an
 argument the human can act on — rather than a list of things an agent noticed.
@@ -17,7 +23,7 @@ Critic and Reviewer findings use the same severities:
 Do not create minor or suggestion findings. A useful improvement that does not affect the next gate
 is a backlog candidate, never a finding. A read-only Critic or Reviewer reports it separately; skill
 scripts record reported candidates in the backlog's tag and area form (see
-[Artifacts](./artifacts.md)) without prioritizing or promoting them.
+[Artifacts](../../workflow/artifacts.md)) without prioritizing or promoting them.
 
 ## Every finding names what it violates
 
@@ -86,7 +92,7 @@ report padded with passing checks buries the two lines someone has to act on.
 
 Acceptance at a gate is a decision, and it disappears unless something records it. When the human
 accepts a concern, it becomes a backlog entry — or a decision record when the acceptance encodes a
-durable choice, per [Artifacts](./artifacts.md). An accepted risk with no durable trace has been
+durable choice, per [Artifacts](../../workflow/artifacts.md). An accepted risk with no durable trace has been
 forgotten rather than accepted, and the next round of work rediscovers it as new.
 
 ## Concern is not escalation

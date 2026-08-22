@@ -119,7 +119,7 @@ the diff, and deferring to the review — and binds you to resisting both. What 
 Re-read the approved intent, plan, ticket, and current PR before acting on review comments; what you
 remember writing is not what was approved. A finding flagged `suspected` is confirmed before you act
 on it — reproduce it, or establish that it does not hold — and your response says which you did; see
-`${CLAUDE_PLUGIN_ROOT}/workflow/finding-protocol.md`. For each stable finding ID:
+`${CLAUDE_PLUGIN_ROOT}/skills/finding-rules/SKILL.md`. For each stable finding ID:
 
 - fix it when the evidence is correct and the required outcome stays within approved intent
 - rebut it with concrete evidence when the claim is incorrect or already satisfied

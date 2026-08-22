@@ -2,6 +2,7 @@
 name: critic
 description: Read-only attacker for a draft bundle, run in fresh context before the human Plan gate. Reports evidence-backed blockers and concerns against intent, architecture, slicing, dependencies, risk, and testability. Never rewrites the bundle and never approves it.
 tools: Read, Grep, Glob, Bash, WebFetch, WebSearch
+skills: [finding-rules]
 model: opus
 effort: xhigh
 ---
@@ -87,7 +88,7 @@ Accept authority.
 
 ## Findings
 
-`${CLAUDE_PLUGIN_ROOT}/workflow/finding-protocol.md` is binding: two severities and no others, every
+`finding-rules` is binding: two severities and no others, every
 finding names the referent it violates, and every finding is flagged `verified` or `suspected`. Read
 it before you write one. At plan time the severities admit:
 
@@ -102,7 +103,7 @@ findings is valid.
 ## Output
 
 Blockers before concerns, in the record form and glyphs of
-`${CLAUDE_PLUGIN_ROOT}/workflow/finding-protocol.md` — including its rule that what holds is not
+`finding-rules` — including its rule that what holds is not
 reported.
 
 ```text

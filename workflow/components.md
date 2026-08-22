@@ -1,7 +1,7 @@
 # Components
 
-How the workflow's roles become skills and agents: what invokes one, how its permissions are
-expressed, where its supporting files go, and what it may reference. [Lifecycle](./lifecycle.md)
+How the workflow's roles become skills, agents, and the session's own voice: what invokes one, how
+its permissions are expressed, where its supporting files go, and what it may reference. [Lifecycle](./lifecycle.md)
 owns what each role does and which gate it sits in front of; this document owns only how one is
 packaged.
 
@@ -18,10 +18,22 @@ layout has to resolve identically in a consuming repo.
 A role that needs both gets both, and the skill stays thin: `critique` resolves the bundle and hands
 it over; every judgment lives in `critic`.
 
-**Knowledge arrives two ways, and neither is restatement in the agent's prompt.** A reusable format
-preloads through the agent's `skills:` field. Everything else the agent reads from `workflow/`
-itself. A skill that restates a `workflow/` document so it can be preloaded drifts within a few
-edits — a prior `docs-rules` skill did exactly that; don't rebuild it.
+**Knowledge arrives two ways, and neither is restatement in the agent's prompt.** What an agent
+needs on every invocation lives in a skill and preloads through its `skills:` field, landing in the
+system prompt before the agent's first action — so nothing depends on it choosing to read. What only
+some runs need stays in `workflow/` and is read at the branch that needs it: the information
+hierarchy's branching test, applied to knowledge placement.
+
+**Preloading moves a document, never copies one.** A skill that restates a `workflow/` document so
+it can be preloaded drifts within a few edits — a prior `docs-rules` skill did exactly that; don't
+rebuild it. Material that crosses the always-needed line moves into `skills/<name>/SKILL.md` and
+leaves nothing behind. `finding-rules` is the worked example: `critic` and `reviewer` preload it,
+and `workflow/` holds no second copy.
+
+**Only a forked agent preloads.** An inline skill has no `skills:` field and no system prompt of its
+own, so its session reads that same file from `${CLAUDE_PLUGIN_ROOT}/skills/<name>/SKILL.md` at the
+step that needs it — `implement` does exactly this in a fix round. Preloading is a fork
+optimization; the placement rule is what both share.
 
 ## Inline or forked
 
@@ -53,6 +65,19 @@ background only where the work is fire-and-forget.
   than claiming enforcement it does not have.
 - **Every skill that crosses a human gate is manual** (`disable-model-invocation: true`). A skill
   invoked by another skill, or by context, stays model-invocable.
+
+## Output styles own the voice, not the role
+
+An **output style** (`output-styles/*.md`, installed as `.claude/output-styles/`) rewrites the main
+conversation's system prompt: how a response is shaped, never what a role does. It reaches no
+subagent — a forked Critic or Reviewer runs its own system prompt — so a rule a role must obey
+belongs in that agent or in a skill it preloads. Two fields decide the rest:
+`keep-coding-instructions: true`, or the built-in engineering instructions are dropped along with
+the default voice; and `force-for-plugin`, which would apply the style whenever the plugin is
+enabled and override the human's own `outputStyle` — left off, so selecting it stays their call.
+
+The plugin ships one, [`crisp`](../output-styles/crisp.md); a repo selects it
+by name with `outputStyle` in `.claude/settings.json`.
 
 ## Supporting material
 
