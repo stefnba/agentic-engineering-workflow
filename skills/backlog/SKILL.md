@@ -12,10 +12,10 @@ yet. Its value is that it reads top to bottom in under a minute — the codebase
 file holds the reminder. A line leaves it two ways: the human picks it and `shape` turns it into a
 bundle, or it is deleted.
 
-**Read "What earns a backlog line" in `${CLAUDE_PLUGIN_ROOT}/workflow/artifacts.md` before writing
-one**, along with the kinds and areas sections under it. That document owns the bar, and most of
-what you are tempted to file misses it — dropping a candidate is the ordinary outcome, not a failure
-to capture.
+**Read the Backlog section of `${CLAUDE_PLUGIN_ROOT}/workflow/artifacts.md` before writing one**,
+along with the Areas section beside it. That document owns the bar and the tags, and most of what
+you are tempted to file misses it — dropping a candidate is the ordinary outcome, not a failure to
+capture.
 
 Where no file exists — a repo that skipped `setup` — create it on the first confirmed line, as a
 `# Backlog` heading, one sentence of what it holds, and an `## Items` heading.

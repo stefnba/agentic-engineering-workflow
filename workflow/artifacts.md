@@ -5,34 +5,27 @@ useful. A bundle contains the minimum artifact set its shaping route requires.
 
 ## Authority
 
-| Artifact                  | Question it owns                                                                    | It does not own                                           |
-| ------------------------- | ----------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| `work/backlog.md`         | What candidate work or follow-up remains unpicked?                                  | Priority, approval, or implementation scope               |
-| Discovery evidence        | What did we observe or learn?                                                       | Commitment, priority, or implementation scope             |
-| Intent artifact           | What outcome, behavior, constraints, and invariants did the human approve?          | Current implementation facts or interior design           |
-| Engineering plan          | How will this repository realize and decompose the approved intent?                 | Behavior or requirements absent from intent               |
-| Ticket                    | What may one agent change, what does it depend on, and what evidence makes it done? | Cross-ticket architecture or unapproved product decisions |
-| PR and CI                 | What changed, what checks ran, what was reviewed, and what is the current state?    | Intent, decomposition, or durable system truth            |
-| Durable system docs       | How is the current system intended to work now?                                     | In-flight plans or historical feature state               |
-| Decision record           | Which durable, consequential choice was made and why?                               | Work status or step-by-step implementation                |
-| `GLOSSARY.md`             | Which project-domain terms and rejected synonyms are canonical?                     | General programming or workflow-artifact terminology      |
-| `AGENTS.md`               | Which repository or package conventions and gotchas must every agent follow?        | Domain behavior or workflows owned by linked documents    |
-| `docs/conventions/git.md` | Which git conventions must a human follow here?                                     | Anything a script reads — that is `work/config.conf`      |
-| `work/config.conf`        | Which settings do the workflow's scripts run with?                                  | Conventions no script consumes                            |
-| `docs/research/`          | What durable reference did investigation establish?                                 | Evidence for one bundle, which lives with that bundle     |
-| Git mechanics             | How are worktrees based, tickets claimed, and bundle branches created race-safely?  | Any value a repository declares for itself                |
-| Agent prompt              | How does one role judge, act, escalate, and report within the loaded workflow?      | Lifecycle, artifact authority, or repository conventions  |
-| Component conventions     | How is a role packaged as a skill or agent — invocation, permissions, references?   | What that role itself judges, decides, or reports         |
+| Artifact                  | Layer          | Question it owns                                                                    | It does not own                                           |
+| ------------------------- | -------------- | ----------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| `work/backlog.md`         | repository     | What candidate work or follow-up remains unpicked?                                  | Priority, approval, or implementation scope               |
+| Discovery evidence        | chat or bundle | What did we observe or learn?                                                       | Commitment, priority, or implementation scope             |
+| Intent artifact           | bundle         | What outcome, behavior, constraints, and invariants did the human approve?          | Current implementation facts or interior design           |
+| Engineering plan          | bundle         | How will this repository realize and decompose the approved intent?                 | Behavior or requirements absent from intent               |
+| Ticket                    | bundle         | What may one agent change, what does it depend on, and what evidence makes it done? | Cross-ticket architecture or unapproved product decisions |
+| PR and CI                 | forge          | What changed, what checks ran, what was reviewed, and what is the current state?    | Intent, decomposition, or durable system truth            |
+| Durable system docs       | repository     | How is the current system intended to work now?                                     | In-flight plans or historical feature state               |
+| Decision record           | repository     | Which durable, consequential choice was made and why?                               | Work status or step-by-step implementation                |
+| `docs/research/`          | repository     | What durable reference did investigation establish?                                 | Evidence for one bundle, which lives with that bundle     |
+| `GLOSSARY.md`             | repository     | Which project-domain terms and rejected synonyms are canonical?                     | General programming or workflow-artifact terminology      |
+| `AGENTS.md`               | repository     | Which repository or package conventions and gotchas must every agent follow?        | Domain behavior or workflows owned by linked documents    |
+| `docs/conventions/git.md` | repository     | Which git conventions must a human follow here?                                     | Anything a script reads — that is `work/config.conf`      |
+| `work/config.conf`        | repository     | Which settings do the workflow's scripts run with?                                  | Conventions no script consumes                            |
+| Git mechanics             | workflow       | How are worktrees based, tickets claimed, and bundle branches created race-safely?  | Any value a repository declares for itself                |
+| Agent prompt              | workflow       | How does one role judge, act, escalate, and report within the loaded workflow?      | Lifecycle, artifact authority, or repository conventions  |
+| Component conventions     | workflow       | How is a role packaged as a skill or agent — invocation, permissions, references?   | What that role itself judges, decides, or reports         |
 
-“Intent artifact” is a role, not one mandatory filename. It may be a feature spec, bug statement,
-target architecture and invariants, migration objective, security requirements, or a ticket that
-contains the complete intent for a small change. When one file plays both intent and ticket roles,
-its sections must still keep approved behavior separate from execution instructions.
-
-Discovery evidence is not always a file: a codebase scan's findings may live only in chat, triaged
-live into a backlog line (accepted) or rejected. Write a decision record for a rejection only when
-it encodes a durable choice — "this stays as it is, because X" — never merely to stop a finding from
-resurfacing. Drop a rejection with no durable reason behind it and let it resurface next scan.
+`bundle` artifacts are deleted at Land ([Bundles](#bundles) below); `repository` artifacts are
+durable; `workflow` documents ship with the plugin; the forge keeps PRs after branch cleanup.
 
 ## Conflict rules
 
@@ -104,38 +97,60 @@ section exists only once a sub-glossary does. Which glossary a term belongs in f
 term's subject, and an unclear case is a question for the human rather than a guess — a term filed
 in the wrong domain is invisible to everyone working in the right one.
 
-## Bundle contents
+## Discovery evidence
+
+Discovery evidence is not always a file: a codebase scan's findings may live only in chat, triaged
+live into a backlog line (accepted) or rejected. Write a decision record for a rejection only when
+it encodes a durable choice — "this stays as it is, because X" — never merely to stop a finding from
+resurfacing. Drop a rejection with no durable reason behind it and let it resurface next scan.
+
+## Bundles
+
+### Contents
 
 A bundle is the disposable container for one coherent approved outcome. [Work bundles](./bundle.md)
 owns Shape-completion criteria and ticket identity; [Shaping routes](./shaping-routes.md) owns which
 artifacts a route requires and when to split sequential bundles.
 
-## Status ownership
+### Intent artifact
 
-Under `work/`, commit artifact content — spec, plan, and ticket text. Derive execution state; never
-store it.
+“Intent artifact” is a role, not one mandatory filename. It may be a feature spec, bug statement,
+target architecture and invariants, migration objective, security requirements, or a ticket that
+contains the complete intent for a small change. When one file plays both intent and ticket roles,
+its sections must still keep approved behavior separate from execution instructions.
 
-```text
-bundle: local draft → shaped → active → deleted at Land
-ticket: todo → doing → done
-PR/CI:  implementation, checks, review, and merge state
-```
+### Status
 
-- ticket `done`: its PR is merged into that ticket's target branch, whichever
-  [Git mechanics](./git-mechanics.md) derives it to be.
-- ticket `doing`: its ticket branch exists on the remote. It stays `doing` through Implement, Review,
-  fixes, and human review.
-- ticket `todo`: neither.
-- bundle `shaped`: it exists under `work/bundles/` on the integration target with no ticket claimed.
-  `active`: at least one ticket is no longer `todo`.
-
-Claiming a ticket _is_ creating its branch, which is why `doing` needs no record of its own.
-Deleting an unmerged ticket branch and its worktree un-claims the ticket. Nothing is written after a
-merge, so a human who merges the PR directly leaves exactly the state a skill script would.
+Under `work/`, commit artifact content — spec, plan, and ticket text. Execution state — bundle and
+ticket status, PR/CI state — is derived at the moment it is asked for and never stored;
+[Git mechanics](./git-mechanics.md) owns the mapping from branches and merge records to each state.
 
 Do not persist `ready`, `implemented`, `verifying`, `blocked`, or `changes_requested` either. Unmet
 ticket dependencies are derived from `depends_on`; an external blocker is raised on the PR or
 escalated to the human, never recorded as ticket metadata that can go stale.
+
+### Lifetime
+
+- **Local draft:** unapproved and not shared as committed work.
+- **Shaped:** critic-reviewed and human-approved; implementation may start.
+- **Active:** at least one ticket has started.
+- **Landed:** every ticket is done, the outcome is on the integration target, and the bundle is
+  deleted — [Lifecycle](./lifecycle.md) owns the ordered Land procedure that moves what the bundle
+  held to its durable owners.
+
+There is no `done/` or landed-bundle archive. Git history preserves temporary artifacts.
+
+Each implementation PR is the permanent historical bridge from the landed change to its temporary
+planning context — which is why the links in its body have to outlive the bundle. The PR handoff
+contract in [Lifecycle](./lifecycle.md) owns what that body must carry.
+
+The PR is also the main surface for implementation evidence, review findings, fix responses, and
+review state. Its links do not transfer authority: the linked intent, plan, and ticket remain
+authoritative while the work is active. PR comments are an execution log, not a second
+specification or durable system documentation.
+
+**Never reference a disposable bundle from code, durable documentation, or comments — it will not
+exist once Land deletes it.**
 
 ## Decision records
 
@@ -148,7 +163,9 @@ A choice with no rejected alternative was a default, not a decision, and belongs
 convention in `docs/conventions/`, a term in `GLOSSARY.md`, an unpicked follow-up in
 `work/backlog.md`, current behavior in the durable system docs.
 
-## What earns a backlog line
+## Backlog
+
+### What earns a line
 
 A line is a pointer to a decision someone makes later, so it earns its place only when all three
 hold:
@@ -174,7 +191,7 @@ scope lands, delete that part rather than moving it into an "already handled" cl
 answers what exists; a line that also answers it has to be maintained every time something lands,
 and goes stale the first time nobody does.
 
-## Backlog tags
+### Tags
 
 Every repository uses the same three **kind** tags, because they classify a line's standing in this
 workflow rather than anything about the repository:
@@ -200,32 +217,3 @@ If a reader can't tell which directories it covers, two people will tag the same
 Keep them coarse enough to repeat, add a cross-cutting term like `ci` or `deps` only once work
 accumulates there, and never reuse a kind as an area. Several areas per item are fine; a repository
 with no meaningful split runs with two or three, or none until a second earns its place.
-
-## Lifetime
-
-- **Local draft:** unapproved and not shared as committed work.
-- **Shaped:** critic-reviewed and human-approved; implementation may start.
-- **Active:** at least one ticket has started.
-- **Landed:** every ticket is done, the outcome is on the integration target, and the bundle is
-  deleted.
-
-There is no `done/` or landed-bundle archive. Git history preserves temporary artifacts.
-
-Each implementation PR is the permanent historical bridge from the landed change to its temporary
-planning context — which is why the links in its body have to outlive the bundle. The PR handoff
-contract in [Lifecycle](./lifecycle.md) owns what that body must carry.
-
-The PR is also the main surface for implementation evidence, review findings, fix responses, and
-review state. Its links do not transfer authority: the linked intent, plan, and ticket remain
-authoritative while the work is active. PR comments are an execution log, not a second
-specification or durable system documentation.
-
-At Land:
-
-1. Move currently true system behavior into the owning durable documentation.
-2. Move durable, consequential rationale into a decision record when it meets that bar.
-3. Move unfinished or newly discovered work into the backlog.
-4. Delete the complete bundle: intent/spec, plan, tickets, and bundle-local evidence.
-
-**Never reference a disposable bundle from code, durable documentation, or comments — it will not
-exist once Land deletes it.**

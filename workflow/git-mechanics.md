@@ -31,11 +31,21 @@ can change; the PRs already merged against a base cannot.
 ## Status is derived
 
 Every bundle and ticket status is computed from the remote branches and the ticket PRs' merge
-records at the moment it is asked for; nothing stores one.
+records at the moment it is asked for; nothing stores one:
 
-To cancel a ticket, delete its remote branch and remove its worktree; it reads as `todo` again. A
-query that cannot reach the forge reports `unknown` rather than guessing — never read that as
-`todo`.
+- ticket `done`: its PR is merged into that ticket's target branch, whichever the branch strategy
+  above derives it to be.
+- ticket `doing`: its ticket branch exists on the remote — claiming is creating that branch (see
+  Claiming a ticket below), so `doing` needs no record of its own. It stays `doing` through
+  Implement, Review, fixes, and human review.
+- ticket `todo`: neither.
+- bundle `shaped`: the bundle exists under `work/bundles/` on the integration target with no ticket
+  claimed; `active`: at least one ticket is no longer `todo`.
+
+To cancel a ticket, delete its remote branch and remove its worktree; it reads as `todo` again.
+Nothing is written after a merge, so a human who merges a ticket PR directly leaves exactly the
+state a skill script would. A query that cannot reach the forge reports `unknown` rather than
+guessing — never read that as `todo`.
 
 ## Ticket PR permalinks
 
