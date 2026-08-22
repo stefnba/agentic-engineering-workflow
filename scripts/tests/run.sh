@@ -107,6 +107,8 @@ echo "== single-ticket bundle takes no bundle branch"
 "$scripts/claim-ticket.sh" "$solo" 01 >/dev/null 2>&1
 ok "solo claim exits 0"             "$?" 0
 ok "no bundle branch"               "$(git ls-remote --heads origin "bundle/$solo" | wc -l | tr -d ' ')" 0
+"$scripts/claim-ticket.sh" "$solo" ticket >/dev/null 2>&1
+ok "slug instead of NN refuses (2)" "$?" 2
 
 echo "== listing"
 ok "lists every bundle"             "$("$scripts/bundle-status.sh" | wc -l | tr -d ' ')" 2

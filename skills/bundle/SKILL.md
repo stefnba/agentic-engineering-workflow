@@ -10,14 +10,18 @@ a paraphrase. The scripts' contract — settings, exit codes, tests — is
 `${CLAUDE_PLUGIN_ROOT}/scripts/README.md`; read it before doing anything the table below doesn't
 cover.
 
-| Request                                       | Command                                                           |
-| --------------------------------------------- | ----------------------------------------------------------------- |
-| every bundle and its status (no argument too) | `${CLAUDE_PLUGIN_ROOT}/scripts/bundle-status.sh`                  |
-| one bundle, with each ticket's status         | `${CLAUDE_PLUGIN_ROOT}/scripts/bundle-status.sh <bundle-id>`      |
-| one ticket's status                           | `${CLAUDE_PLUGIN_ROOT}/scripts/ticket-status.sh <bundle-id> <NN>` |
-| claim a ticket                                | `${CLAUDE_PLUGIN_ROOT}/scripts/claim-ticket.sh <bundle-id> <NN>`  |
-| a ticket PR's permalinks and target branch    | `${CLAUDE_PLUGIN_ROOT}/scripts/pr-links.sh <bundle-id> <NN>`      |
-| merge an accepted ticket PR                   | `${CLAUDE_PLUGIN_ROOT}/scripts/complete-ticket.sh <pr> <sha>`     |
+| Request                                                     | Command                                                                     |
+| ----------------------------------------------------------- | --------------------------------------------------------------------------- |
+| "what's in flight?", "which bundles exist?", bare `/bundle` | `${CLAUDE_PLUGIN_ROOT}/scripts/bundle-status.sh`                            |
+| "where is bundle X?" — one bundle, every ticket's status    | `${CLAUDE_PLUGIN_ROOT}/scripts/bundle-status.sh <bundle-id>`                |
+| "is ticket NN claimed?", "is it done?"                      | `${CLAUDE_PLUGIN_ROOT}/scripts/ticket-status.sh <bundle-id> <NN>`           |
+| "claim ticket NN", "start on NN"                            | `${CLAUDE_PLUGIN_ROOT}/scripts/claim-ticket.sh <bundle-id> <NN>`            |
+| "the permalinks / target branch for a ticket PR"            | `${CLAUDE_PLUGIN_ROOT}/scripts/pr-links.sh <bundle-id> <NN>`                |
+| "merge the accepted ticket PR"                              | `${CLAUDE_PLUGIN_ROOT}/scripts/complete-ticket.sh <pr> <accepted-head-sha>` |
+
+**`<NN>` is the two-digit ticket number** as the status listing prints it — `01` for a single-ticket
+bundle, whose one file is `ticket.md`. A slug or unpadded number names a branch no status query
+reconstructs, so the scripts refuse it as `no such ticket`.
 
 Treat a non-zero exit as a stop and read its meaning in the README's exit codes — never retry or
 work around one. What each status means, how to cancel a ticket, and why `unknown` is not `todo`:
