@@ -45,29 +45,49 @@ auth-token refactor: hand-rolled session cookie → signed tokens. -->
 
 ## Discussed
 
-<!-- What came up and what was suggested. Compress hardest here — this is the part that runs long.
+<!--
+What came up and what was suggested. Compress hardest here — this is the part that runs long.
+
+Maximum of 3-5 bullets.
+
+
 Example:
 - three storage options for the signing key
 - whether existing sessions need a migration
-- logging verification failures at warn level -->
+- logging verification failures at warn level
+-->
 
 - <item>
 
 ## Settled
 
-<!-- What the conversation decided or completed, kept apart from what it only floated. From what the
-conversation says was settled, never from what the repository would show. Example:
+<!--
+What the conversation decided or completed, kept apart from what it only floated. From what the
+conversation says was settled, never from what the repository would show.
+
+Maximum of 3-5 bullets.
+
+Example:
 - key goes in the existing secrets file, not a new one
 - existing sessions expire rather than migrate
-- nothing written yet -->
+- nothing written yet
+-->
 
 - <item>
 
 ## Open
 
-<!-- Threads with no resolution yet. Example:
+<!--
+
+Threads with no resolution yet.
+
+Maximum of 3-5 bullets.
+
+Example:
 - log level for verification failures
-- refresh window — 24 hours or 7 days -->
+- refresh window — 24 hours or 7 days
+
+-->
 
 - <item>
 
