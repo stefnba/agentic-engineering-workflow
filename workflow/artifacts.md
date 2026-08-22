@@ -11,27 +11,22 @@ useful. A bundle contains the minimum artifact set its shaping route requires.
 | --------------------------- | ----------------------------------------------------------------------------------- | --------------------------------------------------------- |
 | Backlog (`work/backlog.md`) | What candidate work or follow-up remains unpicked?                                  | Priority, approval, or implementation scope               |
 | Discovery evidence          | What did we observe or learn?                                                       | Commitment, priority, or implementation scope             |
-| Intent artifact             | What outcome, behavior, constraints, and invariants did the human approve?          | Current implementation facts or interior design           |
-| Engineering plan            | How will this repository realize and decompose the approved intent?                 | Behavior or requirements absent from intent               |
-| Ticket                      | What may one agent change, what does it depend on, and what evidence makes it done? | Cross-ticket architecture or unapproved product decisions |
+| Intent artifact (bundle)    | What outcome, behavior, constraints, and invariants did the human approve?          | Current implementation facts or interior design           |
+| Engineering plan (bundle)   | How will this repository realize and decompose the approved intent?                 | Behavior or requirements absent from intent               |
+| Ticket (bundle)             | What may one agent change, what does it depend on, and what evidence makes it done? | Cross-ticket architecture or unapproved product decisions |
 | PR and CI                   | What changed, what checks ran, what was reviewed, and what is the current state?    | Intent, decomposition, or durable system truth            |
-
-The intent artifact, engineering plan, and ticket are the bundle's contents and are deleted at Land
-([Bundles](#bundles) below). The backlog is a durable repository file, the forge keeps a merged PR
-after branch cleanup, and discovery evidence may live only in chat
-([Discovery evidence](#discovery-evidence) below).
 
 ### Durable
 
-| Artifact                                    | Question it owns                                                             | It does not own                                        |
-| ------------------------------------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------ |
-| Durable system docs                         | How is the current system intended to work now?                              | In-flight plans or historical feature state            |
-| Decision record (`docs/decisions/`)         | Which durable, consequential choice was made and why?                        | Work status or step-by-step implementation             |
-| Research doc (`docs/research/`)             | What durable reference did investigation establish?                          | Evidence for one bundle, which lives with that bundle  |
-| Glossary (`GLOSSARY.md`)                    | Which project-domain terms and rejected synonyms are canonical?              | General programming or workflow-artifact terminology   |
-| Agent instructions (`AGENTS.md`)            | Which repository or package conventions and gotchas must every agent follow? | Domain behavior or workflows owned by linked documents |
-| Git conventions (`docs/conventions/git.md`) | Which git conventions must a human follow here?                              | Anything a script reads — that is `work/config.conf`   |
-| Script settings (`work/config.conf`)        | Which settings do the workflow's scripts run with?                           | Conventions no script consumes                         |
+| Artifact                                       | Question it owns                                                             | It does not own                                        |
+| ---------------------------------------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------ |
+| Durable system docs (`src/<domain>/README.md`) | How is the current system intended to work now?                              | In-flight plans or historical feature state            |
+| Decision record (`docs/decisions/`)            | Which durable, consequential choice was made and why?                        | Work status or step-by-step implementation             |
+| Research doc (`docs/research/`)                | What durable reference did investigation establish?                          | Evidence for one bundle, which lives with that bundle  |
+| Glossary (`GLOSSARY.md`)                       | Which project-domain terms and rejected synonyms are canonical?              | General programming or workflow-artifact terminology   |
+| Agent instructions (`AGENTS.md`)               | Which repository or package conventions and gotchas must every agent follow? | Domain behavior or workflows owned by linked documents |
+| Git conventions (`docs/conventions/git.md`)    | Which git conventions must a human follow here?                              | Anything a script reads — that is `work/config.conf`   |
+| Script settings (`work/config.conf`)           | Which settings do the workflow's scripts run with?                           | Conventions no script consumes                         |
 
 ## Conflict rules
 
@@ -107,15 +102,19 @@ resurfacing. Drop a rejection with no durable reason behind it and let it resurf
 ### Contents
 
 A bundle is the disposable container for one coherent approved outcome. [Work bundles](./bundle.md)
-owns Shape-completion criteria and ticket identity; [Shaping routes](./shaping-routes.md) owns which
-artifacts a route requires and when to split sequential bundles.
+owns the possible contents and Shape-completion criteria; [Shaping routes](./shaping-routes.md)
+owns which artifacts a route requires and when to split sequential bundles.
 
 ### Intent artifact
 
-“Intent artifact” is a role, not one mandatory filename. It may be a feature spec, bug statement,
-target architecture and invariants, migration objective, security requirements, or a ticket that
-contains the complete intent for a small change. When one file plays both intent and ticket roles,
-its sections must still keep approved behavior separate from execution instructions.
+“Intent artifact” is a role, not one mandatory filename. It may be a
+
+- feature spec
+- bug statement
+- target architecture and invariants
+- migration objective
+- security requirements
+- ticket that contains the complete intent for a small change
 
 ### Status
 
