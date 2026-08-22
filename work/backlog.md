@@ -102,9 +102,3 @@ remove` deletes the leaf it is given, so `.claude/worktrees/ticket/<bundle-id>/`
   agreed from what now exists. Separate the two.
 - [idea] [skills] [docs] `work/backlog.md`'s bullet format could move to a markdown table (`id`,
   `topic`, `areas`, `details`)
-- [drift] [workflow] [skills] `workflow/lifecycle.md`'s Implement section and `skills/implement/SKILL.md`
-  now state the same rules twice — the Plan-gate boundary list appears verbatim in both, and the round
-  limit, human gates, and test-ownership clauses the Implementer acts on are stated in the skill and
-  again in the doc. The skill dropped its blanket read of the doc, so nothing keeps the two in step.
-  Decide whether `lifecycle.md` is contract an agent loads or published narrative no agent loads, and
-  which document owns each rule; `AGENTS.md` already has both categories.
