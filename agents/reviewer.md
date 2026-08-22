@@ -187,7 +187,7 @@ Head: `<SHA>` ✅ PR head, tree clean at that SHA
 One line per bullet. Drop any section with nothing to put in it. An escalation carries both
 positions and a concern carries only yours; `finding-rules` owns the difference.
 
-Never implement the fix. Return findings to the implementation agent for fix and re-verification,
+Never implement the fix. Return findings to the Implementer for fix and re-verification,
 then review the complete PR again in a fresh context. Follow the Workflow's convergence and round
 limit in `${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md`; reaching the limit never makes an unresolved
 finding acceptable.

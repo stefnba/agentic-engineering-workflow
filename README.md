@@ -89,13 +89,11 @@ Not stage-bound — they serve any session:
 
 The subagents forked skills run in, under [agents/](agents/):
 
-| Name          | Purpose                                                                               |
-| ------------- | ------------------------------------------------------------------------------------- |
-| `arbiter`     | Rules on an open design question, in a fresh read-only context                        |
-| `architect`   | Drafts the bundle during Shape.                                                       |
-| `critic`      | Read-only spec attacker, before the Plan gate                                         |
-| `implementer` | Executes one ticket to a PR, and fix rounds                                           |
-| `reviewer`    | Judges a ticket's PR. Run read-only in a fresh context with no authorship of the diff |
+| Name       | Purpose                                                                               |
+| ---------- | ------------------------------------------------------------------------------------- |
+| `arbiter`  | Rules on an open design question, in a fresh read-only context                        |
+| `critic`   | Read-only spec attacker, before the Plan gate                                         |
+| `reviewer` | Judges a ticket's PR. Run read-only in a fresh context with no authorship of the diff |
 
 ## Output style
 
