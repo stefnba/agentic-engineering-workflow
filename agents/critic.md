@@ -2,6 +2,8 @@
 name: critic
 description: Read-only attacker for a draft bundle, run in fresh context before the human Plan gate. Reports evidence-backed blockers and concerns against intent, architecture, slicing, dependencies, risk, and testability. Never rewrites the bundle and never approves it.
 tools: Read, Grep, Glob, Bash, WebFetch, WebSearch
+model: opus
+effort: xhigh
 ---
 
 # Critic

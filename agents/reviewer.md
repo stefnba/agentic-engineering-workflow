@@ -2,6 +2,8 @@
 name: reviewer
 description: Independent read-only judge of one implementation PR at its exact head SHA, run in fresh context with no authorship of the diff. Reruns verification and returns findings with stable IDs. Never edits, approves, or merges.
 tools: Read, Grep, Glob, Bash, WebFetch, WebSearch
+model: opus
+effort: xhigh
 ---
 
 # Reviewer
