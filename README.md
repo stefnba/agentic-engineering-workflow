@@ -35,19 +35,29 @@ Installing this into a repo of your own:
 
 ## The workflow
 
-The contract lives in [workflow/](workflow/) — normative, and what the skills and agents load:
+The contract lives in [workflow/](workflow/) — normative, and what the skills and agents load. Its
+files split on one axis: [lifecycle.md](workflow/lifecycle.md) owns sequencing, every other file
+owns one subject. A rule that is both stage-bound and subject-bound would otherwise have two
+legitimate homes and end up written in both, so it lives with its subject and the stage links to
+it.
 
 - [lifecycle.md](workflow/lifecycle.md) — the five stages, human gates, and coordination rules
 - [artifacts.md](workflow/artifacts.md) — which artifact owns which question, and for how long
-- [bundle.md](workflow/bundle.md) — how intent, plan, and tickets cooperate inside a bundle
+- [bundle.md](workflow/bundle.md) — the bundle container: layout, completeness, slicing, revision
 - [shaping-routes.md](workflow/shaping-routes.md) — which artifacts a given piece of work needs
 - [git-mechanics.md](workflow/git-mechanics.md) — worktree basing, ticket claiming, race-safe bundle branches
-- [finding-rules](skills/finding-rules/SKILL.md) — what Critic and Reviewer may report, and what survives a round
+- [components.md](workflow/components.md) — how a role becomes a skill or agent, and the plugin rules
+- [finding-rules](skills/finding-rules/SKILL.md) — what a Critic or Reviewer may report, and what
+  survives a round; a preloaded skill rather than a `workflow/` doc, per the split components.md owns
 
-Prose for humans lives in [docs/](docs/) and is never loaded by an agent:
+Two kinds of content deliberately live elsewhere:
 
-- [walkthrough.md](docs/walkthrough.md) — running it day to day: which skill, which session tab
-- [tool-setup.md](docs/tool-setup.md) — configuring Claude Code for a consuming repo
+- **Authoring guidance** — how to write a good spec, plan, or ticket — sits with each artifact's
+  literal format in the [shape skill's templates](skills/shape/templates/), read at the moment of
+  writing.
+- **Prose for humans** lives in [docs/](docs/) and is never loaded by an agent:
+  [walkthrough.md](docs/walkthrough.md) for running it day to day — which skill, which session
+  tab — and [tool-setup.md](docs/tool-setup.md) for configuring Claude Code in a consuming repo.
 
 ## Skills
 
