@@ -20,8 +20,7 @@ Critic and Reviewer findings use the same severities:
   the next gate after its consequence is explicit.
 
 Do not create minor or suggestion findings. A useful improvement that does not affect the next gate
-is a backlog candidate, never a finding. A read-only Critic or Reviewer reports it separately (see
-[Artifacts](../../workflow/artifacts.md)).
+is a backlog candidate, never a finding.
 
 ## Every finding names what it violates
 
@@ -94,7 +93,7 @@ fault for a finding; that derivation belongs in the reporting agent's context, n
 ## A concern the human accepts leaves a trace
 
 When the human accepts a concern, it becomes a backlog entry — or a decision record when the
-acceptance encodes a durable choice, per [Artifacts](../../workflow/artifacts.md). An accepted
+acceptance encodes a durable choice. An accepted
 concern with no durable trace gets rediscovered as new work next round.
 
 ## Concern is not escalation

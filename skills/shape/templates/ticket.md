@@ -28,7 +28,7 @@ ${CLAUDE_PLUGIN_ROOT}/workflow/bundle.md — `ticket.md` numbered 01 for a singl
 
 Those three keys are the whole frontmatter. Never add a status field — todo, doing, and done are
 derived from the ticket's branch and its merged PR — and never record an external blocker here; it
-belongs on the PR, where it cannot go stale. See ${CLAUDE_PLUGIN_ROOT}/workflow/artifacts.md.
+belongs on the PR, where it cannot go stale.
 
 This file is the brief for an agent that receives the bundle and repository conventions, but not the
 other tickets. It never introduces intent or cross-ticket architecture; where the bundle has a spec,
@@ -199,8 +199,7 @@ after, or a locked acceptance test to run unchanged. -->
 
 <!-- This ticket's own verification only, each with the outcome that counts as passing. The
 repository's canonical test, lint, type, build, and policy commands are run by the Implementer as a
-matter of course and must not be copied here — a private copy drifts from CI and is what
-${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md means by keeping global gates canonical.
+matter of course and must not be copied here — a private copy drifts from CI.
 
 Requires: state what has to be true before these commands run — a service up, a seeded fixture, a
 restored snapshot, credentials — since an independent Reviewer reruns them from a fresh worktree.

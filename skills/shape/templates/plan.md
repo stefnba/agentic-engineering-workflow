@@ -1,9 +1,8 @@
 <!--
 The engineering plan: how this repository realizes and decomposes the approved intent.
 
-Copy it into the bundle as plan.md when the chosen route requires a plan — ${CLAUDE_PLUGIN_ROOT}/workflow/shaping-routes.md
-owns which route that is and when to take it. A plan that would merely restate the tickets is not
-worth writing.
+Copy it into the bundle as plan.md when the chosen route requires a plan. A plan that would merely
+restate the tickets is not worth writing.
 
 Fill every retained section, delete these guidance comments as you go, and omit an optional section
 entirely rather than leaving an empty heading.
@@ -96,10 +95,9 @@ Example:
 and the risk cases: this section owns what this repository makes of them. Prior art to imitate,
 harness or fixture work a slice must build first, and which slice carries it.
 
-Required when the approved outcome is "behavior unchanged" — Vertical slicing in
-${CLAUDE_PLUGIN_ROOT}/workflow/bundle.md makes characterization tests mandatory then, and where a
-plan exists this is where they land: name the slice that pins current behavior before any slice
-changes it.
+Required when the approved outcome is "behavior unchanged" — characterization tests are mandatory
+then, and where a plan exists this is where they land: name the slice that pins current behavior
+before any slice changes it.
 Otherwise optional: delete it when existing test infrastructure covers the change with no
 preparation. -->
 
@@ -120,7 +118,7 @@ preparation. -->
 
 Every row must be executable in one agent session. If you cannot tell that from the row, the slice is
 too big — split it before the Plan gate. What makes a slice valid, when horizontal work is
-admissible, and how refactors and migrations sequence are owned by Vertical slicing in
+admissible, and how refactors and migrations sequence live in Vertical slicing in
 ${CLAUDE_PLUGIN_ROOT}/workflow/bundle.md. -->
 
 | Slice | Outcome            | Intent refs | Produces           | Hard dependencies |
@@ -132,7 +130,7 @@ ${CLAUDE_PLUGIN_ROOT}/workflow/bundle.md. -->
 <!-- Optional. Which slices may run at the same time, and why their write surfaces do not collide —
 shared modules, migrations, schemas, generated artifacts, and integration tests all have to be
 considered, not just the dependency column. Absence of a dependency is not evidence of safety, and
-Dependencies and parallelization in ${CLAUDE_PLUGIN_ROOT}/workflow/bundle.md owns the ceiling on how
+Dependencies and parallelization in ${CLAUDE_PLUGIN_ROOT}/workflow/bundle.md sets the ceiling on how
 wide a wave to shape. Omit the section when the work is sequential. -->
 
 - <slices that may run together> — <why their write surfaces are compatible>
@@ -155,8 +153,8 @@ served in. Omit the section when the change ships in one step. -->
 
 <!-- Optional. The durable documentation, colocated READMEs, and glossary terms this bundle makes
 stale, and which slice updates each. List only what a specific slice can fix inside its own PR;
-knowledge that only becomes true once every ticket has landed is Land's, per
-${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md. Omit the section when no document goes wrong. -->
+knowledge that only becomes true once every ticket has landed is Land's. Omit the section when no
+document goes wrong. -->
 
 - `<path>` — <what changes> (slice NN)
 

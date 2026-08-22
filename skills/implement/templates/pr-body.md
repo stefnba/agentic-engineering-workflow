@@ -3,8 +3,8 @@ The implementation PR's body: the whole handoff from Implement to Review, and �
 the bundle — the permanent bridge from a landed line of code back to the planning record that
 approved it.
 
-${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md owns the handoff contract; these sections are that
-contract's five elements in the order a reviewer needs them. Nothing here is optional, and a section
+These sections are the handoff contract's five elements in the order a reviewer needs them.
+Nothing here is optional, and a section
 with nothing to say says "none" rather than disappearing — an absent Reconciled section reads as an
 oversight, "None" reads as a claim someone can check.
 

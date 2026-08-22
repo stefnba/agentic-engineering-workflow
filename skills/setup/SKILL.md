@@ -11,8 +11,8 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash(git remote:*), Bash(git branc
 Installs the workflow into a consuming repo. Explore, present, confirm, then write — nothing is
 written before the human says yes.
 
-`${CLAUDE_PLUGIN_ROOT}/workflow/git-mechanics.md` owns what the settings mean and why branch names
-and the land are not among them.
+Read `${CLAUDE_PLUGIN_ROOT}/workflow/git-mechanics.md` before presenting — it holds what the
+settings mean.
 
 ## What a run writes
 

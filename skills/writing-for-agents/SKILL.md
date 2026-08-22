@@ -40,6 +40,7 @@ Writing pointers:
 - Front-load the words the agent will actually have in context when the condition arises: error messages, task phrasings, file types.
 - Hoist the pointers every path needs into one read-these-first list — six pointers sitting at the steps that consume them spend six round trips before any work starts. Leave at its branch a file only some paths reach, or one that exactly one step consumes: the information hierarchy's branching test, applied to when a file is read.
 - Point at a file once: the first mention carries the path and the instruction to read it, later mentions the bare name and section ("`lifecycle.md`, Test ownership"). A repeated full path reads as a fresh instruction to open what is already in context.
+- **A reference steers or it goes.** Keep it only if it changes what the agent does: an instruction with a read-condition, or the location of a value deliberately kept in one place. A bare ownership note — "X owns Y" beside a rule already stated, or a citation justifying an instruction — is provenance for the maintainer, not steering for the agent; grep answers ownership on demand. Cut it.
 
 ```markdown
 # Vague — "relevant" is not a condition the agent can test; never fires

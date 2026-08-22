@@ -24,8 +24,7 @@ critique can deep-link them.
 
 The sections below are what this artifact owns. It does not own current repository facts, file
 paths, ticket order, status, or interior implementation choices — see the Intent/spec section of
-${CLAUDE_PLUGIN_ROOT}/workflow/bundle.md for the full split, and ${CLAUDE_PLUGIN_ROOT}/workflow/artifacts.md
-for what happens to this file at Land.
+${CLAUDE_PLUGIN_ROOT}/workflow/bundle.md for the full split.
 
 Write target behavior in present tense; the spec describes the system as it will behave, not a
 promise about future work. Every sentence constrains behavior or gets deleted. Use the repository's
@@ -159,7 +158,7 @@ One AC is proved by one slice. If two tickets would each satisfy half of an AC, 
 the slicing is wrong; fix it here rather than writing "the worker half" into a ticket.
 
 Each must be verifiable by observing the system, not by reading the diff. Green tests are evidence,
-not acceptance — the human gate is owned by ${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md.
+not acceptance — the Accept gate stays the human's.
 
 Example:
 AC-3 (BR-4): Given the upstream errors and a prior fetch exists, when the screen loads, then the
@@ -224,7 +223,7 @@ or in a ticket's Implementation notes. -->
 the section it constrains, then delete this section. A surviving open question blocks approval.
 
 A bounded local choice is not an open question — write it as explicit discretion under the ticket's
-Autonomy boundaries, with the bounds it may not cross. What may never be delegated is owned by
-${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md. -->
+Autonomy boundaries, with the bounds it may not cross — never a judgment
+${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md reserves for the human. -->
 
 - [ ] <question that needs a human decision>

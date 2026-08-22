@@ -115,8 +115,7 @@ since — a gate can be passed in another session, and this one would not know.
 the kind of work in the session is a guess presented as a report.
 
 **Naming a gate is the whole of it.** Propose no action, offer to take none, and never present a
-recap as satisfying a gate. The three gates are the human's alone
-(`${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md`, Human authority).
+recap as satisfying a gate. The three gates are the human's alone.
 
 ## Report honestly
 

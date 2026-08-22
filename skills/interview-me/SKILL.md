@@ -8,10 +8,7 @@ allowed-tools: Read, Grep, Glob
 
 # Interview me
 
-Discover-stage narrowing. `${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md` owns what this step is for
-and when it may be skipped.
-
-Start from `$ARGUMENTS` if given, otherwise the ask already in this conversation — or ask what to
+Discover-stage narrowing. Start from `$ARGUMENTS` if given, otherwise the ask already in this conversation — or ask what to
 discuss if neither exists.
 
 **This writes nothing.** No file, no backlog line, no bundle. You hold `Read`, `Grep`, and `Glob`
@@ -62,6 +59,5 @@ same session. Don't invoke it yourself; dispatching a stage is the human's call.
 offer to append it to `${CLAUDE_PROJECT_DIR}/work/backlog.md` instead; the human writes it, since you hold no write tool.
 
 **Feasibility or diagnosis is genuinely unknown** — don't force it into a shapeable outcome. Say that
-the work looks like the investigation or spike route
-(`${CLAUDE_PLUGIN_ROOT}/workflow/shaping-routes.md`), whose evidence becomes the next thing the human
+the work looks like the investigation or spike route, whose evidence becomes the next thing the human
 picks. `/shape` still runs, but it shapes the investigation, not the implementation.

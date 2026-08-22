@@ -9,8 +9,8 @@ recommend: the human picks that separately, and it is shaped as its own bundle.
 
 Fill every retained section and delete these guidance comments as you go. This file is the brief the
 investigation runs against — the answer it produces is reported to the human and lands in the
-artifact that owns it, never appended here: ${CLAUDE_PLUGIN_ROOT}/workflow/artifacts.md says which
-artifact that is, and this bundle is deleted at Land.
+artifact that owns it, never appended here: this bundle is deleted at Land. The Routing section
+below decides where each result goes.
 -->
 
 # <bundle-id> — Investigation: <the question in a few words>
@@ -112,7 +112,7 @@ one stopped — "Why it is open" is the argument, not the link list. -->
 
 <!-- Decided here, at Shape, so the result is not stranded in a file Land deletes. Name the owner for
 each kind of result this investigation can produce — durable reference material, a durable choice,
-follow-up work, or a recommendation the human picks next. ${CLAUDE_PLUGIN_ROOT}/workflow/artifacts.md
-owns which artifact takes which; name them here, do not restate the rule. -->
+follow-up work, or a recommendation the human picks next. Which artifact takes which is defined in
+${CLAUDE_PLUGIN_ROOT}/workflow/artifacts.md; name them here, do not restate the rule. -->
 
 - <kind of result> → <the artifact that will own it>

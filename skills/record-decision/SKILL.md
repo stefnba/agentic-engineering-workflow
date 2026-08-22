@@ -11,9 +11,9 @@ Write one decision that has already been made into `${CLAUDE_PROJECT_DIR}/docs/d
 recording a settled choice, not making one — if the decision is still open, stop and say so rather
 than writing a record that invents it.
 
-Not every choice earns a record. The **Decision records** section of
-`${CLAUDE_PLUGIN_ROOT}/workflow/artifacts.md` owns the bar and where a choice that misses it belongs
-instead; check the decision against it before writing, and say plainly when it doesn't clear it.
+Not every choice earns a record. Before writing, check the decision against the **Decision records**
+section of `${CLAUDE_PLUGIN_ROOT}/workflow/artifacts.md` — the bar, and where a choice that misses
+it belongs instead; say plainly when it doesn't clear it.
 Declining to write the file is the right outcome more often than not.
 
 ## Interview before drafting
@@ -41,9 +41,9 @@ and route it to the owner the bar names.
    template's frontmatter is the metadata form even where an older record carries those fields in
    its body instead; immutability keeps those as they are rather than retrofitting them.
 3. **Tag `areas:` by reusing a term already in use.** The records you just read carry the
-   vocabulary and so do `${CLAUDE_PROJECT_DIR}/work/backlog.md`'s lines; there is no declared list,
-   and the **Areas** section of `${CLAUDE_PLUGIN_ROOT}/workflow/artifacts.md` owns why and what
-   makes a term usable. Coin a new area only when nothing there fits, never as a near-synonym of a
+   vocabulary and so do `${CLAUDE_PROJECT_DIR}/work/backlog.md`'s lines; there is no declared list —
+   when unsure what makes a term usable, read the **Areas** section of
+   `${CLAUDE_PLUGIN_ROOT}/workflow/artifacts.md`. Coin a new area only when nothing there fits, never as a near-synonym of a
    term that does.
 4. **Confirm the draft with the user before writing.** A record is immutable once written, so a
    wrong claim costs a second record to correct. Show the whole draft — it is short by design.

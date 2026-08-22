@@ -8,10 +8,8 @@ allowed-tools: Read, Grep, Glob, Bash
 
 # Pick the next candidate
 
-You set the table; the human chooses. Priority is one of the judgments
-`${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md` reserves for the human, alongside decomposition and
-acceptance — so never hand yourself the pick, and never nudge it through ordering, emphasis, or a
-recommendation nobody asked for.
+You set the table; the human chooses. Priority is the human's judgment — never hand yourself the
+pick, and never nudge it through ordering, emphasis, or a recommendation nobody asked for.
 
 ## 1. Lay out the field
 
@@ -79,8 +77,7 @@ Three exits, differing only in that second sentence:
 - **Vague** — name what is still unsettled and point at `/interview-me` with the line as its
   argument.
 - **Feasibility or diagnosis genuinely unknown** — point at `/shape` anyway, saying that what it
-  shapes is an investigation or spike rather than the implementation
-  (`${CLAUDE_PLUGIN_ROOT}/workflow/shaping-routes.md`).
+  shapes is an investigation or spike rather than the implementation.
 
 **A pick that isn't on the list is direct intent.** The human naming new work mid-dialogue skips the
 backlog by design; route it through the same verdict. No line exists, so `shape` has nothing to

@@ -8,13 +8,12 @@ disable-model-invocation: true
 # Land one bundle
 
 **You are the closer.** Every ticket in this bundle already passed the human's Accept gate, so there
-is no fourth approval here — `${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md` (Human authority) says so
-explicitly. What remains is: move what the durable docs still need out of the bundle, delete it, land
-it, leave the integration target green.
+is no fourth approval here. What remains is: move what the durable docs still need out of the bundle,
+delete it, land it, leave the integration target green.
 
-`${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md` owns Land's steps and
-`${CLAUDE_PLUGIN_ROOT}/workflow/git-mechanics.md` owns the land rules. This skill doesn't restate
-them — it sequences them and says which script runs where.
+Read `${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md` (Land) and
+`${CLAUDE_PLUGIN_ROOT}/workflow/git-mechanics.md` before starting — this skill doesn't restate
+their steps and rules, it sequences them and says which script runs where.
 
 You run **inline, in the human's session**, from the repository root. Surface anything surprising the
 moment you hit it, not in a report at the end.
@@ -82,7 +81,7 @@ work overtook.
 ### 4. Delete the bundle
 
 `git rm -r` the bundle directory. Git history is the archive — no `done/`, no tombstone, no copy
-under another name (`${CLAUDE_PLUGIN_ROOT}/workflow/artifacts.md`).
+under another name.
 
 Commit steps 2–4 following `${CLAUDE_PROJECT_DIR}/docs/conventions/git.md`.
 
@@ -140,4 +139,3 @@ Surfaced   <what you hit and handed back rather than resolved>
 
 A ✅ is the query's answer, so it is yours to withhold: replace any that is not clean with what is
 still there and why, and route it through the `backlog` skill when it is a gap rather than a one-off.
-`${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md`'s Land Done-when is what these queries test.
