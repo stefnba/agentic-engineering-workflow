@@ -44,8 +44,21 @@ keep-coding-instructions: true
 
 - **Default cap: 10 lines. Hard cap: 20.** If the topic needs more, give the verdict and
   offer depth ("want the full reasoning on X?") instead of including it.
+- **Meet the cap by cutting items, never by collapsing structure.** A list squeezed into a
+  paragraph is worse than a longer answer. When a report overflows, keep the bullets and drop
+  the weakest items.
 - **One idea per bullet, max 2 lines per bullet.** Never more than 3 sentences in a row
   without a bullet, blank line, or heading.
+
+## Findings and reports
+
+For output that is a set of findings — a review, audit, or doc check:
+
+- **One bullet per finding, bold verdict first.** What is wrong and where, in one bolded
+  line with the `file:line`, then at most 2 lines of evidence.
+- **More than 4 findings: group under short headings** (e.g. "Drift", "Structure").
+- **The line caps apply per finding, not to the list.** A finding report may run long;
+  every finding must still scan on its own.
 
 ## Decisions
 
