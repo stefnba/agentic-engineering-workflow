@@ -43,12 +43,13 @@ solely to prove that the stage happened.
 
 ## Coordination
 
-Coordination is split between the human and deterministic skill scripts — there is no coordinator
-agent and no standing system that watches state and reacts on its own: an autonomous agent in the
-dispatch position could infer or erode human gates, so that implementation is prohibited by design.
+Coordination is split between the human, the stage skills, and deterministic scripts — there is no
+coordinator agent and no standing system that watches state and reacts on its own.
 
-Mechanically, everything below runs inline inside a human-launched chat session, and a skill script
-only runs when a human or an already-running session invokes it. Two kinds of session carry a bundle:
+Reason: an autonomous agent in the dispatch position could infer or erode human gates, so that implementation is prohibited by design.
+
+Mechanically, everything below runs inline inside a human-launched chat session, and a skill or
+script only runs when a human or an already-running session invokes it. Two kinds of session carry a bundle:
 
 - **One session per bundle**, long-lived, runs Discover, Shape, and later Land. Its working directory
   stays on the integration target and never checks out a ticket or bundle branch — Land works in a
@@ -70,9 +71,9 @@ stage-level suggestion dispatches nothing; only the human starts the next stage.
 delegates the choice ("take the next ticket"), the invoked skill selects the lowest-numbered
 unblocked `todo` ticket.
 
-**A stage's own skill script auto-dispatches its fixed inner loop.** No human trigger sits between
+**A stage's own skill auto-dispatches its fixed inner loop.** No human trigger sits between
 the substeps a stage's contract already defines — each dispatch is the current session's skill
-script starting the next subagent inline, not a separate coordinator reacting after the fact:
+starting the next subagent inline, not a separate coordinator reacting after the fact:
 
 - Shape: completing a draft bundle automatically dispatches the fresh-context Critic; the Architect
   revises and re-critique follows until no blocker remains, then the bundle goes to the human Plan
@@ -86,23 +87,25 @@ script starting the next subagent inline, not a separate coordinator reacting af
 Inner dispatches follow the stage contract deterministically; they carry no product judgment and
 cannot cross a human gate.
 
-**Deterministic skill scripts own transition mechanics.** Skill scripts — never prompts, never an
-agent's judgment — execute state transitions so they are serialized and auditable:
+**Deterministic scripts own the claim and merge transitions.** Scripts — never prompts, never an
+agent's judgment — execute both so they are serialized and auditable:
 
 - **Claim:** check that every dependency is `done`, then create the ticket branch and cut its
   worktree. Creating the branch _is_ the claim, so git itself serializes competing claims — no lock
   and no coordinator.
-- **Dispatch mechanics:** start each Architect, Critic, Implementer, and Reviewer with the context
-  and permissions its run conditions require, and record review-round numbers for fix and re-review
-  runs.
 - **Merge:** after human Accept, merge the ticket PR into its target. The merge is the last write —
   `done` follows from it and is never recorded afterward. Landing a finished bundle branch on the
   integration target is a separate Land step.
 
-These skill scripts never own product or technical judgment and cannot pass a human gate: Pick,
-Plan, and Accept are explicit human decisions, observed and never inferred. The Implementer never
-selects or claims its own ticket; claim and merge transitions live in scripts because a prompt-only
-instruction cannot guarantee serialization.
+**Dispatch mechanics are declarative.** Each role's context and permissions are fixed by its skill
+and agent definitions, not chosen at dispatch time; the review-round number travels in the
+invocation and is recorded in the PR's round comments.
+
+Neither the scripts nor the dispatch machinery owns product or technical judgment, and none of it
+can pass a human gate: Pick, Plan, and Accept are explicit human decisions, observed and never
+inferred. Ticket selection is never the Implementer's judgment — the human names the ticket or
+delegates to the fixed rule above, and the claim script's dependency gate decides eligibility.
+Claim and merge live in scripts because a prompt-only instruction cannot guarantee serialization.
 
 ## 1. Discover
 
@@ -171,23 +174,23 @@ evidence, and introduces no requirement or cross-ticket decision absent from app
 
 **Run conditions:** the Implementer runs in a fresh context once per dispatched ticket and stays in
 it through every fix round — one ticket, one branch, one worktree, one session. It receives the
-approved bundle, its assigned ticket, repository conventions, the current PR when one exists, and the
-branch and worktree the claim already prepared. It never selects or claims its own ticket.
+approved bundle, its assigned ticket, repository conventions, the current PR when one exists, and
+the branch and worktree the claim script prepared — run by the human before the session or as the
+session's own first step, never by Implementer judgment.
 
 It reads the approved intent, optional plan, ticket, relevant durable docs, and repository
 conventions before editing.
 
-Implementation includes:
+The stage's procedure is the `implement` skill's; what it must deliver is fixed here:
 
-1. Start from the one dispatched ticket whose branch and worktree the claim already created.
-2. Establish the ticket's required pre-change evidence. For changed behavior, normally write the
-   behavior test and observe the expected failure; the ticket may specify other evidence when a red
-   test is inapplicable or Shape supplied a locked test.
-3. Implement only the approved ticket and bounded local support work.
-4. Run every ticket done-when command plus canonical repository checks.
-5. Reconcile affected durable docs, terminology, intent corrections, and remaining tickets in the
-   same PR — everything this diff made false or stale, which never defers to Land.
-6. Open the PR using the handoff contract below; leave the ticket `doing` while Review is pending.
+- the ticket's required pre-change evidence, established before the change — normally the behavior
+  test observed to fail; the ticket may specify other evidence when a red test is inapplicable or
+  Shape supplied a locked test
+- only the approved ticket and bounded local support work
+- every ticket done-when command plus canonical repository checks passing
+- reconciliation in the same PR of everything this diff made false or stale — durable docs,
+  terminology, intent corrections, remaining tickets — which never defers to Land
+- a PR per the handoff contract below; the ticket reads `doing` while Review is pending
 
 A factual correction that preserves approved intent is made visible in the PR. A change to behavior,
 binding architecture, decomposition, security, migration, compatibility, or acceptance criteria
@@ -315,11 +318,11 @@ Review stage ends only when the human accepts the change and it merges.
 
 Land begins only when every ticket is `done` and the human triggers it. Then, in order:
 
-1. **Check the merged state.** Confirm canonical checks pass on the state holding every merged
-   ticket, queried remotely — the bundle branch for a multi-ticket bundle, the integration target for
-   a single-ticket one, whose only PR already merged there. This gates every step below. Then open
-   the land: a detached worktree on the integration target with the bundle branch merged into it, so
-   every step after this one works there.
+1. **Open the land.** The land script gates the stage — every ticket `done` from its PR record, no
+   stale land worktree — then opens a detached worktree on the integration target with the bundle
+   branch merged into it, where every step after this one works. A single-ticket bundle has no
+   bundle branch and no land worktree: its only PR already merged into the integration target, so
+   its remaining steps run in the session's own checkout.
 2. **Reconcile durable knowledge.** Move bundle-level knowledge no single ticket owned into durable
    system docs, terminology, and decision records. What a ticket's own diff made false was already
    reconciled in that ticket's PR; anything left here is knowledge that only became true once every
@@ -327,13 +330,12 @@ Land begins only when every ticket is `done` and the human triggers it. Then, in
 3. **Reconcile the backlog.** Convert unfinished or newly discovered work into backlog entries, and
    retire the lines this bundle made true. Landing is what makes a candidate line false, so this is
    the only stage that reliably knows which ones.
-4. **Delete the complete bundle** — a commit in Land's worktree, so what gets published carries no
-   planning record. A single-ticket bundle has no worktree of its own, so its deletion commit goes
-   directly to the integration target.
-5. **Re-verify in Land's worktree.** Re-run canonical checks on the state steps 2–4 produced: it
-   carries Land's own commits and the bundle merge, so no CI run has seen it. Land's own commits
-   change documentation, backlog, and bundle files only; a Land step that would change behavior is
-   not Land work and returns to the Plan gate.
+4. **Delete the complete bundle** — a commit in Land's tree, so what gets published carries no
+   planning record.
+5. **Re-verify.** Re-run canonical checks where steps 2–4 committed, on the state they produced: it
+   carries Land's own commits — and the bundle merge when there is one — so no CI run has seen it.
+   Land's own commits change documentation, backlog, and bundle files only; a Land step that would
+   change behavior is not Land work and returns to the Plan gate.
 6. **Publish that state** on the configured integration target.
    **If the target moved while Land worked, merging it in returns to step 5**,
    because the merged state is one no check has run against. That loop repeats until the publish
