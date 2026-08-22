@@ -19,21 +19,21 @@ Candidate work and follow-ups nobody has picked yet.
 - [drift] [skills] [docs] `README.md` and `docs/walkthrough.md` name skills that hold nothing yet —
   `scan-codebase`, `research`, and `complete-ticket`. (`land` and `review` now exist.)
   Whoever builds one claims its name from the README table. One constraint is already settled:
-  `bundle-git` owns claim, status, and merge, so `/complete-ticket` calls its script rather than
-  reimplementing the merge.
+  the bundle scripts own claim, status, and merge, so `/complete-ticket` calls
+  `scripts/complete-ticket.sh` rather than reimplementing the merge.
 - [follow-up] [skills] `shape` publishes the approved bundle by hand — `git add`/`commit`/`push` from the
-  prompt, sourcing `bundle-git`'s `_config.sh` for `INTEGRATION_TARGET`. Every other state
+  prompt, sourcing `scripts/_config.sh` for `INTEGRATION_TARGET`. Every other state
   transition is a script; this one is prose, so a collision retry or a wrong target branch depends
-  on the model following instructions. Consider `bundle-git/scripts/publish-bundle.sh`.
-- [follow-up] [skills] `bundle-git`'s claim is verified over the `git://` smart protocol, never against
+  on the model following instructions. Consider `scripts/publish-bundle.sh`.
+- [follow-up] [skills] `claim-ticket.sh` is verified over the `git://` smart protocol, never against
   github.com over HTTPS, and the chain claim → PR → `/complete-ticket` → derived `done` has never run
   joined — only its two halves separately. One real push settles both. Smaller gaps:
   `--match-head-commit` was confirmed to exist but never exercised against a mismatched head, and
   everything ran on darwin with git 2.52.
 - [follow-up] [skills] Add reference skill `/codebase-design` — supplies shared vocabulary (module, interface,
   depth, seam, adapter, leverage, locality) for other skills to borrow; not a session driver itself.
-- [follow-up] [skills] `bundle-git` documents a `depends_on` input rule it doesn't enforce, verified by
-  running it: `claim-ticket.sh` parses the line with a `sed` that handles only the flow form
+- [follow-up] [skills] The workflow documents a `depends_on` input rule the claim gate doesn't enforce,
+  verified by running it: `claim-ticket.sh` parses the line with a `sed` that handles only the flow form
   `[01, 02]`. `skills/shape/templates/ticket.md` names every unsafe form — quoted or unpadded
   numbers block the claim forever, a trailing comment reads as a dependency, block-sequence style
   fails open and lets a dependent ticket start early — so the rule reaches whoever writes a ticket
@@ -54,7 +54,7 @@ Candidate work and follow-ups nobody has picked yet.
   `docs/walkthrough.md` — has nowhere to go, and an agent that never invokes a stage skill never learns
   the lifecycle exists. Ship a reference skill that loads `workflow/lifecycle.md` on demand, or accept
   that the stage skills are the only entry.
-- [follow-up] [skills] `skills/bundle-git/tests/run.sh` pins that a stray file _inside_ `tickets/` can't flip
+- [follow-up] [skills] `scripts/tests/run.sh` pins that a stray file _inside_ `tickets/` can't flip
   the branch strategy, but nothing pins a sibling directory under `work/bundles/<id>/`. `ticket_base` is
   safe today by inspection; add the case before any design puts a directory there.
 - [drift] [docs] `skills/record-decision/templates/decision-record.md` mandates YAML frontmatter with
@@ -102,3 +102,9 @@ remove` deletes the leaf it is given, so `.claude/worktrees/ticket/<bundle-id>/`
   agreed from what now exists. Separate the two.
 - [idea] [skills] [docs] `work/backlog.md`'s bullet format could move to a markdown table (`id`,
   `topic`, `areas`, `details`)
+- [drift] [workflow] [skills] `workflow/lifecycle.md`'s Implement section and `skills/implement/SKILL.md`
+  now state the same rules twice — the Plan-gate boundary list appears verbatim in both, and the round
+  limit, human gates, and test-ownership clauses the Implementer acts on are stated in the skill and
+  again in the doc. The skill dropped its blanket read of the doc, so nothing keeps the two in step.
+  Decide whether `lifecycle.md` is contract an agent loads or published narrative no agent loads, and
+  which document owns each rule; `AGENTS.md` already has both categories.
