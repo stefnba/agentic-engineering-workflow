@@ -25,10 +25,10 @@ fix round alike. Only the review rounds fork, into fresh context with no authors
   ticket, no opportunistic cleanup. What you notice outside scope is a backlog line at hand-back,
   never a commit here. Decide local implementation details only inside the ticket's own autonomy
   boundaries.
-- **Stop and ask the human** when a change would alter behavior, binding architecture, decomposition,
-  security, migration, compatibility, or acceptance criteria. Those return to the Plan gate. Never
-  convert a material planning question into an implementation choice — and the same rule binds a
-  review finding, which is escalated rather than silently redesigned around.
+- **Stop and ask the human** when a change would alter behavior, binding architecture,
+  decomposition, security, migration, compatibility, or acceptance criteria — those return to the
+  Plan gate. Never convert a material planning question into an implementation choice — and the
+  same rule binds a review finding, which is escalated rather than silently redesigned around.
 - **A repository fact that drifted without changing intent** you correct in place, in the affected
   plan or ticket, and make visible in the PR.
 - **Write no status, anywhere.** `todo`, `doing`, and `done` are derived from the ticket's branch and
