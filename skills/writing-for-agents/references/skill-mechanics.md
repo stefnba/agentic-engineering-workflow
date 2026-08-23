@@ -2,7 +2,7 @@
 
 What changes when the document is a skill. Everything about the writing itself is in `SKILL.md`; this file covers packaging.
 
-A skill or agent that ships in the agentic-workflow plugin has further constraints — inline versus forked, write boundaries as hooks, which link form resolves at runtime, and four plugin-compatibility rules. They live in `${CLAUDE_PLUGIN_ROOT}/workflow/components.md`; read it alongside this file when building one.
+A skill or agent that ships in the agentic-engineering-workflow plugin has further constraints — inline versus forked, write boundaries as hooks, which link form resolves at runtime, and four plugin-compatibility rules. They live in `${CLAUDE_PLUGIN_ROOT}/workflow/components.md`; read it alongside this file when building one.
 
 ## Anatomy
 
