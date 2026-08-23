@@ -1,7 +1,10 @@
 ---
-status: accepted
+status: partially-superseded
 date: 2026-08-10
 areas: [docs, repo]
+superseded_by: the `candidates/ planned/ active/` directory list only, by
+  [2026-08-20-derived-execution-state.md](./2026-08-20-derived-execution-state.md); today's tree
+  is `work/backlog.md`, `work/config.conf`, `work/bundles/`. Root-level `work/` stands
 ---
 
 # 0002 Work items live in `work/` at the repo root

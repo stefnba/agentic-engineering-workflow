@@ -1,7 +1,11 @@
 ---
-status: accepted
+status: superseded
 date: 2026-08-14
 areas: [docs, skills]
+superseded_by: entirely, by
+  [2026-08-20-derived-execution-state.md](./2026-08-20-derived-execution-state.md) — branch
+  strategy is derived, not recommended or declared, and branch names are kind-first
+  (`bundle/<id>`, `ticket/<id>/<NN>`), not the bundle-first names this record pins
 ---
 
 # 0016 Bundle-branch replaces trunk as the recommended default

@@ -1,7 +1,11 @@
 ---
 date: 2026-08-20
-status: accepted
+status: partially-superseded
 areas: [workflow, skills]
+superseded_by: the branch-strategy bullet only — deriving it from the ticket count alone — by
+  [2026-08-20-branch-strategy-from-the-branch.md](./2026-08-20-branch-strategy-from-the-branch.md);
+  a `bundle/<bundle-id>` existing on the remote is the base, and the count decides only before the
+  first claim. Everything else stands
 supersedes:
   [2026-08-10-bundle-status-lives-in-the-directory.md](./2026-08-10-bundle-status-lives-in-the-directory.md)
   entirely; the `candidates/ planned/ active/` directory list in

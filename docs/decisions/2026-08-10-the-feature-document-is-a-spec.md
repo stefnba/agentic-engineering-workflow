@@ -1,7 +1,10 @@
 ---
-status: accepted
+status: partially-superseded
 date: 2026-08-10
 areas: [docs, skills]
+superseded_by: the fixed heading set and the one-mandatory-file reading, by
+  [2026-08-23-intent-artifact-is-a-role.md](./2026-08-23-intent-artifact-is-a-role.md); the name
+  `spec.md` and the behavior-first definition of "spec" stand
 ---
 
 # 0003 The feature document is `spec.md`, not `design.md`

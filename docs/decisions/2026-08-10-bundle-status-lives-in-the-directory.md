@@ -1,7 +1,10 @@
 ---
-status: accepted
+status: superseded
 date: 2026-08-10
 areas: [docs]
+superseded_by: entirely, by
+  [2026-08-20-derived-execution-state.md](./2026-08-20-derived-execution-state.md) — bundle and
+  ticket status are derived from git, never stored in a directory or frontmatter
 ---
 
 # 0004 Bundle status lives in the directory; ticket status in frontmatter
