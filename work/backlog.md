@@ -17,7 +17,7 @@ Candidate work and follow-ups nobody has picked yet.
   merged, open PR, in flight — and refused to touch anything unmerged. Add that classification:
   `gh pr list --head` rather than ancestry, because a squash merge leaves none.
 - [drift] [skills] [docs] `README.md` and `docs/walkthrough.md` name skills that hold nothing yet —
-  `scan-codebase`, `research`, and `complete-ticket`. (`land` and `review` now exist.)
+  `scan-codebase`, `research`, and `complete-ticket`. (`land` and `review-pr` now exist.)
   Whoever builds one claims its name from the README table. One constraint is already settled:
   the bundle scripts own claim, status, and merge, so `/complete-ticket` calls
   `scripts/complete-ticket.sh` rather than reimplementing the merge.
@@ -102,3 +102,6 @@ remove` deletes the leaf it is given, so `.claude/worktrees/ticket/<bundle-id>/`
   agreed from what now exists. Separate the two.
 - [idea] [skills] [docs] `work/backlog.md`'s bullet format could move to a markdown table (`id`,
   `topic`, `areas`, `details`)
+- [drift] [skills] `skills/writing-for-agents/references/skill-mechanics.md` routes files filled
+  into the output to `assets/`, but `implement` and `review-pr` keep theirs in `templates/`.
+  Consistent repo-wide, contradicts the anatomy — align the skills or the anatomy.
