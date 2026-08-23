@@ -188,9 +188,9 @@ The stage's procedure is the `implement` skill's; what it must deliver is fixed 
   terminology, intent corrections, remaining tickets — which never defers to Land
 - a PR per the handoff contract below; the ticket reads `doing` while Review is pending
 
-A factual correction that preserves approved intent is made visible in the PR. A change to behavior,
-binding architecture, decomposition, security, migration, compatibility, or acceptance criteria
-returns to the Plan gate.
+A factual correction that preserves approved intent is made visible in the PR. Which changes return
+to the Plan gate instead is the [`implement` skill](../skills/implement/SKILL.md)'s stop-and-ask
+boundary, held inline there because the Implementer needs it to recognize a crossing.
 
 ### PR handoff contract
 
