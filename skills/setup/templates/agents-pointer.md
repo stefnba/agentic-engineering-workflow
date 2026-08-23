@@ -4,9 +4,9 @@ rather than duplicating it. Drop this comment when copying. Nothing below may us
 placeholder: project instructions expand none of them, so a plugin file is reachable only by naming
 the skill that loads it, and this repo's own files by relative link. -->
 
-## Agentic coding workflow
+## Agentic engineering workflow
 
-This repository uses the agentic coding workflow, installed as the `agentic-workflow` plugin.
+This repository uses the agentic engineering workflow, installed as the `agentic-engineering-workflow` plugin.
 
 Read [docs/conventions/git.md](docs/conventions/git.md) before any commit, branch, worktree, or PR.
 

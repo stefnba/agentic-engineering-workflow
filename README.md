@@ -1,6 +1,6 @@
-# Agentic Coding Workflow
+# Agentic Engineering Workflow
 
-A **reference repo** for agentic coding: workflow design, documentation structure, tool setup, and reusable skills. It collects the practices — it is not a codebase that follows them.
+A **reference repo** for agentic engineering: workflow design, documentation structure, tool setup, and reusable skills. It collects the practices — it is not a codebase that follows them.
 
 That distinction matters when reading anything here:
 
