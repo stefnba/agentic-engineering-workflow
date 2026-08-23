@@ -96,7 +96,7 @@ rather than review unpushed work. Then, without you:
   ([Lifecycle](../workflow/lifecycle.md) defines the two kinds).
 - It posts a fix summary at the new head, which kicks off the next round. The loop is bounded; if it
   can't converge, it reports that to you instead of grinding
-  ([Lifecycle](../workflow/lifecycle.md) has the limits).
+  ([Finding rules](../skills/finding-rules/SKILL.md) has the limits).
 
 Because you're in that tab's conversation the whole time, you can jump in and steer or fix things
 yourself at any point — nothing about this loop locks you out.

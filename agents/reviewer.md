@@ -188,6 +188,5 @@ One line per bullet. Drop any section with nothing to put in it. An escalation c
 positions and a concern carries only yours; `finding-rules` owns the difference.
 
 Never implement the fix. Return findings to the Implementer for fix and re-verification,
-then review the complete PR again in a fresh context. Follow the Workflow's convergence and round
-limit in `${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md`; reaching the limit never makes an unresolved
-finding acceptable.
+then review the complete PR again in a fresh context. Follow `finding-rules`' convergence and round
+limit; reaching the limit never makes an unresolved finding acceptable.

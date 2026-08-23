@@ -282,16 +282,10 @@ approves, or merges the change.
 
 ### Convergence and round limit
 
-One Reviewer run is one review round. Three rounds are the normal maximum. Failure to converge by the
-third round usually signals unclear intent, architectural disagreement, unstable verification, or a
-change that should be reshaped; report that diagnosis to the human. A fourth or fifth round requires
-explicit human direction. Five is the absolute maximum without returning to Shape or otherwise
-changing the workflow.
-
-The limit is an escalation condition, never an acceptance condition. Reaching it cannot waive a
-blocker. A PR is ready for human review only when every blocker is fixed, closed by the Reviewer after
-an evidence-backed rebuttal, or resolved through an explicit human planning decision. Open concerns
-are carried visibly to the human Accept gate.
+One Reviewer run is one review round. The round limits, the diagnosis when rounds fail to converge,
+and what makes a PR ready for human review are owned by
+[Finding rules](../skills/finding-rules/SKILL.md) (Convergence and round limit) — preloaded into
+the Reviewer and binding on fix mode.
 
 The final Reviewer comment is tied to the reviewed head SHA and states:
 
