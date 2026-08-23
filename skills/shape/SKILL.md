@@ -122,11 +122,16 @@ Run this before critique — a fork spent on a draft with template comments stil
 the human — mandatory critique before the Plan gate is not optional.
 
 Findings are attacks, not fixes. For each one: revise the bundle, or say plainly why you aren't
-acting on it. A finding that needs a human call goes back through step 5, never into a guess.
+acting on it. A finding that needs a human call goes back through the clarify step, quoting the
+finding that raised it — never into a guess.
 
 **Re-critique after revising**, and repeat until no blocker remains. If blockers survive three
 rounds, stop and report the disagreement to the human rather than looping — that pattern usually
 means the intent itself is unsettled.
+
+**When the loop settles, relay the critic's verdict** — clean, or what it flagged — **and, if you
+revised, a brief summary of what changed.** Critique runs in a fork, so nothing of it reaches the
+human unless you relay it. The per-finding dispositions follow at the Plan gate.
 
 ### 8. Plan gate
 

@@ -57,12 +57,11 @@ Triggered once, by `/shape`, in the bundle's session. Everything after that runs
    get a spec, a plan, or just tickets ([Shaping routes](../workflow/shaping-routes.md) owns the
    choice).
 2. It drafts those artifacts.
-3. It dispatches a fresh-context critique, then revises and re-critiques until nothing blocking
-   remains.
+3. It dispatches a fresh-context critique, revises and re-critiques until nothing blocking
+   remains, then briefly summarizes what changed because of it.
 
 What comes back to you: a summary of what will be built, the ticket list with its sequencing — what's
-serial, what's safe in parallel — and one paste-ready opening prompt per currently unblocked ticket,
-worktree path included.
+serial, what's safe in parallel — and one paste-ready opening prompt per currently unblocked ticket.
 
 **Plan gate — you approve.** This is the point where the outcome, the decomposition, and the test
 strategy become binding; [Lifecycle](../workflow/lifecycle.md) lists what you're signing off on. On
@@ -71,9 +70,9 @@ approval the bundle is committed straight to the integration target, without a P
 
 ## Implement (per ticket)
 
-For each ticket you're ready to start, open a new tab and paste its opening prompt. That prompt
-claims the ticket, which creates its branch and worktree; the tab then runs the implementation skill,
-which builds the ticket including tests, runs its checks, and opens a PR with a summary.
+For each ticket you're ready to start, open a new tab and paste its opening prompt. That prompt runs
+the implementation skill, which claims the ticket — creating its branch and worktree — then builds
+the ticket including tests, runs its checks, and opens a PR with a summary.
 
 Which branch it's cut from and which branch its PR targets both follow from the bundle's shape — a
 single-ticket bundle works directly against the integration target, a multi-ticket bundle gets a
