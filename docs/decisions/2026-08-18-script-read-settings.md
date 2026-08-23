@@ -1,10 +1,16 @@
-# Settings a script reads are not prose
+---
+date: 2026-08-18
+status: partially-superseded
+areas: [workflow, skills]
+superseded_by: the `work/config.conf` key list only — `MERGE_METHOD` is now
+  `TICKET_MERGE_METHOD`, and the land itself is fixed rather than configurable — by
+  [2026-08-18-fixed-bundle-land.md](./2026-08-18-fixed-bundle-land.md). The rule itself stands
+supersedes: the `docs/conventions/git.md` row of
+  [2026-08-18-consuming-repo-layout.md](./2026-08-18-consuming-repo-layout.md), which put this
+  repo's git *values* there
+---
 
-Date: 2026-08-18
-Status: accepted
-Supersedes: the `docs/conventions/git.md` row of
-[2026-08-18-consuming-repo-layout.md](./2026-08-18-consuming-repo-layout.md), which put this repo's
-git *values* there.
+# Settings a script reads are not prose
 
 ## Decision
 

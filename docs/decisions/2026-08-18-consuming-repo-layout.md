@@ -1,7 +1,16 @@
-# Where workflow material lives
+---
+date: 2026-08-18
+status: partially-superseded
+areas: [repo, docs]
+superseded_by: two pieces — the `docs/conventions/git.md` row holding this repo's git values, by
+  [2026-08-18-script-read-settings.md](./2026-08-18-script-read-settings.md), which moved
+  script-consumed values to `work/config.conf`; and the "contract → `workflow/`" line for
+  documents an agent needs on every invocation, by
+  [2026-08-21-agent-knowledge-placement.md](./2026-08-21-agent-knowledge-placement.md), which
+  makes those preloaded skills. The survives-uninstall test and the layout stand
+---
 
-Date: 2026-08-18
-Status: accepted
+# Where workflow material lives
 
 ## Decision
 

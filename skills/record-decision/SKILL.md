@@ -68,9 +68,10 @@ in a new record whose `supersedes` names what it replaces, and which may replace
 earlier record rather than all of it; say which part. Its `Context` says briefly what changed since
 the original.
 
-The one permitted edit to an existing record is its `status` line, set to `superseded by <link>`, so
-a reader landing on the old record is sent forward. Nothing else in it changes, including the parts
-that turned out to be wrong.
+The one permitted edit to an existing record is its frontmatter: `status` becomes `superseded`, or
+`partially-superseded` when only a part falls, and `superseded_by` links the new record — naming
+which part, for a partial — so a reader landing on the old record is sent forward. Nothing else in
+it changes, including the parts that turned out to be wrong.
 
 ## Reporting back
 

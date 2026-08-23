@@ -1,6 +1,9 @@
 ---
 date: 2026-08-18
-status: accepted
+status: partially-superseded
+superseded_by: the reconciliation direction only — merging the moved integration target into the
+  bundle branch — by [2026-08-20-land-worktree.md](./2026-08-20-land-worktree.md); Land now merges
+  the bundle branch into a detached worktree on the target. The fixed `--no-ff` land stands
 supersedes: the `work/config.conf` key list in
   [2026-08-18-script-read-settings.md](./2026-08-18-script-read-settings.md), which named the merge
   setting `MERGE_METHOD` as though it covered every merge the workflow performs

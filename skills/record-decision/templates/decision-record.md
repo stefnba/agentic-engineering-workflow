@@ -1,8 +1,9 @@
 ---
 date: <YYYY-MM-DD>
-status: accepted # accepted | superseded by <link>
+status: accepted # accepted | partially-superseded | superseded — the latter two add superseded_by
 areas: [] # the parts of this repo the decision binds
 supersedes: # <link>, and which part, only when this record replaces an earlier one
+superseded_by: # never on a new record — added later, with <link> and which part, when this one falls
 ---
 
 <!--

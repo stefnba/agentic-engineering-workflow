@@ -1,7 +1,11 @@
 ---
-status: accepted
+status: partially-superseded
 date: 2026-08-11
 areas: [docs, skills]
+superseded_by: the `shaped/`/`active/` status directories only, by
+  [2026-08-20-derived-execution-state.md](./2026-08-20-derived-execution-state.md); bundles live
+  under `work/bundles/` at a path that never moves, and status is derived. The date-slug id
+  stands
 ---
 
 # 0013 Bundle ids are a date-slug, not a sequential counter

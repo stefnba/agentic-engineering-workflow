@@ -1,7 +1,15 @@
 ---
-status: accepted
+status: superseded
 date: 2026-08-13
 areas: [docs, skills]
+superseded_by: piecewise, until nothing operative remained — the branch-strategy declaration by
+  [2026-08-20-derived-execution-state.md](./2026-08-20-derived-execution-state.md); the
+  `docs/agents/git.md` location by
+  [2026-08-18-consuming-repo-layout.md](./2026-08-18-consuming-repo-layout.md), which renamed it
+  `docs/conventions/git.md`; the script-consumed values by
+  [2026-08-18-script-read-settings.md](./2026-08-18-script-read-settings.md), which moved them to
+  `work/config.conf`. The surviving kernel — prose conventions live in a per-repo file scaffolded
+  by setup — is restated by those two 2026-08-18 records
 ---
 
 # 0015 Git conventions are a per-repo file chosen at setup, not fixed in skills

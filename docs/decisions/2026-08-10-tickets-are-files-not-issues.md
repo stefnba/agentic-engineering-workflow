@@ -1,7 +1,11 @@
 ---
-status: accepted
+status: partially-superseded
 date: 2026-08-10
 areas: [docs]
+superseded_by: the claiming and status mechanism only — `status` frontmatter and push-conflict
+  claiming — by [2026-08-20-derived-execution-state.md](./2026-08-20-derived-execution-state.md);
+  claiming is creating the ticket branch, and status is derived from remote refs and PR merge
+  records. Tickets-as-files stands
 ---
 
 # 0007 Tickets are files in the repo, not GitHub issues

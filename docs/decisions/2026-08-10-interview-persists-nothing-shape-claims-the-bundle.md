@@ -1,7 +1,12 @@
 ---
-status: accepted
+status: partially-superseded
 date: 2026-08-10
 areas: [docs, skills]
+superseded_by: the persistence half only — `shape` claiming the bundle via `claim-bundle.sh`
+  before drafting — by
+  [2026-08-20-bundle-published-at-plan-gate.md](./2026-08-20-bundle-published-at-plan-gate.md);
+  the draft stays tool-local and is committed at the Plan gate. That interview persists nothing
+  stands
 ---
 
 # 0012 Interview persists nothing; shape claims the bundle and is the sole author of intent
