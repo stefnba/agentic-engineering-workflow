@@ -49,7 +49,10 @@ discovery — Reference skill or `workflow/` doc below owns when material earns 
 
 A task skill gives the session step-by-step instructions.
 
-Where the task needs an agent, the task skill is the dispatcher.
+- **Write the process as a `## Process` section of numbered steps.** Most task skills run inline,
+  driving a session with the human in the loop.
+
+Working with agents — where the task needs one, the task skill is the dispatcher:
 
 - **The dispatch prompt is the interface.** The default form makes it deterministic:
   `context: fork` with `agent:` turns the skill body into the dispatch prompt verbatim. A skill
@@ -62,9 +65,16 @@ Where the task needs an agent, the task skill is the dispatcher.
 An agent works from three channels — its body, its preloaded skills, and the dispatch prompt —
 and the body governs the other two.
 
-- **The agent body is the caller-independent contract, and stays that lean**: how to treat input,
-  what counts as done, and the output contract — the final message is all the dispatching session
-  sees.
+- **The body states the role's boundaries**: what the role must never do and who owns the
+  withheld action — "never edit the branch, approve, or merge; acceptance belongs to the human."
+  Frontmatter backs what it can — `tools` withholds editing, `model` routes, `skills:` preloads —
+  and where the tool set cannot enforce a boundary, the body names the restraint as prompt-level
+  and binds it anyway (see Permissions).
+- **The body is the caller-independent contract**, a few lines true for every run of the role:
+  - how to treat the input — "read the full diff before commenting";
+  - what counts as done — "every changed file covered", not "understanding reached";
+  - the output contract — the report format, because the final message is all the dispatching
+    session sees.
 - **A rule every caller needs stays in the body**; a procedure belongs there only when the role,
   not the task, demands it.
 - **The body states the default for any prompt part a caller may omit** — no focus named means
