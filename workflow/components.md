@@ -7,13 +7,13 @@ reference other files.
 **Every path in this document ships.** This repository _is_ the plugin. Write every component
 against the layout that exists in a consuming repo, never against this repository's tree.
 
-## 1. Components
+## 1. Component types
 
 Three component types exist. Each holds a different kind of content:
 
 | Component           | Holds                                                                                                                                     | Must not hold                                                                                                                                    |
 | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Reference skill** | The _what_: knowledge the session applies to the work — conventions, rules, checklists, templates                                         | A process. Heavy material inline — put it behind a pointer, see [Supporting material(#supporting-material)                                       |
+| **Reference skill** | The _what_: knowledge the session applies to the work — conventions, rules, checklists, templates                                         | A process. Heavy material inline — put it behind a pointer, see [Supporting material](#22-supporting-material)                                   |
 | **Task skill**      | The _how_: one task's process as numbered steps, including agent dispatch                                                                 | Knowledge — point at reference skills instead of restating them                                                                                  |
 | **Agent**           | The _who_: a role and its boundaries — input handling, completion criteria, output contract; `tools` as the allowlist, `model`, `skills:` | Task-specific steps — those travel in the dispatch prompt. Hooks — put a write fence on the dispatching skill, see [Permissions](#3-permissions) |
 
@@ -34,7 +34,8 @@ kind runs inline unless the rules in [1.4 Inline or forked](#14-inline-or-forked
 
 A reference skill adds domain expertise to the session. It reaches an agent through one of two
 channels: preloading via the agent's `skills:` field, or description-triggered discovery.
-[Section 2.1](#21-reference-skill-or-workflow-doc) defines when material must take this form.
+[Reference skill or `workflow/` doc](#21-reference-skill-or-workflow-doc) defines when material
+must take this form.
 
 Rules:
 
@@ -46,17 +47,19 @@ Rules:
 
 A task skill gives the session step-by-step instructions.
 
-- **Write the process as a `## Process` section of numbered steps.** Most task skills run inline,
-  driving a session with the human in the loop.
+- **Write the process as a `## Process` section of numbered steps.**
 
 Where the task needs an agent, the task skill is the dispatcher. A task skill meets an agent in
 exactly two forms, and in both the dispatch prompt is the interface:
 
 - **Forked form**: `context: fork` with `agent:` in the frontmatter. The skill body becomes the
-  dispatch prompt verbatim; the whole skill runs inside the subagent.
-- **Inline form**: dispatching is one numbered step in the process — for example a forked
-  critique or a review round — sent as a composed Agent-tool prompt. A skill whose only job is
-  dispatch reduces to three steps: obtain the input, dispatch, handle the result.
+  dispatch prompt verbatim and the whole skill runs inside the subagent — the pure-dispatch
+  form: the arguments are the input, the body is the dispatch, the agent's final message is the
+  result.
+- **Inline form**: dispatching is one numbered step in the driving skill's process. The step
+  invokes a forked task skill where one owns the dispatch — implement invoking review-pr, shape
+  invoking critique — and composes an Agent-tool prompt itself only where none does; keep that
+  prompt's parts consistent with the forked form.
 
 Apply the **caller test** to every step: would this step change if a different task skill
 dispatched the same agent?
@@ -117,9 +120,11 @@ body or in a skill it preloads, never in an output style.
 
 ### 1.4 Inline or forked
 
-A skill runs **inline** when the human is part of the loop. A forked skill receives no
-conversation history and has no user to ask, so dialogue and approval cannot fork. A forked
-component must record a question it would have asked instead of asking it.
+These rules govern any forked component — a `context: fork` skill and an agent alike.
+
+A skill runs **inline** when the human is part of the loop. A forked component receives no
+conversation history and has no user to ask, so dialogue and approval cannot fork. It must
+record a question it would have asked instead of asking it.
 
 Set **`context: fork`** when one of these holds:
 
@@ -164,8 +169,8 @@ moves entirely and leaves nothing behind.
 ### 2.2 Supporting material
 
 - Supporting material used by one skill lives in that skill's own folder.
-- A second consumer promotes it; apply the tests in [2.1](#21-reference-skill-or-workflow-doc)
-  to pick the target.
+- A second consumer promotes it; apply the tests in
+  [Reference skill or `workflow/` doc](#21-reference-skill-or-workflow-doc) to pick the target.
 - **Exception — executables**: a script that more than one skill runs lives in the plugin
   root's `scripts/`, executed by path. Prose homes cannot hold something a skill must run, and
   reaching into another skill's folder hides the shared seam.
@@ -198,9 +203,8 @@ Permissions span skills and agents. The fields differ per component; the rules b
   State any remaining restraint plainly as prompt-level; never claim enforcement the tool set
   does not provide.
 - **Every skill that crosses a human gate is manual**: set `disable-model-invocation: true`.
-  Note the interaction with preloading: a manual skill cannot be preloaded via `skills:`
-  ([1.1](#reference-skills)), so a gate-crossing skill must never double as an agent's reference
-  material. A skill invoked by another skill, or by context, stays model-invocable.
+  Note the interaction with preloading (see [Reference skills](#reference-skills)): a
+  gate-crossing skill must never double as an agent's reference material. A skill invoked by another skill, or by context, stays model-invocable.
 
 ## 4. Packaging
 
@@ -213,8 +217,8 @@ here. Four rules hold continuously:
 1. **Target-repo paths only.** A path assuming this repository's tree dangles in the consumer.
 2. **Cross-skill references use the plain skill name.** Namespacing (`<plugin>:<skill>`) is
    applied at install.
-3. **Hooks live on skills, never on agents.** Plugin agents cannot declare hooks; the field is
-   ignored at load.
+3. **Hooks live on skills, never on agents.** `hooks`, `mcpServers`, and `permissionMode` are
+   not supported for plugin-shipped agents.
 4. **Hook commands reference plugin files via `${CLAUDE_PLUGIN_ROOT}`.** Installed plugins run
    from a cache.
 
