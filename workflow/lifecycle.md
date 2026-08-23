@@ -147,10 +147,6 @@ Planning is repository-grounded, so it may reveal a migration decision, compatib
 failure behavior, or invariant absent from intent. Resolve that gap in the owning artifact before
 continuing; never let a ticket silently decide it.
 
-**Keep bundles bounded:** Shape creates the complete executable ticket set for one coherent outcome.
-An outcome too large to shape honestly at once splits into sequential bundles by those criteria,
-never into a speculative ticket backlog inside one bundle.
-
 **Run conditions:** the Architect runs in the human-facing planning session with read access to the
 repository and write access only to the draft bundle; that boundary is prompt-level, not enforced.
 The Critic runs in a fresh context with no authorship of the bundle and no file-editing capability,
