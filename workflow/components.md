@@ -9,49 +9,56 @@ layout has to resolve identically in a consuming repo.
 
 ## Core principle
 
-**Skills are about knowledge. Agents are about context isolation, parallelism and specifying tool
-set. If they need knowledge, agents preload skills.** The placement test: a paragraph useful outside
-this one agent belongs in a skill
-([Steering Claude Code](https://claude.com/blog/steering-claude-code-skills-hooks-rules-subagents-and-more)).
+**[Skills](https://code.claude.com/docs/en/skills) are about instructions or knowledge**. They act as "handbook" or specialized expertise that teach an agent _how_ to do a specific task. We can distinguish between **Task** and **reference** skills.
+
+**[Agents](https://code.claude.com/docs/en/sub-agents) are about context isolation, parallelism and specifying tool set**. If they need knowledge, agents preload skills.
+
+The placement test: a paragraph useful outside this one agent belongs in a skill ([Steering Claude Code](https://claude.com/blog/steering-claude-code-skills-hooks-rules-subagents-and-more)).
 
 ## What goes where
 
-| Layer               | Contains                                                                                                         | Sizing                                                                                                                                 |
-| ------------------- | ---------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| **Reference skill** | Domain knowledge: rules, checklists, templates                                                                   | Lean body; heavy material behind a pointer in the skill's folder — see Supporting material                                             |
-| **Action skill**    | The _when_: what invokes it, which gate it sits in front of, inline or fork — and the procedure around them      | Thin: obtain the input, dispatch, handle the result — restating no knowledge                                                           |
-| **Agent**           | The _who_: role and boundaries, process shape, completion criteria, output contract, `tools`, `model`, `skills:` | Generic, one per role: a run needing a different procedure gets a different action skill or dispatch prompt, never a second agent file |
+| Layer               | Contains                                                                                                               | Sizing                                                                                                                                                      |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Reference skill** | Domain knowledge: rules, checklists, templates                                                                         | Lean body; heavy material behind a pointer in the skill's folder — see Supporting material                                                                  |
+| **Action skill**    | The _how_: one task's process — what invokes it, which gate it sits in front of, inline or fork, and the steps between | Owns the whole procedure, restating no knowledge; the pure-dispatch form shrinks to obtain the input, dispatch, handle the result                           |
+| **Agent**           | The _who_: role and boundaries, how to treat input, completion criteria, output contract, `tools`, `model`, `skills:`  | A contract, not a procedure — one per role: a run needing a different procedure gets a different action skill or dispatch prompt, never a second agent file |
 
-### Reference skills
+### Skills
 
-A reference skill's frontmatter follows from its consumers
-([skill fields](https://code.claude.com/docs/en/skills)): never `disable-model-invocation: true`,
-which also blocks preloading, and `user-invocable: false` where no human would invoke it directly.
-Verify each new preload once — a test run of the agent should name the rules it was given; one that
-can't hasn't loaded them.
+#### Reference skills
 
-### Action skills
+- **Avoid `disable-model-invocation: true`** — it blocks preloading in subagents.
+- **Set `user-invocable: false`** where no human would invoke the skill directly.
 
-An action skill orchestrates one task: obtain the input, tell the agent what this run needs, handle
-the result. The test for where a step belongs: would it change if a different action skill
-dispatched the same agent? Then it lives in the action skill and travels in the dispatch prompt.
+#### Action skills
 
-The dispatch prompt is the real interface between an action skill and its agent, and the default
-form makes it deterministic: `context: fork` with `agent:` turns the skill body into the dispatch
-prompt verbatim. A skill that must stay inline and still delegate composes an Agent-tool prompt
-instead; keep its parts consistent with the forked form. Every action skill dispatching the same
-agent uses the same labeled parts, so the generic agent body can rely on the prompt's shape no
-matter who sent it.
+- **An action skill owns one task's process**, written as a `## Process` section of numbered
+  steps. Most run inline, driving a session with the human in it; dispatching an agent is a step
+  some of them contain — a forked critique, a review round — not what makes them action skills.
+  The pure-dispatch form collapses the process to three steps: obtain the input, dispatch, handle
+  the result.
+- **A contested step goes where the test sends it.** Would the step change if a different action
+  skill dispatched the same agent? Then it lives in the action skill and travels in the dispatch
+  prompt. With a single dispatcher every step can be argued caller-independent, so break the tie
+  on the task's artifacts: a step that names them — the PR, the ticket, the round, where the
+  result is posted — is the action skill's even while only one dispatcher exists.
+- **The dispatch prompt is the real interface** between an action skill and its agent, and the
+  default form makes it deterministic: `context: fork` with `agent:` turns the skill body into the
+  dispatch prompt verbatim. A skill that must stay inline and still delegate composes an
+  Agent-tool prompt instead; keep its parts consistent with the forked form.
+- **Every action skill dispatching the same agent uses the same labeled parts**, so the generic
+  agent body can rely on the prompt's shape no matter who sent it.
 
 ### Agents
 
-The agent body is the caller-independent contract: how to treat input, what counts as done at each
-step, and the output contract — stated once, because the final message is all the dispatching
-session sees. A step every caller needs stays in the body.
-
-A subagent also loads the consuming repo's `CLAUDE.md`, which the plugin does not control and which
-can contradict a preloaded skill — state a binding rule as binding rather than assuming an
-uncontested context.
+- **The agent body is the caller-independent contract, and stays that lean**: how to treat input,
+  what counts as done, and the output contract — stated once, because the final message is all the
+  dispatching session sees.
+- **A rule every caller needs stays in the body**; a procedure belongs there only when the role,
+  not the task, demands it.
+- **State a binding rule as binding** rather than assuming an uncontested context — a subagent
+  also loads the consuming repo's `CLAUDE.md`, which the plugin does not control and which can
+  contradict a preloaded skill.
 
 ## Reference skill or `workflow/` doc
 
