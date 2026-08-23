@@ -182,11 +182,11 @@ costs a rename, not a rewrite.
 
 ### 10. Hand back
 
-Report the published bundle path and, for each currently unblocked ticket, the claim command:
+Report the published bundle path and, for each currently unblocked ticket, a paste-ready opening
+prompt for its own tab:
 
 ```text
-${CLAUDE_PLUGIN_ROOT}/scripts/claim-ticket.sh <bundle-id> <NN>
+/implement <bundle-id> <NN>
 ```
 
-Then stop. Starting a ticket is the human's dispatch, and the bundle branch is created by the first
-claim, not here.
+**Then stop.** The bundle is now in the human's hands, and the next step is their dispatch.
