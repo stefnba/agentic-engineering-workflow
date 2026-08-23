@@ -1,6 +1,6 @@
 ---
 name: review-pr
-description: Judge one implementation PR at an exact head SHA, in a fresh read-only context with no authorship of the diff. Dispatched by the implement skill once per review round; also usable when the user asks to review, re-review, or judge a ticket's PR. Invoke with the PR number, its head SHA, and the round number.
+description: Judge one implementation PR at its exact head SHA. Dispatched by the implement skill once per review round; also use when the user asks to review, re-review, or judge a ticket's PR. Invoke with the PR number, its head SHA, and the round number.
 argument-hint: "[PR number] [head SHA] [round number]"
 context: fork
 agent: reviewer
@@ -20,7 +20,7 @@ order. Resolve the PR with `gh pr view <pr>`. A number that doesn't resolve, a m
 missing round number is your result: report it and stop — a round with no number cannot give its
 findings IDs that survive to the next one.
 
-Done when you hold all three values and the PR resolves.
+**Done when** you hold all three values and the PR resolves.
 
 ### 2. Confirm the tree
 
@@ -34,7 +34,7 @@ Untracked build output from an earlier round is expected. Any other disagreement
 report it instead of reviewing, because a review dispatched from the author's own worktree is
 otherwise indistinguishable from reviewing unpushed work.
 
-Done when all three checks agree, or the round has stopped with the disagreement reported.
+**Done when** all three checks agree, or the round has stopped with the disagreement reported.
 
 ### 3. Read the contract
 
@@ -47,8 +47,7 @@ Nothing reached you but the three values. Read for yourself:
   read the diff
 - the complete diff and, on round 2 or later, all earlier review and fix-response comments
 
-Done when every review claim you could make traces to a requirement, a Done when condition, or a
-repository convention you have read in this round.
+**Done when** each artifact above has been read at this round's head.
 
 ### 4. Verify at the head
 
@@ -63,10 +62,9 @@ Judge the change under your role's contract. On round 2 or later, check every ea
 against the author's disposition, then re-judge the complete accumulated PR at the new head, not
 only the fix diff — the fix may have broken something the fix diff does not touch.
 
-Findings carry IDs `R<round>-F<N>`, stable across rounds. The loop's convergence and round limit
-are `finding-rules`'; reaching the limit never closes a finding.
+Findings carry IDs `R<round>-F<N>`.
 
-Done when the full PR is judged at the head and every prior finding has a disposition.
+**Done when** the full PR is judged at the head and every prior finding has a disposition.
 
 ### 6. Deliver
 
@@ -76,4 +74,4 @@ location is itself the evidence. Then deliver the round assessment and the findi
 message — the implementation session is blocked on them, and the human's Accept gate sits behind
 them.
 
-Done when the comment is on the PR and the final message carries the assessment.
+**Done when** the comment is on the PR and the final message carries the assessment.
