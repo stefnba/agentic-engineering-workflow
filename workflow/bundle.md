@@ -70,7 +70,9 @@ Shape may not hand a bundle to the Plan gate until:
 ## Revising a published bundle
 
 A published bundle can be revised while its tickets are in flight, and it is revised where it was
-published: as an ordinary commit on the integration target, through a repeated Plan gate. Land
+published: as an ordinary commit on the integration target, through a repeated Plan gate. A
+revision runs through the Shape skill, whose overlap check routes a
+match onto its revision path. Land
 deletes the bundle from the state it publishes, so a revision costs nothing at land time — the bundle
 never travels backwards into the branch that deleted it.
 
