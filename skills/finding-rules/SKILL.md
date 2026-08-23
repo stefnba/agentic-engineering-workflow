@@ -1,6 +1,6 @@
 ---
 name: finding-rules
-description: What a Critic or Reviewer may report and what survives a round — the two severities, the violated-referent rule, confidence flags, the record form, and the rules across rounds. Preloaded by the critic and reviewer agents; invoke or read it when writing, disposing, rebutting, or escalating a finding.
+description: What a Critic or Reviewer may report and what survives a round — the two severities, the violated-referent rule, confidence flags, the record form, the rules across rounds, and the PR review loop's convergence and round limit. Preloaded by the critic and reviewer agents; invoke or read it when writing, disposing, rebutting, or escalating a finding, or when deciding whether a review loop stops.
 ---
 
 # Finding rules
@@ -89,6 +89,21 @@ fault for a finding; that derivation belongs in the reporting agent's context, n
   replaced with a reviewer's preferred implementation.
 - **New findings on a later round are limited** to material issues introduced by the fix or
   genuinely missed earlier.
+
+## Convergence and round limit
+
+These limits bind the PR review–fix loop only. The Shape critique loop stops by the `shape` skill's
+own rule, deliberately not fixed here.
+
+One Reviewer run is one review round. Three rounds are the normal maximum. Failure to converge by
+the third round usually signals unclear intent, architectural disagreement, unstable verification,
+or a change that should be reshaped; report that diagnosis to the human. A fourth or fifth round
+requires explicit human direction. Five is the absolute maximum without returning to Shape.
+
+The limit is an escalation condition, never an acceptance condition. Reaching it cannot waive a
+blocker. A PR is ready for human review only when every blocker is fixed, closed by the Reviewer
+after an evidence-backed rebuttal, or resolved through an explicit human planning decision. Open
+concerns are carried visibly to the human Accept gate.
 
 ## A concern the human accepts leaves a trace
 
