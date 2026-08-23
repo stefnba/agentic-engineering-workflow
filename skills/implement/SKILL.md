@@ -170,10 +170,10 @@ can merge with no text conflict and still be broken. Merge the base in, re-verif
 round. `complete-ticket.sh` refuses a stale branch anyway; discovering it at merge time costs an
 entire extra Accept.
 
-**Where the loop stops.** Three rounds is the normal maximum. With blockers still open at three,
-stop and report the diagnosis — unclear intent, architectural disagreement, unstable verification, or
-a change that wants reshaping — and let the human direct a fourth. Five is absolute. Reaching the
-limit never closes a blocker.
+**Where the loop stops.** The round limit and its diagnosis are
+`${CLAUDE_PLUGIN_ROOT}/skills/finding-rules/SKILL.md`'s Convergence and round limit: at the normal
+maximum with blockers still open, stop and report why rather than looping. Reaching the limit never
+closes a blocker.
 
 ### 6. Hand back at the Accept gate
 

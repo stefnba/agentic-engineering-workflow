@@ -18,8 +18,6 @@ approved, executable bundle.
 
 **Read both in one batch before anything else:**
 
-- `${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md` — the Shape stage's feedback loop, and the
-  critique and Plan gate this session ends at
 - `${CLAUDE_PLUGIN_ROOT}/workflow/shaping-routes.md` — the routes, their criteria, the
   sequential-bundle split triggers
 - `${CLAUDE_PLUGIN_ROOT}/workflow/bundle.md` — the bundle layout, vertical slicing, dependencies
@@ -50,6 +48,17 @@ List `${CLAUDE_PROJECT_DIR}/work/bundles/` and skim for anything topically relat
 two slugs sharing no characters can still be the same feature. If something looks related, ask the
 human whether it's the same effort, a follow-up, or unrelated **before reading further**. Duplicate
 shaping is cheapest to catch before any work is spent.
+
+**The same effort, already published, is a revision, not a new bundle.** `bundle.md`'s Revising a
+published bundle binds what a revision may not touch; one that needs more stops and reshapes.
+
+**On the revision path, skip bundle creation:** run
+`${CLAUDE_PLUGIN_ROOT}/scripts/bundle-status.sh <bundle-id>` to see which tickets are still `todo`
+and so revisable, edit the published files in place, and rejoin at the clarify step. No backlog
+line is involved.
+
+**Critique and the Plan gate repeat exactly as for a new bundle.** The publish step's commit
+subject becomes `bundle: revise <bundle-id>`.
 
 ### 2. Choose the shaping route
 
