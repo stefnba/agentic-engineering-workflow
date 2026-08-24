@@ -32,12 +32,20 @@ narrow against.
 - the assigned SHA is the PR's actual head — `gh pr view <pr> --json headRefOid`
 - the tree you are in sits at that SHA — `git rev-parse HEAD`
 - no tracked file is modified — `git status --porcelain --untracked-files=no`
+- the PR has no text conflict with its base — `gh pr view <pr> --json mergeable -q .mergeable`. Only
+  `CONFLICTING` is a stop; `UNKNOWN` is the forge still computing it, wait a few seconds and check
+  once more before treating it as unresolved. Branch protection, a pending required check, or a
+  missing approval (`mergeStateStatus`: `BLOCKED`, `UNSTABLE`, `BEHIND`) are not this check's
+  concern — those gate the merge, not whether the diff can be judged, and this review is often what
+  clears them.
 
 Untracked build output from an earlier round is expected. Any other disagreement stops the round —
 report it instead of reviewing, because a review dispatched from the author's own worktree is
-otherwise indistinguishable from reviewing unpushed work.
+otherwise indistinguishable from reviewing unpushed work. A text conflict is the same kind of stop:
+judging a diff that cannot land as reviewed spends the round on a defect a sync resolves, not one a
+finding would.
 
-**Done when** all three checks agree, or the round has stopped with the disagreement reported.
+**Done when** all four checks agree, or the round has stopped with the disagreement reported.
 
 ### 3. Read the contract
 

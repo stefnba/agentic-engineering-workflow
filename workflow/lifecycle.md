@@ -222,8 +222,10 @@ and no file-editing capability, withheld structurally rather than by instruction
 a shell, so the rest of read-only — no push, approve, or merge — is prompt-level, not enforced.
 Read-only binds the change, not the filesystem: build output, caches, and temp files are expected;
 source, refs, branches, and PR state are not. Each run receives the PR number and the exact head
-SHA to judge, and confirms against the forge that the SHA is the PR head and that the tree it inspects sits there with no tracked file
-modified.
+SHA to judge, and confirms against the forge that the SHA is the PR head, that the tree it inspects
+sits there with no tracked file modified, and that the PR is mergeable against its base. A run that
+stops on any of these never reaches judgment, so it does not consume a round
+([Finding rules](../skills/finding-rules/SKILL.md), Convergence and round limit).
 
 The Reviewer reruns required checks, reads changed code in context, and applies its judgment method
 and output contract.
@@ -280,8 +282,8 @@ approves, or merges the change.
 
 ### Convergence and round limit
 
-One Reviewer run is one review round. The round limits, the diagnosis when rounds fail to converge,
-and what makes a PR ready for human review are owned by
+What counts as a review round, the round limits, the diagnosis when rounds fail to converge, and
+what makes a PR ready for human review are owned by
 [Finding rules](../skills/finding-rules/SKILL.md) (Convergence and round limit) — preloaded into
 the Reviewer and binding on fix mode.
 

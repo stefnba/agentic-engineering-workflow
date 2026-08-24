@@ -12,5 +12,3 @@
   separately as a backlog candidate, never a finding), but not the _mechanism_: the Reviewer is
   structurally read-only, so what actually turns its "Backlog candidates" comment into a persisted
   line in `work/backlog.md` — a skill script scraping PR comments, a step inside Land, a manual copy?
-- Who resolves a merge conflict between a ticket's PR and the bundle branch — does the implementer
-  handle it autonomously, or does it stop and hand back to the human?

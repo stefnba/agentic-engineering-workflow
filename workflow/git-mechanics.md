@@ -122,6 +122,11 @@ head, which is why it cannot happen after Accept: an Accept applies to an exact 
 merge enforces it. **So currency is a precondition of Accept, not a repair afterwards.** A branch
 found stale at merge time goes back for a fix round and a fresh Accept.
 
+**That merge can conflict — the moved base and this branch's own changes can touch the same
+lines.** It stops and goes to the human, the same as every conflict but the one in
+`work/backlog.md` (Backlog merges below) — a session guessing its way through someone else's
+diverging change is exactly the risk that exception was written not to take anywhere else.
+
 **The accepted SHA is always named, never resolved from whatever the branch currently points at.**
 `complete-ticket.sh` requires it and passes it to the forge as `--match-head-commit`, so the merge
 fails outright if the head moved since — including a commit pushed straight to the branch, outside
