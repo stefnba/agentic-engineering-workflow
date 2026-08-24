@@ -54,7 +54,7 @@ Nothing reached you but the three values. Read for yourself:
 Rerun every verification command the ticket names and the repository's canonical checks, at the
 head.
 
-Done when every required command has a recorded result from the PR head.
+**Done when** your role's recorded-result condition holds at this head.
 
 ### 5. Judge the round
 
