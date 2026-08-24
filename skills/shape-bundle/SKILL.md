@@ -125,9 +125,10 @@ Findings are attacks, not fixes. For each one: revise the bundle, or say plainly
 acting on it. A finding that needs a human call goes back through the clarify step, quoting the
 finding that raised it — never into a guess.
 
-**Re-critique after revising**, and repeat until no blocker remains. If blockers survive three
-rounds, stop and report the disagreement to the human rather than looping — that pattern usually
-means the intent itself is unsettled.
+**Re-critique after revising**, and repeat until no blocker remains. Each critique returns per-run
+`C<N>` IDs — the fork sees no earlier round — so you map new findings to earlier ones and their
+dispositions. If blockers survive three rounds, stop and report the disagreement to the human
+rather than looping — that pattern usually means the intent itself is unsettled.
 
 **When the loop settles, relay the critic's verdict** — clean, or what it flagged — **and, if you
 revised, a brief summary of what changed.** Critique runs in a fork, so nothing of it reaches the

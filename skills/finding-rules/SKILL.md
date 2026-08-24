@@ -59,8 +59,9 @@ suspected finding before fixing it or rebutting it**, and says which it did.
 A finding is written as a block: an identifier line — ID, severity, confidence, axis, and where it
 lives — then one line each for what it violates, what the work claims, the evidence, the impact, and
 the outcome a fix must establish. Each agent's prompt carries the exact block. The ID prefix is what
-differs, because the stages count differently: `C<N>` for a bundle critique, which runs once, and
-`R<round>-F<N>` at PR time, where an ID must survive into the next round.
+differs, because the stages count differently: `C<N>` scoped to one critique run — a re-critique
+issues fresh IDs, and the shaping session maps them across runs — and `R<round>-F<N>` at PR time,
+where an ID must survive into the next round.
 
 ```text
 ❌ R2-F3 [verified] correctness — src/billing/refund.ts:88
