@@ -62,10 +62,13 @@ This is not `land-bundle.sh cleanup`, which runs only after a land and deliberat
 branch whose PR isn't merged yet, because that branch is a live claim someone still owns. Abandoning
 discards exactly that in-flight work on purpose, so it deletes every ticket branch regardless of
 status. **A bundle already landed refuses instead of re-running as an abandon:** `abandon-bundle.sh`
-checks whether `work/bundles/<bundle-id>` is still present on the target, never the bundle branch's
-ancestry — a branch nothing has merged into yet is trivially "an ancestor" of the target too, since
-it was cut from it and never diverged, so ancestry alone can't tell an untouched bundle from a
-landed one. A bundle already landed belongs to cleanup instead.
+looks for the exact `chore(land): land bundle <bundle-id>` commit `land-bundle.sh start` writes when
+it merges the bundle branch in — the only signal that is true precisely when a land happened. Neither
+the bundle branch's ancestry nor `work/bundles/<bundle-id>`'s presence on the target can substitute:
+a branch nothing has merged into yet is trivially "an ancestor" of the target too, since it was cut
+from it and never diverged, and the directory is absent from the target both after a land and before
+the bundle was ever published — abandoning that second case is exactly what this script is for. A
+bundle already landed belongs to cleanup instead.
 
 ## Ticket PR permalinks
 
