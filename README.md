@@ -31,7 +31,10 @@ Installing this into a repo of your own:
 3. **Commit `work/config.conf`.** A clone without it silently falls back to the
    [defaults](#config) — which means work landing on `main` when your integration target is `dev`.
 
-4. Read [docs/walkthrough.md](docs/walkthrough.md) for how a day actually runs.
+4. **Optional: turn on the output style.** `/setup` doesn't write this — see
+   [Output style](#output-style) below.
+
+5. Read [docs/walkthrough.md](docs/walkthrough.md) for how a day actually runs.
 
 ## The workflow
 
