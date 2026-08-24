@@ -19,8 +19,6 @@ Candidate work and follow-ups nobody has picked yet.
   joined — only its two halves separately. One real push settles both. Smaller gaps:
   `--match-head-commit` was confirmed to exist but never exercised against a mismatched head, and
   everything ran on darwin with git 2.52.
-- [follow-up] [skills] Add reference skill `/codebase-design` — supplies shared vocabulary (module, interface,
-  depth, seam, adapter, leverage, locality) for other skills to borrow; not a session driver itself.
 - [follow-up] [skills] The workflow documents a `depends_on` input rule the claim gate doesn't enforce,
   verified by running it: `claim-ticket.sh` parses the line with a `sed` that handles only the flow form
   `[01, 02]`. `skills/shape-bundle/templates/ticket.md` names every unsafe form — quoted or unpadded
