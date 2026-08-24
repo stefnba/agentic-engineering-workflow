@@ -128,9 +128,10 @@ comment.
 ### 5. Run the review–fix loop
 
 This loop dispatches itself, round to round, without a separate human trigger — though the human is
-in this tab throughout, and a text conflict with the base is the one point where the loop pauses for
-them before continuing, rather than dispatching straight on. It ends at their Accept gate, at an
-escalation, or at the round limit — never at a merge.
+in this tab throughout, and the loop pauses for them, rather than dispatching straight on, at any
+stop it cannot clear on its own: a text conflict with the base, or a second stop from the same
+unresolved head or mergeability cause. It ends at their Accept gate, at an escalation, or at the
+round limit — never at a merge.
 
 **Round N — review.** Invoke the `review-pr` skill with the PR number, the exact head SHA
 (`gh pr view <pr> --json headRefOid`), and the round number — and nothing else. It blocks, and it
