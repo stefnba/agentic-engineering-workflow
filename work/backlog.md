@@ -75,12 +75,5 @@ Candidate work and follow-ups nobody has picked yet.
   prerequisite for automating the land loop when uniform bundle branches were ruled; today no script
   consumes such a key, which is why it wasn't added with them
   (`docs/decisions/2026-08-18-script-read-settings.md` gates config on a script reader).
-- [follow-up] [skills] `setup` never turns the shipped output style on. Selecting `crisp` is one
-  `outputStyle` line in the consuming repo's `.claude/settings.json`, and nothing in the install list writes
-  or mentions it — so an installed plugin ships a voice nobody enables. Decide whether setup writes the line
-  or only names the style, and reflect it in `README.md`'s install table.
-- [follow-up] [skills] `skills/recap/SKILL.md`'s `Settled` section mixes decisions with actions
-  already taken — a model choice sits beside a file that moved — so a reader cannot tell what was
-  agreed from what now exists. Separate the two.
 - [idea] [skills] [docs] `work/backlog.md`'s bullet format could move to a markdown table (`id`,
   `topic`, `areas`, `details`)

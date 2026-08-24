@@ -62,15 +62,27 @@ Example:
 ## Settled
 
 <!--
-What the conversation decided or completed, kept apart from what it only floated. From what the
-conversation says was settled, never from what the repository would show.
+What the conversation decided or completed, kept apart from what it only floated, and kept apart
+from each other — a reader must be able to tell what was agreed from what now exists without
+inferring it from phrasing. From what the conversation says was settled, never from what the
+repository would show.
 
-Maximum of 3-5 bullets.
+Maximum of 3-5 bullets combined.
+-->
 
-Example:
+### Decided
+
+<!-- Example:
 - key goes in the existing secrets file, not a new one
 - existing sessions expire rather than migrate
-- nothing written yet
+-->
+
+- <item>
+
+### Done
+
+<!-- Example:
+- moved the signing key check into middleware.ts
 -->
 
 - <item>
@@ -103,8 +115,9 @@ Plan gate due: the bundle draft was called complete. May have moved since. -->
 linking verbs before you drop items. `Subject` is one sentence and `Gate` one line — everything else
 is a list. A long session comes back as a scannable report, never as paragraphs.
 
-**Say a part is empty rather than dropping it**: a heading over "nothing settled yet" reports; a
-missing heading reads as forgotten. `Gate` is the only part that disappears when it does not apply.
+**Say a part is empty rather than dropping it**: a heading over "nothing decided yet" reports; a
+missing heading reads as forgotten. This applies to `Decided` and `Done` individually — one can be
+empty while the other isn't. `Gate` is the only part that disappears when it does not apply.
 
 ## Gates
 
