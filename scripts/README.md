@@ -36,14 +36,14 @@ only for scripts and tests that branch on them:
 - `claim-ticket.sh` — `2` no such ticket · `3` dependency not `done` · `4` already claimed ·
   `5` stale worktree
 - `pr-links.sh` — `2` no such ticket · `3` bundle not published · `4` forge unreachable
-- `complete-ticket.sh` — `2` stale against its base
+- `complete-ticket.sh` — `2` stale against its base · `64` missing the accepted head SHA
 - `land-bundle.sh` — `2` no such bundle · `3` a ticket not `done` · `4` no bundle branch (never
   claimed, or already cleaned up) · `5` leftover land worktree · `6` target moved: not a failure
   but a loop — re-run the canonical checks, then `push` again · `7` merge conflict, left for the
   human · `8` a bundle-branch commit matches no merged ticket PR · `9` cleanup on an unlanded
   bundle branch — nothing is deleted
-- `abandon-bundle.sh` — `2` no such bundle · `9` the bundle branch already landed — use
-  `land-bundle.sh cleanup` instead
+- `abandon-bundle.sh` — `1` a branch refused to delete · `2` no such bundle, or run from inside a
+  worktree · `9` already landed — use `land-bundle.sh cleanup` instead
 
 ## Tests
 
