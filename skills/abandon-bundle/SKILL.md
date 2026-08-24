@@ -19,7 +19,7 @@ You run **inline, in the human's own session**, from the repository root, on the
 
 - **Nothing here has ever reached the target.** Every ticket PR merges only into the bundle branch,
   never the integration target, until Land — so abandoning is safe at any point and never needs a
-  merge or a revert on `${INTEGRATION_TARGET}`.
+  merge or a revert on the integration target itself.
 - **Show the state before discarding it.** The human names the bundle; you show what abandoning it
   actually throws away before you throw it away.
 - **This is not `land-bundle.sh cleanup`.** Cleanup runs after a land and refuses to touch a branch
