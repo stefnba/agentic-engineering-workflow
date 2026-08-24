@@ -1,7 +1,7 @@
 # Bundle scripts
 
 Deterministic git mechanics for bundle work, shared by the stage skills that run them and fronted
-by the `bundle` skill. The rules they implement live in
+by the `bundle-state` skill. The rules they implement live in
 [workflow/git-mechanics.md](../workflow/git-mechanics.md); changing those rules changes these
 scripts.
 

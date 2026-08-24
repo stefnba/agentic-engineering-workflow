@@ -53,7 +53,7 @@ it.
 Two kinds of content deliberately live elsewhere:
 
 - **Authoring guidance** — how to write a good spec, plan, or ticket — sits with each artifact's
-  literal format in the [shape skill's templates](skills/shape/templates/), read at the moment of
+  literal format in the [shape skill's templates](skills/shape-bundle/templates/), read at the moment of
   writing.
 - **Prose for humans** lives in [docs/](docs/) and is never loaded by an agent:
   [walkthrough.md](docs/walkthrough.md) for running it day to day — which skill, which session
@@ -61,23 +61,24 @@ Two kinds of content deliberately live elsewhere:
 
 ## Skills
 
-The planned set. Sixteen exist under [skills/](skills/) today — `setup`, `backlog`, `pick`, `interview-me`, `shape`, `critique`, `implement`, `review`, `land`, `bundle`, `record-decision`, `glossary`, `handoff`, `recap`, `judge`, and `writing-for-agents`; the rest are named here because the workflow docs refer to them, and are tracked in the backlog. Each name is a pointer — the authoritative description lives in that skill's `SKILL.md` frontmatter.
+The planned set. Seventeen exist under [skills/](skills/) today — `setup`, `backlog`, `pick`, `interview-me`, `shape-bundle`, `critique-bundle`, `implement-ticket`, `review-pr`, `complete-ticket`, `land-bundle`, `bundle-state`, `record-decision`, `glossary`, `handoff`, `recap`, `judge`, and `writing-for-agents`; the rest are named here because the workflow docs refer to them, and are tracked in the backlog. Each name is a pointer — the authoritative description lives in that skill's `SKILL.md` frontmatter.
 
 ### Workflow skills
 
 Stage-bound — each realizes one role of the [workflow](workflow/lifecycle.md):
 
-| Name            | Stage     | Purpose                              |
-| --------------- | --------- | ------------------------------------ |
-| `scan-codebase` | Discover  | Sweeps the repo for drift            |
-| `research`      | Discover  | Investigates one topic               |
-| `interview-me`  | Discover  | Grills intent until settled          |
-| `pick`          | Discover  | Presents candidates; the human picks |
-| `shape`         | Shape     | Drafts the bundle, runs critique     |
-| `critique`      | Shape     | Attacks the draft bundle             |
-| `implement`     | Implement | Executes one ticket to a PR          |
-| `review`        | Review    | Judges a ticket's PR                 |
-| `land`          | Land      | Absorbs and deletes bundle           |
+| Name               | Stage     | Purpose                              |
+| ------------------ | --------- | ------------------------------------ |
+| `scan-codebase`    | Discover  | Sweeps the repo for drift            |
+| `research`         | Discover  | Investigates one topic               |
+| `interview-me`     | Discover  | Grills intent until settled          |
+| `pick`             | Discover  | Presents candidates; the human picks |
+| `shape-bundle`     | Shape     | Drafts the bundle, runs critique     |
+| `critique-bundle`  | Shape     | Attacks the draft bundle             |
+| `implement-ticket` | Implement | Executes one ticket to a PR          |
+| `review-pr`        | Review    | Judges a ticket's PR                 |
+| `complete-ticket`  | Review    | Merges the accepted ticket PR        |
+| `land-bundle`      | Land      | Absorbs and deletes bundle           |
 
 ### Supporting skills
 
@@ -86,7 +87,7 @@ Not stage-bound — they serve any session:
 | Name                 | Purpose                                    |
 | -------------------- | ------------------------------------------ |
 | `setup`              | Installs the workflow                      |
-| `bundle`             | Claims tickets, reports status, merges PRs |
+| `bundle-state`       | Claims tickets, reports status             |
 | `backlog`            | Maintains the backlog file                 |
 | `glossary`           | Maintains the domain glossary              |
 | `record-decision`    | Writes decision records                    |

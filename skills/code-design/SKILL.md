@@ -1,6 +1,6 @@
 ---
 name: code-design
-description: Shared vocabulary for designing and judging module interfaces — deep vs shallow modules, seams, adapters, testability. Binding for the implement skill wherever a ticket introduces or reshapes a module seam. Invoke or read it when designing a new module's interface, deciding where a seam goes, judging whether an abstraction earns its keep, or making code more testable.
+description: Shared vocabulary for designing and judging module interfaces — deep vs shallow modules, seams, adapters, testability. Binding for the implement-ticket skill wherever a ticket introduces or reshapes a module seam. Invoke or read it when designing a new module's interface, deciding where a seam goes, judging whether an abstraction earns its keep, or making code more testable.
 ---
 
 # Code Design

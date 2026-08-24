@@ -92,7 +92,7 @@ fault for a finding; that derivation belongs in the reporting agent's context, n
 
 ## Convergence and round limit
 
-These limits bind the PR review–fix loop only. The Shape critique loop stops by the `shape` skill's
+These limits bind the PR review–fix loop only. The Shape critique loop stops by the `shape-bundle` skill's
 own rule, deliberately not fixed here.
 
 One Reviewer run is one review round. Three rounds are the normal maximum. Failure to converge by

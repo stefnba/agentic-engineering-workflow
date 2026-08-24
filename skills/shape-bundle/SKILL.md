@@ -1,5 +1,5 @@
 ---
-name: shape
+name: shape-bundle
 description: Turn settled intent into one approved, executable bundle — pick the shaping route, draft the artifacts it requires, run the mandatory critique, and publish on the human's Plan gate. Invoke in the bundle's session once the outcome is understood.
 argument-hint: "[what to shape, if it isn't already in this conversation]"
 disable-model-invocation: true
@@ -8,7 +8,7 @@ hooks:
     - matcher: "Edit|Write"
       hooks:
         - type: command
-          command: "${CLAUDE_PLUGIN_ROOT}/skills/shape/scripts/write-boundary.sh"
+          command: "${CLAUDE_PLUGIN_ROOT}/skills/shape-bundle/scripts/write-boundary.sh"
 ---
 
 # Shape
@@ -118,7 +118,7 @@ Run this before critique — a fork spent on a draft with template comments stil
 
 ### 7. Critique, then revise
 
-**Invoke the `critique` skill with the bundle ID and wait.** It blocks, and it fires without asking
+**Invoke the `critique-bundle` skill with the bundle ID and wait.** It blocks, and it fires without asking
 the human — mandatory critique before the Plan gate is not optional.
 
 Findings are attacks, not fixes. For each one: revise the bundle, or say plainly why you aren't

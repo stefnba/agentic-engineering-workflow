@@ -1,5 +1,5 @@
 ---
-name: land
+name: land-bundle
 description: Land an accepted bundle — absorb what the durable docs still need, reconcile the backlog, delete the bundle, land it on the integration target, and leave that target green. Invoke with the bundle ID once every ticket is done.
 argument-hint: "[bundle id]"
 disable-model-invocation: true
@@ -75,7 +75,7 @@ line each. New work starts as a backlog line, never as commits here.
 
 **Then retire what this bundle made true**, through that skill's prune scoped to this bundle: lines
 whose work now exists, and lines the previous step absorbed into a durable doc. The picked line is
-already gone — `shape` deleted it when it published — so what's left here is every _other_ line this
+already gone — `shape-bundle` deleted it when it published — so what's left here is every _other_ line this
 work overtook.
 
 ### 4. Delete the bundle

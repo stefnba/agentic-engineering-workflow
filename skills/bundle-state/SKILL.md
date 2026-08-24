@@ -1,9 +1,9 @@
 ---
-name: bundle
+name: bundle-state
 description: Answer bundle and ticket state from git, or perform one state transition. Use when the user asks what bundles or tickets exist, what is in flight, whether a ticket is claimed or done, or asks to claim a ticket or merge an accepted ticket PR — even mid-conversation without naming the skill. Not a session driver; shaping, implementing, reviewing, and landing bundles have their own skills.
 ---
 
-# Bundle
+# Bundle state
 
 Route the request to one script, run it from the repository root, and report its output rather than
 a paraphrase. The scripts' contract — settings, exit codes, tests — is
@@ -12,12 +12,11 @@ cover.
 
 | Request                                                     | Command                                                                     |
 | ----------------------------------------------------------- | --------------------------------------------------------------------------- |
-| "what's in flight?", "which bundles exist?", bare `/bundle` | `${CLAUDE_PLUGIN_ROOT}/scripts/bundle-status.sh`                            |
+| "what's in flight?", "which bundles exist?", bare `/bundle-state` | `${CLAUDE_PLUGIN_ROOT}/scripts/bundle-status.sh`                            |
 | "where is bundle X?" — one bundle, every ticket's status    | `${CLAUDE_PLUGIN_ROOT}/scripts/bundle-status.sh <bundle-id>`                |
 | "is ticket NN claimed?", "is it done?"                      | `${CLAUDE_PLUGIN_ROOT}/scripts/ticket-status.sh <bundle-id> <NN>`           |
 | "claim ticket NN", "start on NN"                            | `${CLAUDE_PLUGIN_ROOT}/scripts/claim-ticket.sh <bundle-id> <NN>`            |
 | "the permalinks / target branch for a ticket PR"            | `${CLAUDE_PLUGIN_ROOT}/scripts/pr-links.sh <bundle-id> <NN>`                |
-| "merge the accepted ticket PR"                              | `${CLAUDE_PLUGIN_ROOT}/scripts/complete-ticket.sh <pr> <accepted-head-sha>` |
 
 **`<NN>` is the two-digit ticket number** as the status listing prints it — `01` for a single-ticket
 bundle, whose one file is `ticket.md`. A slug or unpadded number names a branch no status query
@@ -28,5 +27,6 @@ reason and the next action; report it as printed. What each status means, how to
 and why `unknown` is not `todo`:
 `${CLAUDE_PLUGIN_ROOT}/workflow/git-mechanics.md`, Status is derived.
 
-Landing is a judgment sequence, not a routing row — REQUIRED: use the `land` skill for it; run
-`land-bundle.sh` only from there.
+Two transitions cross a human gate and are not routing rows — REQUIRED: point the human at
+`/complete-ticket` to merge an accepted ticket PR (`complete-ticket.sh` runs only from there) and at
+`/land-bundle` to land (`land-bundle.sh` runs only from there); never run either script from here.

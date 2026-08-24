@@ -1,6 +1,6 @@
 ---
-name: critique
-description: Attack a draft bundle in a fresh, read-only context before the human Plan gate. Dispatched by the shape skill once the draft is complete; also usable when the user asks to critique, red-team, or attack a bundle. Never run it on a partial draft.
+name: critique-bundle
+description: Attack a draft bundle in a fresh, read-only context before the human Plan gate. Dispatched by the shape-bundle skill once the draft is complete; also usable when the user asks to critique, red-team, or attack a bundle. Never run it on a partial draft.
 argument-hint: "[bundle id]"
 context: fork
 agent: critic

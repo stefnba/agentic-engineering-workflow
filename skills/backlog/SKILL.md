@@ -9,7 +9,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 
 `${CLAUDE_PROJECT_DIR}/work/backlog.md` holds one line per piece of candidate work nobody has picked
 yet. Its value is that it reads top to bottom in under a minute — the codebase holds the detail, this
-file holds the reminder. A line leaves it two ways: the human picks it and `shape` turns it into a
+file holds the reminder. A line leaves it two ways: the human picks it and `shape-bundle` turns it into a
 bundle, or it is deleted.
 
 **Read the Backlog section of `${CLAUDE_PLUGIN_ROOT}/workflow/artifacts.md` before writing one**,
@@ -53,7 +53,7 @@ context.
 ```
 
 Too vague to act on later: `- [idea] [ui] improve components`. Too much: a line whose sub-bullets
-sketch the schema and the migration steps — that is a plan, so offer `/shape` on it instead.
+sketch the schema and the migration steps — that is a plan, so offer `/shape-bundle` on it instead.
 
 ## Before any edit
 
@@ -72,7 +72,7 @@ or group.
 **Complete** — delete the line. Git holds the history; a `## Done` section grows without bound and
 nobody reads it. If the work settled something contested, offer `record-decision`.
 
-**Promote** — offer to run `/shape` on the line and leave the line where it is. `shape` deletes it
+**Promote** — offer to run `/shape-bundle` on the line and leave the line where it is. `shape-bundle` deletes it
 in the same commit that publishes the bundle, so the item sits in exactly one place at every
 committed state; deleting it here loses it if the shaping session is abandoned.
 

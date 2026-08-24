@@ -12,7 +12,7 @@ Discover-stage narrowing. Start from `$ARGUMENTS` if given, otherwise the ask al
 discuss if neither exists.
 
 **This writes nothing.** No file, no backlog line, no bundle. You hold `Read`, `Grep`, and `Glob`
-only, structurally. `/shape` is the first thing that produces a file.
+only, structurally. `/shape-bundle` is the first thing that produces a file.
 
 ## The design tree
 
@@ -52,7 +52,7 @@ When a term resolves, offer the `glossary` skill to capture it.
 ## Where it can end
 
 **Settled** — the frontier is empty and the human confirms the shared understanding. Report in one
-line that the problem, in the human's framing, is settled, and that the next step is `/shape` in this
+line that the problem, in the human's framing, is settled, and that the next step is `/shape-bundle` in this
 same session. Don't invoke it yourself; dispatching a stage is the human's call.
 
 **Too small to interview** — the conversation converges on something that fits one line. Say so and
@@ -60,4 +60,4 @@ offer to append it to `${CLAUDE_PROJECT_DIR}/work/backlog.md` instead; the human
 
 **Feasibility or diagnosis is genuinely unknown** — don't force it into a shapeable outcome. Say that
 the work looks like the investigation or spike route, whose evidence becomes the next thing the human
-picks. `/shape` still runs, but it shapes the investigation, not the implementation.
+picks. `/shape-bundle` still runs, but it shapes the investigation, not the implementation.

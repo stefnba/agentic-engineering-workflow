@@ -177,7 +177,7 @@ session's own first step, never by Implementer judgment.
 It reads the approved intent, optional plan, ticket, relevant durable docs, and repository
 conventions before editing.
 
-The stage's procedure is the `implement` skill's; what it must deliver is fixed here:
+The stage's procedure is the `implement-ticket` skill's; what it must deliver is fixed here:
 
 - the ticket's required pre-change evidence, established before the change — normally the behavior
   test observed to fail; the ticket may specify other evidence when a red test is inapplicable or
@@ -189,7 +189,7 @@ The stage's procedure is the `implement` skill's; what it must deliver is fixed 
 - a PR per the handoff contract below; the ticket reads `doing` while Review is pending
 
 A factual correction that preserves approved intent is made visible in the PR. Which changes return
-to the Plan gate instead is the [`implement` skill](../skills/implement/SKILL.md)'s stop-and-ask
+to the Plan gate instead is the [`implement-ticket` skill](../skills/implement-ticket/SKILL.md)'s stop-and-ask
 boundary, held inline there because the Implementer needs it to recognize a crossing.
 
 ### PR handoff contract

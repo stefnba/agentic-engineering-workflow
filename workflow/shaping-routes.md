@@ -44,7 +44,7 @@ result before Shape creates a bundle.
 
 The intent artifact for this route states the open question, the evidence that settles it, the time
 box, and the decision the answer feeds — see
-[`skills/shape/templates/spike.md`](../skills/shape/templates/spike.md).
+[`skills/shape-bundle/templates/spike.md`](../skills/shape-bundle/templates/spike.md).
 
 ### Intent plus tickets
 
