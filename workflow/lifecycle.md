@@ -280,8 +280,8 @@ approves, or merges the change.
 
 ### Convergence and round limit
 
-One Reviewer run is one review round. The round limits, the diagnosis when rounds fail to converge,
-and what makes a PR ready for human review are owned by
+What counts as a review round, the round limits, the diagnosis when rounds fail to converge, and
+what makes a PR ready for human review are owned by
 [Finding rules](../skills/finding-rules/SKILL.md) (Convergence and round limit) — preloaded into
 the Reviewer and binding on fix mode.
 

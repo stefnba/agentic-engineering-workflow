@@ -143,6 +143,9 @@ Act on the assessment it returns:
 - **ready for human review** → step 6.
 - **fixes required** → fix round, below.
 - **human escalation required** → stop the loop and go to step 6 carrying both positions.
+- **stopped before judging** (a text conflict with the base, a head that moved under it) → resolve
+  what it named, then invoke round N again with the same number — nothing was judged, so the round
+  never happened.
 
 **Fix round — yours, here, in this session.** Re-read the approved intent, plan, ticket, and current
 PR before acting on the round; what you remember writing is not what was approved. **Confirm every
