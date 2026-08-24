@@ -12,11 +12,5 @@
   separately as a backlog candidate, never a finding), but not the _mechanism_: the Reviewer is
   structurally read-only, so what actually turns its "Backlog candidates" comment into a persisted
   line in `work/backlog.md` — a skill script scraping PR comments, a step inside Land, a manual copy?
-- The human can jump into a ticket tab and change the PR branch directly (walkthrough.md), but how is
-  that captured for the reviewer — does it show up as a normal commit, does review restart, is it
-  documented anywhere?
-- What's the abandon/cancel path when a bundle stops partway through? Cancelling a single ticket is
-  settled — delete its branch and worktree and it reads as `todo` again — but an abandoned _bundle_
-  still needs an owner for deleting the bundle branch and the published bundle path.
 - Who resolves a merge conflict between a ticket's PR and the bundle branch — does the implementer
   handle it autonomously, or does it stop and hand back to the human?
