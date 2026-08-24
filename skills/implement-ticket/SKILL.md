@@ -95,8 +95,9 @@ Red evidence, smallest coherent change, verify, reconcile:
 - **Make the smallest coherent change that satisfies the ticket**, refactoring only within scope and
   only while behavior stays green. Where the ticket introduces or reshapes a module seam, read the
   `code-design` skill before placing it and apply its deletion test before adding an abstraction.
-- **Take one `Done when` condition at a time**, running that condition's own command and the
-  typechecker as you go. The repository's canonical checks run once, at verify — not per condition.
+- **Take one `Done when` condition at a time**, building it red–green per the `tdd` skill wherever
+  it adds or changes behavior, and running that condition's own command and the typechecker as you
+  go. The repository's canonical checks run once, at verify — not per condition.
 - **Commit as you go**, message per `${CLAUDE_PROJECT_DIR}/docs/conventions/git.md`.
 - **Reconcile in this branch, before the PR** — every document this diff made false: colocated
   READMEs, glossary entries it renamed or redefined, the spec where implementation corrected it, and
