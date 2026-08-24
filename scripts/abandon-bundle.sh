@@ -38,7 +38,9 @@ git fetch -q origin
 # work/bundles/<id>'s absence on the target can't tell a landed bundle from one never published at
 # all — a pre-Plan-gate draft has no directory on the target either, and abandoning that is exactly
 # what this script is for.
-if git log -q -F --grep="chore(land): land bundle $bundle" "origin/$target" | grep -q .; then
+# Anchored at the end: unanchored, a bundle id that is a strict prefix of another (2026-08-17-search
+# vs. 2026-08-17-search-ui) would match the longer bundle's land commit too.
+if git log -q --grep="chore(land): land bundle ${bundle}\$" "origin/$target" | grep -q .; then
   echo "$bundle already landed on $target — run land-bundle.sh cleanup, not abandon" >&2
   exit 9
 fi
@@ -47,10 +49,14 @@ fi
 # not-yet-merged branch because it is a live claim another session still owns; abandon is the human
 # choosing to discard the whole bundle, in-flight tickets included, and nothing outside this bundle
 # can depend on keeping any of it — none of it ever reached the target.
-delete_branch() { # <ref> -> 0 gone, now or already; 1 still there, delete refused
+delete_branch() { # <ref> -> 0 confirmed gone, now or already; 1 still there, or unresolved
   git push -q origin --delete "$1" 2>/dev/null && return 0
-  git ls-remote --exit-code --heads origin "$1" >/dev/null 2>&1 || return 0
-  return 1
+  # --exit-code is 2 for "no matching ref" specifically — anything else (including an unreachable
+  # remote) is not a confirmed deletion, so it must not read as one (workflow/git-mechanics.md,
+  # Status is derived: a query that cannot reach the forge reports unknown, never a guess).
+  local rc=0
+  git ls-remote --exit-code --heads origin "$1" >/dev/null 2>&1 || rc=$?
+  [ "$rc" -eq 2 ]
 }
 
 refused=""

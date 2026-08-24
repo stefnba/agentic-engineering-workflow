@@ -507,5 +507,63 @@ ok "abandon exits 0"                  "$?" 0
 ok "land worktree is gone"            "$([ -d ".claude/worktrees/land/$lw" ] && echo yes || echo no)" no
 : > "$MERGED"
 
+echo "== abandon: a bundle id that prefixes another landed one is not read as landed"
+sync_main
+short=2026-08-17-search
+long=2026-08-17-search-ui
+mkdir -p "work/bundles/$short" "work/bundles/$long"
+printf 'depends_on: []\n---\nshort probe\n' > "work/bundles/$short/ticket.md"
+printf 'depends_on: []\n---\nlong probe\n'  > "work/bundles/$long/ticket.md"
+git add -A && git commit -qm "docs(bundle): publish prefix-collision probes" && git push -q origin main
+"$scripts/claim-ticket.sh" "$short" 01 >/dev/null 2>&1
+"$scripts/claim-ticket.sh" "$long" 01 >/dev/null 2>&1
+# Land only the longer bundle, from its own worktree, never this checkout — an unanchored grep for
+# the shorter id's land message would match inside this one too.
+git worktree add -q --detach "$root/prefixadv" origin/main
+( cd "$root/prefixadv" && git rm -rq "work/bundles/$long" &&
+  git commit -qm "chore(land): land bundle $long" && git push -q origin HEAD:main )
+git worktree remove --force "$root/prefixadv"
+git fetch -q origin
+"$scripts/abandon-bundle.sh" "$short" > "$root/prefix.out" 2>&1
+ok "the shorter id is not read as landed" "$?" 0
+git fetch -q --prune origin
+ok "and its branches are gone"        "$(git ls-remote --heads origin "bundle/$short" "ticket/$short/01" | wc -l | tr -d ' ')" 0
+
+echo "== abandon: a never-published local draft is not read as landed"
+draft=2026-08-17-abandon-draft
+mkdir -p "work/bundles/$draft"
+printf 'depends_on: []\n---\nnever pushed\n' > "work/bundles/$draft/ticket.md"
+"$scripts/abandon-bundle.sh" "$draft" > "$root/draft.out" 2>&1
+ok "a local-only draft is not landed (0)" "$?" 0
+ok "and says nothing about landing"   "$(grep -c 'already landed' "$root/draft.out")" 0
+rm -rf "work/bundles/$draft"
+
+echo "== abandon: an unreachable forge is not read as already deleted"
+sync_main
+netdrop=2026-08-17-abandon-netdrop
+mkdir -p "work/bundles/$netdrop"
+printf 'depends_on: []\n---\nnetwork drop probe\n' > "work/bundles/$netdrop/ticket.md"
+git add -A && git commit -qm "docs(bundle): publish netdrop probe" && git push -q origin main
+"$scripts/claim-ticket.sh" "$netdrop" 01 >/dev/null 2>&1
+# A shim that fails only a delete or a status query naming this bundle's refs, with a network-style
+# error rather than "no such ref" — real git handles everything else, including the land-message
+# grep and the fetch above it.
+realgit=$(command -v git)
+mkdir -p "$root/gitbin"
+cat > "$root/gitbin/git" <<STUB
+#!/usr/bin/env bash
+if { [[ "\$*" == *--delete* ]] || [[ "\$*" == *ls-remote* ]]; } && [[ "\$*" == *"$netdrop"* ]]; then
+  echo "fatal: unable to access — simulated network drop" >&2
+  exit 128
+fi
+exec "$realgit" "\$@"
+STUB
+chmod +x "$root/gitbin/git"
+PATH="$root/gitbin:$PATH" "$scripts/abandon-bundle.sh" "$netdrop" > "$root/netdrop.out" 2>&1
+ok "an unreachable forge refuses (1)"  "$?" 1
+ok "names what it could not resolve"  "$(grep -c 'refused to delete' "$root/netdrop.out")" 1
+git fetch -q origin
+ok "branches survive the network drop" "$(git ls-remote --heads origin "bundle/$netdrop" "ticket/$netdrop/01" | wc -l | tr -d ' ')" 2
+
 printf '\n%d passed, %d failed\n' "$pass" "$fail"
 [ "$fail" -eq 0 ]
