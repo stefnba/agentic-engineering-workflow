@@ -19,6 +19,15 @@ ok() {
   fi
 }
 
+# Later sections push to main from worktrees other than this checkout (land, the "landed" abandon
+# simulation), which leaves this checkout's local main behind or diverged. Call before publishing
+# another bundle here, or the push is a non-fast-forward — silently, since this file has no `set -e`.
+sync_main() {
+  git fetch -q origin
+  git merge -q -m "test: sync before publishing another bundle" origin/main 2>/dev/null || true
+  git push -q origin main
+}
+
 command -v git >/dev/null || { echo "git required" >&2; exit 2; }
 git daemon --help >/dev/null 2>&1 || { echo "git daemon required" >&2; exit 2; }
 
@@ -408,11 +417,7 @@ ok "and says it kept it"              "$(grep -c "kept ticket/$stray/01" "$root/
 ok "while the bundle branch goes"     "$(git ls-remote --heads origin "bundle/$stray" | wc -l | tr -d ' ')" 0
 
 echo "== abandon: discards every ticket branch regardless of status, and the bundle branch"
-# This checkout has its own unpushed commits (env, target probes) and the land tests above pushed
-# main forward from other worktrees — reconcile both before publishing another bundle here.
-git fetch -q origin
-git merge -q -m "test: sync before publishing another bundle" origin/main
-git push -q origin main
+sync_main
 aband=2026-08-17-abandon
 mkdir -p "work/bundles/$aband/tickets"
 printf 'depends_on: []\n---\nfirst\n'  > "work/bundles/$aband/tickets/01-first.md"
@@ -433,14 +438,15 @@ ok "both worktrees are gone"         "$([ -d ".claude/worktrees/ticket/$aband" ]
 : > "$MERGED"
 
 echo "== abandon: refuses a bundle already landed"
+sync_main
 landedb=2026-08-17-landed-abandon
 mkdir -p "work/bundles/$landedb"
 printf 'depends_on: []\n---\nalready shipped\n' > "work/bundles/$landedb/ticket.md"
 git add -A && git commit -qm "docs(bundle): publish landed-abandon probe" && git push -q origin main
 "$scripts/claim-ticket.sh" "$landedb" 01 >/dev/null 2>&1
-# Simulate a completed land from elsewhere: the target loses the bundle directory, but this
-# checkout's own local copy stays until it fetches — the realistic way abandon-bundle.sh sees
-# "already landed", since Land runs in its own worktree, never the bundle session's own checkout.
+# Simulate a completed land from elsewhere, in its own worktree, never this checkout — the commit
+# message is the signal abandon-bundle.sh actually looks for, not the directory going missing: a
+# pre-Plan-gate draft has no directory on the target either, and abandoning that is not "landed".
 git worktree add -q --detach "$root/landedadv" origin/main
 ( cd "$root/landedadv" && git rm -rq "work/bundles/$landedb" &&
   git commit -qm "chore(land): land bundle $landedb" && git push -q origin HEAD:main )
@@ -454,6 +460,52 @@ ok "nothing was deleted"              "$(git ls-remote --heads origin "bundle/$l
 echo "== abandon: refuses an unknown bundle"
 "$scripts/abandon-bundle.sh" no-such-bundle >/dev/null 2>&1
 ok "unknown bundle refuses (2)"       "$?" 2
+
+echo "== abandon: refuses to run from inside a worktree"
+sync_main
+wtg=2026-08-17-abandon-guard
+mkdir -p "work/bundles/$wtg"
+printf 'depends_on: []\n---\nguard probe\n' > "work/bundles/$wtg/ticket.md"
+git add -A && git commit -qm "docs(bundle): publish guard probe" && git push -q origin main
+"$scripts/claim-ticket.sh" "$wtg" 01 >/dev/null 2>&1
+( cd ".claude/worktrees/ticket/$wtg/01" && "$scripts/abandon-bundle.sh" "$wtg" ) > "$root/guard.out" 2>&1
+ok "refuses from inside a worktree (2)" "$?" 2
+ok "names the fix"                    "$(grep -c 'main checkout' "$root/guard.out")" 1
+git fetch -q origin
+ok "nothing was deleted"              "$(git ls-remote --heads origin "bundle/$wtg" "ticket/$wtg/01" | wc -l | tr -d ' ')" 2
+
+echo "== abandon: a refused delete is reported, not swallowed as success"
+sync_main
+denyd=2026-08-17-abandon-deny
+mkdir -p "work/bundles/$denyd"
+printf 'depends_on: []\n---\ndeny probe\n' > "work/bundles/$denyd/ticket.md"
+git add -A && git commit -qm "docs(bundle): publish deny probe" && git push -q origin main
+"$scripts/claim-ticket.sh" "$denyd" 01 >/dev/null 2>&1
+git -C "$root/remote.git" config receive.denyDeletes true
+"$scripts/abandon-bundle.sh" "$denyd" > "$root/deny.out" 2>&1
+ok "refused delete exits 1"           "$?" 1
+ok "names what it could not remove"   "$(grep -c "refused to delete" "$root/deny.out")" 1
+git -C "$root/remote.git" config receive.denyDeletes false
+git fetch -q origin
+ok "the branches survive the refusal" "$(git ls-remote --heads origin "bundle/$denyd" "ticket/$denyd/01" | wc -l | tr -d ' ')" 2
+"$scripts/abandon-bundle.sh" "$denyd" >/dev/null 2>&1
+ok "retrying after the block succeeds" "$?" 0
+
+echo "== abandon: removes an in-progress land worktree instead of leaving it"
+sync_main
+lw=2026-08-17-abandon-land
+mkdir -p "work/bundles/$lw"
+printf 'depends_on: []\n---\nland worktree probe\n' > "work/bundles/$lw/ticket.md"
+git add -A && git commit -qm "docs(bundle): publish land-worktree probe" && git push -q origin main
+"$scripts/claim-ticket.sh" "$lw" 01 >/dev/null 2>&1
+printf 'ticket/%s/01 bundle/%s\n' "$lw" "$lw" >> "$MERGED"
+"$scripts/land-bundle.sh" start "$lw" >/dev/null 2>&1
+ok "land start exits 0"               "$?" 0
+ok "land worktree exists"             "$([ -d ".claude/worktrees/land/$lw" ] && echo yes)" yes
+"$scripts/abandon-bundle.sh" "$lw" >/dev/null 2>&1
+ok "abandon exits 0"                  "$?" 0
+ok "land worktree is gone"            "$([ -d ".claude/worktrees/land/$lw" ] && echo yes || echo no)" no
+: > "$MERGED"
 
 printf '\n%d passed, %d failed\n' "$pass" "$fail"
 [ "$fail" -eq 0 ]
