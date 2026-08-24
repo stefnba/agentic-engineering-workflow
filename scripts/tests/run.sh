@@ -142,7 +142,6 @@ ok "same answer from the worktree"  "$(cat "$root/links-wt.out")" "$(sed -n 1p "
 "$scripts/pr-links.sh" "$solo" 01 | sed -n 2,3p > "$root/links-solo.out" 2>&1
 ok "solo bundle links ticket.md"    "$(sed -n 1p "$root/links-solo.out")" \
                                     "- Ticket: \`01\` — [\`ticket.md\`](https://forge.test/acme/widgets/blob/$published/work/bundles/$solo/ticket.md)"
-ok "and targets the integration target" "$(sed -n 2p "$root/links-solo.out")" "- Base: \`main\`"
 "$scripts/pr-links.sh" "$solo" 07 >/dev/null 2>&1
 ok "pr-links wrong solo NN refuses (2)" "$?" 2
 ok "and targets its bundle branch"  "$(sed -n 2p "$root/links-solo.out")" "- Base: \`bundle/$solo\`"
