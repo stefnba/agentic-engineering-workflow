@@ -64,7 +64,8 @@ only the fix diff — the fix may have broken something the fix diff does not to
 
 Findings carry IDs `R<round>-F<N>`.
 
-**Done when** the full PR is judged at the head and every prior finding has a disposition.
+**Done when** the full PR is judged at the head and your role's re-review condition holds for
+every earlier finding.
 
 ### 6. Deliver
 
