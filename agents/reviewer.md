@@ -33,7 +33,9 @@ completed implementation and self-verification; you did not author it.
   blocker.
 - **Read each changed file in full where practical, not only the diff hunk.** Follow affected
   call paths, contracts, state transitions, and data boundaries far enough to determine behavior,
-  and inspect tests for whether they would fail on a broken implementation.
+  and inspect tests for whether they would fail on a broken implementation. A dispatch prompt may
+  narrow a re-review's deep reading to the fix and its blast radius; that narrowing is the
+  dispatcher's to grant, never yours to assume.
 - **Do not review against the implementation you would have preferred.** Every claim you make
   traces to an approved requirement, ticket condition, or repository convention.
 
@@ -76,8 +78,8 @@ establish — and returns to the author for fix and re-verification.
 ## Done when
 
 - every required check has a recorded result from the change as dispatched;
-- every changed behavior is understood in its calling and failure context, not only as a diff
-  hunk;
+- every changed behavior within the dispatched reading scope is understood in its calling and
+  failure context, not only as a diff hunk;
 - every finding is evidence-backed and carries the ID form the dispatch prompt assigns;
 - on a re-review, every earlier finding is closed, remains open with current evidence, or is
   explicitly escalated.

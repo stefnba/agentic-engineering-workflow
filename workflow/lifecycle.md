@@ -98,8 +98,8 @@ agent's judgment — execute both so they are serialized and auditable:
   integration target is a separate Land step.
 
 **Dispatch mechanics are declarative.** Each role's context and permissions are fixed by its skill
-and agent definitions, not chosen at dispatch time; the review-round number travels in the
-invocation and is recorded in the PR's round comments.
+and agent definitions, not chosen at dispatch time; the review-round number and review scope travel
+in the invocation and are recorded in the PR's round comments.
 
 Neither the scripts nor the dispatch machinery owns product or technical judgment, and none of it
 can pass a human gate: Pick, Plan, and Accept are explicit human decisions, observed and never
@@ -247,7 +247,9 @@ Implement → verify + reconcile → open PR
                          └──────► next Review    merge + complete
 ```
 
-Each Reviewer starts in fresh context and reviews the complete PR at its exact head SHA. It posts one
+Each Reviewer starts in fresh context and reviews the PR at its exact head SHA, at the reading
+scope its dispatch assigns — the [review-pr skill](../skills/review-pr/SKILL.md) owns the scopes
+and their default. It posts one
 structured round summary to the PR and uses inline comments only where a precise code location adds
 evidence. Findings receive stable IDs such as `R1-F1`; later rounds preserve those IDs when recording
 their disposition.
@@ -271,8 +273,8 @@ rebuts it with evidence, or escalates it because resolution requires a material 
 After rerunning all required checks, it posts one PR response mapping every finding ID to its
 disposition, changes, verification results, and new head SHA.
 
-The next Reviewer checks every prior disposition and reviews the complete PR again, not only the
-latest patch. New findings are limited to material issues introduced by the fix or genuinely missed
+The next Reviewer checks every prior disposition and re-judges the PR at its new head under the
+dispatched scope. New findings are limited to material issues introduced by the fix or genuinely missed
 earlier; a later round must not move the goalposts to personal preferences. Review never edits,
 approves, or merges the change.
 
