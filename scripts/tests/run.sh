@@ -176,6 +176,23 @@ git add "work/bundles/$pad" && git commit -qm "docs(bundle): publish a mis-named
 "$scripts/claim-ticket.sh" "$pad" 1 >/dev/null 2>&1
 ok "unpadded NN refuses (2)"        "$?" 2
 
+echo "== a malformed depends_on refuses rather than mis-parses"
+bad=2026-08-17-bad-deps
+mkdir -p "work/bundles/$bad/tickets"
+printf 'depends_on: ["01"]\n---\nquoted\n'        > "work/bundles/$bad/tickets/01-quoted.md"
+printf 'depends_on: [1]\n---\nunpadded\n'         > "work/bundles/$bad/tickets/02-unpadded.md"
+printf 'depends_on: [01] # x\n---\ncommented\n'   > "work/bundles/$bad/tickets/03-commented.md"
+printf 'depends_on:\n  - 01\n---\nblock\n'        > "work/bundles/$bad/tickets/04-block.md"
+git add "work/bundles/$bad" && git commit -qm "docs(bundle): publish malformed depends_on" && git push -q origin main
+"$scripts/claim-ticket.sh" "$bad" 01 >/dev/null 2>&1
+ok "quoted number refuses (6)"      "$?" 6
+"$scripts/claim-ticket.sh" "$bad" 02 >/dev/null 2>&1
+ok "unpadded number refuses (6)"    "$?" 6
+"$scripts/claim-ticket.sh" "$bad" 03 >/dev/null 2>&1
+ok "trailing comment refuses (6)"   "$?" 6
+"$scripts/claim-ticket.sh" "$bad" 04 >/dev/null 2>&1
+ok "block-sequence refuses (6)"     "$?" 6
+
 echo "== an unreachable forge never reads as todo"
 mv "$root/bin/gh" "$root/bin/gh.real"
 printf '#!/usr/bin/env bash\nexit 1\n' > "$root/bin/gh" && chmod +x "$root/bin/gh"

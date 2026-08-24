@@ -2,6 +2,7 @@
 # Claim one ticket by creating its branch and worktree. A second claim on the same ticket fails.
 #   usage: claim-ticket.sh <bundle-id> <NN>
 #   exit:  2 no such ticket   3 dependency not done   4 already claimed   5 stale worktree
+#          6 malformed depends_on
 set -euo pipefail
 
 bundle="$1"
@@ -25,9 +26,21 @@ git ls-remote --exit-code --heads origin "$base" >/dev/null 2>&1 ||
   true # another ticket's claim won the race and created it first
 git fetch -q origin "+refs/heads/$base:refs/remotes/origin/$base"
 
+# depends_on must be the one safe form the ticket template documents: a flow list of unquoted
+# two-digit numbers, nothing after the closing bracket. Every other form — quoted or unpadded
+# numbers, a trailing comment, block-sequence style — is unsafe and gets rejected here rather than
+# silently mis-parsed (block-sequence style in particular parses as no dependency at all).
+depends_line=$(grep -m1 '^depends_on:' "$ticket") || depends_line=""
+[[ "$depends_line" =~ ^depends_on:\ *\[([0-9]{2}(\ *,\ *[0-9]{2})*)?\]\ *$ ]] ||
+  { echo "malformed depends_on in $ticket: \"$depends_line\" — must be a flow list of unquoted" \
+         "two-digit numbers, e.g. depends_on: [01, 02]" >&2
+    exit 6; }
+
 # Report the status actually observed. A failed query prints nothing and is unknown, not todo — the
 # gate is closed either way, but "couldn't tell" and "not finished yet" need different responses.
-for dep in $(sed -n 's/^depends_on: *\[\(.*\)\]/\1/p' "$ticket" | tr -d ' ' | tr ',' '\n'); do
+# Consume the line just validated, not a fresh scan of the file: a body line that also starts with
+# "depends_on:" must not contribute dependencies the gate above never saw.
+for dep in $(sed -n 's/^depends_on: *\[\(.*\)\]/\1/p' <<<"$depends_line" | tr -d ' ' | tr ',' '\n'); do
   dep_status=$("$here/ticket-status.sh" "$bundle" "$dep") || dep_status=""
   [ -n "$dep_status" ] || dep_status=unknown
   if [ "$dep_status" != done ]; then
