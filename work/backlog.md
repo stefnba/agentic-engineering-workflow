@@ -10,10 +10,6 @@ Candidate work and follow-ups nobody has picked yet.
   prompt. Both prompts and `workflow/lifecycle.md`'s Run conditions say so plainly rather than
   overclaiming. Close it with a hook or a permission rule, and the same question applies to the
   Architect's "write access only to the draft bundle" boundary.
-- [follow-up] [skills] `land-bundle.sh cleanup` deletes every ticket branch and the bundle branch
-  unconditionally, where `git show old-workflow:skills/bundle-git/SKILL.md` classified them first —
-  merged, open PR, in flight — and refused to touch anything unmerged. Add that classification:
-  `gh pr list --head` rather than ancestry, because a squash merge leaves none.
 - [follow-up] [skills] `shape-bundle` publishes the approved bundle by hand — `git add`/`commit`/`push` from the
   prompt, sourcing `scripts/_config.sh` for `INTEGRATION_TARGET`. Every other state
   transition is a script; this one is prose, so a collision retry or a wrong target branch depends
@@ -31,7 +27,8 @@ Candidate work and follow-ups nobody has picked yet.
   numbers block the claim forever, a trailing comment reads as a dependency, block-sequence style
   fails open and lets a dependent ticket start early — so the rule reaches whoever writes a ticket
   from the template, and nothing catches a hand-edit that ignores it. (The sibling `ls tickets`
-  count is fixed: `_config.sh`'s `ticket_base` globs `NN-<slug>.md`, with a regression test.)
+  count hazard is gone: `ticket_base` no longer reads the ticket set at all; `ticket_names` still
+  globs `NN-<slug>.md`, with a status-listing regression test.)
 - [idea] [skills] A doc-drift sweep skill (`audit` on the `old-workflow` tag: stale READMEs, broken
   references, glossary violations, contradicted decisions). `scan-codebase` deliberately excludes
   drift; port `audit` fresh against `workflow/` if ambient capture — reconcile steps plus noticed
@@ -43,9 +40,6 @@ Candidate work and follow-ups nobody has picked yet.
   `docs/walkthrough.md` — has nowhere to go, and an agent that never invokes a stage skill never learns
   the lifecycle exists. Ship a reference skill that loads `workflow/lifecycle.md` on demand, or accept
   that the stage skills are the only entry.
-- [follow-up] [skills] `scripts/tests/run.sh` pins that a stray file _inside_ `tickets/` can't flip
-  the branch strategy, but nothing pins a sibling directory under `work/bundles/<id>/`. `ticket_base` is
-  safe today by inspection; add the case before any design puts a directory there.
 - [drift] [docs] `skills/record-decision/templates/decision-record.md` mandates YAML frontmatter with
   `areas:`, and `workflow/artifacts.md` reads the area vocabulary from records' frontmatter — but
   `2026-08-18-consuming-repo-layout.md` and `2026-08-18-script-read-settings.md` use a prose byline and
@@ -72,16 +66,17 @@ Candidate work and follow-ups nobody has picked yet.
   on 2026-08-20 and nothing re-derives it. Review round 1 already caught the first draft naming four
   tools that no longer exist and missing a dozen that do; the next platform change puts the list back in
   that state silently, and anything added after it stays callable.
-- [follow-up] [workflow] A ticket PR merged from the forge bypasses `complete-ticket.sh` entirely — both
-  the `merge-base --is-ancestor` currency gate and `--match-head-commit`. Observed on PR #11, merged at
-  `9f5537b` with `0c40854` not an ancestor, which the script would have refused with exit `2`. Branch
-  protection is not available as a cover: `skills/setup/references/prerequisites.md` routes a protected
-  default branch onto an unprotected integration target.
-- [follow-up] [skills] `land-bundle.sh cleanup` leaves the worktree scaffolding on disk: `git worktree
-remove` deletes the leaf it is given, so `.claude/worktrees/ticket/<bundle-id>/` and its parent
-  survive every land as empty directories, untracked and invisible to `git status`. Observed landing
-  `2026-08-20-recap-skill`; `git worktree list` was clean while `find .claude/worktrees` still returned
-  two directories.
+- [follow-up] [workflow] A ticket PR merged from the forge UI bypasses `complete-ticket.sh`'s currency
+  gate and `--match-head-commit`. Observed on PR #11, merged at `9f5537b` with `0c40854` not an
+  ancestor. `land-bundle.sh start` now catches the direct-push case — a bundle-branch commit matching
+  no merged ticket PR refuses the land (exit `8`) — but a UI-merged PR has a record and passes. Closing
+  the remainder needs the accepted head SHA recorded somewhere durable at Accept time so the land can
+  compare against it; today it exists only in the `/complete-ticket` invocation.
+- [idea] [workflow] Canonical checks as a `work/config.conf` key, so scripts — Land's re-check loop
+  first — can run them instead of relying on the skill's judgment to. Flagged as the shared
+  prerequisite for automating the land loop when uniform bundle branches were ruled; today no script
+  consumes such a key, which is why it wasn't added with them
+  (`docs/decisions/2026-08-18-script-read-settings.md` gates config on a script reader).
 - [follow-up] [skills] `setup` never turns the shipped output style on. Selecting `crisp` is one
   `outputStyle` line in the consuming repo's `.claude/settings.json`, and nothing in the install list writes
   or mentions it — so an installed plugin ships a voice nobody enables. Decide whether setup writes the line
