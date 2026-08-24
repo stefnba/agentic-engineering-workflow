@@ -1,7 +1,7 @@
 ---
 name: review-pr
-description: Judge one implementation PR at its exact head SHA. Dispatched by the implement-ticket skill once per review round; also use when the user asks to review, re-review, or judge a ticket's PR. Invoke with the PR number, its head SHA, and the round number.
-argument-hint: "[PR number] [head SHA] [round number]"
+description: Judge one implementation PR at its exact head SHA. Dispatched by the implement-ticket skill once per review round; also use when the user asks to review, re-review, or judge a ticket's PR. Invoke with the PR number, its head SHA, the round number, and optionally a scope — full (default) re-judges the whole PR, delta narrows a later round to the fixes since the previous round.
+argument-hint: "[PR number] [head SHA] [round number] [full|delta]"
 context: fork
 agent: reviewer
 background: false
@@ -15,12 +15,15 @@ One review round: judge the PR at the assigned head SHA and return the round's f
 
 ### 1. Resolve the assignment
 
-`$ARGUMENTS` carries the PR number, the exact head SHA to judge, and the round number, in that
-order. Resolve the PR with `gh pr view <pr>`. A number that doesn't resolve, a missing SHA, or a
-missing round number is your result: report it and stop — a round with no number cannot give its
-findings IDs that survive to the next one.
+`$ARGUMENTS` carries the PR number, the exact head SHA to judge, the round number, and
+optionally a scope — `full` or `delta` — in that order. Resolve the PR with `gh pr view <pr>`. A
+number that doesn't resolve, a missing SHA, or a missing round number is your result: report it
+and stop — a round with no number cannot give its findings IDs that survive to the next one.
 
-**Done when** you hold all three values and the PR resolves.
+An omitted scope is `full`, and round 1 is `full` regardless — there is no earlier round to
+narrow against.
+
+**Done when** you hold all three values plus the resolved scope, and the PR resolves.
 
 ### 2. Confirm the tree
 
@@ -38,7 +41,7 @@ otherwise indistinguishable from reviewing unpushed work.
 
 ### 3. Read the contract
 
-Nothing reached you but the three values. Read for yourself:
+Nothing reached you but the dispatched values. Read for yourself:
 
 - repository conventions and the decision records the change touches
 - the complete diff and, on round 2 or later, all earlier review and fix-response comments
@@ -69,13 +72,23 @@ head.
 ### 5. Judge the round
 
 Judge the change under your role's contract. On round 2 or later, check every earlier finding ID
-against the author's disposition, then re-judge the complete accumulated PR at the new head, not
-only the fix diff — the fix may have broken something the fix diff does not touch.
+against the author's disposition, then re-judge at the new head under the assigned scope:
+
+- **full** — the complete accumulated PR, not only the fix diff; the fix may have broken
+  something the fix diff does not touch.
+- **delta** — a deep pass only on the earlier findings, the diff from the previous round
+  comment's `Head:` SHA to the current head — never "the last commit" — and that diff's blast
+  radius: the callers and tests of what it changed. Everything else gets confirmation-level
+  tracing — enough to see the fix did not reach it. Whatever step 4's verification flags
+  re-enters the deep pass wherever it lives.
+
+A delta scope narrows reading, never reporting: `finding-rules`' round rules still bind, and a
+finding you do reach is reported whether or not it sits inside the scope.
 
 Findings carry IDs `R<round>-F<N>`.
 
-**Done when** the full PR is judged at the head and your role's re-review condition holds for
-every earlier finding.
+**Done when** the PR is judged at the head under the assigned scope and your role's re-review
+condition holds for every earlier finding.
 
 ### 6. Deliver
 

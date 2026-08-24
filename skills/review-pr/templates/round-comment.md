@@ -4,7 +4,8 @@ check that passed and raised no finding appears only in the verification table. 
 
 ## Review — round <N>
 
-Head: `<SHA>` ✅ PR head, tree clean at that SHA
+**Head**: `<SHA>` ✅ PR head, tree clean at that SHA
+**Scope**: full | delta since `<previous round's head SHA>`
 
 ### Findings
 
@@ -14,11 +15,11 @@ canonical check, or a concrete failure mechanism. -->
 
 ❌ R<round>-F<N> [verified|suspected] <axis> — <file:line or command>
 
-- Violates: <the referent>
-- Claim: <what the change does or asserts>
-- Evidence: <what you ran or read, and the result>
-- Impact: <the concrete failure or risk>
-- Required outcome: <the property a fix must establish, without writing the fix>
+- **Violates**: <the referent>
+- **Claim**: <what the change does or asserts>
+- **Evidence**: <what you ran or read, and the result>
+- **Impact**: <the concrete failure or risk>
+- **Required outcome**: <the property a fix must establish, without writing the fix>
 
 ### Verification at head
 

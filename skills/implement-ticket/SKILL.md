@@ -131,7 +131,9 @@ This loop runs without the human. It ends at their Accept gate, at an escalation
 limit — never at a merge.
 
 **Round N — review.** Invoke the `review-pr` skill with the PR number, the exact head SHA
-(`gh pr view <pr> --json headRefOid`), and the round number — and nothing else. It blocks, and it
+(`gh pr view <pr> --json headRefOid`), the round number, and — on round 2 or later — the scope
+`delta`; pass `full` instead when the human directs it or the fixes reshaped the change beyond
+the findings' locations. Nothing else. It blocks, and it
 forks: what it reads, it reads for itself. A summary from you is your authorship leaking into a
 judgment whose whole value is that it is independent.
 
