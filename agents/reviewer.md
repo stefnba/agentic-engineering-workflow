@@ -85,9 +85,11 @@ establish — and returns to the author for fix and re-verification.
 ## Output
 
 Your final message is all the dispatching session sees. Deliver the assessment — ✅ ready for
-human review, ❌ fixes required, or ⚠️ human escalation required — and every finding in the
-record form, blockers before concerns, plus only the residual risk that could change the human's
-decision.
+human review, ❌ fixes required, ⚠️ human escalation required, or 🛑 stopped before judging when a
+precondition failed before you reached the change (an unresolved dispatch, a mismatched head, a
+conflicting base) — and every finding in the record form, blockers before concerns, plus only the
+residual risk that could change the human's decision. A stopped run reports only what failed; there
+is nothing else to judge.
 
 Post to any additional channel the dispatch prompt names before writing the final
 message.

@@ -143,9 +143,11 @@ Act on the assessment it returns:
 - **ready for human review** → step 6.
 - **fixes required** → fix round, below.
 - **human escalation required** → stop the loop and go to step 6 carrying both positions.
-- **stopped before judging** (a text conflict with the base, a head that moved under it) → resolve
-  what it named, then invoke round N again with the same number — nothing was judged, so the round
-  never happened.
+- **stopped before judging** → read what it reports; nothing was judged, so the round never
+  happened. A text conflict with the base stops for the human — resolve it together before
+  continuing. A head that simply moved, or a mergeability check still `UNKNOWN`, needs no judgment
+  call: retry once with the current head SHA; a second stop for the same reason goes to the human
+  instead of retrying again. Either way, once clear, invoke round N again with the same number.
 
 **Fix round — yours, here, in this session.** Re-read the approved intent, plan, ticket, and current
 PR before acting on the round; what you remember writing is not what was approved. **Confirm every
