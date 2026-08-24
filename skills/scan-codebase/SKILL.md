@@ -25,6 +25,6 @@ Sweep the scoped code for improvement candidates on these dimensions:
   a glossary with entries exists
 - **Consistency** — the outlier module that ignores patterns the rest of the repo has settled on
 
-Return the findings as your final message — inline, ranked, with evidence, and nothing written
-anywhere. The human triages each finding live: accepted ones become backlog lines through the
-`backlog` skill, rejected ones disappear with the report.
+Fill `${CLAUDE_SKILL_DIR}/templates/scan-report.md` and deliver it as your final message —
+nothing written anywhere. The human triages each finding live: accepted ones become backlog
+lines through the `backlog` skill, rejected ones disappear with the report.

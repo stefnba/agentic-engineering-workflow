@@ -28,16 +28,23 @@ trap 'kill "$(cat "$root/daemon.pid" 2>/dev/null)" 2>/dev/null; rm -rf "$root"' 
 
 export GIT_AUTHOR_NAME=test GIT_AUTHOR_EMAIL=test@local
 export GIT_COMMITTER_NAME=test GIT_COMMITTER_EMAIL=test@local
-export MERGED="$root/merged" # "<branch> <base>" per line: the pull requests the stub reports merged
+export MERGED="$root/merged" # "<branch> <base> [merge-sha]" per line: the PRs the stub reports merged
 : > "$MERGED"
 
-# gh stub: answers the two queries the scripts make, from $MERGED.
+# gh stub: answers the queries the scripts make, from $MERGED.
 mkdir -p "$root/bin"
 cat > "$root/bin/gh" <<'STUB'
 #!/usr/bin/env bash
 args="$*"
 case "$args" in
   "pr list"*)
+    if grep -q 'mergeCommitOid' <<<"$args"; then
+      base=""; prev=""
+      for a in "$@"; do [ "$prev" = "--base" ] && base="$a"; prev="$a"; done
+      [ -f "$MERGED" ] || exit 0
+      awk -v b="$base" '$2==b && NF>=3 {print $1, $3}' "$MERGED"
+      exit 0
+    fi
     head=""; prev=""
     for a in "$@"; do [ "$prev" = "--head" ] && head="$a"; prev="$a"; done
     base=$(sed -n 's/.*baseRefName=="\([^"]*\)".*/\1/p' <<<"$args")
@@ -103,10 +110,10 @@ ok "merged PR reads as done"        "$("$scripts/ticket-status.sh" "$multi" 01)"
 "$scripts/claim-ticket.sh" "$multi" 02 >/dev/null 2>&1
 ok "met dependency allows claim"    "$?" 0
 
-echo "== single-ticket bundle takes no bundle branch"
+echo "== a single-ticket bundle gets a bundle branch too"
 "$scripts/claim-ticket.sh" "$solo" 01 >/dev/null 2>&1
 ok "solo claim exits 0"             "$?" 0
-ok "no bundle branch"               "$(git ls-remote --heads origin "bundle/$solo" | wc -l | tr -d ' ')" 0
+ok "solo bundle branch created"     "$(git ls-remote --heads origin "bundle/$solo" | wc -l | tr -d ' ')" 1
 "$scripts/claim-ticket.sh" "$solo" ticket >/dev/null 2>&1
 ok "slug instead of NN refuses (2)" "$?" 2
 "$scripts/claim-ticket.sh" "$solo" 07 >/dev/null 2>&1
@@ -138,6 +145,7 @@ ok "solo bundle links ticket.md"    "$(sed -n 1p "$root/links-solo.out")" \
 ok "and targets the integration target" "$(sed -n 2p "$root/links-solo.out")" "- Base: \`main\`"
 "$scripts/pr-links.sh" "$solo" 07 >/dev/null 2>&1
 ok "pr-links wrong solo NN refuses (2)" "$?" 2
+ok "and targets its bundle branch"  "$(sed -n 2p "$root/links-solo.out")" "- Base: \`bundle/$solo\`"
 "$scripts/pr-links.sh" "$multi" 99 >/dev/null 2>&1
 ok "unknown ticket refuses (2)"     "$?" 2
 "$scripts/pr-links.sh" 2026-01-01-nope 01 >/dev/null 2>&1
@@ -148,7 +156,7 @@ printf 'depends_on: []\n---\nnever published\n' > "work/bundles/2026-01-01-local
 ok "unpublished bundle refuses (3)" "$?" 3
 rm -rf "work/bundles/2026-01-01-local"
 
-echo "== a stray file in tickets/ does not flip the branch strategy"
+echo "== a stray file in tickets/ is not a ticket"
 stray=2026-08-17-stray
 mkdir -p "work/bundles/$stray/tickets"
 printf 'depends_on: []\n---\nthe only ticket\n' > "work/bundles/$stray/tickets/01-only.md"
@@ -156,9 +164,10 @@ printf 'scratch\n'                             > "work/bundles/$stray/tickets/no
 git add -A && git commit -qm "docs(bundle): a bundle with a stray file" && git push -q origin main
 "$scripts/claim-ticket.sh" "$stray" 01 >/dev/null 2>&1
 ok "stray-file claim exits 0"       "$?" 0
-ok "one ticket still takes no branch" "$(git ls-remote --heads origin "bundle/$stray" | wc -l | tr -d ' ')" 0
-printf 'ticket/%s/01 main\n' "$stray" >> "$MERGED"
+ok "its PRs target the bundle branch" "$(git ls-remote --heads origin "bundle/$stray" | wc -l | tr -d ' ')" 1
+printf 'ticket/%s/01 bundle/%s\n' "$stray" "$stray" >> "$MERGED"
 ok "status agrees on the base"      "$("$scripts/ticket-status.sh" "$stray" 01)" done
+ok "status lists exactly one ticket" "$("$scripts/bundle-status.sh" "$stray" | wc -l | tr -d ' ')" 2
 
 echo "== a ticket file the listing cannot see is not claimable"
 pad=2026-08-17-pad
@@ -206,28 +215,46 @@ mkdir -p "work/bundles/$cfg"
 printf 'depends_on: []\n---\nconfig probe\n' > "work/bundles/$cfg/ticket.md"
 git add "work/bundles/$cfg" && git commit -qm "docs(bundle): publish config probe" && git push -q origin main
 # Written the way the shipped template is: aligned inline comments, not bare KEY=value.
-printf 'TICKET_MERGE_METHOD=rebase  # ticket PR merge method\nWORKTREE_DIR=.wt            # where worktrees go\n' > work/config.conf
+printf 'TICKET_MERGE_METHOD=merge   # ticket PR merge method\nWORKTREE_DIR=.wt            # where worktrees go\n' > work/config.conf
 "$scripts/claim-ticket.sh" "$cfg" 01 >/dev/null 2>&1
 ok "worktree honours WORKTREE_DIR"  "$([ -d ".wt/ticket/$cfg/01" ] && echo yes)" yes
-export GH_STUB_LOG="$root/merge2.log" GH_STUB_BRANCH="ticket/$cfg/01" GH_STUB_BASE=main
+export GH_STUB_LOG="$root/merge2.log" GH_STUB_BRANCH="ticket/$cfg/01" GH_STUB_BASE="bundle/$cfg"
 "$scripts/complete-ticket.sh" 43 >/dev/null 2>&1
-ok "merge honours TICKET_MERGE_METHOD" "$(grep -c -- '--rebase' "$root/merge2.log")" 1
+ok "merge honours TICKET_MERGE_METHOD" "$(grep -c -- '--merge' "$root/merge2.log")" 1
 ok "no --squash when overridden"    "$(grep -c -- '--squash' "$root/merge2.log")" 0
 
-echo "== a non-default INTEGRATION_TARGET is what tickets cut from and merge into"
+echo "== an unsupported merge method stops at config read, not at land"
+printf 'TICKET_MERGE_METHOD=rebase\n' > work/config.conf
+"$scripts/ticket-status.sh" "$cfg" 01 > "$root/rebasecfg.out" 2>&1
+ok "rebase refuses (1)"             "$?" 1
+ok "and names the supported set"    "$(grep -c 'use squash or merge' "$root/rebasecfg.out")" 1
+
+echo "== a non-default INTEGRATION_TARGET is what bundle branches are cut from"
 tgt=2026-08-17-target
 mkdir -p "work/bundles/$tgt"
 printf 'depends_on: []\n---\ntarget probe\n' > "work/bundles/$tgt/ticket.md"
 git add "work/bundles/$tgt" && git commit -qm "docs(bundle): publish target probe"
 git push -q origin main main:refs/heads/dev
 printf 'INTEGRATION_TARGET=dev\n' > work/config.conf
-"$scripts/claim-ticket.sh" "$tgt" 01 > "$root/target.out" 2>&1
-ok "claim cuts from the target"     "$(grep -c 'from dev' "$root/target.out")" 1
-echo "ticket/$tgt/01 dev" > "$MERGED"
-ok "merged into the target is done" "$("$scripts/ticket-status.sh" "$tgt" 01)" done
+# Advance dev past main, so which branch the bundle branch was cut from is observable in its tip.
+git worktree add -q --detach "$root/devadv" origin/dev
+( cd "$root/devadv" && printf 'dev moved\n' > dev.txt && git add dev.txt &&
+  git commit -qm "chore: advance dev" && git push -q origin HEAD:dev )
+git worktree remove --force "$root/devadv"
+git fetch -q origin
+"$scripts/claim-ticket.sh" "$tgt" 01 >/dev/null 2>&1
+ok "claim exits 0"                  "$?" 0
+ok "bundle branch cut from the target" "$(git ls-remote --heads origin "bundle/$tgt" | cut -f1)" "$(git rev-parse origin/dev)"
+echo "ticket/$tgt/01 bundle/$tgt" > "$MERGED"
+ok "merged into the bundle branch is done" "$("$scripts/ticket-status.sh" "$tgt" 01)" done
 echo "ticket/$tgt/01 main" > "$MERGED"
 ok "merged elsewhere is not done"   "$("$scripts/ticket-status.sh" "$tgt" 01)" doing
-ok "environment outranks the file"  "$(INTEGRATION_TARGET=main "$scripts/ticket-status.sh" "$tgt" 01)" done
+env=2026-08-17-env
+mkdir -p "work/bundles/$env"
+printf 'depends_on: []\n---\nenv probe\n' > "work/bundles/$env/ticket.md"
+git add "work/bundles/$env" && git commit -qm "docs(bundle): publish env probe"
+INTEGRATION_TARGET=main "$scripts/claim-ticket.sh" "$env" 01 >/dev/null 2>&1
+ok "environment outranks the file"  "$(git ls-remote --heads origin "bundle/$env" | cut -f1)" "$(git rev-parse origin/main)"
 
 echo "== a malformed config line stops instead of running as a command"
 printf 'INTEGRATION_TARGET = dev\n' > work/config.conf
@@ -235,16 +262,6 @@ printf 'INTEGRATION_TARGET = dev\n' > work/config.conf
 ok "malformed config exits 1"       "$?" 1
 ok "malformed config names the line" "$(grep -c 'expected KEY=value' "$root/badcfg.out")" 1
 rm -f work/config.conf
-
-echo "== the remote bundle branch outranks the ticket count"
-# A bundle revised from three tickets to one must not re-derive main as the base: its merged PRs
-# targeted bundle/<id>, and re-deriving would report a done ticket as todo.
-echo "ticket/$multi/01 bundle/$multi" > "$MERGED"
-ok "done against the bundle branch"   "$("$scripts/ticket-status.sh" "$multi" 01)" done
-mkdir -p "$root/stash"
-mv "work/bundles/$multi/tickets/02-api.md" "work/bundles/$multi/tickets/03-ui.md" "$root/stash/"
-ok "still done when the count drops" "$("$scripts/ticket-status.sh" "$multi" 01)" done
-mv "$root/stash/02-api.md" "$root/stash/03-ui.md" "work/bundles/$multi/tickets/"
 
 echo "== a stale ticket branch is refused, not merged"
 git fetch -q origin
@@ -282,12 +299,36 @@ printf 'ticket/%s/01 bundle/%s\n' "$multi" "$multi" > "$MERGED"
 ok "an unfinished ticket blocks (3)"  "$?" 3
 ok "and names which one"              "$(grep -cE 'ticket 0[23] is (todo|doing)' "$root/land3.out")" 1
 "$scripts/land-bundle.sh" start "$solo" >/dev/null 2>&1
-ok "single-ticket has nothing to land (4)" "$?" 4
+ok "solo's unfinished ticket blocks (3)" "$?" 3
+unclaimed=2026-08-17-unclaimed
+mkdir -p "work/bundles/$unclaimed"
+printf 'depends_on: []\n---\nnever claimed\n' > "work/bundles/$unclaimed/ticket.md"
+"$scripts/land-bundle.sh" start "$unclaimed" >/dev/null 2>&1
+ok "never-claimed bundle refuses (4)" "$?" 4
+rm -rf "work/bundles/$unclaimed"
 "$scripts/land-bundle.sh" start no-such-bundle >/dev/null 2>&1
 ok "unknown bundle refuses (2)"       "$?" 2
 
-echo "== land: start opens a detached worktree with the bundle merged in"
+echo "== land: an unrecorded commit on the bundle branch refuses the land"
+# The sibling commit was pushed directly, so no merged PR's record carries its SHA yet.
 for nn in 01 02 03; do printf 'ticket/%s/%s bundle/%s\n' "$multi" "$nn" "$multi" >> "$MERGED"; done
+"$scripts/land-bundle.sh" start "$multi" > "$root/land8.out" 2>&1
+ok "unrecorded commit refuses (8)"    "$?" 8
+ok "and names the commit"             "$(grep -c 'unrecorded commit' "$root/land8.out")" 1
+ok "and no worktree was opened"       "$([ -d ".claude/worktrees/land/$multi" ] && echo yes || echo no)" no
+
+echo "== land: a merged PR from a non-ticket branch is no license"
+# The direct-pushed commit now has a merged PR record — but from a head no ticket owns, so its
+# content passed no Accept gate and the land must still refuse it.
+printf 'feature/rogue bundle/%s %s\n' "$multi" "$(git rev-parse "origin/bundle/$multi")" >> "$MERGED"
+"$scripts/land-bundle.sh" start "$multi" > "$root/land8b.out" 2>&1
+ok "non-ticket PR refuses (8)"        "$?" 8
+ok "and names the commit"             "$(grep -c 'unrecorded commit' "$root/land8b.out")" 1
+
+echo "== land: start opens a detached worktree with the bundle merged in"
+git fetch -q origin
+printf 'ticket/%s/01 bundle/%s %s\n' "$multi" "$multi" "$(git rev-parse "origin/bundle/$multi")" > "$MERGED"
+for nn in 02 03; do printf 'ticket/%s/%s bundle/%s\n' "$multi" "$nn" "$multi" >> "$MERGED"; done
 "$scripts/land-bundle.sh" start "$multi" >/dev/null 2>&1
 ok "start exits 0"                    "$?" 0
 land=".claude/worktrees/land/$multi"
@@ -355,6 +396,51 @@ ok "allowed path passes"                    "$(payload "$hookrepo/work/bundles/x
 ok "a path outside the project passes"      "$(payload "/elsewhere/handoff.md" | fence | verdict)" allow
 ( cd "$hookrepo" && git add -A && git commit -qm "publish" )
 ok "the fence lifts once the tree is clean" "$(payload "src/app.ts" | fence | verdict)" allow
+ok "worktree scaffolding removed"     "$([ -d ".claude/worktrees/ticket/$multi" ] && echo yes || echo no)" no
+
+echo "== land: a single-ticket bundle lands through the same worktree"
+# Give the bundle branch a real ticket commit, as a merged PR would have, so the land below has to
+# perform an actual merge — an ancestor branch would let a skipped merge pass unnoticed.
+git worktree add -q --detach "$root/soloadv" "origin/bundle/$solo"
+( cd "$root/soloadv" && printf 'fixed\n' > typo.txt && git add typo.txt &&
+  git commit -qm "fix: the solo ticket landed on its bundle branch" &&
+  git push -q origin "HEAD:bundle/$solo" )
+git worktree remove --force "$root/soloadv"
+git fetch -q origin
+printf 'ticket/%s/01 bundle/%s %s\n' "$solo" "$solo" "$(git rev-parse "origin/bundle/$solo")" > "$MERGED"
+"$scripts/land-bundle.sh" start "$solo" >/dev/null 2>&1
+ok "solo start exits 0"               "$?" 0
+sland=".claude/worktrees/land/$solo"
+ok "solo land worktree exists"        "$([ -d "$sland" ] && echo yes)" yes
+( cd "$sland" && git rm -rq "work/bundles/$solo" && git commit -qm "chore(land): delete the bundle" )
+"$scripts/land-bundle.sh" push "$solo" >/dev/null 2>&1
+ok "solo push exits 0"                "$?" 0
+git fetch -q origin
+ok "solo ticket commit reaches main"  "$(git log --oneline origin/main | grep -c 'the solo ticket landed on its bundle branch')" 1
+ok "solo land is a first-parent merge" "$(git log --first-parent --oneline origin/main | grep -c "land bundle $solo")" 1
+"$scripts/land-bundle.sh" cleanup "$solo" >/dev/null 2>&1
+ok "solo cleanup exits 0"             "$?" 0
+git fetch -q --prune origin
+ok "solo bundle branch deleted"       "$(git ls-remote --heads origin "bundle/$solo" | wc -l | tr -d ' ')" 0
+ok "solo bundle gone from main"       "$(git ls-tree -r --name-only origin/main | grep -c "work/bundles/$solo")" 0
+ok "land scaffolding removed"         "$([ -d ".claude/worktrees/land" ] && echo yes || echo no)" no
+
+echo "== cleanup refuses an unlanded bundle branch and keeps live claims"
+git worktree add -q --detach "$root/strayadv" "origin/bundle/$stray"
+( cd "$root/strayadv" && printf 'unlanded\n' > unlanded.txt && git add unlanded.txt &&
+  git commit -qm "feat: accepted but not landed" && git push -q origin "HEAD:bundle/$stray" )
+git worktree remove --force "$root/strayadv"
+"$scripts/land-bundle.sh" cleanup "$stray" > "$root/cleanup9.out" 2>&1
+ok "unlanded bundle branch refuses (9)" "$?" 9
+git fetch -q origin
+ok "and deletes nothing"              "$(git ls-remote --heads origin "bundle/$stray" "ticket/$stray/01" | wc -l | tr -d ' ')" 2
+# Roll the branch back to a landed state (its content is on main), leaving the ticket unmerged.
+git push -q --force origin "origin/main:refs/heads/bundle/$stray"
+"$scripts/land-bundle.sh" cleanup "$stray" > "$root/cleanup0.out" 2>&1
+ok "landed branch cleans up (0)"      "$?" 0
+ok "but keeps the in-flight ticket"   "$(git ls-remote --heads origin "ticket/$stray/01" | wc -l | tr -d ' ')" 1
+ok "and says it kept it"              "$(grep -c "kept ticket/$stray/01" "$root/cleanup0.out")" 1
+ok "while the bundle branch goes"     "$(git ls-remote --heads origin "bundle/$stray" | wc -l | tr -d ' ')" 0
 
 printf '\n%d passed, %d failed\n' "$pass" "$fail"
 [ "$fail" -eq 0 ]

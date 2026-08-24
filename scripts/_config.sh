@@ -26,6 +26,18 @@ TICKET_MERGE_METHOD="${_env_merge:-${TICKET_MERGE_METHOD:-squash}}"
 WORKTREE_DIR="${_env_worktree:-${WORKTREE_DIR:-.claude/worktrees}}"
 unset _env_target _env_merge _env_worktree _bad
 
+# squash and merge record one merge commit per PR, which is what the land gate matches first-parent
+# commits against. A rebase merge records only the tip of the commits it adds, so the rest would
+# read as unrecorded and no bundle could ever land. Refuse here, at read time — not at land time,
+# with the bundle already done.
+case "$TICKET_MERGE_METHOD" in
+  squash | merge) ;;
+  *)
+    echo "TICKET_MERGE_METHOD=$TICKET_MERGE_METHOD: use squash or merge — rebase records only its tip commit, which the land gate cannot match to the rest" >&2
+    exit 1
+    ;;
+esac
+
 ticket_branch() { echo "ticket/$1/$2"; } # <bundle-id> <NN>
 bundle_branch() { echo "bundle/$1"; }    # <bundle-id>
 
@@ -84,3 +96,8 @@ ticket_base() { # <bundle-id> -> the branch this bundle's ticket PRs target
   done
   if [ "$n" -gt 1 ]; then bundle_branch "$1"; else echo "$INTEGRATION_TARGET"; fi
 }
+# Every bundle's ticket PRs target its bundle branch, whatever the ticket count. Uniform, so
+# nothing is derived and nothing can flip: no ticket PR targets the integration target —
+# implementation content reaches it only through the land. Kept as a function because claim,
+# status and links must share one definition of the base.
+ticket_base() { bundle_branch "$1"; } # <bundle-id> -> the branch this bundle's ticket PRs target

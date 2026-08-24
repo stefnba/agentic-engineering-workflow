@@ -8,9 +8,11 @@
 #   land-bundle.sh cleanup <bundle-id>  delete the bundle's branches, remove its worktrees
 #
 #   exit: 2 no such bundle          3 a ticket is not done
-#         4 nothing to land         5 stale land worktree
+#         4 no bundle branch        5 stale land worktree
 #         6 the target moved — re-run the canonical checks, then push again
 #         7 merge conflict left in the land worktree, for the human to resolve
+#         8 a commit on the bundle branch matches no merged ticket PR
+#         9 the bundle branch is not landed — cleanup deletes nothing
 set -euo pipefail
 
 verb="${1:-}"
@@ -57,10 +59,11 @@ land_merge() { # <worktree> <message> <ref> -> 0 merged, 1 conflicts left for th
 
 case "$verb" in
 start)
-  # A single-ticket bundle's only PR already merged into the target, so there is no branch to land.
-  # Land still runs — its reconcile, drain and delete commits go to the session's own checkout.
+  # Every bundle lands through its bundle branch — the first claim creates it, and nothing merges
+  # into the target except this stage. A missing branch means no ticket was ever claimed, or a
+  # cleanup already deleted it.
   if ! git ls-remote --exit-code --heads origin "$bb" >/dev/null 2>&1; then
-    echo "no bundle branch for $bundle — reconcile, drain and delete on $target in this checkout" >&2
+    echo "no bundle branch for $bundle — nothing to land: no ticket was ever claimed, or cleanup already removed the branch" >&2
     exit 4
   fi
 
@@ -75,6 +78,27 @@ start)
   [ -e "$land" ] && { echo "stale land worktree at $land — a previous land left it; have it removed, then retry" >&2; exit 5; }
 
   git fetch -q origin
+  # Content reaches a bundle branch only through an accepted ticket PR
+  # (workflow/git-mechanics.md, Bundle-branch writes). Enforce it structurally: every first-parent
+  # commit the branch adds over the target must be the merge record of one of this bundle's ticket
+  # PRs — the same set the done-gate above iterated. A merged PR from any other head is no license:
+  # its content passed no Accept gate. One with no record at all was pushed directly. Either way,
+  # landing it would publish work no review ever saw.
+  if ! pairs=$(gh pr list --base "$bb" --state merged --json headRefName,mergeCommitOid \
+      -q '.[] | .headRefName + " " + .mergeCommitOid'); then
+    echo "cannot query pull requests — refusing to land commits that cannot be matched to a PR" >&2
+    exit 3
+  fi
+  allowed=""
+  while read -r nn _; do
+    [ -n "$nn" ] || continue
+    allowed+="$(awk -v h="$(ticket_branch "$bundle" "$nn")" '$1==h {print $2}' <<<"$pairs")"$'\n'
+  done <<<"$(ticket_names "$bundle")"
+  for sha in $(git rev-list --first-parent "origin/$target..origin/$bb"); do
+    grep -qx "$sha" <<<"$allowed" ||
+      { echo "unrecorded commit on $bb: $sha matches no merged ticket PR — take it to the human before landing" >&2; exit 8; }
+  done
+
   # Detached, and it has to be: the session's own checkout already holds the integration target, and
   # git gives a branch to one worktree at a time. It is also what makes an abandoned land free —
   # nothing is named until the push, so a failed check is a directory to delete.
@@ -116,9 +140,28 @@ cleanup)
     exit 2
   fi
 
+  git fetch -q origin
+  # The bundle branch is the only copy of accepted work until the land publishes it — squashed
+  # ticket branches never held it. Deleting an unlanded one is data loss, so refuse everything.
+  if git ls-remote --exit-code --heads origin "$bb" >/dev/null 2>&1; then
+    if ! git merge-base --is-ancestor "origin/$bb" "origin/$target"; then
+      echo "not landed: $bb carries work $target does not have — land it first; cleanup deletes nothing until then" >&2
+      exit 9
+    fi
+  fi
+
   while read -r nn _; do
     [ -n "$nn" ] || continue
     tb=$(ticket_branch "$bundle" "$nn")
+    # A ticket branch whose PR is not merged is a live claim — deleting it cancels work another
+    # session owns. unknown skips too: couldn't tell is not permission.
+    if git ls-remote --exit-code --heads origin "$tb" >/dev/null 2>&1; then
+      st=$("$here/ticket-status.sh" "$bundle" "$nn") || st=unknown
+      if [ "$st" != done ]; then
+        echo "kept $tb — ticket $nn is $st, so its branch and worktree stay" >&2
+        continue
+      fi
+    fi
     git worktree remove --force "$WORKTREE_DIR/$tb" 2>/dev/null || true
     git push -q origin --delete "$tb" 2>/dev/null || true # already gone when the forge deletes on merge
   done <<<"$(ticket_names "$bundle")"
@@ -126,6 +169,9 @@ cleanup)
   git push -q origin --delete "$bb" 2>/dev/null || true
   git worktree remove --force "$land" 2>/dev/null || true
   git worktree prune
+  # git worktree remove deletes only the leaf it was given; drop the scaffolding directories it
+  # leaves, each only if empty — never a tree, and never anything above $WORKTREE_DIR.
+  rmdir "$WORKTREE_DIR/ticket/$bundle" "$WORKTREE_DIR/ticket" "$WORKTREE_DIR/land" "$WORKTREE_DIR" 2>/dev/null || true
   git fetch -q --prune origin
   echo "cleaned up $bundle — branches and worktrees removed"
   ;;

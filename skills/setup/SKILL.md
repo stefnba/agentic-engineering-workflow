@@ -145,12 +145,12 @@ order below, each naming what was found — `absent` is the normal case for a fi
 Ask all three in one round, each with its recommended answer. The template documents what each
 controls; don't restate its wording.
 
-- **`INTEGRATION_TARGET`** — the branch bundles land on and ticket branches are cut from. Recommend
+- **`INTEGRATION_TARGET`** — the branch bundles land on and bundle branches are cut from. Recommend
   the default branch, and **ask whether it's protected** — required reviews, no direct push, or
   required linear history make it unusable as an integration target, and the repo needs a separate
   branch such as `dev` instead. Protection isn't readable with this skill's tools: it's their answer
   to give, never a check to run.
-- **`TICKET_MERGE_METHOD`** — `squash | merge | rebase`, for ticket PRs only.
+- **`TICKET_MERGE_METHOD`** — `squash | merge`, for ticket PRs only.
 - **`WORKTREE_DIR`** — where ticket worktrees go.
 
 Branch names and how a finished bundle lands are **not** questions. The workflow fixes both.

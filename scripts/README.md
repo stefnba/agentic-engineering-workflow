@@ -41,9 +41,11 @@ only for scripts and tests that branch on them:
   `5` stale worktree
 - `pr-links.sh` — `2` no such ticket · `3` bundle not published · `4` forge unreachable
 - `complete-ticket.sh` — `2` stale against its base
-- `land-bundle.sh` — `2` no such bundle · `3` a ticket not `done` · `4` nothing to land
-  (single-ticket bundle) · `5` leftover land worktree · `6` target moved: not a failure but a loop —
-  re-run the canonical checks, then `push` again · `7` merge conflict, left for the human
+- `land-bundle.sh` — `2` no such bundle · `3` a ticket not `done` · `4` no bundle branch (never
+  claimed, or already cleaned up) · `5` leftover land worktree · `6` target moved: not a failure
+  but a loop — re-run the canonical checks, then `push` again · `7` merge conflict, left for the
+  human · `8` a bundle-branch commit matches no merged ticket PR · `9` cleanup on an unlanded
+  bundle branch — nothing is deleted
 
 ## Tests
 
@@ -52,3 +54,6 @@ nothing written outside a temp dir. It covers a ten-way claim race, the dependen
 shapes, listing, an unreachable forge, permalinks pinned past a branch amendment, the flags passed to
 the merge, the staleness refusal, a full land — gate, detached worktree, the moved-target loop,
 the backlog union, and cleanup — and the write boundary's deny-by-path. Exits non-zero on failure.
+the merge, the staleness refusal, and a full land for both bundle shapes — gate, unrecorded-commit
+refusal, detached worktree, the moved-target loop, the backlog union, and a guarded cleanup. Exits
+non-zero on failure.
