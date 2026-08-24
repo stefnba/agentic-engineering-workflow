@@ -127,8 +127,11 @@ comment.
 
 ### 5. Run the review–fix loop
 
-This loop runs without the human. It ends at their Accept gate, at an escalation, or at the round
-limit — never at a merge.
+This loop dispatches itself, round to round, without a separate human trigger — though the human is
+in this tab throughout, and the loop pauses for them, rather than dispatching straight on, at any
+stop it cannot clear on its own: a text conflict with the base, or a second stop from the same
+unresolved head or mergeability cause. It ends at their Accept gate, at an escalation, or at the
+round limit — never at a merge.
 
 **Round N — review.** Invoke the `review-pr` skill with the PR number, the exact head SHA
 (`gh pr view <pr> --json headRefOid`), the round number, and — on round 2 or later — the scope
@@ -145,6 +148,11 @@ Act on the assessment it returns:
 - **ready for human review** → step 6.
 - **fixes required** → fix round, below.
 - **human escalation required** → stop the loop and go to step 6 carrying both positions.
+- **stopped before judging** → read what it reports; nothing was judged, so the round never
+  happened. A text conflict with the base stops for the human — resolve it together before
+  continuing. A head that simply moved, or a mergeability check still `UNKNOWN`, needs no judgment
+  call: retry once with the current head SHA; a second stop for the same reason goes to the human
+  instead of retrying again. Either way, once clear, invoke round N again with the same number.
 
 **Fix round — yours, here, in this session.** Re-read the approved intent, plan, ticket, and current
 PR before acting on the round; what you remember writing is not what was approved. **Confirm every

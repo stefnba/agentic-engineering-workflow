@@ -137,3 +137,9 @@ Land in [Lifecycle](../workflow/lifecycle.md) has the exact steps;
   review round judges whatever is actually at the head, and `/complete-ticket` refuses to merge
   unless the SHA you name still matches it. [Git mechanics](../workflow/git-mechanics.md)
   (Ticket-branch currency) owns the rule.
+- **A sibling ticket landed first and your branch now conflicts with it** — caught either by the
+  currency check before you hand back, or by the reviewer, which stops before judging rather than
+  spending a round on a diff that can't land as reviewed
+  ([Lifecycle](../workflow/lifecycle.md), Review Run conditions). Either way it surfaces in the same
+  tab you're already in, and you resolve it there — it isn't a separate escalation.
+  [Git mechanics](../workflow/git-mechanics.md) (Ticket-branch currency) owns who resolves it.

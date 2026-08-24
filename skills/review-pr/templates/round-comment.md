@@ -37,7 +37,7 @@ canonical check, or a concrete failure mechanism. -->
 
 ### Assessment
 
-✅ ready for human review | ❌ fixes required | ⚠️ human escalation required
+✅ ready for human review | ❌ fixes required | ⚠️ human escalation required | 🛑 stopped before judging
 
 ### Residual risk
 
