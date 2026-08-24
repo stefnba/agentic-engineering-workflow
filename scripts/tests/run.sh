@@ -332,6 +332,29 @@ ok "bundle branch deleted"            "$(git ls-remote --heads origin "bundle/$m
 ok "ticket branches deleted"          "$(git ls-remote --heads origin "ticket/$multi/*" | wc -l | tr -d ' ')" 0
 ok "land worktree removed"            "$([ -d "$land" ] && echo yes || echo no)" no
 
+echo "== the write boundary denies inside the repo whatever the path form"
+# Its own repo, not the fixture one: the fence-lift check reads git status, and the fixture repo's
+# cleanliness is other blocks' business.
+hookrepo="$root/hookrepo"
+git init -q "$hookrepo"
+mkdir -p "$hookrepo/work/bundles/x"
+printf 'draft\n' > "$hookrepo/work/bundles/x/spec.md" # uncommitted draft: the fence is armed
+payload() { jq -n --arg p "$1" '{tool_input:{file_path:$p}}'; }
+verdict() { # stdin: the hook's output — empty means allowed
+  out=$(cat)
+  if [ -z "$out" ]; then echo allow; else jq -r '.hookSpecificOutput.permissionDecision' <<<"$out"; fi
+}
+fence() {
+  CLAUDE_PROJECT_DIR="$hookrepo" "$scripts/write-boundary.sh" \
+    --reason "shape writes only inside work/bundles/ (plus work/backlog.md)" \
+    --lift-when-clean work/bundles/ 'work/bundles/*' work/backlog.md
+}
+ok "relative path outside the fence denied" "$(payload "src/app.ts" | fence | verdict)" deny
+ok "absolute path outside the fence denied" "$(payload "$hookrepo/src/app.ts" | fence | verdict)" deny
+ok "allowed path passes"                    "$(payload "$hookrepo/work/bundles/x/spec.md" | fence | verdict)" allow
+ok "a path outside the project passes"      "$(payload "/elsewhere/handoff.md" | fence | verdict)" allow
+( cd "$hookrepo" && git add -A && git commit -qm "publish" )
+ok "the fence lifts once the tree is clean" "$(payload "src/app.ts" | fence | verdict)" allow
 
 printf '\n%d passed, %d failed\n' "$pass" "$fail"
 [ "$fail" -eq 0 ]
