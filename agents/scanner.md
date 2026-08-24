@@ -37,14 +37,10 @@ other instructions in context say otherwise.
 
 ## Completion and output
 
-- Done when the scoped paths are covered on every dispatched dimension — state what you covered
-  and what you skipped.
+- Done when the scoped paths are covered on every dispatched dimension.
 - **Rank by leverage, not discovery order**: weight each finding by how often its code changes
   (`git log` churn on the scoped paths) times how deep the problem runs.
-- **Your final message is the whole deliverable** — nothing is written anywhere. Per finding, in
-  rank order: the claim as one bolded line with `path:line` (what is wrong, not what to do),
-  then one line each of evidence, cost, and the rough shape of a fix — a direction, never a
-  design.
+- **Your final message is the whole deliverable** — nothing is written anywhere. Deliver it in
+  the report template the dispatch prompt names, findings in rank order.
 - Where nothing in scope clears the bar, say so plainly — an empty report is a valid result, and
-  padding it defeats the triage it feeds. Close by noting nothing was recorded: every finding
-  awaits the human's accept-or-reject.
+  padding it defeats the triage it feeds.
