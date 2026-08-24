@@ -11,7 +11,7 @@ hooks:
     - matcher: "Edit|Write"
       hooks:
         - type: command
-          command: "${CLAUDE_PLUGIN_ROOT}/skills/research/scripts/write-boundary.sh"
+          command: "${CLAUDE_PLUGIN_ROOT}/scripts/write-boundary.sh --reason 'the researcher writes only docs/research/ and work/backlog.md' 'docs/research/*' work/backlog.md"
 ---
 
 # Research

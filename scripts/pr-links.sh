@@ -11,11 +11,7 @@ nn="$2"
 here="$(cd "$(dirname "$0")" && pwd)"
 . "$here/_config.sh"
 
-if [ -f "work/bundles/$bundle/ticket.md" ]; then
-  ticket="work/bundles/$bundle/ticket.md"
-else
-  ticket=$(ls "work/bundles/$bundle/tickets/$nn-"*.md 2>/dev/null | head -1 || true)
-fi
+ticket=$(ticket_file "$bundle" "$nn")
 [ -n "$ticket" ] ||
   { echo "no such ticket: $bundle/$nn — NN is the two-digit number bundle-status.sh prints (e.g. 01)" >&2; exit 2; }
 

@@ -8,7 +8,7 @@ hooks:
     - matcher: "Edit|Write"
       hooks:
         - type: command
-          command: "${CLAUDE_PLUGIN_ROOT}/skills/shape-bundle/scripts/write-boundary.sh"
+          command: "${CLAUDE_PLUGIN_ROOT}/scripts/write-boundary.sh --reason 'shape writes only inside work/bundles/ (plus work/backlog.md)' --lift-when-clean work/bundles/ 'work/bundles/*' work/backlog.md"
 ---
 
 # Shape
