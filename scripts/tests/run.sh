@@ -19,6 +19,15 @@ ok() {
   fi
 }
 
+# Later sections push to main from worktrees other than this checkout (land, the "landed" abandon
+# simulation), which leaves this checkout's local main behind or diverged. Call before publishing
+# another bundle here, or the push is a non-fast-forward — silently, since this file has no `set -e`.
+sync_main() {
+  git fetch -q origin
+  git merge -q -m "test: sync before publishing another bundle" origin/main 2>/dev/null || true
+  git push -q origin main
+}
+
 command -v git >/dev/null || { echo "git required" >&2; exit 2; }
 git daemon --help >/dev/null 2>&1 || { echo "git daemon required" >&2; exit 2; }
 
@@ -224,6 +233,8 @@ export GH_STUB_LOG="$root/merge.log" GH_STUB_BRANCH="ticket/$multi/01" GH_STUB_B
 ok "squash merge requested"         "$(grep -c -- '--squash' "$root/merge.log")" 1
 ok "head branch deleted"            "$(grep -c -- '--delete-branch' "$root/merge.log")" 1
 ok "accepted sha is enforced"       "$(grep -c -- '--match-head-commit deadbeef' "$root/merge.log")" 1
+"$scripts/complete-ticket.sh" 42 >/dev/null 2>&1
+ok "missing accepted sha refuses (64)" "$?" 64
 
 echo "== work/config.conf overrides the defaults"
 cfg=2026-08-17-config
@@ -235,7 +246,7 @@ printf 'TICKET_MERGE_METHOD=merge   # ticket PR merge method\nWORKTREE_DIR=.wt  
 "$scripts/claim-ticket.sh" "$cfg" 01 >/dev/null 2>&1
 ok "worktree honours WORKTREE_DIR"  "$([ -d ".wt/ticket/$cfg/01" ] && echo yes)" yes
 export GH_STUB_LOG="$root/merge2.log" GH_STUB_BRANCH="ticket/$cfg/01" GH_STUB_BASE="bundle/$cfg"
-"$scripts/complete-ticket.sh" 43 >/dev/null 2>&1
+"$scripts/complete-ticket.sh" 43 cafef00d >/dev/null 2>&1
 ok "merge honours TICKET_MERGE_METHOD" "$(grep -c -- '--merge' "$root/merge2.log")" 1
 ok "no --squash when overridden"    "$(grep -c -- '--squash' "$root/merge2.log")" 0
 
@@ -287,7 +298,7 @@ git worktree add -q --detach "$root/adv" "origin/bundle/$multi"
 git worktree remove --force "$root/adv"
 git fetch -q origin
 export GH_STUB_LOG="$root/stale.log" GH_STUB_BRANCH="ticket/$multi/01" GH_STUB_BASE="bundle/$multi"
-"$scripts/complete-ticket.sh" 44 > "$root/stale.out" 2>&1
+"$scripts/complete-ticket.sh" 44 cafef00d > "$root/stale.out" 2>&1
 ok "stale branch refuses (2)"        "$?" 2
 ok "and no merge was requested"      "$([ -f "$root/stale.log" ] && echo yes || echo no)" no
 ok "and it names the cure"           "$(grep -c 're-verify, re-Accept' "$root/stale.out")" 1
@@ -298,13 +309,13 @@ wt=".claude/worktrees/ticket/$multi/01"
 ( cd "$wt" && git merge -q --no-ff -m "chore: merge the base in" "origin/bundle/$multi" &&
   git push -q origin "HEAD:ticket/$multi/01" )
 git fetch -q origin
-"$scripts/complete-ticket.sh" 44 >/dev/null 2>&1
+"$scripts/complete-ticket.sh" 44 cafef00d >/dev/null 2>&1
 ok "current branch merges (0)"       "$?" 0
 
 echo "== an unreadable PR record is unknown, not stale"
 mv "$root/bin/gh" "$root/bin/gh.real"
 printf '#!/usr/bin/env bash\nexit 1\n' > "$root/bin/gh" && chmod +x "$root/bin/gh"
-"$scripts/complete-ticket.sh" 44 > "$root/nopr.out" 2>&1
+"$scripts/complete-ticket.sh" 44 cafef00d > "$root/nopr.out" 2>&1
 ok "unreadable PR exits 1"           "$?" 1
 ok "and does not claim staleness"    "$(grep -c 'unknown base' "$root/nopr.out")" 1
 mv -f "$root/bin/gh.real" "$root/bin/gh"
@@ -457,6 +468,155 @@ ok "landed branch cleans up (0)"      "$?" 0
 ok "but keeps the in-flight ticket"   "$(git ls-remote --heads origin "ticket/$stray/01" | wc -l | tr -d ' ')" 1
 ok "and says it kept it"              "$(grep -c "kept ticket/$stray/01" "$root/cleanup0.out")" 1
 ok "while the bundle branch goes"     "$(git ls-remote --heads origin "bundle/$stray" | wc -l | tr -d ' ')" 0
+
+echo "== abandon: discards every ticket branch regardless of status, and the bundle branch"
+sync_main
+aband=2026-08-17-abandon
+mkdir -p "work/bundles/$aband/tickets"
+printf 'depends_on: []\n---\nfirst\n'  > "work/bundles/$aband/tickets/01-first.md"
+printf 'depends_on: []\n---\nsecond\n' > "work/bundles/$aband/tickets/02-second.md"
+git add -A && git commit -qm "docs(bundle): publish abandon probe" && git push -q origin main
+"$scripts/claim-ticket.sh" "$aband" 01 >/dev/null 2>&1
+"$scripts/claim-ticket.sh" "$aband" 02 >/dev/null 2>&1
+echo "ticket/$aband/01 bundle/$aband" > "$MERGED"
+ok "one ticket reads done"           "$("$scripts/ticket-status.sh" "$aband" 01)" done
+ok "the other is still doing"        "$("$scripts/ticket-status.sh" "$aband" 02)" doing
+"$scripts/abandon-bundle.sh" "$aband" >/dev/null 2>&1
+ok "abandon exits 0"                 "$?" 0
+git fetch -q --prune origin
+ok "the done ticket branch is gone"  "$(git ls-remote --heads origin "ticket/$aband/01" | wc -l | tr -d ' ')" 0
+ok "the doing ticket branch is gone" "$(git ls-remote --heads origin "ticket/$aband/02" | wc -l | tr -d ' ')" 0
+ok "the bundle branch is gone"       "$(git ls-remote --heads origin "bundle/$aband" | wc -l | tr -d ' ')" 0
+ok "both worktrees are gone"         "$([ -d ".claude/worktrees/ticket/$aband" ] && echo yes || echo no)" no
+: > "$MERGED"
+
+echo "== abandon: refuses a bundle already landed"
+sync_main
+landedb=2026-08-17-landed-abandon
+mkdir -p "work/bundles/$landedb"
+printf 'depends_on: []\n---\nalready shipped\n' > "work/bundles/$landedb/ticket.md"
+git add -A && git commit -qm "docs(bundle): publish landed-abandon probe" && git push -q origin main
+"$scripts/claim-ticket.sh" "$landedb" 01 >/dev/null 2>&1
+# Simulate a completed land from elsewhere, in its own worktree, never this checkout — the commit
+# message is the signal abandon-bundle.sh actually looks for, not the directory going missing: a
+# pre-Plan-gate draft has no directory on the target either, and abandoning that is not "landed".
+git worktree add -q --detach "$root/landedadv" origin/main
+( cd "$root/landedadv" && git rm -rq "work/bundles/$landedb" &&
+  git commit -qm "chore(land): land bundle $landedb" && git push -q origin HEAD:main )
+git worktree remove --force "$root/landedadv"
+git fetch -q origin
+"$scripts/abandon-bundle.sh" "$landedb" > "$root/abandon9.out" 2>&1
+ok "landed bundle refuses (9)"        "$?" 9
+ok "and points at cleanup"            "$(grep -c 'land-bundle.sh cleanup' "$root/abandon9.out")" 1
+ok "nothing was deleted"              "$(git ls-remote --heads origin "bundle/$landedb" "ticket/$landedb/01" | wc -l | tr -d ' ')" 2
+
+echo "== abandon: refuses an unknown bundle"
+"$scripts/abandon-bundle.sh" no-such-bundle >/dev/null 2>&1
+ok "unknown bundle refuses (2)"       "$?" 2
+
+echo "== abandon: refuses to run from inside a worktree"
+sync_main
+wtg=2026-08-17-abandon-guard
+mkdir -p "work/bundles/$wtg"
+printf 'depends_on: []\n---\nguard probe\n' > "work/bundles/$wtg/ticket.md"
+git add -A && git commit -qm "docs(bundle): publish guard probe" && git push -q origin main
+"$scripts/claim-ticket.sh" "$wtg" 01 >/dev/null 2>&1
+( cd ".claude/worktrees/ticket/$wtg/01" && "$scripts/abandon-bundle.sh" "$wtg" ) > "$root/guard.out" 2>&1
+ok "refuses from inside a worktree (2)" "$?" 2
+ok "names the fix"                    "$(grep -c 'main checkout' "$root/guard.out")" 1
+git fetch -q origin
+ok "nothing was deleted"              "$(git ls-remote --heads origin "bundle/$wtg" "ticket/$wtg/01" | wc -l | tr -d ' ')" 2
+
+echo "== abandon: a refused delete is reported, not swallowed as success"
+sync_main
+denyd=2026-08-17-abandon-deny
+mkdir -p "work/bundles/$denyd"
+printf 'depends_on: []\n---\ndeny probe\n' > "work/bundles/$denyd/ticket.md"
+git add -A && git commit -qm "docs(bundle): publish deny probe" && git push -q origin main
+"$scripts/claim-ticket.sh" "$denyd" 01 >/dev/null 2>&1
+git -C "$root/remote.git" config receive.denyDeletes true
+"$scripts/abandon-bundle.sh" "$denyd" > "$root/deny.out" 2>&1
+ok "refused delete exits 1"           "$?" 1
+ok "names what it could not remove"   "$(grep -c "refused to delete" "$root/deny.out")" 1
+git -C "$root/remote.git" config receive.denyDeletes false
+git fetch -q origin
+ok "the branches survive the refusal" "$(git ls-remote --heads origin "bundle/$denyd" "ticket/$denyd/01" | wc -l | tr -d ' ')" 2
+"$scripts/abandon-bundle.sh" "$denyd" >/dev/null 2>&1
+ok "retrying after the block succeeds" "$?" 0
+
+echo "== abandon: removes an in-progress land worktree instead of leaving it"
+sync_main
+lw=2026-08-17-abandon-land
+mkdir -p "work/bundles/$lw"
+printf 'depends_on: []\n---\nland worktree probe\n' > "work/bundles/$lw/ticket.md"
+git add -A && git commit -qm "docs(bundle): publish land-worktree probe" && git push -q origin main
+"$scripts/claim-ticket.sh" "$lw" 01 >/dev/null 2>&1
+printf 'ticket/%s/01 bundle/%s\n' "$lw" "$lw" >> "$MERGED"
+"$scripts/land-bundle.sh" start "$lw" >/dev/null 2>&1
+ok "land start exits 0"               "$?" 0
+ok "land worktree exists"             "$([ -d ".claude/worktrees/land/$lw" ] && echo yes)" yes
+"$scripts/abandon-bundle.sh" "$lw" >/dev/null 2>&1
+ok "abandon exits 0"                  "$?" 0
+ok "land worktree is gone"            "$([ -d ".claude/worktrees/land/$lw" ] && echo yes || echo no)" no
+: > "$MERGED"
+
+echo "== abandon: a bundle id that prefixes another landed one is not read as landed"
+sync_main
+short=2026-08-17-search
+long=2026-08-17-search-ui
+mkdir -p "work/bundles/$short" "work/bundles/$long"
+printf 'depends_on: []\n---\nshort probe\n' > "work/bundles/$short/ticket.md"
+printf 'depends_on: []\n---\nlong probe\n'  > "work/bundles/$long/ticket.md"
+git add -A && git commit -qm "docs(bundle): publish prefix-collision probes" && git push -q origin main
+"$scripts/claim-ticket.sh" "$short" 01 >/dev/null 2>&1
+"$scripts/claim-ticket.sh" "$long" 01 >/dev/null 2>&1
+# Land only the longer bundle, from its own worktree, never this checkout — an unanchored grep for
+# the shorter id's land message would match inside this one too.
+git worktree add -q --detach "$root/prefixadv" origin/main
+( cd "$root/prefixadv" && git rm -rq "work/bundles/$long" &&
+  git commit -qm "chore(land): land bundle $long" && git push -q origin HEAD:main )
+git worktree remove --force "$root/prefixadv"
+git fetch -q origin
+"$scripts/abandon-bundle.sh" "$short" > "$root/prefix.out" 2>&1
+ok "the shorter id is not read as landed" "$?" 0
+git fetch -q --prune origin
+ok "and its branches are gone"        "$(git ls-remote --heads origin "bundle/$short" "ticket/$short/01" | wc -l | tr -d ' ')" 0
+
+echo "== abandon: a never-published local draft is not read as landed"
+draft=2026-08-17-abandon-draft
+mkdir -p "work/bundles/$draft"
+printf 'depends_on: []\n---\nnever pushed\n' > "work/bundles/$draft/ticket.md"
+"$scripts/abandon-bundle.sh" "$draft" > "$root/draft.out" 2>&1
+ok "a local-only draft is not landed (0)" "$?" 0
+ok "and says nothing about landing"   "$(grep -c 'already landed' "$root/draft.out")" 0
+rm -rf "work/bundles/$draft"
+
+echo "== abandon: an unreachable forge is not read as already deleted"
+sync_main
+netdrop=2026-08-17-abandon-netdrop
+mkdir -p "work/bundles/$netdrop"
+printf 'depends_on: []\n---\nnetwork drop probe\n' > "work/bundles/$netdrop/ticket.md"
+git add -A && git commit -qm "docs(bundle): publish netdrop probe" && git push -q origin main
+"$scripts/claim-ticket.sh" "$netdrop" 01 >/dev/null 2>&1
+# A shim that fails only a delete or a status query naming this bundle's refs, with a network-style
+# error rather than "no such ref" — real git handles everything else, including the land-message
+# grep and the fetch above it.
+realgit=$(command -v git)
+mkdir -p "$root/gitbin"
+cat > "$root/gitbin/git" <<STUB
+#!/usr/bin/env bash
+if { [[ "\$*" == *--delete* ]] || [[ "\$*" == *ls-remote* ]]; } && [[ "\$*" == *"$netdrop"* ]]; then
+  echo "fatal: unable to access — simulated network drop" >&2
+  exit 128
+fi
+exec "$realgit" "\$@"
+STUB
+chmod +x "$root/gitbin/git"
+PATH="$root/gitbin:$PATH" "$scripts/abandon-bundle.sh" "$netdrop" > "$root/netdrop.out" 2>&1
+ok "an unreachable forge refuses (1)"  "$?" 1
+ok "names what it could not resolve"  "$(grep -c 'refused to delete' "$root/netdrop.out")" 1
+git fetch -q origin
+ok "branches survive the network drop" "$(git ls-remote --heads origin "bundle/$netdrop" "ticket/$netdrop/01" | wc -l | tr -d ' ')" 2
 
 printf '\n%d passed, %d failed\n' "$pass" "$fail"
 [ "$fail" -eq 0 ]
