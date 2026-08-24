@@ -122,6 +122,16 @@ head, which is why it cannot happen after Accept: an Accept applies to an exact 
 merge enforces it. **So currency is a precondition of Accept, not a repair afterwards.** A branch
 found stale at merge time goes back for a fix round and a fresh Accept.
 
+**That merge can conflict — the moved base and this branch's own changes can touch the same
+lines — and who resolves it depends on what kind of collision it is.** A mechanical conflict, where
+the two sides changed adjacent or unrelated text that git simply can't place automatically, is
+resolved by whichever session is performing the merge, same as any other implementation step: merge,
+resolve, re-verify, continue. A semantic collision — the two changes disagree about what the code
+should do, not just where the lines sit — stops and goes to the human rather than guessing a
+resolution, the same principle Landing a bundle already applies to every conflict but the backlog's.
+This is the one rule for every required sync-merge in the workflow, not something each one restates:
+the Implementer's currency cure above is today's concrete case.
+
 **The accepted SHA is always named, never resolved from whatever the branch currently points at.**
 `complete-ticket.sh` requires it and passes it to the forge as `--match-head-commit`, so the merge
 fails outright if the head moved since — including a commit pushed straight to the branch, outside
