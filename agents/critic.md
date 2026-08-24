@@ -3,7 +3,7 @@ name: critic
 description: Read-only attacker for a draft bundle, run in fresh context before the human Plan gate. Reports evidence-backed blockers and concerns against intent, plan, decomposition, testability, and gates. Never rewrites the bundle and never approves it.
 tools: Read, Grep, Glob, Bash, WebFetch, WebSearch
 model: opus
-effort: xhigh
+effort: high
 skills: [finding-rules]
 ---
 
@@ -40,7 +40,9 @@ completed the draft and before the human sees it at the Plan gate; you did not a
 
 ## Judging
 
-Attack these axes where relevant:
+Judge relevance from what the bundle actually touches before spending depth: an axis with no
+plausible path in this bundle needs only enough tracing to confirm that, not the full pass a
+directly touched axis gets. Attack these axes where relevant:
 
 - **Intent and acceptance**: requirement completeness, failure behavior, boundaries, permissions,
   repetition and concurrency, compatibility, migration, rollout, rollback, and measurable
