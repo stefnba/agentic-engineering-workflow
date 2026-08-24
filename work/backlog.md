@@ -84,7 +84,3 @@ Candidate work and follow-ups nobody has picked yet.
   agreed from what now exists. Separate the two.
 - [idea] [skills] [docs] `work/backlog.md`'s bullet format could move to a markdown table (`id`,
   `topic`, `areas`, `details`)
-- [drift] [skills] `skills/writing-for-agents/references/skill-mechanics.md` routes files filled
-  into the output to `assets/`, but `implement-ticket`, `review-pr`, and `critique-bundle` keep
-  theirs in `templates/`.
-  Consistent repo-wide, contradicts the anatomy — align the skills or the anatomy.
