@@ -14,14 +14,7 @@ worktree="$WORKTREE_DIR/$branch"
 
 git fetch -q origin
 
-if [ -f "work/bundles/$bundle/ticket.md" ]; then
-  # A single-ticket bundle's one ticket is 01. Any other argument — a slug, an unpadded number —
-  # would name a branch the status derivation never reconstructs, claiming a ticket no query can see.
-  ticket="work/bundles/$bundle/ticket.md"
-  [ "$nn" = 01 ] || ticket=""
-else
-  ticket=$(ls "work/bundles/$bundle/tickets/$nn-"*.md 2>/dev/null | head -1 || true)
-fi
+ticket=$(ticket_file "$bundle" "$nn")
 [ -n "$ticket" ] ||
   { echo "no such ticket: $bundle/$nn — NN is the two-digit number bundle-status.sh prints (e.g. 01)" >&2; exit 2; }
 
