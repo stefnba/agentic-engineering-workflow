@@ -11,7 +11,7 @@ skill-name/
 ├── SKILL.md            # frontmatter + body
 ├── references/         # disclosed reference, loaded on demand
 ├── scripts/            # executable steps, run without loading
-└── assets/             # files used in output (templates, fonts)
+└── templates/          # files copied or filled into the output
 ```
 
 Three loading tiers: the description is always in context; the body loads when the skill triggers (keep it under ~500 lines); everything else loads only when pointed to.
@@ -21,14 +21,14 @@ Three loading tiers: the description is always in context; the body loads when t
 Route each file by how the agent consumes it:
 
 - Read into context for knowledge → `references/`
-- Copied or filled into the output → `assets/`
+- Copied or filled into the output → `templates/`
 - Executed without loading → `scripts/`
 - Imitated but never copied → an example: inline in SKILL.md when short, a reference file when long or numerous (the example rules in `SKILL.md` apply)
 
 Internal structure follows the same split:
 
 - **Reference files open with one or two lines** stating what the file covers — enough for the agent to confirm it opened the right one. The _when to read it_ condition lives in the SKILL.md pointer; don't repeat it here. Body is plain markdown; fence only blocks meant to be reproduced character-for-character.
-- **Asset files carry no preamble.** Anything in the file can land verbatim in the deliverable, so an explanatory intro leaks into the output. Ship a bare scaffold with placeholder markers (`{{CLIENT_NAME}}`); usage instructions live next to the SKILL.md pointer, and slot-level guidance rides in comment syntax per SKILL.md's template rules.
+- **Template files carry no preamble.** Anything in the file can land verbatim in the deliverable, so an explanatory intro leaks into the output. Ship a bare scaffold with placeholder markers (`{{CLIENT_NAME}}`); usage instructions live next to the SKILL.md pointer, and slot-level guidance rides in comment syntax per SKILL.md's template rules.
 
 ## The description
 

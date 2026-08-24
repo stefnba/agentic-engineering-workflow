@@ -27,6 +27,11 @@ Every status is computed from the remote branches and the ticket PRs' merge reco
 no script writes one. [git-mechanics.md](../workflow/git-mechanics.md) (Status is derived) holds
 the semantics, including cancelling and the `unknown` state.
 
+`write-boundary.sh` is the one non-bundle script here: the PreToolUse hook every skill with a
+write boundary registers, its allowlist and deny reason passed as arguments — see its header and
+[workflow/components.md](../workflow/components.md) (Permissions). It lives here because more than
+one skill runs it.
+
 ## Exit codes
 
 Treat a non-zero exit as a stop, never as something to retry or work around; the script's stderr
@@ -34,7 +39,7 @@ states the reason and the next action, so nothing else needs a mapping. The numb
 only for scripts and tests that branch on them:
 
 - `claim-ticket.sh` — `2` no such ticket · `3` dependency not `done` · `4` already claimed ·
-  `5` stale worktree
+  `5` stale worktree · `6` malformed `depends_on`
 - `pr-links.sh` — `2` no such ticket · `3` bundle not published · `4` forge unreachable
 - `complete-ticket.sh` — `2` stale against its base · `64` missing the accepted head SHA
 - `land-bundle.sh` — `2` no such bundle · `3` a ticket not `done` · `4` no bundle branch (never
@@ -52,5 +57,5 @@ nothing written outside a temp dir. It covers a ten-way claim race, the dependen
 shapes, listing, an unreachable forge, permalinks pinned past a branch amendment, the flags passed to
 the merge, the staleness refusal, a required accepted SHA, a full land for both bundle shapes — gate,
 unrecorded-commit refusal, detached worktree, the moved-target loop, the backlog union, and a guarded
-cleanup — and abandoning a bundle mid-flight, both with in-flight tickets and after it has landed.
-Exits non-zero on failure.
+cleanup — abandoning a bundle mid-flight, both with in-flight tickets and after it has landed, and
+the write boundary's deny-by-path. Exits non-zero on failure.
