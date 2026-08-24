@@ -310,9 +310,7 @@ Land begins only when every ticket is `done` and the human triggers it. Then, in
 
 1. **Open the land.** The land script gates the stage — every ticket `done` from its PR record, no
    stale land worktree — then opens a detached worktree on the integration target with the bundle
-   branch merged into it, where every step after this one works. A single-ticket bundle has no
-   bundle branch and no land worktree: its only PR already merged into the integration target, so
-   its remaining steps run in the session's own checkout.
+   branch merged into it, where every step after this one works.
 2. **Reconcile durable knowledge.** Move bundle-level knowledge no single ticket owned into durable
    system docs, terminology, and decision records. What a ticket's own diff made false was already
    reconciled in that ticket's PR; anything left here is knowledge that only became true once every
@@ -323,7 +321,7 @@ Land begins only when every ticket is `done` and the human triggers it. Then, in
 4. **Delete the complete bundle** — a commit in Land's tree, so what gets published carries no
    planning record.
 5. **Re-verify.** Re-run canonical checks where steps 2–4 committed, on the state they produced: it
-   carries Land's own commits — and the bundle merge when there is one — so no CI run has seen it.
+   carries Land's own commits and the bundle merge, so no CI run has seen it.
    Land's own commits change documentation, backlog, and bundle files only; a Land step that would
    change behavior is not Land work and returns to the Plan gate.
 6. **Publish that state** on the configured integration target.

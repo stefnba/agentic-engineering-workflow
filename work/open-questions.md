@@ -20,9 +20,3 @@
   still needs an owner for deleting the bundle branch and the published bundle path.
 - Who resolves a merge conflict between a ticket's PR and the bundle branch — does the implementer
   handle it autonomously, or does it stop and hand back to the human?
-- Does a spike run as a bundle with its own ticket and PR, or stay inline in Discover? It has no
-  bundle layout, no production code for one-ticket-one-PR to bind, and Land would delete the evidence
-  that was the deliverable.
-- Should the claim gate know about preconditions that are not ticket edges — a date, an operator
-  action, another repo's infrastructure? `depends_on` carries ticket edges only and an external
-  blocker may not be stored in the file, so such a ticket reads as claimable on day one.

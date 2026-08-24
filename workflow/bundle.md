@@ -79,8 +79,8 @@ never travels backwards into the branch that deleted it.
 Two things a revision may not do, because in-flight work already depends on them:
 
 - **Change the ticket set.** Adding or removing a `NN-<slug>.md` file rewrites the `depends_on` graph
-  under tickets already claimed against the old one, and changes which branch this bundle's PRs
-  target. A bundle that needs a different decomposition is not revised; it is stopped and reshaped.
+  under tickets already claimed against the old one. A bundle that needs a different decomposition is
+  not revised; it is stopped and reshaped.
 - **Change a claimed ticket's contract.** Its branch was cut, and its accepted head is what the merge
   is bound to. Revise a ticket only while it is still `todo`; a claimed one is changed by cancelling
   the claim — delete its branch and worktree and it reads `todo` again.

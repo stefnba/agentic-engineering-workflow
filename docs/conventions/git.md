@@ -7,10 +7,11 @@ This repository's git conventions: rules that apply to any git work.
 Conventional Commits — `type(scope): subject`.
 
 - Standard commits use one of these seven types: `feat`, `fix`, `refactor`, `docs`, `test`, `chore`, `ci`.
-- Three paths have reserved types — a commit touching one uses that type, scopeless, and touches nothing else:
+- Four paths have reserved types — a commit touching one uses that type, scopeless, and touches nothing else:
   - `bundle` — bundle artifacts under `work/<bundle-slug>/`
   - `decision` — adding or superseding a record in `docs/decisions/`
   - `backlog` — `work/backlog.md`
+  - `research` — research reports under `docs/research/`
 - Scope names the one component the change is about — ripple in other components (call sites, links updated because it changed) adds no scope. Omit it only when several components change as peers with no single subject.
 - Subject imperative, lowercase after the colon, ≤ 72 characters.
 - Body only when the why isn't obvious from the diff.

@@ -1,6 +1,10 @@
 ---
 date: 2026-08-20
-status: accepted
+status: partially-superseded
+superseded_by: the single-ticket consequence only — no bundle branch, Land committing in the
+  session's own checkout — by
+  [2026-08-24-uniform-bundle-branch.md](./2026-08-24-uniform-bundle-branch.md); the detached
+  worktree and merge direction stand
 areas: [workflow, skills]
 supersedes: the reconciliation direction in
   [2026-08-18-fixed-bundle-land.md](./2026-08-18-fixed-bundle-land.md), which had Land merge the

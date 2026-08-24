@@ -90,6 +90,8 @@ Red evidence, smallest coherent change, verify, reconcile:
   approved seam, observed to fail for the expected reason — or the alternative the ticket names
   where a red test doesn't apply. You neither choose it nor skip it because the change looks
   obvious; a test that passes before the change proves nothing about the ticket.
+- **Where the ticket adds or changes behavior, read the `tdd` skill and build by its loop** — every
+  slice after the `Pre-change evidence` red gets its own failing test before its implementation.
 - **A locked acceptance test is run, never edited.** One that cannot pass unmodified is drift, not a
   test to adjust.
 - **Make the smallest coherent change that satisfies the ticket**, refactoring only within scope and

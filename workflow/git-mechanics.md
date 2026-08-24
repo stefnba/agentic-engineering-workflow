@@ -22,19 +22,19 @@ Status is derived by reconstructing these names, so every consumer has to agree 
 repository that changed them would see a claimed ticket read as `todo`, which lets a dependent ticket
 start early. `scripts/_config.sh` is the one definition every script uses.
 
-**Branch strategy** is derived, not declared. Until the first claim it follows the ticket count: more
-than one ticket gets a bundle branch, a single-ticket bundle's PR targets the integration target
-directly. **From the first claim onward the branch itself is the answer** — if `bundle/<bundle-id>`
-exists on the remote, that is the base, whatever the ticket files now say. The count is a file that
-can change; the PRs already merged against a base cannot.
+**Branch strategy is uniform: every bundle gets a bundle branch**, whatever its ticket count. A
+single-ticket bundle's PR merges into `bundle/<bundle-id>` like any other, and Land carries the
+result to the integration target. The uniformity is the point, not a convenience: no ticket PR
+targets the integration target, so a moving target can never stale a reviewed diff, and the only
+merge into it is the land, re-verified in Land's worktree first. Planning commits — a published
+bundle, a backlog line — still write to the target directly; they carry no behavior change.
 
 ## Status is derived
 
 Every bundle and ticket status is computed from the remote branches and the ticket PRs' merge
 records at the moment it is asked for; nothing stores one:
 
-- ticket `done`: its PR is merged into that ticket's target branch, whichever the branch strategy
-  above derives it to be.
+- ticket `done`: its PR is merged into the bundle branch.
 - ticket `doing`: its ticket branch exists on the remote — claiming is creating that branch (see
   Claiming a ticket below), so `doing` needs no record of its own. It stays `doing` through
   Implement, Review, fixes, and human review.
@@ -57,11 +57,11 @@ publish commit sits in the integration target's first-parent history.
 
 ## Worktree base rule
 
-A branch is cut from the branch its work will PR into — for bundle work the bundle scripts
-derive that target; outside a bundle it is the configured integration target.
+A branch is cut from the branch its work will PR into — for bundle work that is the bundle branch
+(Branch naming above); outside a bundle it is the configured integration target.
 
 **Bundle branches and worktrees go through the bundle scripts.** They own their creation and
-cleanup, deriving every name from the bundle's shape and the settings above. Worktrees outside a
+cleanup, deriving every name from the bundle ID and the settings above. Worktrees outside a
 bundle follow the base rule directly.
 
 **Land gets a detached worktree on the integration target** — the only worktree cut for a stage
@@ -80,15 +80,13 @@ Three reasons it is neither the session's own checkout nor the bundle branch:
   fails leaves a scratch tree to delete rather than a half-landed integration target in the human's
   working directory.
 - **Every script here reads `work/bundles/<id>/` from the tree it runs in.** A session that switched
-  its own checkout would derive branch strategy and dependency gates from a different copy of the
+  its own checkout would derive the ticket set and dependency gates from a different copy of the
   bundle than the one it believes it has.
 - **Landing on the bundle branch inverts the merge and manufactures conflicts.** It would have to
   merge the moved integration target back into a branch that just deleted the bundle, so a bundle
   republished mid-execution collides modify/delete, and a backlog line appended by any other session
   collides on content. Merging the bundle into the target instead has neither collision, because
   nothing has to travel backwards.
-
-A single-ticket bundle has no bundle branch, so Land's commits go to the session's own checkout.
 
 ## Ticket-branch currency
 
@@ -122,7 +120,9 @@ branch off that instead of failing.
 
 **Content reaches a bundle branch only through an accepted ticket PR.** Nothing else ever writes to
 it — not even Land, which merges the branch into a detached worktree on the integration target
-rather than committing on it (see Landing a bundle below).
+rather than committing on it (see Landing a bundle below). Land enforces this structurally: a
+first-parent commit on the branch that matches no merged ticket PR's record refuses the land, so a
+direct push is caught before it can reach the target.
 
 ## Backlog merges
 
@@ -142,10 +142,6 @@ and tool in a consuming repository, for a file most of them never touch, to fix 
 workflow creates.
 
 ## Landing a bundle
-
-Only a multi-ticket bundle has a branch to land. A single-ticket bundle's PR already landed on the
-integration target, so Land's reconciliation and deletion commits go straight there — the stage runs
-either way.
 
 **The land preserves each ticket's commits exactly as they reached the bundle branch** — one per
 ticket when `TICKET_MERGE_METHOD` squashes, whatever that setting produces otherwise. Once Land

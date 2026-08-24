@@ -77,10 +77,10 @@ For each ticket you're ready to start, open a new tab and paste its opening prom
 the implementation skill, which claims the ticket — creating its branch and worktree — then builds
 the ticket including tests, runs its checks, and opens a PR with a summary.
 
-Which branch it's cut from and which branch its PR targets both follow from the bundle's shape — a
-single-ticket bundle works directly against the integration target, a multi-ticket bundle gets a
-bundle branch that every ticket PR merges into. [Git mechanics](../workflow/git-mechanics.md) owns
-the mapping and the mechanics; you don't declare any of it.
+Which branch it's cut from and which branch its PR targets are fixed: every bundle gets a bundle
+branch that its ticket PRs merge into, and Land later carries that branch to the integration
+target. [Git mechanics](../workflow/git-mechanics.md) owns the mechanics; you don't declare any of
+it.
 
 Only open a ticket's tab once every ticket it depends on is `done`.
 
@@ -124,5 +124,5 @@ runs in order, and stops if the first step isn't green:
 If somebody else pushes while you're landing, `/land-bundle` merges their work in and sends you back to
 re-run the checks before it will publish. Expect to see that; it isn't a failure.
 
-Land in [Lifecycle](../workflow/lifecycle.md) has the exact steps and which of them a single-ticket
-bundle skips; [Git mechanics](../workflow/git-mechanics.md) has the land rules.
+Land in [Lifecycle](../workflow/lifecycle.md) has the exact steps;
+[Git mechanics](../workflow/git-mechanics.md) has the land rules.
