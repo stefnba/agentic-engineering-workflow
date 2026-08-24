@@ -47,6 +47,26 @@ Nothing is written after a merge, so a human who merges a ticket PR directly lea
 state a skill script would. A query that cannot reach the forge reports `unknown` rather than
 guessing — never read that as `todo`.
 
+## Abandoning a bundle
+
+**A bundle can be abandoned at any point, whatever mix of `done`, `doing`, and `todo` its tickets
+are in — nothing it holds has ever reached the integration target.** Ticket-branch currency
+(above) is what makes a single ticket's PR safe to merge into the bundle branch; the bundle
+branch itself only ever reaches the target through Land. So abandoning is symmetric with cancelling
+a ticket, just wider: delete every ticket branch and worktree, then the bundle branch, then the
+published `work/bundles/<bundle-id>` directory as its own commit on the integration target — the
+same kind of direct planning commit Shape's publish and Land's delete already are, never a revert
+of the publish commit.
+
+This is not `land-bundle.sh cleanup`, which runs only after a land and deliberately keeps a ticket
+branch whose PR isn't merged yet, because that branch is a live claim someone still owns. Abandoning
+discards exactly that in-flight work on purpose, so it deletes every ticket branch regardless of
+status. **A bundle already landed refuses instead of re-running as an abandon:** `abandon-bundle.sh`
+checks whether `work/bundles/<bundle-id>` is still present on the target, never the bundle branch's
+ancestry — a branch nothing has merged into yet is trivially "an ancestor" of the target too, since
+it was cut from it and never diverged, so ancestry alone can't tell an untouched bundle from a
+landed one. A bundle already landed belongs to cleanup instead.
+
 ## Ticket PR permalinks
 
 **A ticket PR's permalinks pin to the commit that published the bundle on the integration
@@ -98,6 +118,11 @@ The cure is to merge the base into the ticket branch, re-verify, and review agai
 head, which is why it cannot happen after Accept: an Accept applies to an exact head SHA and the
 merge enforces it. **So currency is a precondition of Accept, not a repair afterwards.** A branch
 found stale at merge time goes back for a fix round and a fresh Accept.
+
+**The accepted SHA is always named, never resolved from whatever the branch currently points at.**
+`complete-ticket.sh` requires it and passes it to the forge as `--match-head-commit`, so the merge
+fails outright if the head moved since — including a commit pushed straight to the branch, outside
+Review, that a "just take the current head" resolve would otherwise wave through unreviewed.
 
 Only siblings with no edge between them can go stale. `depends_on` already serializes a dependent
 ticket behind its dependency's merge, so that one is current by construction.

@@ -1,14 +1,19 @@
 #!/usr/bin/env bash
 # Merge an accepted ticket PR and clean up its worktree. The merge is the last write — the ticket
-# reads as done because its PR is merged, so nothing is recorded afterward.
-#   usage: complete-ticket.sh <pr-number> [accepted-head-sha]
+# reads as done because its PR is merged, so nothing is recorded afterward. The accepted SHA is
+# required, never resolved here: silently trusting "whatever is at the head right now" is exactly
+# how a commit pushed straight to the branch, outside Review, would get merged as if it had been
+# reviewed.
+#   usage: complete-ticket.sh <pr-number> <accepted-head-sha>
 #   exit:  2 the ticket branch is stale against its base
 set -euo pipefail
 
 . "$(cd "$(dirname "$0")" && pwd)/_config.sh"
 
-pr="$1"
+pr="${1:-}"
 accepted="${2:-}"
+[ -n "$pr" ] && [ -n "$accepted" ] ||
+  { echo "usage: complete-ticket.sh <pr-number> <accepted-head-sha> — the SHA from the last Reviewer round's final summary, never guessed" >&2; exit 64; }
 
 # Process substitution hides a failed query from set -e, and empty refs would then read as stale
 # rather than as unknown — the same distinction the status scripts keep.
@@ -27,11 +32,8 @@ if ! git merge-base --is-ancestor "origin/$base" "origin/$branch"; then
   exit 2
 fi
 
-args=("--$TICKET_MERGE_METHOD" --delete-branch)
 # Accept applies to the exact reviewed head SHA; let the forge enforce that rather than trusting it.
-[ -n "$accepted" ] && args+=(--match-head-commit "$accepted")
-
-gh pr merge "$pr" "${args[@]}"
+gh pr merge "$pr" "--$TICKET_MERGE_METHOD" --delete-branch --match-head-commit "$accepted"
 
 git worktree remove --force "$WORKTREE_DIR/$branch" 2>/dev/null || true
 git fetch -q --prune origin

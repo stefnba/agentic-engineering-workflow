@@ -10,13 +10,13 @@ a paraphrase. The scripts' contract — settings, exit codes, tests — is
 `${CLAUDE_PLUGIN_ROOT}/scripts/README.md`; read it before doing anything the table below doesn't
 cover.
 
-| Request                                                     | Command                                                                     |
-| ----------------------------------------------------------- | --------------------------------------------------------------------------- |
-| "what's in flight?", "which bundles exist?", bare `/bundle-state` | `${CLAUDE_PLUGIN_ROOT}/scripts/bundle-status.sh`                            |
-| "where is bundle X?" — one bundle, every ticket's status    | `${CLAUDE_PLUGIN_ROOT}/scripts/bundle-status.sh <bundle-id>`                |
-| "is ticket NN claimed?", "is it done?"                      | `${CLAUDE_PLUGIN_ROOT}/scripts/ticket-status.sh <bundle-id> <NN>`           |
-| "claim ticket NN", "start on NN"                            | `${CLAUDE_PLUGIN_ROOT}/scripts/claim-ticket.sh <bundle-id> <NN>`            |
-| "the permalinks / target branch for a ticket PR"            | `${CLAUDE_PLUGIN_ROOT}/scripts/pr-links.sh <bundle-id> <NN>`                |
+| Request                                                           | Command                                                           |
+| ----------------------------------------------------------------- | ----------------------------------------------------------------- |
+| "what's in flight?", "which bundles exist?", bare `/bundle-state` | `${CLAUDE_PLUGIN_ROOT}/scripts/bundle-status.sh`                  |
+| "where is bundle X?" — one bundle, every ticket's status          | `${CLAUDE_PLUGIN_ROOT}/scripts/bundle-status.sh <bundle-id>`      |
+| "is ticket NN claimed?", "is it done?"                            | `${CLAUDE_PLUGIN_ROOT}/scripts/ticket-status.sh <bundle-id> <NN>` |
+| "claim ticket NN", "start on NN"                                  | `${CLAUDE_PLUGIN_ROOT}/scripts/claim-ticket.sh <bundle-id> <NN>`  |
+| "the permalinks / target branch for a ticket PR"                  | `${CLAUDE_PLUGIN_ROOT}/scripts/pr-links.sh <bundle-id> <NN>`      |
 
 **`<NN>` is the two-digit ticket number** as the status listing prints it — `01` for a single-ticket
 bundle, whose one file is `ticket.md`. A slug or unpadded number names a branch no status query
@@ -27,6 +27,9 @@ reason and the next action; report it as printed. What each status means, how to
 and why `unknown` is not `todo`:
 `${CLAUDE_PLUGIN_ROOT}/workflow/git-mechanics.md`, Status is derived.
 
-Two transitions cross a human gate and are not routing rows — REQUIRED: point the human at
-`/complete-ticket` to merge an accepted ticket PR (`complete-ticket.sh` runs only from there) and at
-`/land-bundle` to land (`land-bundle.sh` runs only from there); never run either script from here.
+Three transitions cross a human gate and are not routing rows — REQUIRED: point the human at the
+dedicated skill, never run any of these scripts from here:
+
+- Merge an accepted ticket PR → `/complete-ticket` (`complete-ticket.sh` runs only from there).
+- Land a finished bundle → `/land-bundle` (`land-bundle.sh` runs only from there).
+- Drop a bundle that won't finish → `/abandon-bundle` (`abandon-bundle.sh` runs only from there).

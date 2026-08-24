@@ -66,6 +66,9 @@ Shape may not hand a bundle to the Plan gate until:
 - **Active:** at least one ticket has started.
 - **Landed:** every ticket is done, the outcome is on the integration target, and the bundle is
   deleted.
+- **Abandoned:** the human decides not to finish it, at any point — nothing a bundle holds reaches
+  the integration target before Land, so this costs no more than deleting branches, worktrees, and
+  the bundle directory.
 
 ## Revising a published bundle
 

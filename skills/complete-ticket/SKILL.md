@@ -15,10 +15,12 @@ merge on your own judgment that the PR looks ready.
 
 ### 1. Pin the accepted head
 
-Both arguments come from the human. **With no SHA given, resolve the current head**
-(`gh pr view <pr> --json headRefOid`), show it, and confirm it is the state they reviewed before
-using it — the SHA pins the merge to what was accepted, so a head that moved since must go back
-through review, not through a fresh resolve.
+Both arguments come from the human, and the SHA is required — the head the last Reviewer round's
+final summary was tied to, never resolved here. **Never substitute `gh pr view`'s current head for
+it.** That would treat whatever commit is sitting on the branch — including one pushed straight to
+it, outside Review — as if it had been reviewed, which is exactly the gap requiring the SHA closes.
+If the human doesn't have it to hand, point them at the last round's summary; the script itself now
+refuses to run without it.
 
 ### 2. Merge
 
