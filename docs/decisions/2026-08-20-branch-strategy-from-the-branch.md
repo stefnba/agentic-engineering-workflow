@@ -57,7 +57,7 @@ and it is created by the claim that makes the strategy matter.
   had none.
 - The derivation now has two arms, so the docs have to say which arm applies when —
   `workflow/git-mechanics.md` states it, and the scripts' one definition lives in
-  `skills/bundle-git/scripts/_config.sh`.
+  `scripts/_config.sh`.
 - After Land deletes the bundle branch, the count arm answers again. That is the correct end state,
   but it means the two arms are not ordered by time so much as by whether the branch is alive.
 

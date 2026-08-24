@@ -47,7 +47,7 @@ deletes and re-verifies there; and publishes with `git push origin HEAD:<integra
 ## Rejected
 
 - **A worktree on the bundle branch.** The original answer. Rejected on the reproduction above.
-- **Switch the session's own checkout to the bundle branch.** All `bundle-git` scripts read
+- **Switch the session's own checkout to the bundle branch.** All bundle scripts read
   `work/bundles/<id>/` from the tree they run in, so branch strategy and the dependency gate would
   derive from a different copy of the bundle than the one the session believes it has.
 - **Do Land in the session's own checkout of the integration target.** Same merge direction, no
