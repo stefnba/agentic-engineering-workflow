@@ -61,7 +61,7 @@ Two kinds of content deliberately live elsewhere:
 
 ## Skills
 
-The planned set. Twenty exist under [skills/](skills/) today — `setup`, `backlog`, `pick`, `scan-codebase`, `research`, `interview-me`, `shape-bundle`, `critique-bundle`, `implement-ticket`, `review-pr`, `review-changes`, `complete-ticket`, `land-bundle`, `bundle-state`, `record-decision`, `glossary`, `handoff`, `recap`, `judge`, and `writing-for-agents`. Each name is a pointer — the authoritative description lives in that skill's `SKILL.md` frontmatter.
+The planned set. Twenty-one exist under [skills/](skills/) today — `setup`, `backlog`, `pick`, `scan-codebase`, `research`, `interview-me`, `shape-bundle`, `critique-bundle`, `implement-ticket`, `review-pr`, `review-changes`, `complete-ticket`, `land-bundle`, `bundle-state`, `record-decision`, `glossary`, `handoff`, `recap`, `judge`, `code-design`, and `writing-for-agents` — plus `finding-rules`, covered with the contract above. Each name is a pointer — the authoritative description lives in that skill's `SKILL.md` frontmatter.
 
 ### Workflow skills
 
@@ -95,6 +95,7 @@ Not stage-bound — they serve any session:
 | `review-changes`     | Reviews local changes without a PR    |
 | `handoff`            | Compacts a dying session              |
 | `recap`              | Reports the session back to the human |
+| `code-design`        | Vocabulary for module and seam design |
 | `writing-for-agents` | Reviews agent-facing documents        |
 
 ## Agents
