@@ -40,14 +40,24 @@ otherwise indistinguishable from reviewing unpushed work.
 
 Nothing reached you but the three values. Read for yourself:
 
-- the bundle and the ticket, including its Done when conditions
 - repository conventions and the decision records the change touches
-- the PR body, which must satisfy the handoff contract in
-  `${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md` — an incomplete handoff is a blocker before you
-  read the diff
 - the complete diff and, on round 2 or later, all earlier review and fix-response comments
+- the PR body and planning record, per the route below
 
-**Done when** each artifact above has been read at this round's head.
+The head branch name picks the route: `ticket/<bundle-id>/<NN>`
+(`${CLAUDE_PLUGIN_ROOT}/workflow/git-mechanics.md#branch-naming`) means a bundle backs this PR;
+any other name means none does.
+
+- **Bundle-backed** — read the bundle and the ticket, including its Done when conditions. The
+  body must satisfy the handoff contract in `${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md` — an
+  incomplete handoff is a blocker before you read the diff.
+- **No bundle** — there is no planning record. The body must state the intent, delivered scope,
+  verification commands and results from the current head, and known limitations or residual
+  risk; a missing one is the same blocker. With no Done when condition, requirement fit drops out
+  of this review.
+
+**Done when** the route is determined and each artifact it calls for has been read at this round's
+head.
 
 ### 4. Verify at the head
 
