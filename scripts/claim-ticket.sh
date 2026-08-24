@@ -25,15 +25,12 @@ fi
 [ -n "$ticket" ] ||
   { echo "no such ticket: $bundle/$nn — NN is the two-digit number bundle-status.sh prints (e.g. 01)" >&2; exit 2; }
 
-# A base that is not the target means a multi-ticket bundle, whose shared branch the first claim
-# creates.
+# Every bundle shares one bundle branch; the first claim creates it from the integration target.
 base=$(ticket_base "$bundle")
-if [ "$base" != "$target" ]; then
-  git ls-remote --exit-code --heads origin "$base" >/dev/null 2>&1 ||
-    git push -q origin "origin/$target:refs/heads/$base" ||
-    true # another ticket's claim won the race and created it first
-  git fetch -q origin "+refs/heads/$base:refs/remotes/origin/$base"
-fi
+git ls-remote --exit-code --heads origin "$base" >/dev/null 2>&1 ||
+  git push -q origin "origin/$target:refs/heads/$base" ||
+  true # another ticket's claim won the race and created it first
+git fetch -q origin "+refs/heads/$base:refs/remotes/origin/$base"
 
 # Report the status actually observed. A failed query prints nothing and is unknown, not todo — the
 # gate is closed either way, but "couldn't tell" and "not finished yet" need different responses.
