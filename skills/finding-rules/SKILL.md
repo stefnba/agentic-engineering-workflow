@@ -63,14 +63,14 @@ differs, because the stages count differently: `C<N>` scoped to one critique run
 issues fresh IDs, and the shaping session maps them across runs — and `R<round>-F<N>` at PR time,
 where an ID must survive into the next round.
 
-```text
+```markdown
 ❌ R2-F3 [verified] correctness — src/billing/refund.ts:88
 
-- Violates: AC-4 (a partial refund never exceeds the original charge)
-- Claim: `applyRefund` trusts the caller-supplied `amount` without comparing it to `charge.total`
-- Evidence: ran `refund(charge, {amount: charge.total + 1})`; it succeeded and left `charge.refunded` negative
-- Impact: a caller can drain more than the original charge, corrupting the ledger
-- Required outcome: `applyRefund` rejects any amount exceeding the remaining refundable balance
+- **Violates**: AC-4 (a partial refund never exceeds the original charge)
+- **Claim**: `applyRefund` trusts the caller-supplied `amount` without comparing it to `charge.total`
+- **Evidence**: ran `refund(charge, {amount: charge.total + 1})`; it succeeded and left `charge.refunded` negative
+- **Impact**: a caller can drain more than the original charge, corrupting the ledger
+- **Required outcome**: `applyRefund` rejects any amount exceeding the remaining refundable balance
 ```
 
 Severity carries a glyph: ❌ blocker, ⚠️ concern, ✅ passed or closed.
