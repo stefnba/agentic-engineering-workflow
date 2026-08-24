@@ -1,6 +1,6 @@
 ---
 name: review-pr
-description: Judge one implementation PR at its exact head SHA. Dispatched by the implement skill once per review round; also use when the user asks to review, re-review, or judge a ticket's PR. Invoke with the PR number, its head SHA, and the round number.
+description: Judge one implementation PR at its exact head SHA. Dispatched by the implement-ticket skill once per review round; also use when the user asks to review, re-review, or judge a ticket's PR. Invoke with the PR number, its head SHA, and the round number.
 argument-hint: "[PR number] [head SHA] [round number]"
 context: fork
 agent: reviewer

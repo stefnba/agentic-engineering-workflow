@@ -57,8 +57,8 @@ exactly two forms, and in both the dispatch prompt is the interface:
   form: the arguments are the input, the body is the dispatch, the agent's final message is the
   result.
 - **Inline form**: dispatching is one numbered step in the driving skill's process. The step
-  invokes a forked task skill where one owns the dispatch — implement invoking review-pr, shape
-  invoking critique — and composes an Agent-tool prompt itself only where none does; keep that
+  invokes a forked task skill where one owns the dispatch — implement-ticket invoking review-pr, shape-bundle
+  invoking critique-bundle — and composes an Agent-tool prompt itself only where none does; keep that
   prompt's parts consistent with the forked form.
 
 Apply the **caller test** to every step: would this step change if a different task skill

@@ -1,5 +1,5 @@
 ---
-name: implement
+name: implement-ticket
 description: Implement one approved ticket — claim it, build it against the ticket's own evidence, verify, reconcile, open the PR, then run its review–fix rounds to convergence. Invoke with the bundle ID and ticket number, in that ticket's own tab.
 argument-hint: "[bundle id] [NN]"
 disable-model-invocation: true
@@ -43,7 +43,7 @@ Resolve `$ARGUMENTS` against `${CLAUDE_PROJECT_DIR}/work/bundles/`. No match, or
 don't guess.
 
 **If this session is already on `ticket/<bundle-id>/<NN>`, the claim happened** — the human ran the
-command `shape` handed them. Go to step 2.
+command `shape-bundle` handed them. Go to step 2.
 
 **With no ticket number given**, take the lowest-numbered ticket that reads `todo` in
 `${CLAUDE_PLUGIN_ROOT}/scripts/bundle-status.sh <bundle-id>` and whose `depends_on`
@@ -185,11 +185,6 @@ Report, in this order:
 - what reconcile touched
 - what you noticed outside scope — offer it through the `backlog` skill, which owns what earns a line
 
-Then stop. The human reads the PR and merges, directly or with:
-
-```text
-${CLAUDE_PLUGIN_ROOT}/scripts/complete-ticket.sh <pr> <accepted-head-sha>
-```
-
-That merge is the last write, and `done` follows from it. Don't merge it yourself, and don't start
-the next ticket — that is a fresh tab and the human's dispatch.
+Then stop. The human reads the PR and merges, directly or via `/complete-ticket`. That
+merge is the last write, and `done` follows from it. Don't merge it yourself, and don't start the
+next ticket — that is a fresh tab and the human's dispatch.

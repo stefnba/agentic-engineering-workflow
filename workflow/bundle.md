@@ -1,7 +1,7 @@
 # Work bundles
 
 The bundle as a container: its layout, completeness, lifetime, revision, and decomposition.
-Use the literal formats in [`skills/shape/templates/`](../skills/shape/templates/).
+Use the literal formats in [`skills/shape-bundle/templates/`](../skills/shape-bundle/templates/).
 
 ## Naming and layout
 

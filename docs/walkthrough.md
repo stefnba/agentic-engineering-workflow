@@ -39,7 +39,7 @@ shaping. [Lifecycle](../workflow/lifecycle.md) defines this session model;
 **Narrowing — almost every entry point still needs it.** A backlog line is a title, not a settled
 intent. Run `/interview-me` in the same session and keep going until you and the agent share an
 understanding of the problem, the outcome you want, and the edge cases. This stays conversational and
-writes nothing — `/shape` is the first thing that produces a file. Skip it only when the pick was
+writes nothing — `/shape-bundle` is the first thing that produces a file. Skip it only when the pick was
 already fully settled going in; treat that as rare (see Narrowing in
 [Lifecycle](../workflow/lifecycle.md)).
 
@@ -47,11 +47,11 @@ If narrowing leaves feasibility or diagnosis genuinely unknown, don't force it �
 investigation or spike first (see [Shaping routes](../workflow/shaping-routes.md)). Its evidence
 becomes the next thing you pick, not a shortcut into Shape.
 
-Once you share an understanding, trigger `/shape` in that same session.
+Once you share an understanding, trigger `/shape-bundle` in that same session.
 
 ## Shape
 
-Triggered once, by `/shape`, in the bundle's session. Everything after that runs on its own:
+Triggered once, by `/shape-bundle`, in the bundle's session. Everything after that runs on its own:
 
 1. The agent picks a shaping route and tells you which one and why — the route decides whether you
    get a spec, a plan, or just tickets ([Shaping routes](../workflow/shaping-routes.md) owns the
@@ -106,7 +106,7 @@ merged, and nothing writes a status afterward.
 
 ## Land
 
-Once every ticket is `done`, go back to the bundle's session (or a fresh one) and trigger `/land`. It
+Once every ticket is `done`, go back to the bundle's session (or a fresh one) and trigger `/land-bundle`. It
 runs in order, and stops if the first step isn't green:
 
 - confirms the checks pass on the state holding every merged ticket
@@ -118,7 +118,7 @@ runs in order, and stops if the first step isn't green:
 - re-verifies, then publishes that state on the integration target
 - removes the branches and worktrees that are left
 
-If somebody else pushes while you're landing, `/land` merges their work in and sends you back to
+If somebody else pushes while you're landing, `/land-bundle` merges their work in and sends you back to
 re-run the checks before it will publish. Expect to see that; it isn't a failure.
 
 Land in [Lifecycle](../workflow/lifecycle.md) has the exact steps and which of them a single-ticket

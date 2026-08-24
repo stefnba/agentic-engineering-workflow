@@ -15,7 +15,7 @@ pick, and never nudge it through ordering, emphasis, or a recommendation nobody 
 
 **Read `${CLAUDE_PROJECT_DIR}/work/backlog.md` in full.** Missing or empty: say so and stop. There
 is nothing to pick, and intent the human brings directly skips the backlog for `/interview-me` or
-`/shape` anyway.
+`/shape-bundle` anyway.
 
 **Check what's already in flight** with
 `${CLAUDE_PLUGIN_ROOT}/scripts/bundle-status.sh`, run from the repository root. It
@@ -64,27 +64,27 @@ from? — and hand off in this shape:
 ```markdown
 Picked: `[follow-up] [server] no transaction support — repository ops can't run atomically`
 
-Crisp — problem and rough scope would support a spec. Next: `/shape` here, no argument needed; the
+Crisp — problem and rough scope would support a spec. Next: `/shape-bundle` here, no argument needed; the
 line above is its input.
 ```
 
-The verbatim quote is load-bearing: `/shape` and `/interview-me` read their input from this
+The verbatim quote is load-bearing: `/shape-bundle` and `/interview-me` read their input from this
 conversation, and this block is what they receive.
 
 Three exits, differing only in that second sentence:
 
-- **Crisp** — `/shape`, as above.
+- **Crisp** — `/shape-bundle`, as above.
 - **Vague** — name what is still unsettled and point at `/interview-me` with the line as its
   argument.
-- **Feasibility or diagnosis genuinely unknown** — point at `/shape` anyway, saying that what it
+- **Feasibility or diagnosis genuinely unknown** — point at `/shape-bundle` anyway, saying that what it
   shapes is an investigation or spike rather than the implementation.
 
 **A pick that isn't on the list is direct intent.** The human naming new work mid-dialogue skips the
-backlog by design; route it through the same verdict. No line exists, so `shape` has nothing to
+backlog by design; route it through the same verdict. No line exists, so `shape-bundle` has nothing to
 delete later.
 
-**Leave the invocation to the human.** `/shape` and `/interview-me` are manual-only because invoking
+**Leave the invocation to the human.** `/shape-bundle` and `/interview-me` are manual-only because invoking
 one is the act of approval that closes this gate.
 
-**Leave the picked line in the backlog.** `shape` deletes it in the commit that publishes the
+**Leave the picked line in the backlog.** `shape-bundle` deletes it in the commit that publishes the
 bundle.

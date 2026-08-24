@@ -2,7 +2,7 @@
 
 How the workflow uses git. These rules are identical in every consuming repo and are what the
 plugin's `scripts/` implement — changing them changes the scripts' behavior. The scripts' own
-interface contract (invocation, exit codes, tests) is `scripts/README.md`; the `bundle` skill routes
+interface contract (invocation, exit codes, tests) is `scripts/README.md`; the `bundle-state` skill routes
 conversational requests to them.
 
 The settings they operate on are read from `${CLAUDE_PROJECT_DIR}/work/config.conf`:

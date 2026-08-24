@@ -17,11 +17,9 @@ Candidate work and follow-ups nobody has picked yet.
   merged, open PR, in flight — and refused to touch anything unmerged. Add that classification:
   `gh pr list --head` rather than ancestry, because a squash merge leaves none.
 - [drift] [skills] [docs] `README.md` and `docs/walkthrough.md` name skills that hold nothing yet —
-  `scan-codebase`, `research`, and `complete-ticket`. (`land` and `review-pr` now exist.)
-  Whoever builds one claims its name from the README table. One constraint is already settled:
-  the bundle scripts own claim, status, and merge, so `/complete-ticket` calls
-  `scripts/complete-ticket.sh` rather than reimplementing the merge.
-- [follow-up] [skills] `shape` publishes the approved bundle by hand — `git add`/`commit`/`push` from the
+  `scan-codebase` and `research`. (`land-bundle`, `review-pr`, and `complete-ticket` now exist.)
+  Whoever builds one claims its name from the README table.
+- [follow-up] [skills] `shape-bundle` publishes the approved bundle by hand — `git add`/`commit`/`push` from the
   prompt, sourcing `scripts/_config.sh` for `INTEGRATION_TARGET`. Every other state
   transition is a script; this one is prose, so a collision retry or a wrong target branch depends
   on the model following instructions. Consider `scripts/publish-bundle.sh`.
@@ -34,7 +32,7 @@ Candidate work and follow-ups nobody has picked yet.
   depth, seam, adapter, leverage, locality) for other skills to borrow; not a session driver itself.
 - [follow-up] [skills] The workflow documents a `depends_on` input rule the claim gate doesn't enforce,
   verified by running it: `claim-ticket.sh` parses the line with a `sed` that handles only the flow form
-  `[01, 02]`. `skills/shape/templates/ticket.md` names every unsafe form — quoted or unpadded
+  `[01, 02]`. `skills/shape-bundle/templates/ticket.md` names every unsafe form — quoted or unpadded
   numbers block the claim forever, a trailing comment reads as a dependency, block-sequence style
   fails open and lets a dependent ticket start early — so the rule reaches whoever writes a ticket
   from the template, and nothing catches a hand-edit that ignores it. (The sibling `ls tickets`
@@ -62,7 +60,7 @@ Candidate work and follow-ups nobody has picked yet.
   `2026-08-18-consuming-repo-layout.md` and `2026-08-18-script-read-settings.md` use a prose byline and
   `2026-08-18-fixed-bundle-land.md` has frontmatter without `areas:`. All three are immutable, so the fix
   is not an edit: either supersede them or accept that the vocabulary reads from the rest.
-- [idea] [skills] `shape` picks the test seam while filling `spec.md`'s Test intent in step 4 and confirms
+- [idea] [skills] `shape-bundle` picks the test seam while filling `spec.md`'s Test intent in step 4 and confirms
   it in step 5's batch — after the Behavioral Requirements and Acceptance Criteria above it are already
   written. The `old-workflow` shape had a dedicated step 3, "Sketch the test seams and confirm with
   user", before creating the bundle at all, for the stated reason that AC are phrased at the seam, so
@@ -103,5 +101,5 @@ remove` deletes the leaf it is given, so `.claude/worktrees/ticket/<bundle-id>/`
 - [idea] [skills] [docs] `work/backlog.md`'s bullet format could move to a markdown table (`id`,
   `topic`, `areas`, `details`)
 - [drift] [skills] `skills/writing-for-agents/references/skill-mechanics.md` routes files filled
-  into the output to `assets/`, but `implement` and `review-pr` keep theirs in `templates/`.
+  into the output to `assets/`, but `implement-ticket` and `review-pr` keep theirs in `templates/`.
   Consistent repo-wide, contradicts the anatomy — align the skills or the anatomy.

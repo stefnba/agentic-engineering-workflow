@@ -54,7 +54,11 @@ description: Use when tests have race conditions, timing dependencies, or pass/f
 
 ## Naming
 
-Verb-first, active, named for what you do or the core insight: `condition-based-waiting` beats `async-test-helpers`; `creating-skills` beats `skill-creation`. Letters, numbers, hyphens only.
+**Verb-first, active, named for what you do or the core insight:** `condition-based-waiting` beats `async-test-helpers`; `creating-skills` beats `skill-creation`. Letters, numbers, hyphens only.
+
+**Two refinements**: when the verb acts on one artifact, name both (`implement-ticket`, not `implement`) so sibling skills stay distinguishable; a caretaker skill takes the name of the artifact or state it owns (`backlog`, `glossary`) — a verb there would misdescribe a skill that answers as often as it acts.
+
+**Citing a skill in prose**: `/name` only where the text tells the human to invoke it — the form they would type; the bare backticked name everywhere else, including where the agent invokes it. The split carries information: a slash in a skill body marks a hand-back to the human.
 
 ## Structuring multi-domain skills
 

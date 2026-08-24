@@ -1,6 +1,6 @@
 ---
 name: recap
-description: Report this conversation back to the human — its subject, what it settled, what is still open. Use when the user asks where things stand, what has been covered or decided so far, what is still open, what they were working on, or says "catch me up", "remind me", "where were we", "summarize this session" — including after a long gap, a switch back to an old tab, or a context compaction. Not for writing a resumable document for a fresh agent, which is `handoff`, and not for repository, bundle, or ticket state, which the `bundle` skill derives.
+description: Report this conversation back to the human — its subject, what it settled, what is still open. Use when the user asks where things stand, what has been covered or decided so far, what is still open, what they were working on, or says "catch me up", "remind me", "where were we", "summarize this session" — including after a long gap, a switch back to an old tab, or a context compaction. Not for writing a resumable document for a fresh agent, which is `handoff`, and not for repository, bundle, or ticket state, which the `bundle-state` skill derives.
 disallowed-tools: Agent, Artifact, Bash, CronCreate, CronDelete, CronList, Edit, EnterWorktree, ExitWorktree, Glob, Grep, LSP, ListAgents, ListMcpResourcesTool, Monitor, NotebookEdit, PowerShell, PushNotification, Read, ReadMcpResourceTool, RemoteTrigger, ReportFindings, ScheduleWakeup, SendMessage, SendUserFile, ShareOnboardingGuide, Skill, TaskCreate, TaskGet, TaskList, TaskOutput, TaskStop, TaskUpdate, TodoWrite, ToolSearch, WaitForMcpServers, WebFetch, WebSearch, Workflow, Write
 ---
 
@@ -131,5 +131,5 @@ start: what came before it is compacted, and the recap covers only what survived
 an idea turned over. Subject, digest, settled, open. There being no branch, bundle, or ticket in the
 session is not a reason to report less.
 
-**Point at `handoff` when the human wants this kept.** A recap persists nothing, by design; writing
+**Point at `/handoff` when the human wants this kept.** A recap persists nothing, by design; writing
 the session down is that skill's job.
