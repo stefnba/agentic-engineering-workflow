@@ -26,6 +26,11 @@ Every status is computed from the remote branches and the ticket PRs' merge reco
 no script writes one. [git-mechanics.md](../workflow/git-mechanics.md) (Status is derived) holds
 the semantics, including cancelling and the `unknown` state.
 
+`write-boundary.sh` is the one non-bundle script here: the PreToolUse hook every skill with a
+write boundary registers, its allowlist and deny reason passed as arguments — see its header and
+[workflow/components.md](../workflow/components.md) (Permissions). It lives here because more than
+one skill runs it.
+
 ## Exit codes
 
 Treat a non-zero exit as a stop, never as something to retry or work around; the script's stderr
@@ -47,6 +52,6 @@ only for scripts and tests that branch on them:
 `tests/run.sh` runs the scripts against a local `git daemon` with a stubbed `gh` — no network, and
 nothing written outside a temp dir. It covers a ten-way claim race, the dependency gate, both bundle
 shapes, listing, an unreachable forge, permalinks pinned past a branch amendment, the flags passed to
-the merge, the staleness refusal, and a full land for both bundle shapes — gate, unrecorded-commit
-refusal, detached worktree, the moved-target loop, the backlog union, and a guarded cleanup. Exits
-non-zero on failure.
+the merge, the staleness refusal, a full land for both bundle shapes — gate, unrecorded-commit
+refusal, detached worktree, the moved-target loop, the backlog union, and a guarded cleanup — and
+the write boundary's deny-by-path. Exits non-zero on failure.

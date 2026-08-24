@@ -56,6 +56,25 @@ ticket_names() { # <bundle-id>
   done
 }
 
+# One ticket's file, resolved through ticket_names so a ticket is claimable exactly when the
+# status listing and the land gate can see it. An NN the listing does not print — unpadded, a
+# slug, a wrong number on a single-ticket bundle — resolves to nothing here instead of matching
+# a file no derived status would ever cover.
+ticket_file() { # <bundle-id> <NN> -> the ticket's path, or nothing when there is no such ticket
+  local nn name
+  while read -r nn name; do
+    if [ "$nn" = "$2" ]; then
+      if [ "$name" = ticket ]; then
+        echo "work/bundles/$1/ticket.md"
+      else
+        echo "work/bundles/$1/tickets/$name.md"
+      fi
+      return 0
+    fi
+  done <<<"$(ticket_names "$1")"
+  return 0
+}
+
 # Every bundle's ticket PRs target its bundle branch, whatever the ticket count. Uniform, so
 # nothing is derived and nothing can flip: no ticket PR targets the integration target —
 # implementation content reaches it only through the land. Kept as a function because claim,

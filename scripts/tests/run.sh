@@ -116,6 +116,8 @@ ok "solo claim exits 0"             "$?" 0
 ok "solo bundle branch created"     "$(git ls-remote --heads origin "bundle/$solo" | wc -l | tr -d ' ')" 1
 "$scripts/claim-ticket.sh" "$solo" ticket >/dev/null 2>&1
 ok "slug instead of NN refuses (2)" "$?" 2
+"$scripts/claim-ticket.sh" "$solo" 07 >/dev/null 2>&1
+ok "wrong NN on a solo bundle refuses (2)" "$?" 2
 
 echo "== listing"
 ok "lists every bundle"             "$("$scripts/bundle-status.sh" | wc -l | tr -d ' ')" 2
@@ -140,6 +142,8 @@ ok "same answer from the worktree"  "$(cat "$root/links-wt.out")" "$(sed -n 1p "
 "$scripts/pr-links.sh" "$solo" 01 | sed -n 2,3p > "$root/links-solo.out" 2>&1
 ok "solo bundle links ticket.md"    "$(sed -n 1p "$root/links-solo.out")" \
                                     "- Ticket: \`01\` — [\`ticket.md\`](https://forge.test/acme/widgets/blob/$published/work/bundles/$solo/ticket.md)"
+"$scripts/pr-links.sh" "$solo" 07 >/dev/null 2>&1
+ok "pr-links wrong solo NN refuses (2)" "$?" 2
 ok "and targets its bundle branch"  "$(sed -n 2p "$root/links-solo.out")" "- Base: \`bundle/$solo\`"
 "$scripts/pr-links.sh" "$multi" 99 >/dev/null 2>&1
 ok "unknown ticket refuses (2)"     "$?" 2
@@ -163,6 +167,14 @@ ok "its PRs target the bundle branch" "$(git ls-remote --heads origin "bundle/$s
 printf 'ticket/%s/01 bundle/%s\n' "$stray" "$stray" >> "$MERGED"
 ok "status agrees on the base"      "$("$scripts/ticket-status.sh" "$stray" 01)" done
 ok "status lists exactly one ticket" "$("$scripts/bundle-status.sh" "$stray" | wc -l | tr -d ' ')" 2
+
+echo "== a ticket file the listing cannot see is not claimable"
+pad=2026-08-17-pad
+mkdir -p "work/bundles/$pad/tickets"
+printf 'depends_on: []\n---\nunpadded\n' > "work/bundles/$pad/tickets/1-unpadded.md"
+git add "work/bundles/$pad" && git commit -qm "docs(bundle): publish a mis-named ticket" && git push -q origin main
+"$scripts/claim-ticket.sh" "$pad" 1 >/dev/null 2>&1
+ok "unpadded NN refuses (2)"        "$?" 2
 
 echo "== an unreachable forge never reads as todo"
 mv "$root/bin/gh" "$root/bin/gh.real"
@@ -359,6 +371,30 @@ ok "cleanup exits 0"                  "$?" 0
 ok "bundle branch deleted"            "$(git ls-remote --heads origin "bundle/$multi" | wc -l | tr -d ' ')" 0
 ok "ticket branches deleted"          "$(git ls-remote --heads origin "ticket/$multi/*" | wc -l | tr -d ' ')" 0
 ok "land worktree removed"            "$([ -d "$land" ] && echo yes || echo no)" no
+
+echo "== the write boundary denies inside the repo whatever the path form"
+# Its own repo, not the fixture one: the fence-lift check reads git status, and the fixture repo's
+# cleanliness is other blocks' business.
+hookrepo="$root/hookrepo"
+git init -q "$hookrepo"
+mkdir -p "$hookrepo/work/bundles/x"
+printf 'draft\n' > "$hookrepo/work/bundles/x/spec.md" # uncommitted draft: the fence is armed
+payload() { jq -n --arg p "$1" '{tool_input:{file_path:$p}}'; }
+verdict() { # stdin: the hook's output — empty means allowed
+  out=$(cat)
+  if [ -z "$out" ]; then echo allow; else jq -r '.hookSpecificOutput.permissionDecision' <<<"$out"; fi
+}
+fence() {
+  CLAUDE_PROJECT_DIR="$hookrepo" "$scripts/write-boundary.sh" \
+    --reason "shape writes only inside work/bundles/ (plus work/backlog.md)" \
+    --lift-when-clean work/bundles/ 'work/bundles/*' work/backlog.md
+}
+ok "relative path outside the fence denied" "$(payload "src/app.ts" | fence | verdict)" deny
+ok "absolute path outside the fence denied" "$(payload "$hookrepo/src/app.ts" | fence | verdict)" deny
+ok "allowed path passes"                    "$(payload "$hookrepo/work/bundles/x/spec.md" | fence | verdict)" allow
+ok "a path outside the project passes"      "$(payload "/elsewhere/handoff.md" | fence | verdict)" allow
+( cd "$hookrepo" && git add -A && git commit -qm "publish" )
+ok "the fence lifts once the tree is clean" "$(payload "src/app.ts" | fence | verdict)" allow
 ok "worktree scaffolding removed"     "$([ -d ".claude/worktrees/ticket/$multi" ] && echo yes || echo no)" no
 
 echo "== land: a single-ticket bundle lands through the same worktree"
