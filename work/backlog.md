@@ -101,5 +101,6 @@ remove` deletes the leaf it is given, so `.claude/worktrees/ticket/<bundle-id>/`
 - [idea] [skills] [docs] `work/backlog.md`'s bullet format could move to a markdown table (`id`,
   `topic`, `areas`, `details`)
 - [drift] [skills] `skills/writing-for-agents/references/skill-mechanics.md` routes files filled
-  into the output to `assets/`, but `implement-ticket` and `review-pr` keep theirs in `templates/`.
+  into the output to `assets/`, but `implement-ticket`, `review-pr`, and `critique-bundle` keep
+  theirs in `templates/`.
   Consistent repo-wide, contradicts the anatomy — align the skills or the anatomy.
