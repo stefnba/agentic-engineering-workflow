@@ -50,7 +50,7 @@ bundle branch.**
 - The invariant is written so it does not assume `TICKET_MERGE_METHOD=squash`. Under the default that
   is one commit per ticket; under `merge` or `rebase` it is whatever those produce, and the land
   preserves that too.
-- No script implements the land yet — `bundle-git` has no Land-side script at all, tracked in
+- No script implements the land yet — the bundle scripts have no Land-side script at all, tracked in
   `work/backlog.md`. Until one exists, `workflow/git-mechanics.md` is the only control, and
   `TICKET_MERGE_METHOD` deliberately does not reach it.
 - Confirmed by an independent review pass before implementation, which also established that the land
