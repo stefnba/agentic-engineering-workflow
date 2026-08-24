@@ -126,3 +126,14 @@ re-run the checks before it will publish. Expect to see that; it isn't a failure
 
 Land in [Lifecycle](../workflow/lifecycle.md) has the exact steps;
 [Git mechanics](../workflow/git-mechanics.md) has the land rules.
+
+## FAQ
+
+- **You don't want to finish a bundle** — trigger `/abandon-bundle`, at any point, whatever mix of
+  `done`, `doing`, and `todo` its tickets are in. [Work bundles](../workflow/bundle.md) (Lifetime,
+  Abandoned) and [Git mechanics](../workflow/git-mechanics.md) (Abandoning a bundle) own what that
+  discards and why it's safe.
+- **You pushed a commit straight to a ticket branch, outside its tab** — nothing to undo: the next
+  review round judges whatever is actually at the head, and `/complete-ticket` refuses to merge
+  unless the SHA you name still matches it. [Git mechanics](../workflow/git-mechanics.md)
+  (Ticket-branch currency) owns the rule.

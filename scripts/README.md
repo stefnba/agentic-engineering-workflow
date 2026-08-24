@@ -17,10 +17,11 @@ on its own.
 | `ticket-status.sh <bundle-id> <NN>`  | Print one ticket's status, for scripts and gates.                               |
 | `claim-ticket.sh <bundle-id> <NN>`   | Create the ticket's branch and worktree. Claiming is creating the branch.       |
 | `pr-links.sh <bundle-id> <NN>`       | Print a ticket PR body's permalinks and target branch.                          |
-| `complete-ticket.sh <pr> [sha]`      | Merge an accepted ticket PR per `TICKET_MERGE_METHOD`, remove its worktree.     |
+| `complete-ticket.sh <pr> <sha>`      | Merge an accepted ticket PR per `TICKET_MERGE_METHOD`, remove its worktree.     |
 | `land-bundle.sh start <bundle-id>`   | Open the land: a detached worktree on the integration target, bundle merged in. |
 | `land-bundle.sh push <bundle-id>`    | Publish that worktree's tip on the integration target.                          |
 | `land-bundle.sh cleanup <bundle-id>` | Delete the bundle's branches and remove its worktrees.                          |
+| `abandon-bundle.sh <bundle-id>`      | Delete every ticket and bundle branch and worktree for an abandoned bundle.     |
 
 Every status is computed from the remote branches and the ticket PRs' merge records on each call;
 no script writes one. [git-mechanics.md](../workflow/git-mechanics.md) (Status is derived) holds
@@ -41,12 +42,15 @@ only for scripts and tests that branch on them:
   but a loop — re-run the canonical checks, then `push` again · `7` merge conflict, left for the
   human · `8` a bundle-branch commit matches no merged ticket PR · `9` cleanup on an unlanded
   bundle branch — nothing is deleted
+- `abandon-bundle.sh` — `2` no such bundle · `9` the bundle branch already landed — use
+  `land-bundle.sh cleanup` instead
 
 ## Tests
 
 `tests/run.sh` runs the scripts against a local `git daemon` with a stubbed `gh` — no network, and
 nothing written outside a temp dir. It covers a ten-way claim race, the dependency gate, both bundle
 shapes, listing, an unreachable forge, permalinks pinned past a branch amendment, the flags passed to
-the merge, the staleness refusal, and a full land for both bundle shapes — gate, unrecorded-commit
-refusal, detached worktree, the moved-target loop, the backlog union, and a guarded cleanup. Exits
-non-zero on failure.
+the merge, the staleness refusal, a required accepted SHA, a full land for both bundle shapes — gate,
+unrecorded-commit refusal, detached worktree, the moved-target loop, the backlog union, and a guarded
+cleanup — and abandoning a bundle mid-flight, both with in-flight tickets and after it has landed.
+Exits non-zero on failure.

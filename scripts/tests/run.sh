@@ -195,6 +195,8 @@ export GH_STUB_LOG="$root/merge.log" GH_STUB_BRANCH="ticket/$multi/01" GH_STUB_B
 ok "squash merge requested"         "$(grep -c -- '--squash' "$root/merge.log")" 1
 ok "head branch deleted"            "$(grep -c -- '--delete-branch' "$root/merge.log")" 1
 ok "accepted sha is enforced"       "$(grep -c -- '--match-head-commit deadbeef' "$root/merge.log")" 1
+"$scripts/complete-ticket.sh" 42 >/dev/null 2>&1
+ok "missing accepted sha refuses (64)" "$?" 64
 
 echo "== work/config.conf overrides the defaults"
 cfg=2026-08-17-config
@@ -206,7 +208,7 @@ printf 'TICKET_MERGE_METHOD=merge   # ticket PR merge method\nWORKTREE_DIR=.wt  
 "$scripts/claim-ticket.sh" "$cfg" 01 >/dev/null 2>&1
 ok "worktree honours WORKTREE_DIR"  "$([ -d ".wt/ticket/$cfg/01" ] && echo yes)" yes
 export GH_STUB_LOG="$root/merge2.log" GH_STUB_BRANCH="ticket/$cfg/01" GH_STUB_BASE="bundle/$cfg"
-"$scripts/complete-ticket.sh" 43 >/dev/null 2>&1
+"$scripts/complete-ticket.sh" 43 cafef00d >/dev/null 2>&1
 ok "merge honours TICKET_MERGE_METHOD" "$(grep -c -- '--merge' "$root/merge2.log")" 1
 ok "no --squash when overridden"    "$(grep -c -- '--squash' "$root/merge2.log")" 0
 
@@ -258,7 +260,7 @@ git worktree add -q --detach "$root/adv" "origin/bundle/$multi"
 git worktree remove --force "$root/adv"
 git fetch -q origin
 export GH_STUB_LOG="$root/stale.log" GH_STUB_BRANCH="ticket/$multi/01" GH_STUB_BASE="bundle/$multi"
-"$scripts/complete-ticket.sh" 44 > "$root/stale.out" 2>&1
+"$scripts/complete-ticket.sh" 44 cafef00d > "$root/stale.out" 2>&1
 ok "stale branch refuses (2)"        "$?" 2
 ok "and no merge was requested"      "$([ -f "$root/stale.log" ] && echo yes || echo no)" no
 ok "and it names the cure"           "$(grep -c 're-verify, re-Accept' "$root/stale.out")" 1
@@ -269,13 +271,13 @@ wt=".claude/worktrees/ticket/$multi/01"
 ( cd "$wt" && git merge -q --no-ff -m "chore: merge the base in" "origin/bundle/$multi" &&
   git push -q origin "HEAD:ticket/$multi/01" )
 git fetch -q origin
-"$scripts/complete-ticket.sh" 44 >/dev/null 2>&1
+"$scripts/complete-ticket.sh" 44 cafef00d >/dev/null 2>&1
 ok "current branch merges (0)"       "$?" 0
 
 echo "== an unreadable PR record is unknown, not stale"
 mv "$root/bin/gh" "$root/bin/gh.real"
 printf '#!/usr/bin/env bash\nexit 1\n' > "$root/bin/gh" && chmod +x "$root/bin/gh"
-"$scripts/complete-ticket.sh" 44 > "$root/nopr.out" 2>&1
+"$scripts/complete-ticket.sh" 44 cafef00d > "$root/nopr.out" 2>&1
 ok "unreadable PR exits 1"           "$?" 1
 ok "and does not claim staleness"    "$(grep -c 'unknown base' "$root/nopr.out")" 1
 mv -f "$root/bin/gh.real" "$root/bin/gh"
@@ -404,6 +406,54 @@ ok "landed branch cleans up (0)"      "$?" 0
 ok "but keeps the in-flight ticket"   "$(git ls-remote --heads origin "ticket/$stray/01" | wc -l | tr -d ' ')" 1
 ok "and says it kept it"              "$(grep -c "kept ticket/$stray/01" "$root/cleanup0.out")" 1
 ok "while the bundle branch goes"     "$(git ls-remote --heads origin "bundle/$stray" | wc -l | tr -d ' ')" 0
+
+echo "== abandon: discards every ticket branch regardless of status, and the bundle branch"
+# This checkout has its own unpushed commits (env, target probes) and the land tests above pushed
+# main forward from other worktrees — reconcile both before publishing another bundle here.
+git fetch -q origin
+git merge -q -m "test: sync before publishing another bundle" origin/main
+git push -q origin main
+aband=2026-08-17-abandon
+mkdir -p "work/bundles/$aband/tickets"
+printf 'depends_on: []\n---\nfirst\n'  > "work/bundles/$aband/tickets/01-first.md"
+printf 'depends_on: []\n---\nsecond\n' > "work/bundles/$aband/tickets/02-second.md"
+git add -A && git commit -qm "docs(bundle): publish abandon probe" && git push -q origin main
+"$scripts/claim-ticket.sh" "$aband" 01 >/dev/null 2>&1
+"$scripts/claim-ticket.sh" "$aband" 02 >/dev/null 2>&1
+echo "ticket/$aband/01 bundle/$aband" > "$MERGED"
+ok "one ticket reads done"           "$("$scripts/ticket-status.sh" "$aband" 01)" done
+ok "the other is still doing"        "$("$scripts/ticket-status.sh" "$aband" 02)" doing
+"$scripts/abandon-bundle.sh" "$aband" >/dev/null 2>&1
+ok "abandon exits 0"                 "$?" 0
+git fetch -q --prune origin
+ok "the done ticket branch is gone"  "$(git ls-remote --heads origin "ticket/$aband/01" | wc -l | tr -d ' ')" 0
+ok "the doing ticket branch is gone" "$(git ls-remote --heads origin "ticket/$aband/02" | wc -l | tr -d ' ')" 0
+ok "the bundle branch is gone"       "$(git ls-remote --heads origin "bundle/$aband" | wc -l | tr -d ' ')" 0
+ok "both worktrees are gone"         "$([ -d ".claude/worktrees/ticket/$aband" ] && echo yes || echo no)" no
+: > "$MERGED"
+
+echo "== abandon: refuses a bundle already landed"
+landedb=2026-08-17-landed-abandon
+mkdir -p "work/bundles/$landedb"
+printf 'depends_on: []\n---\nalready shipped\n' > "work/bundles/$landedb/ticket.md"
+git add -A && git commit -qm "docs(bundle): publish landed-abandon probe" && git push -q origin main
+"$scripts/claim-ticket.sh" "$landedb" 01 >/dev/null 2>&1
+# Simulate a completed land from elsewhere: the target loses the bundle directory, but this
+# checkout's own local copy stays until it fetches — the realistic way abandon-bundle.sh sees
+# "already landed", since Land runs in its own worktree, never the bundle session's own checkout.
+git worktree add -q --detach "$root/landedadv" origin/main
+( cd "$root/landedadv" && git rm -rq "work/bundles/$landedb" &&
+  git commit -qm "chore(land): land bundle $landedb" && git push -q origin HEAD:main )
+git worktree remove --force "$root/landedadv"
+git fetch -q origin
+"$scripts/abandon-bundle.sh" "$landedb" > "$root/abandon9.out" 2>&1
+ok "landed bundle refuses (9)"        "$?" 9
+ok "and points at cleanup"            "$(grep -c 'land-bundle.sh cleanup' "$root/abandon9.out")" 1
+ok "nothing was deleted"              "$(git ls-remote --heads origin "bundle/$landedb" "ticket/$landedb/01" | wc -l | tr -d ' ')" 2
+
+echo "== abandon: refuses an unknown bundle"
+"$scripts/abandon-bundle.sh" no-such-bundle >/dev/null 2>&1
+ok "unknown bundle refuses (2)"       "$?" 2
 
 printf '\n%d passed, %d failed\n' "$pass" "$fail"
 [ "$fail" -eq 0 ]
