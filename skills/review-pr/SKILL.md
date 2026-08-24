@@ -29,12 +29,17 @@ findings IDs that survive to the next one.
 - the assigned SHA is the PR's actual head — `gh pr view <pr> --json headRefOid`
 - the tree you are in sits at that SHA — `git rev-parse HEAD`
 - no tracked file is modified — `git status --porcelain --untracked-files=no`
+- the PR is mergeable against its base — `gh pr view <pr> --json mergeable,mergeStateStatus`.
+  `UNKNOWN` is the forge still computing it, not a conflict — wait a few seconds and check once more
+  before treating it as one.
 
 Untracked build output from an earlier round is expected. Any other disagreement stops the round —
 report it instead of reviewing, because a review dispatched from the author's own worktree is
-otherwise indistinguishable from reviewing unpushed work.
+otherwise indistinguishable from reviewing unpushed work. A conflicting base is the same kind of
+stop: judging a diff that cannot land as reviewed spends the round on a defect a sync resolves, not
+one a finding would.
 
-**Done when** all three checks agree, or the round has stopped with the disagreement reported.
+**Done when** all four checks agree, or the round has stopped with the disagreement reported.
 
 ### 3. Read the contract
 

@@ -100,7 +100,9 @@ it.
 These limits bind the PR review–fix loop only. The Shape critique loop stops by the `shape-bundle` skill's
 own rule, deliberately not fixed here.
 
-One Reviewer run is one review round. Three rounds are the normal maximum. Failure to converge by
+One Reviewer run that reaches a verdict is one review round. A run that stops before judging — a
+malformed dispatch, a head that no longer matches what was assigned, a PR that cannot merge into its
+base — does not consume the limit; only a judged run does. Three rounds are the normal maximum. Failure to converge by
 the third round usually signals unclear intent, architectural disagreement, unstable verification,
 or a change that should be reshaped; report that diagnosis to the human. A fourth or fifth round
 requires explicit human direction. Five is the absolute maximum without returning to Shape.
