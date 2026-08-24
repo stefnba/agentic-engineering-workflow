@@ -1,6 +1,6 @@
 ---
 name: review-changes
-description: Judge local git changes with the independent reviewer, without a PR. Use when the user asks to review the working tree, staged or uncommitted changes, the current diff, or a branch with no PR yet — "review my changes", "check this before I commit", "second opinion on this diff" — even when the changes span several conversations or the user authored them by hand. Invoke with an optional base ref (default is HEAD, i.e. the uncommitted work) and an optional one-line intent to judge against. Not for a ticket's PR, which review-pr judges.
+description: Judge local git changes with the independent reviewer, without a PR. Use when the user asks to review the working tree, staged or uncommitted changes, the current diff, or a branch with no PR yet — "review my changes", "check this before I commit", "second opinion on this diff" — even when the changes span several conversations or the user authored them by hand. Invoke with an optional base ref (default is HEAD, judging the staged and uncommitted work like `git diff`; a base ref widens it to commits, branches, or remotes) and an optional one-line intent to judge against. Not for a ticket's PR, which review-pr judges.
 argument-hint: "[base ref] [stated intent]"
 context: fork
 agent: reviewer
@@ -22,12 +22,17 @@ the stated intent.
 
 The baseline is the commit the change set is diffed against:
 
-- no base ref — the baseline is `HEAD`; the change set is the staged, unstaged, and untracked
-  work.
+- no base ref — including an empty `$ARGUMENTS` — the baseline is `HEAD`; the change set is the
+  staged, unstaged, and untracked work, like `git diff`.
 - a base ref — the baseline is `git merge-base <base> HEAD`; the change set is every commit since
   it, plus the uncommitted work on top.
 
-**Done when** the baseline commit resolves and you hold the stated intent or know none was given.
+When the change set is empty, stop and tell the human there is nothing to review against this
+baseline — with no base ref that usually means the work was already committed, so name the fix:
+rerun with a base ref, e.g. the integration target.
+
+**Done when** the baseline commit resolves and the change set is non-empty, and you hold the
+stated intent or know none was given.
 
 ### 2. Fingerprint the tree
 

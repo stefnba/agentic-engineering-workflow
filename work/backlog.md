@@ -19,16 +19,6 @@ Candidate work and follow-ups nobody has picked yet.
   joined — only its two halves separately. One real push settles both. Smaller gaps:
   `--match-head-commit` was confirmed to exist but never exercised against a mismatched head, and
   everything ran on darwin with git 2.52.
-- [follow-up] [skills] Add reference skill `/codebase-design` — supplies shared vocabulary (module, interface,
-  depth, seam, adapter, leverage, locality) for other skills to borrow; not a session driver itself.
-- [follow-up] [skills] The workflow documents a `depends_on` input rule the claim gate doesn't enforce,
-  verified by running it: `claim-ticket.sh` parses the line with a `sed` that handles only the flow form
-  `[01, 02]`. `skills/shape-bundle/templates/ticket.md` names every unsafe form — quoted or unpadded
-  numbers block the claim forever, a trailing comment reads as a dependency, block-sequence style
-  fails open and lets a dependent ticket start early — so the rule reaches whoever writes a ticket
-  from the template, and nothing catches a hand-edit that ignores it. (The sibling `ls tickets`
-  count hazard is gone: `ticket_base` no longer reads the ticket set at all; `ticket_names` still
-  globs `NN-<slug>.md`, with a status-listing regression test.)
 - [idea] [skills] A doc-drift sweep skill (`audit` on the `old-workflow` tag: stale READMEs, broken
   references, glossary violations, contradicted decisions). `scan-codebase` deliberately excludes
   drift; port `audit` fresh against `workflow/` if ambient capture — reconcile steps plus noticed
@@ -77,16 +67,5 @@ Candidate work and follow-ups nobody has picked yet.
   prerequisite for automating the land loop when uniform bundle branches were ruled; today no script
   consumes such a key, which is why it wasn't added with them
   (`docs/decisions/2026-08-18-script-read-settings.md` gates config on a script reader).
-- [follow-up] [skills] `setup` never turns the shipped output style on. Selecting `crisp` is one
-  `outputStyle` line in the consuming repo's `.claude/settings.json`, and nothing in the install list writes
-  or mentions it — so an installed plugin ships a voice nobody enables. Decide whether setup writes the line
-  or only names the style, and reflect it in `README.md`'s install table.
-- [follow-up] [skills] `skills/recap/SKILL.md`'s `Settled` section mixes decisions with actions
-  already taken — a model choice sits beside a file that moved — so a reader cannot tell what was
-  agreed from what now exists. Separate the two.
 - [idea] [skills] [docs] `work/backlog.md`'s bullet format could move to a markdown table (`id`,
   `topic`, `areas`, `details`)
-- [drift] [skills] `skills/writing-for-agents/references/skill-mechanics.md` routes files filled
-  into the output to `assets/`, but `implement-ticket`, `review-pr`, and `critique-bundle` keep
-  theirs in `templates/`.
-  Consistent repo-wide, contradicts the anatomy — align the skills or the anatomy.
