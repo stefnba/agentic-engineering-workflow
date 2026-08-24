@@ -3,7 +3,10 @@ date: 2026-08-18
 status: partially-superseded
 superseded_by: the reconciliation direction only — merging the moved integration target into the
   bundle branch — by [2026-08-20-land-worktree.md](./2026-08-20-land-worktree.md); Land now merges
-  the bundle branch into a detached worktree on the target. The fixed `--no-ff` land stands
+  the bundle branch into a detached worktree on the target. The single-ticket clause — a ticket PR
+  merging into the integration target — by
+  [2026-08-24-uniform-bundle-branch.md](./2026-08-24-uniform-bundle-branch.md). The fixed
+  `--no-ff` land stands
 supersedes: the `work/config.conf` key list in
   [2026-08-18-script-read-settings.md](./2026-08-18-script-read-settings.md), which named the merge
   setting `MERGE_METHOD` as though it covered every merge the workflow performs
