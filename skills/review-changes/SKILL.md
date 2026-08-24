@@ -27,9 +27,16 @@ The baseline is the commit the change set is diffed against:
 - a base ref — the baseline is `git merge-base <base> HEAD`; the change set is every commit since
   it, plus the uncommitted work on top.
 
-When the change set is empty, stop and tell the human there is nothing to review against this
-baseline — with no base ref that usually means the work was already committed, so name the fix:
-rerun with a base ref, e.g. the integration target.
+When the change set is empty, stop. Reply with exactly this shape — two lines, no headings, no
+fingerprint, no report template:
+
+```text
+Nothing to review — <why the set is empty, one clause, e.g. "the working tree is clean" or "`main` is level with `HEAD`">.
+To review committed work, rerun with a base ref behind `HEAD` — e.g. `/review-changes <a resolved ref behind HEAD> [intent]`.
+```
+
+Fill every `<…>` slot before replying; pick the example ref so it yields a non-empty set (a
+commit behind `HEAD`, not one level with it).
 
 **Done when** the baseline commit resolves and the change set is non-empty, and you hold the
 stated intent or know none was given.
