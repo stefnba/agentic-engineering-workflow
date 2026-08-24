@@ -18,11 +18,11 @@ intent, or a concrete failure mechanism. -->
 
 ❌ F<N> [verified|suspected] <axis> — <file:line or command>
 
-- Violates: <the referent>
-- Claim: <what the change does or asserts>
-- Evidence: <what you ran or read, and the result>
-- Impact: <the concrete failure or risk>
-- Required outcome: <the property a fix must establish, without writing the fix>
+- **Violates**: <the referent>
+- **Claim**: <what the change does or asserts>
+- **Evidence**: <what you ran or read, and the result>
+- **Impact**: <the concrete failure or risk>
+- **Required outcome**: <the property a fix must establish, without writing the fix>
 
 ### Verification
 

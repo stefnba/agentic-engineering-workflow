@@ -4,7 +4,8 @@ check that passed and raised no finding appears only in the verification table. 
 
 ## Review — round <N>
 
-**Head**: `<SHA>` ✅ PR head, tree clean at that SHA
+**Head**: `<SHA>`
+**Status**: ✅ <the step-2 tree checks that hold, one line> | 🛑 <the check that stopped the round>
 **Scope**: full | delta since `<previous round's head SHA>`
 
 ### Findings

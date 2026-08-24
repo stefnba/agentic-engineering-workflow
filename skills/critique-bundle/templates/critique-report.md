@@ -11,11 +11,11 @@ rule in bundle.md / artifacts.md / shaping-routes.md, or a concrete failure mech
 
 ❌ C<N> [verified|suspected] <axis> — <artifact:section or repository path>
 
-- Violates: <the referent>
-- Claim: <what the bundle says or assumes>
-- Evidence: <what you inspected>
-- Impact: <what becomes wrong, unsafe, or unexecutable>
-- Required outcome: <the property Shape must establish, without writing the fix>
+- **Violates**: <the referent>
+- **Claim**: <what the bundle says or assumes>
+- **Evidence**: <what you inspected>
+- **Impact**: <what becomes wrong, unsafe, or unexecutable>
+- **Required outcome**: <the property Shape must establish, without writing the fix>
 
 ### Coverage
 
