@@ -50,9 +50,7 @@ detached worktree on the integration target with the bundle branch merged in. **
 happens in the worktree it prints** — that tree is where the checks run and what gets published.
 
 Read a non-zero exit as a stop, not as something to work around: its message states the reason and
-the next action — report it, and leave anything it says is in the way to the human. One code routes
-instead of stopping: `4` means a single-ticket bundle with no branch to land, so steps 2–4 commit in
-this checkout and push.
+the next action — report it, and leave anything it says is in the way to the human.
 
 ### 2. Absorb what the durable docs still need
 
@@ -103,6 +101,11 @@ against the new state, and run `push` again. Repeat until it exits `0`. Never pu
 merged state is one no check has run against, which is the whole reason the script refuses to
 publish it for you.
 
+**Red after a `6` is an escalation, not a fix loop.** The break lives in a merged state no reviewer
+saw, so it is not yours to patch — a fix would be a behavior change, which Boundaries already rules
+out of Land. Report the failing check's output and the upstream commits the merge brought in, then
+stop; the human routes it, usually as a new bundle.
+
 ### 6. Remove the leftovers
 
 ```text
@@ -110,20 +113,23 @@ ${CLAUDE_PLUGIN_ROOT}/scripts/land-bundle.sh cleanup <bundle-id>
 ```
 
 Ticket branches, the bundle branch, every worktree — Land's own last, and from the repository root.
-Branches a forge already deleted on merge are skipped, not treated as an error.
+Branches a forge already deleted on merge are skipped, not treated as an error. Cleanup guards
+itself: it refuses outright when the bundle branch carries unlanded work, and it keeps any ticket
+branch whose PR is not merged — a live claim — reporting what it kept.
 
 ### 7. Hand back
 
 **Query the end state before reporting it.** `cleanup` exiting `0` proves it ran, not that nothing
 survived it — a branch the forge already removed and a branch it refused to remove both leave that
-exit code, and `git worktree remove` deletes the leaf it was given while its parent directories
-stay. Run these from the repository root and report what they return, not what you expected:
+exit code, and a ticket branch it kept keeps its worktree too. `cleanup` removes the scaffolding
+directories it emptied, `$WORKTREE_DIR` itself included, so a missing directory is the clean
+outcome. Run these from the repository root and report what they return, not what you expected:
 
 ```text
 . ${CLAUDE_PLUGIN_ROOT}/scripts/_config.sh   # for $WORKTREE_DIR
 git fetch --prune origin && git ls-remote --heads origin       # ticket and bundle branches
 git worktree list                                              # every registered worktree
-find "$WORKTREE_DIR" -mindepth 1                               # directories git no longer tracks
+[ -d "$WORKTREE_DIR" ] && find "$WORKTREE_DIR" -mindepth 1     # survivors; a missing dir is clean
 ls work/bundles/                                               # the bundle itself
 ```
 

@@ -5,8 +5,8 @@ What a repository needs before the workflow can run.
 ## Git
 
 - A remote repository with a local clone.
-- A declared integration target branch — the branch bundles commit to, ticket branches and
-  worktrees are cut from, and a bundle lands on.
+- A declared integration target branch — the branch bundles commit to, bundle branches are cut
+  from, and a bundle lands on.
 - If the default branch is protected (required reviews, no direct push, required linear history),
   declare a separate integration target (e.g. `dev`). Promoting it to the protected branch is a
   separate release process this workflow doesn't own or verify.
