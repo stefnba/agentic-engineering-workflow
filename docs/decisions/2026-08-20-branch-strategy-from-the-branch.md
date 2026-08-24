@@ -1,6 +1,9 @@
 ---
 date: 2026-08-20
-status: accepted
+status: superseded
+superseded_by: entirely, by
+  [2026-08-24-uniform-bundle-branch.md](./2026-08-24-uniform-bundle-branch.md) — every bundle gets
+  a bundle branch, so there is no derivation left for the two arms to order
 areas: [workflow, skills]
 supersedes: the branch-strategy bullet of
   [2026-08-20-derived-execution-state.md](./2026-08-20-derived-execution-state.md), which derived it
