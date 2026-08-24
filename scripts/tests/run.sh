@@ -109,6 +109,8 @@ ok "solo claim exits 0"             "$?" 0
 ok "no bundle branch"               "$(git ls-remote --heads origin "bundle/$solo" | wc -l | tr -d ' ')" 0
 "$scripts/claim-ticket.sh" "$solo" ticket >/dev/null 2>&1
 ok "slug instead of NN refuses (2)" "$?" 2
+"$scripts/claim-ticket.sh" "$solo" 07 >/dev/null 2>&1
+ok "wrong NN on a solo bundle refuses (2)" "$?" 2
 
 echo "== listing"
 ok "lists every bundle"             "$("$scripts/bundle-status.sh" | wc -l | tr -d ' ')" 2
@@ -134,6 +136,8 @@ ok "same answer from the worktree"  "$(cat "$root/links-wt.out")" "$(sed -n 1p "
 ok "solo bundle links ticket.md"    "$(sed -n 1p "$root/links-solo.out")" \
                                     "- Ticket: \`01\` — [\`ticket.md\`](https://forge.test/acme/widgets/blob/$published/work/bundles/$solo/ticket.md)"
 ok "and targets the integration target" "$(sed -n 2p "$root/links-solo.out")" "- Base: \`main\`"
+"$scripts/pr-links.sh" "$solo" 07 >/dev/null 2>&1
+ok "pr-links wrong solo NN refuses (2)" "$?" 2
 "$scripts/pr-links.sh" "$multi" 99 >/dev/null 2>&1
 ok "unknown ticket refuses (2)"     "$?" 2
 "$scripts/pr-links.sh" 2026-01-01-nope 01 >/dev/null 2>&1
@@ -155,6 +159,14 @@ ok "stray-file claim exits 0"       "$?" 0
 ok "one ticket still takes no branch" "$(git ls-remote --heads origin "bundle/$stray" | wc -l | tr -d ' ')" 0
 printf 'ticket/%s/01 main\n' "$stray" >> "$MERGED"
 ok "status agrees on the base"      "$("$scripts/ticket-status.sh" "$stray" 01)" done
+
+echo "== a ticket file the listing cannot see is not claimable"
+pad=2026-08-17-pad
+mkdir -p "work/bundles/$pad/tickets"
+printf 'depends_on: []\n---\nunpadded\n' > "work/bundles/$pad/tickets/1-unpadded.md"
+git add "work/bundles/$pad" && git commit -qm "docs(bundle): publish a mis-named ticket" && git push -q origin main
+"$scripts/claim-ticket.sh" "$pad" 1 >/dev/null 2>&1
+ok "unpadded NN refuses (2)"        "$?" 2
 
 echo "== an unreachable forge never reads as todo"
 mv "$root/bin/gh" "$root/bin/gh.real"
