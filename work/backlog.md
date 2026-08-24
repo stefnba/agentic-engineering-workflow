@@ -4,8 +4,6 @@ Candidate work and follow-ups nobody has picked yet.
 
 ## Items
 
-- [follow-up] [skills] The research split from `docs/decisions/2026-08-18-consuming-repo-layout.md` is now in
-  `workflow/artifacts.md`'s authority table, but the research skill that has to honour it is unbuilt.
 - [follow-up] [agents] Structurally enforce the read-only agents. `agents/reviewer.md` and `agents/critic.md`
   now carry a `tools:` allowlist, which withholds file editing only — both keep `Bash` because
   verification and repository reading need it, so nothing stops a push, approve, or merge except the
@@ -16,9 +14,6 @@ Candidate work and follow-ups nobody has picked yet.
   unconditionally, where `git show old-workflow:skills/bundle-git/SKILL.md` classified them first —
   merged, open PR, in flight — and refused to touch anything unmerged. Add that classification:
   `gh pr list --head` rather than ancestry, because a squash merge leaves none.
-- [drift] [skills] [docs] `README.md` and `docs/walkthrough.md` name skills that hold nothing yet —
-  `scan-codebase` and `research`. (`land-bundle`, `review-pr`, and `complete-ticket` now exist.)
-  Whoever builds one claims its name from the README table.
 - [follow-up] [skills] `shape-bundle` publishes the approved bundle by hand — `git add`/`commit`/`push` from the
   prompt, sourcing `scripts/_config.sh` for `INTEGRATION_TARGET`. Every other state
   transition is a script; this one is prose, so a collision retry or a wrong target branch depends
@@ -37,14 +32,10 @@ Candidate work and follow-ups nobody has picked yet.
   fails open and lets a dependent ticket start early — so the rule reaches whoever writes a ticket
   from the template, and nothing catches a hand-edit that ignores it. (The sibling `ls tickets`
   count is fixed: `_config.sh`'s `ticket_base` globs `NN-<slug>.md`, with a regression test.)
-- [follow-up] [skills] Two skills stay on the `old-workflow` tag because they encode the superseded
-  contract: `research` and `audit` (→ `scan-codebase`), along with the `researcher` agent they fork
-  into. Write them fresh against `workflow/`, with `git show old-workflow:skills/<name>/SKILL.md` as
-  reference, rather than restoring and patching paths; `researcher` preloads `backlog` via its
-  `skills:` field, which now exists. Open first: `audit` wrote a `docs/research/audit-*.md` plus
-  backlog lines autonomously, but `docs/walkthrough.md` and `workflow/artifacts.md` now say a
-  codebase scan's findings stay inline in chat and get triaged live — settle which before writing
-  it.
+- [idea] [skills] A doc-drift sweep skill (`audit` on the `old-workflow` tag: stale READMEs, broken
+  references, glossary violations, contradicted decisions). `scan-codebase` deliberately excludes
+  drift; port `audit` fresh against `workflow/` if ambient capture — reconcile steps plus noticed
+  drift routed to the backlog — proves insufficient.
 - [follow-up] [skills] A consuming repo has no read path into `workflow/` at all. The installed `AGENTS.md`
   pointer deliberately stops at naming the plugin, `docs/conventions/git.md`, `work/config.conf`, and the
   two caretaker skills: no placeholder resolves in project instructions, and the line routing every stage

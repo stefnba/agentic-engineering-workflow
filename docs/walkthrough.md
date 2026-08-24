@@ -32,8 +32,11 @@ shaping. [Lifecycle](../workflow/lifecycle.md) defines this session model;
 **Entry point — how you arrive at something to work on:**
 
 - **Backlog pick** — `/pick` a one-line item from `work/backlog.md`.
-- **Codebase scan** — `/scan-codebase` for full or narrow findings. Results appear inline in chat,
-  never in a file. You triage each one right there: accept it into the backlog, or reject it.
+- **Codebase scan** — `/scan-codebase` for design and quality findings, full or narrowed to an
+  area. Results appear inline in chat, never in a file. You triage each one right there: accept it
+  into the backlog, or reject it.
+- **Topic research** — `/research` a question in a background fork; it comes back as a
+  `docs/research/` file plus backlog lines to pick from.
 - **Fresh idea** — anything you bring yourself; no different from a backlog pick once it's out loud.
 
 **Narrowing — almost every entry point still needs it.** A backlog line is a title, not a settled

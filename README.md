@@ -61,7 +61,7 @@ Two kinds of content deliberately live elsewhere:
 
 ## Skills
 
-The planned set. Seventeen exist under [skills/](skills/) today — `setup`, `backlog`, `pick`, `interview-me`, `shape-bundle`, `critique-bundle`, `implement-ticket`, `review-pr`, `complete-ticket`, `land-bundle`, `bundle-state`, `record-decision`, `glossary`, `handoff`, `recap`, `judge`, and `writing-for-agents`; the rest are named here because the workflow docs refer to them, and are tracked in the backlog. Each name is a pointer — the authoritative description lives in that skill's `SKILL.md` frontmatter.
+The planned set. Nineteen exist under [skills/](skills/) today — `setup`, `backlog`, `pick`, `scan-codebase`, `research`, `interview-me`, `shape-bundle`, `critique-bundle`, `implement-ticket`, `review-pr`, `complete-ticket`, `land-bundle`, `bundle-state`, `record-decision`, `glossary`, `handoff`, `recap`, `judge`, and `writing-for-agents`. Each name is a pointer — the authoritative description lives in that skill's `SKILL.md` frontmatter.
 
 ### Workflow skills
 
@@ -69,7 +69,7 @@ Stage-bound — each realizes one role of the [workflow](workflow/lifecycle.md):
 
 | Name               | Stage     | Purpose                              |
 | ------------------ | --------- | ------------------------------------ |
-| `scan-codebase`    | Discover  | Sweeps the repo for drift            |
+| `scan-codebase`    | Discover  | Surveys code design and quality      |
 | `research`         | Discover  | Investigates one topic               |
 | `interview-me`     | Discover  | Grills intent until settled          |
 | `pick`             | Discover  | Presents candidates; the human picks |
@@ -84,27 +84,29 @@ Stage-bound — each realizes one role of the [workflow](workflow/lifecycle.md):
 
 Not stage-bound — they serve any session:
 
-| Name                 | Purpose                                    |
-| -------------------- | ------------------------------------------ |
-| `setup`              | Installs the workflow                      |
-| `bundle-state`       | Claims tickets, reports status             |
-| `backlog`            | Maintains the backlog file                 |
-| `glossary`           | Maintains the domain glossary              |
-| `record-decision`    | Writes decision records                    |
-| `judge`              | Rules on open design questions             |
-| `handoff`            | Compacts a dying session                   |
-| `recap`              | Reports the session back to the human      |
-| `writing-for-agents` | Reviews agent-facing documents             |
+| Name                 | Purpose                               |
+| -------------------- | ------------------------------------- |
+| `setup`              | Installs the workflow                 |
+| `bundle-state`       | Claims tickets, reports status        |
+| `backlog`            | Maintains the backlog file            |
+| `glossary`           | Maintains the domain glossary         |
+| `record-decision`    | Writes decision records               |
+| `judge`              | Rules on open design questions        |
+| `handoff`            | Compacts a dying session              |
+| `recap`              | Reports the session back to the human |
+| `writing-for-agents` | Reviews agent-facing documents        |
 
 ## Agents
 
 The subagents forked skills run in, under [agents/](agents/):
 
-| Name       | Purpose                                                                               |
-| ---------- | ------------------------------------------------------------------------------------- |
-| `arbiter`  | Rules on an open design question, in a fresh read-only context                        |
-| `critic`   | Read-only spec attacker, before the Plan gate                                         |
-| `reviewer` | Judges a ticket's PR. Run read-only in a fresh context with no authorship of the diff |
+| Name         | Purpose                                                                               |
+| ------------ | ------------------------------------------------------------------------------------- |
+| `arbiter`    | Rules on an open design question, in a fresh read-only context                        |
+| `critic`     | Read-only spec attacker, before the Plan gate                                         |
+| `researcher` | Gathers topic evidence into docs/research/ plus backlog lines, in the background      |
+| `reviewer`   | Judges a ticket's PR. Run read-only in a fresh context with no authorship of the diff |
+| `scanner`    | Surveys code for design and quality findings, read-only in a fresh context            |
 
 ## Output style
 
