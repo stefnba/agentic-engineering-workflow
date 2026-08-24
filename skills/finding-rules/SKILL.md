@@ -82,6 +82,10 @@ fault for a finding; that derivation belongs in the reporting agent's context, n
 
 ## Across rounds
 
+These rules bind the PR review–fix loop only — the one loop where a finding ID survives into the
+next round. A re-critique at plan time is a fresh judgment with fresh IDs; no prior round reaches
+it.
+
 - **A finding's severity may not increase across rounds.** A concern stays a concern. If new
   evidence shows the risk is worse than judged, that is a new finding with its own ID and its own
   evidence — not a re-grade of the old one. Re-grading turns review into leverage over a
