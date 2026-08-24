@@ -6,12 +6,13 @@ description: The red–green discipline for building behavior test-first — cyc
 # Test-driven development
 
 Build behavior in red–green cycles: one failing test, the minimal change that passes it, repeat.
-Take the seam and the first failing test from the ticket's `Pre-change evidence` — the Plan gate
-decided both, and the loop starts after that first observed red, never by choosing its own.
+Take the seam and the first red from the contract that precedes the work — a ticket's
+`Pre-change evidence` where one is in play; with no ticket, agree the seam with the user before
+writing the first test.
 
 ## The loop
 
-- **Red before green.** Write one failing test at the approved seam and run it before writing any
+- **Red before green.** Write one failing test at the agreed seam and run it before writing any
   implementation. Observe it fail for the expected reason — a test that never failed proves nothing
   about the code that follows.
 - **Green minimally.** Write only enough implementation to pass the test in front of you. Structure
@@ -19,24 +20,20 @@ decided both, and the loop starts after that first observed red, never by choosi
 - **One slice per cycle.** One test, one minimal implementation. Pick the next test from what this
   cycle taught — a tracer bullet through the next unproven behavior — not from a list drawn up
   before the first cycle ran.
-- **Refactor between cycles, while green.** Reshape only under passing tests, and only within the
-  ticket's scope. When the reshaping touches a module seam, read the `code-design` skill first.
+- **Refactor between cycles, under passing tests** — never mid-cycle with a red test on the board.
 
 ## What makes a test worth keeping
 
-- **It exercises behavior through the seam's public interface.** It reads like a specification —
-  the name states the capability — and it survives a refactor of everything behind the interface.
-- **Its expected values come from an independent source**: a known-good literal, a worked example,
-  the spec. An assertion that recomputes the expectation the way the code does passes by
-  construction and can never disagree with the code.
+- **It reads like a specification.** The name states the capability, and the body exercises it
+  through the seam's interface. Read the `code-design` skill's "Designing for testability" section
+  before attaching a test anywhere other than that interface.
+- **Its expected values come from an independent source.** A known-good literal, a worked example,
+  the spec — an assertion that recomputes the expectation the way the code does
+  (`expect(add(a, b)).toBe(a + b)`) passes by construction and can never disagree with the code.
 
-## Anti-patterns
+## Anti-pattern: horizontal slicing
 
-- **Implementation-coupled**: mocks internal collaborators, asserts private state, or verifies
-  through a side channel instead of the interface. The tell: the test breaks under refactor while
-  behavior holds.
-- **Tautological**: the expected value is derived by the same computation as the actual —
-  `expect(add(a, b)).toBe(a + b)`, a hand-derived snapshot, a constant asserted against itself.
-- **Horizontal slicing**: all tests written first, then all implementation. Bulk tests verify
-  imagined behavior and commit to test structure before the implementation teaches anything —
-  work in vertical slices instead, one cycle at a time.
+Writing all tests first and all implementation after verifies imagined behavior and commits to test
+structure before the implementation teaches anything. Work in vertical slices, one cycle at a time.
+A separately authored acceptance suite run unchanged is not this anti-pattern — it supplies red
+evidence; the slicing rule governs the tests written inside the loop.
