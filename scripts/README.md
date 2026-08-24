@@ -38,7 +38,7 @@ states the reason and the next action, so nothing else needs a mapping. The numb
 only for scripts and tests that branch on them:
 
 - `claim-ticket.sh` — `2` no such ticket · `3` dependency not `done` · `4` already claimed ·
-  `5` stale worktree
+  `5` stale worktree · `6` malformed `depends_on`
 - `pr-links.sh` — `2` no such ticket · `3` bundle not published · `4` forge unreachable
 - `complete-ticket.sh` — `2` stale against its base
 - `land-bundle.sh` — `2` no such bundle · `3` a ticket not `done` · `4` no bundle branch (never

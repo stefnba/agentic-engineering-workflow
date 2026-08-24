@@ -19,14 +19,6 @@ Candidate work and follow-ups nobody has picked yet.
   joined — only its two halves separately. One real push settles both. Smaller gaps:
   `--match-head-commit` was confirmed to exist but never exercised against a mismatched head, and
   everything ran on darwin with git 2.52.
-- [follow-up] [skills] The workflow documents a `depends_on` input rule the claim gate doesn't enforce,
-  verified by running it: `claim-ticket.sh` parses the line with a `sed` that handles only the flow form
-  `[01, 02]`. `skills/shape-bundle/templates/ticket.md` names every unsafe form — quoted or unpadded
-  numbers block the claim forever, a trailing comment reads as a dependency, block-sequence style
-  fails open and lets a dependent ticket start early — so the rule reaches whoever writes a ticket
-  from the template, and nothing catches a hand-edit that ignores it. (The sibling `ls tickets`
-  count hazard is gone: `ticket_base` no longer reads the ticket set at all; `ticket_names` still
-  globs `NN-<slug>.md`, with a status-listing regression test.)
 - [idea] [skills] A doc-drift sweep skill (`audit` on the `old-workflow` tag: stale READMEs, broken
   references, glossary violations, contradicted decisions). `scan-codebase` deliberately excludes
   drift; port `audit` fresh against `workflow/` if ambient capture — reconcile steps plus noticed

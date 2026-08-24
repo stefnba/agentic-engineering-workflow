@@ -9,9 +9,8 @@ plan: ../plan.md
 # depends_on is the line the claim script parses. Write it as a flow list of unquoted two-digit
 # ticket numbers on one line, with nothing after the closing bracket:
 #     depends_on: []            depends_on: [01]            depends_on: [01, 02]
-# Every other YAML form is unsafe: quoted ("01") or unpadded (1) numbers name a branch that never
-# exists and block the claim forever, a trailing # comment is read as a dependency, and
-# block-sequence style parses as no dependency at all — which lets a dependent ticket start early.
+# Every other YAML form — quoted ("01") or unpadded (1) numbers, a trailing # comment,
+# block-sequence style — is refused at claim time rather than parsed.
 # Record only real blocking edges; Dependencies and parallelization in
 # ${CLAUDE_PLUGIN_ROOT}/workflow/bundle.md defines which edges those are.
 depends_on: []
