@@ -7,7 +7,8 @@
 #   land-bundle.sh push    <bundle-id>  publish that worktree's tip on the integration target
 #   land-bundle.sh cleanup <bundle-id>  delete the bundle's branches, remove its worktrees
 #
-#   exit: 2 no such bundle          3 a ticket is not done
+#   exit: 2 no such bundle, push before start, or cleanup from inside a worktree
+#         3 a ticket is not done, or its PR record could not be queried
 #         4 no bundle branch        5 stale land worktree
 #         6 the target moved — re-run the canonical checks, then push again
 #         7 merge conflict left in the land worktree, for the human to resolve
