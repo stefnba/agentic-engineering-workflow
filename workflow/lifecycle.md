@@ -36,6 +36,8 @@ solely to prove that the stage happened.
 - [Coordination](#coordination) — who dispatches what, and which transitions are scripts
 - [1. Discover](#1-discover) · [2. Shape](#2-shape) · [3. Implement](#3-implement) ·
   [4. Review](#4-review) · [5. Land](#5-land)
+- [Shape run conditions](#shape-run-conditions) · [Implement run conditions](#implement-run-conditions) ·
+  [Review run conditions](#review-run-conditions) — who runs each stage's agents, and under what access
 - [PR handoff contract](#pr-handoff-contract) — what an implementation PR body must carry
 - [Convergence and round limit](#convergence-and-round-limit) — when review stops
 - [Human authority](#human-authority) — the three gates no agent may pass
@@ -149,7 +151,9 @@ Planning is repository-grounded, so it may reveal a migration decision, compatib
 failure behavior, or invariant absent from intent. Resolve that gap in the owning artifact before
 continuing; never let a ticket silently decide it.
 
-**Run conditions:** the Architect runs in the human-facing planning session with read access to the
+### Shape run conditions
+
+The Architect runs in the human-facing planning session with read access to the
 repository and write access only to the draft bundle; that boundary is prompt-level, not enforced.
 The Critic runs in a fresh context with no authorship of the bundle and no file-editing capability,
 withheld structurally; a shell stays available for reading the repository, so the rest of read-only
@@ -175,7 +179,9 @@ evidence, and introduces no requirement or cross-ticket decision absent from app
 
 **Objective:** turn one approved ticket into a verified and reconciled implementation PR.
 
-**Run conditions:** the Implementer runs in a fresh context once per dispatched ticket and stays in
+### Implement run conditions
+
+The Implementer runs in a fresh context once per dispatched ticket and stays in
 it through every fix round — one ticket, one branch, one worktree, one session. It receives the
 approved bundle, its assigned ticket, repository conventions, the current PR when one exists, and
 the branch and worktree the claim script prepared — run by the human before the session or as the
@@ -224,7 +230,9 @@ an independent Reviewer.
 
 **Objective:** independently judge what implementation and deterministic verification cannot.
 
-**Run conditions:** the Reviewer runs in a fresh context per round with no authorship of the diff
+### Review run conditions
+
+The Reviewer runs in a fresh context per round with no authorship of the diff
 and no file-editing capability, withheld structurally rather than by instruction. Verification needs
 a shell, so the rest of read-only — no push, approve, or merge — is prompt-level, not enforced.
 Read-only binds the change, not the filesystem: build output, caches, and temp files are expected;
@@ -232,7 +240,7 @@ source, refs, branches, and PR state are not. Each run receives the PR number an
 SHA to judge, and confirms against the forge that the SHA is the PR head, that the tree it inspects
 sits there with no tracked file modified, and that the PR is mergeable against its base. A run that
 stops on any of these never reaches judgment, so it does not consume a round
-([Finding rules](../skills/finding-rules/SKILL.md), Convergence and round limit).
+([Finding rules](../skills/finding-rules/SKILL.md#convergence-and-round-limit), Convergence and round limit).
 
 The Reviewer reruns required checks, reads changed code in context, and applies its judgment method
 and output contract.
@@ -291,7 +299,7 @@ approves, or merges the change.
 
 What counts as a review round, the round limits, the diagnosis when rounds fail to converge, and
 what makes a PR ready for human review are owned by
-[Finding rules](../skills/finding-rules/SKILL.md) (Convergence and round limit) — preloaded into
+[Finding rules](../skills/finding-rules/SKILL.md#convergence-and-round-limit) (Convergence and round limit) — preloaded into
 the Reviewer and binding on fix mode.
 
 The final Reviewer comment is tied to the reviewed head SHA and states:

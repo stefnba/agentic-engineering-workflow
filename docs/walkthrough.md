@@ -92,7 +92,7 @@ From the same ticket tab, the implementation session dispatches review as a fres
 no message history with the implementer, so it judges independently — but it does share the tab's
 worktree, so it first confirms it's looking at the exact PR head with nothing uncommitted and that the
 PR is still mergeable against its base, and stops rather than judge a diff that can't land as reviewed
-([Lifecycle](../workflow/lifecycle.md#4-review), Run conditions). Then, without you:
+([Lifecycle](../workflow/lifecycle.md#review-run-conditions), Run conditions). Then, without you:
 
 - The reviewer posts its findings to the PR and returns a summary to the tab.
 - The implementer works through them — still this tab, so you can weigh in on any of them: it fixes,
@@ -144,6 +144,6 @@ Land in [Lifecycle](../workflow/lifecycle.md) has the exact steps;
 - **A sibling ticket landed first and your branch now conflicts with it** — caught either by the
   currency check before you hand back, or by the reviewer, which stops before judging rather than
   spending a round on a diff that can't land as reviewed
-  ([Lifecycle](../workflow/lifecycle.md#4-review), Review Run conditions). Either way it surfaces in the same
+  ([Lifecycle](../workflow/lifecycle.md#review-run-conditions), Review Run conditions). Either way it surfaces in the same
   tab you're already in, and you resolve it there — it isn't a separate escalation.
   [Git mechanics](../workflow/git-mechanics.md#ticket-branch-currency) (Ticket-branch currency) owns who resolves it.
