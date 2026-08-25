@@ -45,8 +45,10 @@ and route it to the owner the bar names.
    when unsure what makes a term usable, read the **Areas** section of
    `${CLAUDE_PLUGIN_ROOT}/workflow/artifacts.md`. Coin a new area only when nothing there fits, never as a near-synonym of a
    term that does.
-4. **Confirm the draft with the user before writing.** A record is immutable once written, so a
-   wrong claim costs a second record to correct. Show the whole draft — it is short by design.
+4. **Write the file directly; the uncommitted diff is the review.** Skip pasting the draft into
+   chat — the human reads it in the working tree, where a diff is easier to review than a chat
+   message. Until the commit, the file is still a draft: revise it in place on feedback.
+   Immutability starts at the commit, not at the write.
 
 ## What makes it self-contained
 
@@ -76,4 +78,5 @@ it changes, including the parts that turned out to be wrong.
 ## Reporting back
 
 Name the file you wrote and the record it supersedes, if any. Don't restate the decision — the user
-just answered every question in it.
+just answered every question in it. Propose the commit and stop: commit only after the human has
+read the record and said to.
