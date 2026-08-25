@@ -61,7 +61,9 @@ Triggered once, by `/shape-bundle`, in the bundle's session. Everything after th
    choice).
 2. It drafts those artifacts.
 3. It dispatches a fresh-context critique, revises and re-critiques until nothing blocking
-   remains, then briefly summarizes what changed because of it.
+   remains, then briefly summarizes what changed because of it. That loop is bounded too; if
+   blockers won't resolve, it stops and reports the disagreement instead of grinding
+   ([shape-bundle](../skills/shape-bundle/SKILL.md#7-critique-then-revise) has the limit).
 
 What comes back to you: a summary of what will be built, the ticket list with its sequencing — what's
 serial, what's safe in parallel — and one paste-ready opening prompt per currently unblocked ticket.
@@ -88,17 +90,18 @@ Only open a ticket's tab once every ticket it depends on is `done`.
 
 From the same ticket tab, the implementation session dispatches review as a fresh subagent. It shares
 no message history with the implementer, so it judges independently — but it does share the tab's
-worktree, so it first confirms it's looking at the exact PR head with nothing uncommitted, and stops
-rather than review unpushed work. Then, without you:
+worktree, so it first confirms it's looking at the exact PR head with nothing uncommitted and that the
+PR is still mergeable against its base, and stops rather than judge a diff that can't land as reviewed
+([Lifecycle](../workflow/lifecycle.md#4-review), Run conditions). Then, without you:
 
 - The reviewer posts its findings to the PR and returns a summary to the tab.
 - The implementer works through them — still this tab, so you can weigh in on any of them: it fixes,
   or rebuts with evidence, or escalates anything that would need a planning decision. Not every
   finding must be fixed — some are risks that carry forward for you to accept at merge time
-  ([Lifecycle](../workflow/lifecycle.md) defines the two kinds).
+  ([Finding rules](../skills/finding-rules/SKILL.md#two-severities) defines the two kinds).
 - It posts a fix summary at the new head, which kicks off the next round. The loop is bounded; if it
   can't converge, it reports that to you instead of grinding
-  ([Finding rules](../skills/finding-rules/SKILL.md) has the limits).
+  ([Finding rules](../skills/finding-rules/SKILL.md#convergence-and-round-limit) has the limits).
 
 Because you're in that tab's conversation the whole time, you can jump in and steer or fix things
 yourself at any point — nothing about this loop locks you out.
@@ -131,16 +134,16 @@ Land in [Lifecycle](../workflow/lifecycle.md) has the exact steps;
 ## FAQ
 
 - **You don't want to finish a bundle** — trigger `/abandon-bundle`, at any point, whatever mix of
-  `done`, `doing`, and `todo` its tickets are in. [Work bundles](../workflow/bundle.md) (Lifetime,
-  Abandoned) and [Git mechanics](../workflow/git-mechanics.md) (Abandoning a bundle) own what that
+  `done`, `doing`, and `todo` its tickets are in. [Work bundles](../workflow/bundle.md#lifetime) (Lifetime,
+  Abandoned) and [Git mechanics](../workflow/git-mechanics.md#abandoning-a-bundle) (Abandoning a bundle) own what that
   discards and why it's safe.
 - **You pushed a commit straight to a ticket branch, outside its tab** — nothing to undo: the next
   review round judges whatever is actually at the head, and `/complete-ticket` refuses to merge
-  unless the SHA you name still matches it. [Git mechanics](../workflow/git-mechanics.md)
+  unless the SHA you name still matches it. [Git mechanics](../workflow/git-mechanics.md#ticket-branch-currency)
   (Ticket-branch currency) owns the rule.
 - **A sibling ticket landed first and your branch now conflicts with it** — caught either by the
   currency check before you hand back, or by the reviewer, which stops before judging rather than
   spending a round on a diff that can't land as reviewed
-  ([Lifecycle](../workflow/lifecycle.md), Review Run conditions). Either way it surfaces in the same
+  ([Lifecycle](../workflow/lifecycle.md#4-review), Review Run conditions). Either way it surfaces in the same
   tab you're already in, and you resolve it there — it isn't a separate escalation.
-  [Git mechanics](../workflow/git-mechanics.md) (Ticket-branch currency) owns who resolves it.
+  [Git mechanics](../workflow/git-mechanics.md#ticket-branch-currency) (Ticket-branch currency) owns who resolves it.
