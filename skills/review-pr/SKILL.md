@@ -1,7 +1,7 @@
 ---
 name: review-pr
-description: Judge one implementation PR at its exact head SHA. Dispatched by the implement-ticket skill once per review round; also use when the user asks to review or re-review a ticket's PR. Takes the PR number, head SHA, round number, and an optional scope — full (default) or delta (only the fixes since the previous round).
-argument-hint: "[PR number] [head SHA] [round number] [full|delta]"
+description: Judge one implementation PR at its exact head SHA. Dispatched by the implement-ticket skill once per review round; also use when the user asks to review or re-review a ticket's PR. Takes the PR number, head SHA, round number, and a scope — full (default) or delta (only the fixes since the previous round). Every argument is optional; an omitted PR number resolves from the current branch, an omitted SHA or round number from the forge.
+argument-hint: "[PR number] [head SHA] [round number] [full|delta] — omitted values are derived"
 context: fork
 agent: reviewer
 background: false
@@ -15,21 +15,37 @@ One review round: judge the PR at the assigned head SHA and return the round's f
 
 ### 1. Resolve the assignment
 
-`$ARGUMENTS` carries the PR number, the exact head SHA to judge, the round number, and
-optionally a scope — `full` or `delta` — in that order. Resolve the PR with `gh pr view <pr>`. A
-number that doesn't resolve, a missing SHA, or a missing round number is your result: report it
-and stop — a round with no number cannot give its findings IDs that survive to the next one.
+`$ARGUMENTS` carries up to four values in order — PR number, head SHA to judge, round number,
+and a scope, `full` or `delta`.
 
-An omitted scope is `full`, and round 1 is `full` regardless — there is no earlier round to
-narrow against.
+The implement-ticket loop passes the first three explicitly; a
+human typing `/review-pr` may pass any prefix of them, including nothing.
 
-**Done when** you hold all three values plus the resolved scope, and the PR resolves.
+A passed value binds exactly as given. Derive each omitted one — never stop over it, and never ask:
+
+- **PR number** — the current branch's PR: `gh pr view --json number -q .number`. No PR for the
+  branch is your result: report it and stop.
+- **Head SHA** — the PR's current head: `gh pr view <pr> --json headRefOid`. A passed SHA is an
+  independent cross-check on the dispatch; a derived one waives that check — say so in your
+  report and beside the round comment's `Head:` value, so the record shows which one this was.
+- **Round number** — one more than the highest `Review — round <N>` comment already on the PR;
+  `1` when there is none. This keeps finding IDs continuous across rounds.
+- **Scope** — `full`; round 1 is `full` regardless — there is no earlier round to narrow
+  against.
+
+Resolve the PR with `gh pr view <pr>`. A number that doesn't resolve is your result: report it
+and stop. Anything that does resolve is a working value, not a result — announcing the resolved
+dispatch is not running the round; the round ends only at step 6's report or at a stop a step
+names.
+
+**Done when** you hold all four values and the PR resolves.
 
 ### 2. Confirm the tree
 
-**The SHA you were handed is the one you judge.** Confirm:
+**The SHA resolved in step 1 is the one you judge.** Confirm:
 
-- the assigned SHA is the PR's actual head — `gh pr view <pr> --json headRefOid`
+- the SHA to judge is the PR's actual head — `gh pr view <pr> --json headRefOid`; for a derived
+  SHA this only catches a head that moved since step 1
 - the tree you are in sits at that SHA — `git rev-parse HEAD`
 - no tracked file is modified — `git status --porcelain --untracked-files=no`
 - the PR has no text conflict with its base — `gh pr view <pr> --json mergeable -q .mergeable`. Only
