@@ -164,6 +164,55 @@ printf 'depends_on: []\n---\nnever published\n' > "work/bundles/2026-01-01-local
 ok "unpublished bundle refuses (3)" "$?" 3
 rm -rf "work/bundles/2026-01-01-local"
 
+echo "== claiming after a bundle revision syncs the target's copy"
+revise=2026-08-17-revise
+mkdir -p "work/bundles/$revise/tickets"
+printf 'depends_on: []\n---\nseed\n'      > "work/bundles/$revise/tickets/01-seed.md"
+printf 'depends_on: []\n---\noriginal\n'  > "work/bundles/$revise/tickets/02-target.md"
+printf 'depends_on: []\n---\noriginal\n'  > "work/bundles/$revise/tickets/03-conflict.md"
+printf 'depends_on: []\n---\noriginal\n'  > "work/bundles/$revise/tickets/04-branch-only.md"
+git add -A && git commit -qm "docs(bundle): publish the revision-sync test bundle" && git push -q origin main
+"$scripts/claim-ticket.sh" "$revise" 01 >/dev/null 2>&1
+ok "seed claim exits 0"             "$?" 0
+printf 'depends_on: []\n---\nrevised on the target\n' > "work/bundles/$revise/tickets/02-target.md"
+git add -A && git commit -qm "bundle: revise $revise" && git push -q origin main
+"$scripts/claim-ticket.sh" "$revise" 02 > "$root/sync.out" 2>&1
+ok "claim after a revision exits 0" "$?" 0
+ok "says it synced"                 "$(grep -c 'synced' "$root/sync.out")" 1
+ok "worktree carries the revision" \
+   "$(grep -c 'revised on the target' ".claude/worktrees/ticket/$revise/02/work/bundles/$revise/tickets/02-target.md")" 1
+ok "the ticket branch carries the sync commit" \
+   "$(git show "origin/ticket/$revise/02:work/bundles/$revise/tickets/02-target.md" | grep -c 'revised on the target')" 1
+
+echo "== a revision colliding with an earlier ticket PR's amendment stops the claim"
+git worktree add -q --detach "$root/amend-wt" "origin/bundle/$revise" 2>/dev/null
+( cd "$root/amend-wt" &&
+  printf 'depends_on: []\n---\namended while implementing 01\n' > "work/bundles/$revise/tickets/03-conflict.md" &&
+  git commit -qam "docs(bundle): reconcile ticket 03 while implementing 01" &&
+  git push -q origin "HEAD:bundle/$revise" )
+git worktree remove --force "$root/amend-wt"
+printf 'depends_on: []\n---\nrevised differently on the target\n' > "work/bundles/$revise/tickets/03-conflict.md"
+git add -A && git commit -qm "bundle: revise $revise again" && git push -q origin main
+"$scripts/claim-ticket.sh" "$revise" 03 > "$root/conflict.out" 2>&1
+ok "collision aborts (8)"           "$?" 8
+ok "names the colliding path"       "$(grep -c 'tickets/03-conflict.md' "$root/conflict.out")" 1
+ok "nothing was claimed"            "$([ -d ".claude/worktrees/ticket/$revise/03" ] && echo yes || echo no)" no
+ok "no ticket branch was pushed"    "$(git ls-remote --heads origin "ticket/$revise/03" | wc -l | tr -d ' ')" 0
+
+echo "== a bundle-branch-only amendment claims cleanly, with no target revision"
+git worktree add -q --detach "$root/amend-wt2" "origin/bundle/$revise" 2>/dev/null
+( cd "$root/amend-wt2" &&
+  printf 'depends_on: []\n---\namended while implementing 01, target never moved\n' \
+    > "work/bundles/$revise/tickets/04-branch-only.md" &&
+  git commit -qam "docs(bundle): reconcile ticket 04 while implementing 01" &&
+  git push -q origin "HEAD:bundle/$revise" )
+git worktree remove --force "$root/amend-wt2"
+"$scripts/claim-ticket.sh" "$revise" 04 > "$root/branchonly.out" 2>&1
+ok "branch-only amendment claims (0)" "$?" 0
+ok "no sync note printed"           "$(grep -c 'synced' "$root/branchonly.out")" 0
+ok "worktree keeps the branch's amendment" \
+   "$(grep -c 'target never moved' ".claude/worktrees/ticket/$revise/04/work/bundles/$revise/tickets/04-branch-only.md")" 1
+
 echo "== a stray file in tickets/ is not a ticket"
 stray=2026-08-17-stray
 mkdir -p "work/bundles/$stray/tickets"

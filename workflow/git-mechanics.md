@@ -155,6 +155,15 @@ that skipped branch deletion. With no commits of its own beyond the target it ho
 claim recreates it from the target and says so; with its own commits, recreating would discard
 merged ticket work, so the claim stops for the human instead.
 
+**Carrying the bundle isn't the same as carrying its latest revision.** A revision after the
+bundle branch already exists lands only on the target (Revising a published bundle,
+`bundle.md`), and nothing but an accepted ticket PR writes the bundle branch (Bundle-branch
+writes, below) — so the directory check above passes even when the branch's copy predates a
+revision. The claim closes that gap itself: for the ticket being claimed plus the bundle's shared
+docs, it compares the branch's blob, the target's blob, and their merge-base, and takes the
+target's version only where the branch never touched it since — a file both sides amended stops
+the claim instead of guessing which one wins.
+
 ## Bundle-branch writes
 
 **Content reaches a bundle branch only through an accepted ticket PR.** Nothing else ever writes to
