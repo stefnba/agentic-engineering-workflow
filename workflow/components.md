@@ -139,6 +139,13 @@ Set **`background`** by who is waiting and what tools the work needs:
   applies to background subagents — a backgrounded fork runs with that narrower set.
 - Background only when the work is fire-and-forget and survives on the reduced tool set.
 
+**A forked component's final message is the deliverable, not a status update.** Nothing of it
+reaches the human unless whatever dispatched it relays that — an inline task skill's step
+(shape-bundle relaying critique-bundle's verdict into the Plan gate presentation) or, for a
+pure-dispatch skill with no narrator step of its own, the dispatching session's own reply.
+Either way, relay the report in full: a paraphrase that drops a section the report names (an
+Options list, a findings table) leaves the human unable to see content the summary refers to.
+
 ## 2. Where knowledge lives
 
 ### 2.1 Reference skill or `workflow/` doc
