@@ -3,6 +3,7 @@
 #   usage: claim-ticket.sh <bundle-id> <NN>
 #   exit:  2 no such ticket   3 dependency not done   4 already claimed   5 stale worktree
 #          6 malformed depends_on   7 bundle missing from the branch or target
+#          8 a bundle revision and an earlier ticket PR both amended the same file
 set -euo pipefail
 
 bundle="$1"
@@ -86,4 +87,34 @@ grep -q '^\*' <<<"$result" ||
 
 git fetch -q origin "+refs/heads/$branch:refs/remotes/origin/$branch"
 git worktree add -q "$worktree" "$branch"
+
+# A bundle revision after this bundle branch existed lands only on the target
+# (workflow/bundle.md, Revising a published bundle) — nothing else ever writes the bundle branch
+# (workflow/git-mechanics.md, Bundle-branch writes), so a still-todo ticket claimed after a
+# revision would otherwise branch off the pre-revision copy. Sync this ticket's own file and the
+# bundle-level docs from the target, scoped to what only the target moved since the two branched:
+# a file an earlier ticket PR also amended here is left alone unless the target agrees with it —
+# a genuine two-sided edit stops the claim instead of guessing which side wins.
+revbase=$(git merge-base "$branch" "origin/$target")
+synced=0
+for path in "$ticket" "work/bundles/$bundle/spec.md" "work/bundles/$bundle/plan.md"; do
+  git cat-file -e "origin/$target:$path" 2>/dev/null || continue
+  ours=$(git rev-parse -q --verify "$branch:$path" 2>/dev/null) || ours=""
+  theirs=$(git rev-parse -q --verify "origin/$target:$path" 2>/dev/null) || theirs=""
+  based=$(git rev-parse -q --verify "$revbase:$path" 2>/dev/null) || based=""
+  [ "$ours" = "$theirs" ] && continue
+  if [ "$ours" != "$based" ]; then
+    echo "claim aborted: $path was amended both by an earlier ticket PR on $branch and by a bundle revision on $target — reconcile by hand, then retry" >&2
+    exit 8
+  fi
+  git -C "$worktree" show "origin/$target:$path" >"$worktree/$path"
+  git -C "$worktree" add -- "$path"
+  synced=1
+done
+if [ "$synced" = 1 ]; then
+  git -C "$worktree" commit -q -m "bundle: sync $bundle with $target"
+  git -C "$worktree" push -q origin "HEAD:$branch"
+  echo "note: synced $branch with a bundle revision on $target"
+fi
+
 echo "claimed $branch from $base — worktree at $worktree"
