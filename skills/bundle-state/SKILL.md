@@ -5,7 +5,7 @@ description: Answer bundle and ticket state from git, or perform one state trans
 
 # Bundle state
 
-Route the request to one script, run it from the repository root, and report its output rather than
+Route the request to one script and report its output rather than
 a paraphrase. The scripts' contract — settings, exit codes, tests — is
 `${CLAUDE_PLUGIN_ROOT}/scripts/README.md`; read it before doing anything the table below doesn't
 cover.

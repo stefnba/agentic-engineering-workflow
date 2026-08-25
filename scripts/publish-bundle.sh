@@ -15,7 +15,7 @@ target="$INTEGRATION_TARGET"
 wt="$WORKTREE_DIR/publish/$bundle"
 
 [ -d "work/bundles/$bundle" ] ||
-  { echo "no work/bundles/$bundle in this working tree — run from the shaping session's repository root" >&2; exit 2; }
+  { echo "no work/bundles/$bundle in this working tree — run from the shaping session's checkout" >&2; exit 2; }
 [ -e "$wt" ] &&
   { echo "stale publish worktree at $wt — an earlier publish left it; have it removed, then retry" >&2; exit 5; }
 

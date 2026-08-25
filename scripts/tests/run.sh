@@ -133,6 +133,13 @@ ok "lists every bundle"             "$("$scripts/bundle-status.sh" | wc -l | tr 
 ok "per-ticket listing"             "$("$scripts/bundle-status.sh" "$multi" | tr -s ' ' | tr '\n' '|')" \
                                     "active $multi| done 01-persistence| doing 02-api| todo 03-ui|"
 
+echo "== scripts anchor on the invoking checkout, not the CWD"
+ok "status answers from a subdirectory"  "$(cd work/bundles && "$scripts/ticket-status.sh" "$multi" 01)" done
+ok "listing answers from a subdirectory" "$(cd work/bundles && "$scripts/bundle-status.sh" | wc -l | tr -d ' ')" 2
+( cd "$root" && "$scripts/bundle-status.sh" ) >/dev/null 2>"$root/anchor-err.out"
+ok "outside a work tree refuses (1)"     "$?" 1
+ok "and names the reason"                "$(grep -c 'not inside a git work tree' "$root/anchor-err.out")" 1
+
 echo "== pr links pin to the published bundle, not to the ticket branch"
 published=$(git rev-parse origin/main)
 ( cd ".claude/worktrees/ticket/$multi/02" &&
