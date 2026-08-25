@@ -1,6 +1,7 @@
 ---
 name: bundle-state
 description: Answer bundle and ticket state from git, or perform one state transition. Use when the user asks what bundles or tickets exist, what is in flight, whether a ticket is claimed or done, or asks to claim a ticket or merge an accepted ticket PR — even mid-conversation without naming the skill. Not a session driver; shaping, implementing, reviewing, and landing bundles have their own skills.
+model: sonnet
 ---
 
 # Bundle state

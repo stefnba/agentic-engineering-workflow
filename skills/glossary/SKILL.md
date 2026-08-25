@@ -2,6 +2,7 @@
 name: glossary
 description: Caretaker for GLOSSARY.md, the repo's canonical domain vocabulary. Use whenever a conversation defines a domain term, disambiguates one word from another, renames a term, or settles on one word over a synonym — even when nobody says "glossary". Propose the exact entry and write only after the user confirms.
 argument-hint: "[term to capture, or nothing to browse]"
+model: sonnet
 allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 

@@ -2,7 +2,7 @@
 name: setup
 description: Install the agentic engineering workflow into a repository — check prerequisites, interview the three settings, then write work/config.conf, docs/conventions/git.md, work/backlog.md, GLOSSARY.md, and the AGENTS.md pointer. Run once per repo, before any bundle work.
 disable-model-invocation: true
-model: haiku
+model: sonnet
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash(git remote:*), Bash(git branch:*), Bash(git rev-parse:*), Bash(gh auth status:*), Bash(ls:*), Bash(cat:*)
 ---
 

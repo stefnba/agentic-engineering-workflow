@@ -2,6 +2,7 @@
 name: backlog
 description: Caretaker for work/backlog.md, the repo's list of candidate work and follow-ups nobody has picked yet. Use when the user asks to record something for later, asks what is outstanding for an area, or reports a backlog item done — and at the end of a task, to offer what you noticed but did not fix. Not everything you notice earns a line.
 argument-hint: "[what to record, complete, or look up]"
+model: sonnet
 allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 

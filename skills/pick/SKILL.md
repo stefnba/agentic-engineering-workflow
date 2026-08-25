@@ -3,6 +3,7 @@ name: pick
 description: Choose the next backlog line to work on. Use when the user asks what to work on next, wants to see what's worth doing, or wants to start something from the backlog — even when they don't say "pick".
 argument-hint: "[kind or area to focus on]"
 disable-model-invocation: true
+model: sonnet
 allowed-tools: Read, Grep, Glob, Bash
 ---
 
