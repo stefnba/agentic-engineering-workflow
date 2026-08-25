@@ -77,7 +77,9 @@ starting the next subagent inline, not a separate coordinator reacting after the
 
 - Shape: completing a draft bundle automatically dispatches the fresh-context Critic; the Architect
   revises and re-critique follows until no blocker remains, then the bundle goes to the human Plan
-  gate.
+  gate. A loop that keeps producing blockers stops at the round limit
+  [`shape-bundle`](../skills/shape-bundle/SKILL.md) sets, and the surviving disagreement reaches the
+  human instead of the bundle reaching its gate.
 - Implement and Review: opening or updating the PR automatically dispatches a fresh-context review
   round; a round with findings returns the ticket to its own implementation session in fix mode,
   whose PR response automatically dispatches the next round. The loop ends only per the convergence rules — ready for
@@ -160,6 +162,11 @@ the Critic supplies findings, never fixes or approval.
 **Plan gate:** after critique, the human approves the outcome, binding constraints, technical
 direction when present, complete ticket decomposition, dependency graph, and test strategy. Material
 open questions block approval.
+
+**A rejection here is not a stage transition by default.** Nothing is committed until approval, so a
+rejected approach, decomposition, or test strategy is revised and re-critiqued inside Shape and
+presented again. Only a rejected outcome leaves the stage, back to Discover along the clarify edge:
+whether this work is worth doing is the Pick gate's, and Shape may not re-decide it.
 
 Done when every approved ticket is executable in one agent session, has objective done-when
 evidence, and introduces no requirement or cross-ticket decision absent from approved intent.

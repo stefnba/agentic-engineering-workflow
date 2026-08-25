@@ -157,6 +157,15 @@ tickets. Do not
 commit before the approval, and do not dispatch implementation after it — that is a separate human
 dispatch.
 
+**A rejection routes by what they rejected.** Nothing is committed yet, so most of them cost an edit
+rather than a stage:
+
+- **Approach, decomposition, scope, or test strategy** — revise, taking anything you can't settle
+  alone back through step 5, then rejoin at step 7: the revised bundle is no longer the one the
+  Critic attacked.
+- **The outcome itself** — stop and hand back. That is the Pick gate's, and reshaping around it
+  decides here what Discovery owns.
+
 ### 9. Publish
 
 On approval, commit the bundle **exactly as approved** — no edits between the OK and the commit; the
