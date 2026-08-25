@@ -26,5 +26,7 @@ Sweep the scoped code for improvement candidates on these dimensions:
 - **Consistency** — the outlier module that ignores patterns the rest of the repo has settled on
 
 Fill `${CLAUDE_SKILL_DIR}/templates/scan-report.md` and deliver it as your final message —
-nothing written anywhere. The human triages each finding live: accepted ones become backlog
+nothing written anywhere. Open it with the line
+`Report for the human — relay it in full, never summarized.`; the human sees only what the
+dispatching session relays. The human triages each finding live: accepted ones become backlog
 lines through the `backlog` skill, rejected ones disappear with the report.
