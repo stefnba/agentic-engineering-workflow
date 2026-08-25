@@ -15,7 +15,7 @@ Read `${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md` (Land) and
 `${CLAUDE_PLUGIN_ROOT}/workflow/git-mechanics.md` before starting — this skill doesn't restate
 their steps and rules, it sequences them and says which script runs where.
 
-You run **inline, in the human's session**, from the repository root. Surface anything surprising the
+You run **inline, in the human's session**, in the main checkout. Surface anything surprising the
 moment you hit it, not in a report at the end.
 
 ## Boundaries
@@ -39,7 +39,7 @@ moment you hit it, not in a report at the end.
 Resolve `$ARGUMENTS` against `${CLAUDE_PROJECT_DIR}/work/bundles/`. No match, or two matching — ask,
 don't guess.
 
-Then run, from the repository root:
+Then run:
 
 ```text
 ${CLAUDE_PLUGIN_ROOT}/scripts/land-bundle.sh start <bundle-id>
@@ -119,7 +119,7 @@ stop; the human routes it, usually as a new bundle.
 ${CLAUDE_PLUGIN_ROOT}/scripts/land-bundle.sh cleanup <bundle-id>
 ```
 
-Ticket branches, the bundle branch, every worktree — Land's own last, and from the repository root.
+Ticket branches, the bundle branch, every worktree — Land's own last, and from the main checkout.
 Branches a forge already deleted on merge are skipped, not treated as an error. Cleanup guards
 itself: it refuses outright when the bundle branch carries unlanded work, and it keeps any ticket
 branch whose PR is not merged — a live claim — reporting what it kept.
@@ -130,7 +130,7 @@ branch whose PR is not merged — a live claim — reporting what it kept.
 survived it — a branch the forge already removed and a branch it refused to remove both leave that
 exit code, and a ticket branch it kept keeps its worktree too. `cleanup` removes the scaffolding
 directories it emptied, `$WORKTREE_DIR` itself included, so a missing directory is the clean
-outcome. Run these from the repository root and report what they return, not what you expected:
+outcome. Run these and report what they return, not what you expected:
 
 ```text
 . ${CLAUDE_PLUGIN_ROOT}/scripts/_config.sh   # for $WORKTREE_DIR

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Print the Ticket section of a ticket PR's body: commit permalinks to the approved bundle and to
-# this ticket, plus the branch the PR targets. Read-only; runs from the repository root or from a
-# ticket worktree, since the implementer calls it from the latter.
+# this ticket, plus the branch the PR targets. Read-only; reads the checkout it is invoked in —
+# the main checkout or a ticket worktree, since the implementer calls it from the latter.
 #   usage: pr-links.sh <bundle-id> <NN>
 #   exit:  2 no such ticket   3 the bundle is not on the integration target   4 forge unreachable
 set -euo pipefail
