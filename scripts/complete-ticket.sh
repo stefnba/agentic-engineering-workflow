@@ -10,6 +10,12 @@ set -euo pipefail
 
 . "$(cd "$(dirname "$0")" && pwd)/_config.sh"
 
+# The invoker often sits inside the very worktree this script removes — the implement session's
+# shell lives there. Work from the main checkout so the removal and the relative $WORKTREE_DIR
+# resolve either way, and warn at the end when the caller's shell lost its cwd.
+invoked_from=$(pwd -P)
+cd "$(git worktree list --porcelain | head -1 | sed 's/^worktree //')"
+
 pr="${1:-}"
 accepted="${2:-}"
 [ -n "$pr" ] && [ -n "$accepted" ] ||
@@ -42,3 +48,9 @@ git worktree prune
 rmdir "$WORKTREE_DIR/$(dirname "$branch")" "$WORKTREE_DIR/ticket" "$WORKTREE_DIR" 2>/dev/null || true
 git fetch -q --prune origin
 echo "merged PR #$pr ($branch)"
+
+wt="$WORKTREE_DIR/$branch"
+case "$wt" in /*) : ;; *) wt="$(pwd -P)/$wt" ;; esac
+case "$invoked_from/" in
+  "$wt/"*) echo "note: your shell's directory was removed with the worktree — cd to the repository root" ;;
+esac
