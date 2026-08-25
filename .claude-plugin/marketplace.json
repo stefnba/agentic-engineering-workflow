@@ -1,5 +1,6 @@
 {
   "name": "agentic-engineering-workflow",
+  "description": "Marketplace for the agentic-engineering-workflow plugin",
   "owner": {
     "name": "Stefan Bauer"
   },
