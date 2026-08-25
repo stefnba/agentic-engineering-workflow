@@ -3,6 +3,7 @@ name: complete-ticket
 description: Merge one accepted ticket PR and remove its worktree. Invoke with the PR number and the head SHA you accepted, after reviewing the PR yourself — invoking this skill is the Accept.
 argument-hint: "[pr] [accepted-head-sha]"
 disable-model-invocation: true
+model: sonnet
 ---
 
 # Complete one ticket

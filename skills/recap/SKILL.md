@@ -1,6 +1,7 @@
 ---
 name: recap
 description: Report this conversation back to the human — its subject, what it settled, what is still open. Use when the user asks where things stand or what was decided, or says "catch me up", "where were we" — including after a long gap or a context compaction. Not for a fresh agent's resumable document (`handoff`), nor repository, bundle, or ticket state (`bundle-state`).
+model: sonnet
 disallowed-tools: Agent, Artifact, Bash, CronCreate, CronDelete, CronList, Edit, EnterWorktree, ExitWorktree, Glob, Grep, LSP, ListAgents, ListMcpResourcesTool, Monitor, NotebookEdit, PowerShell, PushNotification, Read, ReadMcpResourceTool, RemoteTrigger, ReportFindings, ScheduleWakeup, SendMessage, SendUserFile, ShareOnboardingGuide, Skill, TaskCreate, TaskGet, TaskList, TaskOutput, TaskStop, TaskUpdate, TodoWrite, ToolSearch, WaitForMcpServers, WebFetch, WebSearch, Workflow, Write
 ---
 

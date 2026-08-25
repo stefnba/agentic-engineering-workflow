@@ -2,6 +2,7 @@
 name: record-decision
 description: Write or supersede a decision record for the repository. A decision record is a short, self-contained document stating one settled design, tooling, or process choice, the alternatives that lost, and what it costs. Use when the user says "document this decision", "write down why", asks why something was built a certain way, or overturns an existing record. It is not a session driver.
 argument-hint: "[the decision to record, or the record to supersede]"
+model: sonnet
 allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 

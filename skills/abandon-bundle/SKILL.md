@@ -3,6 +3,7 @@ name: abandon-bundle
 description: Abandon a bundle that will never land — discard every ticket branch and worktree, the bundle branch, and the published bundle directory. Invoke with the bundle ID once the human has decided not to finish it, whatever tickets are done, doing, or todo.
 argument-hint: "[bundle id]"
 disable-model-invocation: true
+model: sonnet
 ---
 
 # Abandon one bundle
