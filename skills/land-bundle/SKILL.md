@@ -71,6 +71,13 @@ every ticket had landed.
 Unfinished scope, deferred ideas, and anything you noticed while landing → the `backlog` skill, one
 line each. New work starts as a backlog line, never as commits here.
 
+**Sweep the Reviewer's candidates.** List this bundle's merged ticket PRs
+(`gh pr list --base <bundle-branch> --state merged`) and read each round comment's Backlog
+candidates section. Drop what a later round fixed, a sibling ticket landed, or the previous step
+absorbed; merge duplicates across PRs. Offer the survivors through the same `backlog` skill batch —
+it owns the bar, and most candidates should not survive it. A forge failure here is reported in the
+hand-back, never a reason to stop the land.
+
 **Then retire what this bundle made true**, through that skill's prune scoped to this bundle: lines
 whose work now exists, and lines the previous step absorbed into a durable doc. The picked line is
 already gone — `shape-bundle` deleted it when it published — so what's left here is every _other_ line this
