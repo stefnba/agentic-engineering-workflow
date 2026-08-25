@@ -137,7 +137,10 @@ the round count, and every disposition go into the Plan gate presentation's crit
 
 **Write the presentation as a plain text message to the human, then ask for approval.** An
 approval prompt's own text field is never the presentation — it truncates, and the human decides
-from what you wrote. Fill every slot of this skeleton; write `none` rather than dropping a slot:
+from what you wrote.
+
+Route, Intent, Critique, Tickets, and Your call always appear; the other
+subsections carry their own omit conditions, and a section with content may never be dropped:
 
 ```markdown
 ## Plan gate: <bundle-id>
@@ -156,24 +159,31 @@ from what you wrote. Fill every slot of this skeleton; write `none` rather than 
 
 #### Parallelism
 
-<what's serial, what's safe in parallel>
+<what's serial, what's safe in parallel — omit for a single ticket>
 
 ### You are accepting
 
 #### Backlog lines covered
 
-<each quoted verbatim | none>
+<each quoted verbatim — omit if none>
 
 #### Concerns
 
-<every concern the human is asked to accept consciously | none>
+<only concerns no section above already carries — a dispositioned critique finding or anything
+the closing questions ask is already on the table; omit if none>
+
+### Your call
+
+1. Is the granularity right?
+2. Are the blocking edges correct?
+3. Should any ticket merge or split?
 ```
 
 Publishing deletes each covered `${CLAUDE_PROJECT_DIR}/work/backlog.md` line alongside the one
 the bundle was shaped from, so a line the human doesn't confirm here stays.
 
-Then ask three things: is the granularity right, are the blocking edges correct, should any ticket
-merge or split.
+Ask the closing questions as written — they are the human's to answer, and your own assessment
+already lives in the sections above.
 
 **This is the human's gate**, and it binds the outcome, the approach, the decomposition, and the
 test strategy. Bad slicing is cheap to fix in a list and expensive to fix across twelve started
@@ -185,7 +195,7 @@ dispatch.
 rather than a stage:
 
 - **Approach, decomposition, scope, or test strategy** — revise, taking anything you can't settle
-  alone back through step 5, then rejoin at step 7: the revised bundle is no longer the one the
+  alone back through the clarify step, then rejoin at critique: the revised bundle is no longer the one the
   Critic attacked.
 - **The outcome itself** — stop and hand back. That is the Pick gate's, and reshaping around it
   decides here what Discovery owns.
