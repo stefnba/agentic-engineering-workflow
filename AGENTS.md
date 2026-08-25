@@ -6,6 +6,10 @@ Orientation for agents working on this repo. Only orientation lives here — the
 
 This repo collects agentic-engineering practices — workflow design, documentation structure, reusable skills — for _other_ repos to install (see [README.md](README.md)). Docs and skills therefore describe a consuming repo's layout: workspace packages, CI gates, colocated `src/<domain>/README.md` files. None of that exists in this tree. Treat a referenced path that doesn't resolve here as intentional — leave it as written; note real drift in [work/backlog.md](work/backlog.md).
 
+## Evidence and validation
+
+Material claims about the codebase — a diagnosis, a root cause, a recommendation's premise — carry a validation label: **verified** (you read the deciding line or ran the command — cite it) or **suspected** (inference, not checked); the same flags the `finding-rules` skill uses. An unlabeled verdict reads as verified. Citing evidence asserts you actually inspected it. "Suspected, here's how to confirm" is a good answer; a confident guess stated as fact is not.
+
 ## Where things live
 
 This repo is also the plugin: its root is the plugin root, so everything here ships to consuming
