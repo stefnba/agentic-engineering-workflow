@@ -39,8 +39,9 @@ records at the moment it is asked for; nothing stores one:
   Claiming a ticket below), so `doing` needs no record of its own. It stays `doing` through
   Implement, Review, fixes, and human review.
 - ticket `todo`: neither.
-- bundle `shaped`: the bundle exists under `work/bundles/` on the integration target with no ticket
-  claimed; `active`: at least one ticket is no longer `todo`.
+- bundle `draft`: the directory exists only in the working tree, not yet on the integration
+  target; `shaped`: published on the target with no ticket claimed; `active`: at least one ticket
+  is no longer `todo`.
 
 To cancel a ticket, delete its remote branch and remove its worktree; it reads as `todo` again.
 Nothing is written after a merge, so a human who merges a ticket PR directly leaves exactly the
