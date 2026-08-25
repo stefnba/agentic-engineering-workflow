@@ -8,7 +8,7 @@ Conventional Commits — `type(scope): subject`.
 
 - Standard commits use one of these seven types: `feat`, `fix`, `refactor`, `docs`, `test`, `chore`, `ci`.
 - Four paths have reserved types — a commit touching one uses that type, scopeless, and touches nothing else:
-  - `bundle` — bundle artifacts under `work/<bundle-slug>/`
+  - `bundle` — bundle artifacts under `work/bundles/<bundle-id>/`
   - `decision` — adding or superseding a record in `docs/decisions/`
   - `backlog` — `work/backlog.md`
   - `research` — research reports under `docs/research/`

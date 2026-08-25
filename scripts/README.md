@@ -47,7 +47,8 @@ only for scripts and tests that branch on them:
   both amended the same file
 - `pr-links.sh` — `2` no such ticket · `3` bundle not published · `4` forge unreachable
 - `complete-ticket.sh` — `2` stale against its base · `64` missing the accepted head SHA
-- `land-bundle.sh` — `2` no such bundle · `3` a ticket not `done` · `4` no bundle branch (never
+- `land-bundle.sh` — `2` no such bundle, `push` before `start`, or `cleanup` from inside a
+  worktree · `3` a ticket not `done`, or its PR record unqueryable · `4` no bundle branch (never
   claimed, or already cleaned up) · `5` leftover land worktree · `6` target moved: not a failure
   but a loop — re-run the canonical checks, then `push` again · `7` merge conflict, left for the
   human · `8` a bundle-branch commit matches no merged ticket PR · `9` cleanup on an unlanded
@@ -59,7 +60,9 @@ only for scripts and tests that branch on them:
 
 `tests/run.sh` runs the scripts against a local `git daemon` with a stubbed `gh` — no network, and
 nothing written outside a temp dir. It covers a ten-way claim race, the dependency gate, both bundle
-shapes, the stale-bundle-branch heal and its two refusals, the detached-worktree publish — racing
+shapes, the stale-bundle-branch heal and its two refusals, the claim-time revision sync — carried onto a
+fresh claim, stopped by a two-sided amendment, left alone for a branch-only one — the
+detached-worktree publish — racing
 a sibling backlog append, revising, and refusing a bundle that moved — listing, an unreachable forge, permalinks pinned past a branch amendment, the flags passed to
 the merge, the staleness refusal, a required accepted SHA, a full land for both bundle shapes — gate,
 unrecorded-commit refusal, detached worktree, the moved-target loop, the backlog union, and a guarded
