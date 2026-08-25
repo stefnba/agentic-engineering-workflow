@@ -1,0 +1,13 @@
+{
+  "name": "agentic-engineering-workflow",
+  "owner": {
+    "name": "Stefan Bauer"
+  },
+  "plugins": [
+    {
+      "name": "agentic-engineering-workflow",
+      "source": "./",
+      "description": "Skills, agents, and the workflow doc for an agentic engineering workflow — run the setup skill to install it into a repo"
+    }
+  ]
+}

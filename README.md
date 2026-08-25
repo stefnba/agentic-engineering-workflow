@@ -44,8 +44,26 @@ Installing this into a repo of your own:
    authenticated forge CLI (`gh`). Ticket status is derived from pull request records, so the forge
    CLI is not optional. Details in
    [skills/setup/references/prerequisites.md](skills/setup/references/prerequisites.md).
-2. **Install the plugin**, then run [`/setup`](skills/setup/SKILL.md) in the target repo — a
-   placeholder today, so do these by hand for now. It writes:
+2. **Install the plugin from GitHub.** This repo lists itself as a marketplace
+   ([.claude-plugin/marketplace.json](.claude-plugin/marketplace.json)), so no separate
+   marketplace repo is needed — the first command adds this GitHub repo (`owner/repo` shorthand)
+   as an install source, the second installs the plugin it lists:
+
+   ```
+   /plugin marketplace add stefnba/agentic-engineering-workflow
+   /plugin install agentic-engineering-workflow@agentic-engineering-workflow
+   ```
+
+   To pick up later changes, refresh the marketplace listing, then update the plugin (restart to
+   apply):
+
+   ```
+   /plugin marketplace update agentic-engineering-workflow
+   /plugin update agentic-engineering-workflow@agentic-engineering-workflow
+   ```
+
+3. **Run [`/setup`](skills/setup/SKILL.md)** in the target repo. It interviews the three settings
+   below, then writes:
 
    | Path                      | What it is                                                                          |
    | ------------------------- | ----------------------------------------------------------------------------------- |
@@ -57,12 +75,12 @@ Installing this into a repo of your own:
    | `AGENTS.md`               | one pointer line naming the workflow                                                |
    | `.gitignore`              | your `WORKTREE_DIR`, so ticket worktrees stay untracked                             |
 
-3. **Commit `work/config.conf`.** A clone without it silently falls back to the
+4. **Commit `work/config.conf`.** A clone without it silently falls back to the
    [defaults](#configuration) — which means work landing on `main` when your integration target is `dev`.
-4. **Optional: turn on the output style.** `/setup` doesn't write this — see
+5. **Optional: turn on the output style.** `/setup` doesn't write this — see
    [Output style](#output-style) below. For everything else about configuring Claude Code itself in
    a consuming repo, see [docs/tool-setup.md](docs/tool-setup.md).
-5. Continue with [Using it day to day](#using-it-day-to-day) below for how a session actually runs.
+6. Continue with [Using it day to day](#using-it-day-to-day) below for how a session actually runs.
 
 ## Using it day to day
 
