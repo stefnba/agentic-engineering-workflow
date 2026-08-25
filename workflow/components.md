@@ -145,6 +145,10 @@ reaches the human unless whatever dispatched it relays that — an inline task s
 pure-dispatch skill with no narrator step of its own, the dispatching session's own reply.
 Either way, relay the report in full: a paraphrase that drops a section the report names (an
 Options list, a findings table) leaves the human unable to see content the summary refers to.
+The dispatching session never reads a `context: fork` skill's body — only its description and
+the returned report — so the report itself carries the relay instruction: the fork opens its
+final message with a relay-in-full line, which reaches the dispatcher exactly where it composes
+its reply.
 
 ## 2. Where knowledge lives
 
