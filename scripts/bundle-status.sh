@@ -7,8 +7,19 @@ set -uo pipefail
 here="$(cd "$(dirname "$0")" && pwd)"
 . "$here/_config.sh" # ticket_names, so this and the land gate iterate the same set
 
-bundle_status() { # shaped until a ticket is claimed, then active; unknown if a query failed
+# draft below is derived from origin/<target>; a fetch that failed leaves that answer unknown
+# rather than guessed — the same line ticket-status.sh holds for the forge.
+fetched=y
+git fetch -q origin 2>/dev/null || fetched=""
+
+bundle_status() { # draft until published, shaped until a ticket is claimed, then active; unknown if a query failed
   local nn rest st out=shaped
+  # A directory only in the working tree is a draft — shaped means published on the integration
+  # target (workflow/git-mechanics.md, Status is derived).
+  if ! git cat-file -e "origin/$INTEGRATION_TARGET:work/bundles/$1" 2>/dev/null; then
+    if [ -n "$fetched" ]; then echo draft; else echo unknown; fi
+    return
+  fi
   while read -r nn rest; do
     [ -n "$nn" ] || continue
     st=$("$here/ticket-status.sh" "$1" "$nn") || { echo unknown; return; }

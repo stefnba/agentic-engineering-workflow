@@ -93,6 +93,29 @@ echo "== derived status before any claim"
 ok "unclaimed ticket is todo"       "$("$scripts/ticket-status.sh" "$multi" 01)" todo
 ok "unclaimed bundle is shaped"     "$("$scripts/bundle-status.sh" "$multi" | head -1 | awk '{print $1}')" shaped
 
+echo "== a local-only draft is draft, not shaped"
+draftb=2026-08-17-draftonly
+mkdir -p "work/bundles/$draftb"
+printf 'depends_on: []\n---\nnever published\n' > "work/bundles/$draftb/ticket.md"
+ok "unpublished bundle is draft"    "$("$scripts/bundle-status.sh" "$draftb" | head -1 | awk '{print $1}')" draft
+ok "the listing shows it as draft"  "$("$scripts/bundle-status.sh" | grep -c "draft.*$draftb")" 1
+# draft is only an answer when origin/<target> is fresh; a failed fetch must answer unknown,
+# never draft — the same bundle might be published and simply unverifiable.
+realgit=$(command -v git)
+mkdir -p "$root/gitbin-fetchdrop"
+cat > "$root/gitbin-fetchdrop/git" <<STUB
+#!/usr/bin/env bash
+if [[ "\$1" == fetch ]]; then
+  echo "fatal: unable to access — simulated network drop" >&2
+  exit 128
+fi
+exec "$realgit" "\$@"
+STUB
+chmod +x "$root/gitbin-fetchdrop/git"
+ok "unverifiable bundle is unknown, not draft" \
+   "$(PATH="$root/gitbin-fetchdrop:$PATH" "$scripts/bundle-status.sh" "$draftb" | head -1 | awk '{print $1}')" unknown
+rm -rf "work/bundles/$draftb"
+
 echo "== claiming"
 "$scripts/claim-ticket.sh" "$multi" 01 >/dev/null 2>&1
 ok "claim exits 0"                  "$?" 0
@@ -571,6 +594,50 @@ ok "landed branch cleans up (0)"      "$?" 0
 ok "but keeps the in-flight ticket"   "$(git ls-remote --heads origin "ticket/$stray/01" | wc -l | tr -d ' ')" 1
 ok "and says it kept it"              "$(grep -c "kept ticket/$stray/01" "$root/cleanup0.out")" 1
 ok "while the bundle branch goes"     "$(git ls-remote --heads origin "bundle/$stray" | wc -l | tr -d ' ')" 0
+
+echo "== cleanup: an unreachable forge stops before anything is deleted"
+sync_main
+cnet=2026-08-17-cleanup-netdrop
+mkdir -p "work/bundles/$cnet"
+printf 'depends_on: []\n---\ncleanup netdrop probe\n' > "work/bundles/$cnet/ticket.md"
+git add -A && git commit -qm "docs(bundle): publish cleanup netdrop probe" && git push -q origin main
+"$scripts/claim-ticket.sh" "$cnet" 01 >/dev/null 2>&1
+realgit=$(command -v git)
+mkdir -p "$root/gitbin-cleanup"
+cat > "$root/gitbin-cleanup/git" <<STUB
+#!/usr/bin/env bash
+if [[ "\$*" == *ls-remote* ]] && [[ "\$*" == *"$cnet"* ]]; then
+  echo "fatal: unable to access — simulated network drop" >&2
+  exit 128
+fi
+exec "$realgit" "\$@"
+STUB
+chmod +x "$root/gitbin-cleanup/git"
+PATH="$root/gitbin-cleanup:$PATH" "$scripts/land-bundle.sh" cleanup "$cnet" > "$root/cleanup-net.out" 2>&1
+ok "unqueryable bundle branch stops (1)" "$?" 1
+ok "and says nothing is deleted"      "$(grep -c 'cannot reach the forge' "$root/cleanup-net.out")" 1
+git fetch -q origin
+ok "branches survive the drop"        "$(git ls-remote --heads origin "bundle/$cnet" "ticket/$cnet/01" | wc -l | tr -d ' ')" 2
+ok "the ticket worktree survives"     "$([ -d ".claude/worktrees/ticket/$cnet/01" ] && echo yes)" yes
+
+echo "== cleanup: a ticket branch it cannot verify is kept, not deleted"
+mkdir -p "$root/gitbin-ticketdrop"
+cat > "$root/gitbin-ticketdrop/git" <<STUB
+#!/usr/bin/env bash
+if [[ "\$*" == *ls-remote* ]] && [[ "\$*" == *"ticket/$cnet"* ]]; then
+  echo "fatal: unable to access — simulated network drop" >&2
+  exit 128
+fi
+exec "$realgit" "\$@"
+STUB
+chmod +x "$root/gitbin-ticketdrop/git"
+PATH="$root/gitbin-ticketdrop:$PATH" "$scripts/land-bundle.sh" cleanup "$cnet" > "$root/cleanup-tdrop.out" 2>&1
+ok "unverifiable ticket exits 1"      "$?" 1
+ok "and says it kept the ticket"      "$(grep -c "kept ticket/$cnet/01" "$root/cleanup-tdrop.out")" 1
+git fetch -q origin
+ok "its branch stays"                 "$(git ls-remote --heads origin "ticket/$cnet/01" | wc -l | tr -d ' ')" 1
+ok "its worktree stays"               "$([ -d ".claude/worktrees/ticket/$cnet/01" ] && echo yes)" yes
+ok "the landed bundle branch goes"    "$(git ls-remote --heads origin "bundle/$cnet" | wc -l | tr -d ' ')" 0
 
 echo "== abandon: discards every ticket branch regardless of status, and the bundle branch"
 sync_main

@@ -73,7 +73,8 @@ git worktree prune
 # git worktree remove deletes only the leaf it was given; drop the scaffolding directories it leaves,
 # each only if empty — never a tree, and never anything above $WORKTREE_DIR.
 rmdir "$WORKTREE_DIR/ticket/$bundle" "$WORKTREE_DIR/ticket" "$WORKTREE_DIR/land" "$WORKTREE_DIR" 2>/dev/null || true
-git fetch -q --prune origin
+# Pruning stale remote-tracking refs is cosmetic; a failure here must not eat the summary below.
+git fetch -q --prune origin || true
 
 if [ -n "$refused" ]; then
   echo "refused to delete:$refused — branch protection or a permissions gap; everything else was removed" >&2

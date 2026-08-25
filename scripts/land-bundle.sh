@@ -7,7 +7,9 @@
 #   land-bundle.sh push    <bundle-id>  publish that worktree's tip on the integration target
 #   land-bundle.sh cleanup <bundle-id>  delete the bundle's branches, remove its worktrees
 #
-#   exit: 2 no such bundle, push before start, or cleanup from inside a worktree
+#   exit: 1 cleanup could not verify a branch — it and its worktree stay
+#           (a fully unreachable forge stops earlier, at the fetch, with git's own exit)
+#         2 no such bundle, push before start, or cleanup from inside a worktree
 #         3 a ticket is not done, or its PR record could not be queried
 #         4 no bundle branch        5 stale land worktree
 #         6 the target moved — re-run the canonical checks, then push again
@@ -142,27 +144,52 @@ cleanup)
   fi
 
   git fetch -q origin
+
+  # exists | absent | unknown. ls-remote's --exit-code is 2 for "no matching ref" specifically;
+  # anything else — an unreachable forge included — is unknown, and couldn't tell is not
+  # permission to delete (workflow/git-mechanics.md, Status is derived). abandon-bundle.sh
+  # draws the same line.
+  branch_state() { # <ref>
+    local rc=0
+    git ls-remote --exit-code --heads origin "$1" >/dev/null 2>&1 || rc=$?
+    case "$rc" in 0) echo exists ;; 2) echo absent ;; *) echo unknown ;; esac
+  }
+
   # The bundle branch is the only copy of accepted work until the land publishes it — squashed
   # ticket branches never held it. Deleting an unlanded one is data loss, so refuse everything.
-  if git ls-remote --exit-code --heads origin "$bb" >/dev/null 2>&1; then
+  case "$(branch_state "$bb")" in
+  exists)
     if ! git merge-base --is-ancestor "origin/$bb" "origin/$target"; then
       echo "not landed: $bb carries work $target does not have — land it first; cleanup deletes nothing until then" >&2
       exit 9
     fi
-  fi
+    ;;
+  unknown)
+    echo "cannot reach the forge to check $bb — nothing is deleted; fix the connection, then retry" >&2
+    exit 1
+    ;;
+  esac
 
+  unverified=""
   while read -r nn _; do
     [ -n "$nn" ] || continue
     tb=$(ticket_branch "$bundle" "$nn")
     # A ticket branch whose PR is not merged is a live claim — deleting it cancels work another
     # session owns. unknown skips too: couldn't tell is not permission.
-    if git ls-remote --exit-code --heads origin "$tb" >/dev/null 2>&1; then
+    case "$(branch_state "$tb")" in
+    exists)
       st=$("$here/ticket-status.sh" "$bundle" "$nn") || st=unknown
       if [ "$st" != done ]; then
         echo "kept $tb — ticket $nn is $st, so its branch and worktree stay" >&2
         continue
       fi
-    fi
+      ;;
+    unknown)
+      echo "kept $tb — the forge could not be queried, so its branch and worktree stay" >&2
+      unverified="$unverified $tb"
+      continue
+      ;;
+    esac
     git worktree remove --force "$WORKTREE_DIR/$tb" 2>/dev/null || true
     git push -q origin --delete "$tb" 2>/dev/null || true # already gone when the forge deletes on merge
   done <<<"$(ticket_names "$bundle")"
@@ -173,7 +200,12 @@ cleanup)
   # git worktree remove deletes only the leaf it was given; drop the scaffolding directories it
   # leaves, each only if empty — never a tree, and never anything above $WORKTREE_DIR.
   rmdir "$WORKTREE_DIR/ticket/$bundle" "$WORKTREE_DIR/ticket" "$WORKTREE_DIR/land" "$WORKTREE_DIR" 2>/dev/null || true
-  git fetch -q --prune origin
+  # Pruning stale remote-tracking refs is cosmetic; a failure here must not eat the summary below.
+  git fetch -q --prune origin || true
+  if [ -n "$unverified" ]; then
+    echo "could not verify:$unverified — their branches and worktrees stay; fix the connection, then retry" >&2
+    exit 1
+  fi
   echo "cleaned up $bundle — branches and worktrees removed"
   ;;
 

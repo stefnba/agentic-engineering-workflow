@@ -45,8 +45,8 @@ Draft location is tool-local and uncommitted. After the Plan gate, skill scripts
 approved bundle under `work/bundles/` on the configured integration target using the repository's Git
 conventions — committed directly, never through a PR: mandatory critique plus the human's approval
 already are the review a planning artifact gets, and a PR on top adds ceremony without adding a
-gate. The path never moves — shaped and active are derived states, not directories. Land deletes
-the bundle path; there is no archive.
+gate. The path never moves — bundle status is a derived state, never a directory (git-mechanics.md,
+Status is derived). Land deletes the bundle path; there is no archive.
 
 ## A complete bundle
 

@@ -122,7 +122,8 @@ ${CLAUDE_PLUGIN_ROOT}/scripts/land-bundle.sh cleanup <bundle-id>
 Ticket branches, the bundle branch, every worktree — Land's own last, and from the main checkout.
 Branches a forge already deleted on merge are skipped, not treated as an error. Cleanup guards
 itself: it refuses outright when the bundle branch carries unlanded work, and it keeps any ticket
-branch whose PR is not merged — a live claim — reporting what it kept.
+branch whose PR is not merged — a live claim — or whose state it could not query, reporting what
+it kept.
 
 ### 7. Hand back
 
