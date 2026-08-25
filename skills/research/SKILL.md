@@ -11,7 +11,7 @@ hooks:
     - matcher: "Edit|Write"
       hooks:
         - type: command
-          command: "${CLAUDE_PLUGIN_ROOT}/scripts/write-boundary.sh --reason 'the researcher writes only docs/research/ and work/backlog.md' 'docs/research/*' work/backlog.md"
+          command: "b=\"${CLAUDE_PLUGIN_ROOT:-${CLAUDE_PROJECT_DIR:-.}}/scripts/write-boundary.sh\"; [ -x \"$b\" ] || { echo 'write boundary unavailable (CLAUDE_PLUGIN_ROOT unset, claude-code#42564) — do not write; tell the human' >&2; exit 2; }; \"$b\" --reason 'the researcher writes only docs/research/ and work/backlog.md' 'docs/research/*' work/backlog.md"
 ---
 
 # Research
