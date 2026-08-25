@@ -1,6 +1,6 @@
 ---
 name: review-pr
-description: Judge one implementation PR at its exact head SHA. Dispatched by the implement-ticket skill once per review round; also use when the user asks to review, re-review, or judge a ticket's PR. Invoke with the PR number, its head SHA, the round number, and optionally a scope — full (default) re-judges the whole PR, delta narrows a later round to the fixes since the previous round.
+description: Judge one implementation PR at its exact head SHA. Dispatched by the implement-ticket skill once per review round; also use when the user asks to review or re-review a ticket's PR. Takes the PR number, head SHA, round number, and an optional scope — full (default) or delta (only the fixes since the previous round).
 argument-hint: "[PR number] [head SHA] [round number] [full|delta]"
 context: fork
 agent: reviewer
@@ -104,7 +104,9 @@ Post one comment on the PR, tied to the reviewed head SHA, filled from
 `${CLAUDE_SKILL_DIR}/templates/round-comment.md`; use an inline comment only where a code
 location is itself the evidence. Then deliver the round assessment, the findings, and the Backlog
 candidates as your final message — the implementation session is blocked on the first two, and the
-human's Accept gate sits behind them.
+human's Accept gate sits behind them. Open it with the line
+`Report for the human — relay it in full, never summarized.`; the human sees only what the
+dispatching session relays.
 
 **No bundle:** nothing ever sweeps this PR's backlog candidates back. Say so plainly in the final
 message, so whoever invoked this round routes the candidates through the `backlog` skill directly
