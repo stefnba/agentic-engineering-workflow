@@ -270,6 +270,18 @@ ok "scaffolding stays while siblings live" "$([ -d ".claude/worktrees/ticket/$mu
 "$scripts/complete-ticket.sh" 42 >/dev/null 2>&1
 ok "missing accepted sha refuses (64)" "$?" 64
 
+echo "== completing from inside the worktree it removes"
+inw=2026-08-17-inside
+mkdir -p "work/bundles/$inw"
+printf 'depends_on: []\n---\ninside\n' > "work/bundles/$inw/ticket.md"
+git add "work/bundles/$inw" && git commit -qm "docs(bundle): publish inside probe" && git push -q origin main
+"$scripts/claim-ticket.sh" "$inw" 01 >/dev/null 2>&1
+export GH_STUB_LOG="$root/merge-inside.log" GH_STUB_BRANCH="ticket/$inw/01" GH_STUB_BASE="bundle/$inw"
+( cd ".claude/worktrees/ticket/$inw/01" && "$scripts/complete-ticket.sh" 45 f00dcafe ) > "$root/inside.out" 2>&1
+ok "completes from inside (0)"      "$?" 0
+ok "worktree removed"               "$([ ! -e ".claude/worktrees/ticket/$inw/01" ] && echo yes)" yes
+ok "warns about the lost cwd"       "$(grep -c 'removed with the worktree' "$root/inside.out")" 1
+
 echo "== work/config.conf overrides the defaults"
 cfg=2026-08-17-config
 mkdir -p "work/bundles/$cfg"
