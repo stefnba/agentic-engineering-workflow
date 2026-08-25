@@ -57,8 +57,8 @@ published bundle binds what a revision may not touch; one that needs more stops 
 and so revisable, edit the published files in place, and rejoin at the clarify step. No backlog
 line is involved.
 
-**Critique and the Plan gate repeat exactly as for a new bundle.** The publish step's commit
-subject becomes `bundle: revise <bundle-id>`.
+**Critique and the Plan gate repeat exactly as for a new bundle**, and the publish step runs the
+same script — it derives the `revise` commit subject itself.
 
 ### 2. Choose the shaping route
 
@@ -202,32 +202,28 @@ rather than a stage:
 
 ### 9. Publish
 
-On approval, commit the bundle **exactly as approved** — no edits between the OK and the commit; the
-approved bytes and the committed bytes are the same.
-
-Publish straight to the integration target, no PR — mandatory critique plus the human's approval are
-the review a planning artifact gets (`bundle.md`). Read `INTEGRATION_TARGET` by sourcing
-`${CLAUDE_PLUGIN_ROOT}/scripts/_config.sh` from the repository root; never assume
-`main`. The subject is fixed, so the publishing commit is greppable by bundle ID:
+On approval, make the working tree the exact approved state — the bundle directory untouched since
+the OK, and `${CLAUDE_PROJECT_DIR}/work/backlog.md` with the line the bundle was shaped from and
+every line the Plan gate confirmed as covered deleted, and no line it didn't — then run from the
+repository root:
 
 ```text
-bundle: publish <bundle-id>
+${CLAUDE_PLUGIN_ROOT}/scripts/publish-bundle.sh <bundle-id> [<body-line>]
 ```
 
-Add a body only when this commit deletes a `${CLAUDE_PROJECT_DIR}/work/backlog.md` line the bundle
-doesn't obviously cover — one line naming what it replaced:
+It publishes those bytes straight to the integration target, no PR — mandatory critique plus the
+human's approval are the review a planning artifact gets (`bundle.md`) — committing from a
+detached worktree so this session's checkout is never written, and deriving publish versus revise
+and the greppable `bundle: publish|revise <bundle-id>` subject itself. Don't reproduce any of its
+git operations by hand.
 
-```text
-Shaped from the backlog's session-recap idea, which this bundle replaces
-```
+Pass the body line only when the commit deletes a backlog line the bundle doesn't obviously
+cover — one line naming what it replaced, e.g. `Shaped from the backlog's session-recap idea,
+which this bundle replaces`.
 
-If the bundle was shaped from a `${CLAUDE_PROJECT_DIR}/work/backlog.md` line, delete that line in
-the same commit — the
-bundle replaces it, and the item lives in exactly one place at every committed state. Delete every
-further line the Plan gate confirmed as covered in that same commit, and no line it didn't.
-
-If the push is rejected on a date-and-slug collision, rename to a disambiguated slug and retry. That
-costs a rename, not a rewrite.
+Exit 3 means the bundle moved on the target mid-session. For a brand-new bundle that is a
+date-and-slug collision: rename to a disambiguated slug and rerun — a rename, not a rewrite. For a
+revision: sync and re-check the approved bytes before rerunning.
 
 ### 10. Hand back
 
