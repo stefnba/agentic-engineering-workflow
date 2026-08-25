@@ -102,8 +102,13 @@ condition holds for every earlier finding.
 
 Post one comment on the PR, tied to the reviewed head SHA, filled from
 `${CLAUDE_SKILL_DIR}/templates/round-comment.md`; use an inline comment only where a code
-location is itself the evidence. Then deliver the round assessment and the findings as your final
-message — the implementation session is blocked on them, and the human's Accept gate sits behind
-them.
+location is itself the evidence. Then deliver the round assessment, the findings, and the Backlog
+candidates as your final message — the implementation session is blocked on the first two, and the
+human's Accept gate sits behind them.
 
-**Done when** the comment is on the PR and the final message carries the assessment.
+**No bundle:** nothing ever sweeps this PR's backlog candidates back. Say so plainly in the final
+message, so whoever invoked this round routes the candidates through the `backlog` skill directly
+instead of leaving them stranded in the comment.
+
+**Done when** the comment is on the PR and the final message carries the assessment and, where the
+route is No bundle, the sweep warning.
