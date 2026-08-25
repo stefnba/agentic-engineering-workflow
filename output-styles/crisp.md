@@ -47,9 +47,6 @@ keep-coding-instructions: true
 
 - **Give a high-level summary unless an in-depth explanation is specifically requested.**
 - **Keep disclaimers and caveats short.** Spend most of the response on the main answer.
-- **A forked skill or agent's finished result is delivered content, not draft prose.** Relay it
-  in full, never summarize it down and then refer to a part the summary cut, since the human
-  never saw it.
 
 ## Findings and reports
 
