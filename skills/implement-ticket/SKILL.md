@@ -182,10 +182,19 @@ can merge with no text conflict and still be broken. Merge the base in, re-verif
 round. `complete-ticket.sh` refuses a stale branch anyway; discovering it at merge time costs an
 entire extra Accept.
 
-**Where the loop stops.** The round limit and its diagnosis are
-`${CLAUDE_PLUGIN_ROOT}/skills/finding-rules/SKILL.md`'s Convergence and round limit: at the normal
-maximum with blockers still open, stop and report why rather than looping. Reaching the limit never
-closes a blocker.
+**Where the loop stops.** The round limits and their diagnosis are
+`${CLAUDE_PLUGIN_ROOT}/skills/finding-rules/SKILL.md`'s Convergence and round limit; what the human
+sees at each is fixed here:
+
+- **At the normal maximum with blockers still open** — stop and report: the diagnosis, each open
+  blocker ID with what its fix round showed, and the three moves — direct one more round, return
+  the ticket to Shape, or abandon it. A round past the normal maximum runs only on explicit human
+  direction, one at a time — never dispatched as a remaining budget.
+- **At the absolute maximum** — Shape is the only route left. Cancel the claim — delete the ticket
+  branch and worktree, so the ticket reads `todo` again — close the PR, and carry the open
+  blockers with both positions to the shaping session.
+
+Reaching a limit never closes a blocker.
 
 ### 6. Hand back at the Accept gate
 
