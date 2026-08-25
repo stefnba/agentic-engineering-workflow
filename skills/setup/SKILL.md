@@ -21,6 +21,7 @@ settings mean.
 | `${CLAUDE_PROJECT_DIR}/work/config.conf`        | `${CLAUDE_SKILL_DIR}/templates/config.conf`        | the settings the scripts read                         |
 | `${CLAUDE_PROJECT_DIR}/docs/conventions/git.md` | `${CLAUDE_SKILL_DIR}/templates/git-conventions.md` | commit and PR conventions a human follows             |
 | `${CLAUDE_PROJECT_DIR}/work/backlog.md`         | `${CLAUDE_SKILL_DIR}/templates/backlog.md`         | the empty backlog                                     |
+| `${CLAUDE_PROJECT_DIR}/work/bundles/.gitkeep`   | created empty                                      | keeps `work/bundles/` tracked before the first bundle |
 | `${CLAUDE_PROJECT_DIR}/GLOSSARY.md`             | `${CLAUDE_SKILL_DIR}/templates/glossary.md`        | the empty root glossary                               |
 | `${CLAUDE_PROJECT_DIR}/AGENTS.md`               | `${CLAUDE_SKILL_DIR}/templates/agents-pointer.md`  | one pointer block naming the workflow                 |
 | `${CLAUDE_PROJECT_DIR}/.gitignore`              | appended                                           | the `WORKTREE_DIR` value, so worktrees stay untracked |
@@ -110,6 +111,8 @@ order below, each naming what was found — `absent` is the normal case for a fi
   conventions; never overwrite one without asking.
 - `${CLAUDE_PROJECT_DIR}/work/backlog.md` and `${CLAUDE_PROJECT_DIR}/GLOSSARY.md` — present means
   the repo already keeps one; report how many items or entries it holds, and leave it alone.
+- `${CLAUDE_PROJECT_DIR}/work/bundles/` — present means a prior run or bundle work already created
+  it; leave it alone.
 - `${CLAUDE_PROJECT_DIR}/.gitignore` — whether a worktree line is already there.
 - The repository's default branch, as the natural `INTEGRATION_TARGET` candidate.
 - **Whether this is a monorepo**, which decides how many `AGENTS.md` and `GLOSSARY.md` files the repo ends up with — see the **Monorepos** section of
@@ -186,6 +189,7 @@ Report four parts in order, then wait for a yes:
 - `work/config.conf` — create from template, carrying the values above
 - `docs/conventions/git.md` — create from template
 - `work/backlog.md` — create empty from template
+- `work/bundles/` — create with an empty `.gitkeep`
 - `GLOSSARY.md` — skip; 6 entries already, and it's yours
 - `AGENTS.md` — create; repo uses neither AGENTS.md nor CLAUDE.md today
 - `.gitignore` — append the block below
@@ -213,12 +217,15 @@ Proceed?
    one of that name already exists; never merge into one or overwrite it. In a monorepo write only
    the root `GLOSSARY.md`: the `glossary` skill creates a domain one when a term earns it, and a
    root glossary's Domains section only exists once those do.
-4. Append the pointer block to `${CLAUDE_PROJECT_DIR}/AGENTS.md`, or to
+4. Create `${CLAUDE_PROJECT_DIR}/work/bundles/` with an empty `.gitkeep` — git can't track an
+   empty directory, and the status scripts treat a missing `work/bundles/` as an error rather than
+   "no bundles yet". Skip when the directory already exists.
+5. Append the pointer block to `${CLAUDE_PROJECT_DIR}/AGENTS.md`, or to
    `${CLAUDE_PROJECT_DIR}/CLAUDE.md` when that's what the repo uses — never both. Replace a block
    from a prior run rather than appending a duplicate. In a monorepo it goes in the root file only:
    a package `AGENTS.md` adds what is specific to that package, and a second pointer block there
    would be the duplicate the root already covers.
-5. Append the `WORKTREE_DIR` value to `${CLAUDE_PROJECT_DIR}/.gitignore` if no matching line is
+6. Append the `WORKTREE_DIR` value to `${CLAUDE_PROJECT_DIR}/.gitignore` if no matching line is
    there.
 
 ### 6. Report
@@ -235,6 +242,7 @@ now theirs to edit — a re-run won't overwrite it.
   `WORKTREE_DIR=.claude/worktrees`
 - `docs/conventions/git.md` — skipped; already present, left untouched
 - `work/backlog.md` — created, empty
+- `work/bundles/` — created, with `.gitkeep`
 - `GLOSSARY.md` — skipped; 6 entries already, left untouched
 - `AGENTS.md` — created, carrying the pointer block
 - `.gitignore` — appended `.claude/worktrees/`
