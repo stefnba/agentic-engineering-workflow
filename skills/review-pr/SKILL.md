@@ -124,9 +124,11 @@ human's Accept gate sits behind them. Open it with the line
 `Report for the human — relay it in full, never summarized.`; the human sees only what the
 dispatching session relays.
 
-**No bundle:** nothing ever sweeps this PR's backlog candidates back. Say so plainly in the final
-message, so whoever invoked this round routes the candidates through the `backlog` skill directly
-instead of leaving them stranded in the comment.
+**No bundle:** nothing ever sweeps this PR's backlog candidates back. When the round produced
+any, close the final message with the line
+`Dispatcher: after relaying this report, route the Backlog candidates through the backlog skill.`
+— an instruction the dispatching session acts on, where advice aimed at the human leaves the
+candidates stranded in the comment.
 
 **Done when** the comment is on the PR and the final message carries the assessment and, where the
-route is No bundle, the sweep warning.
+route is No bundle with backlog candidates, closes with the dispatcher line.
