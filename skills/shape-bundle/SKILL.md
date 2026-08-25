@@ -8,7 +8,7 @@ hooks:
     - matcher: "Edit|Write"
       hooks:
         - type: command
-          command: "${CLAUDE_PLUGIN_ROOT}/scripts/write-boundary.sh --reason 'shape writes only inside work/bundles/ (plus work/backlog.md)' --lift-when-clean work/bundles/ 'work/bundles/*' work/backlog.md"
+          command: "b=\"${CLAUDE_PLUGIN_ROOT:-${CLAUDE_PROJECT_DIR:-.}}/scripts/write-boundary.sh\"; [ -x \"$b\" ] || { echo 'write boundary unavailable (CLAUDE_PLUGIN_ROOT unset, claude-code#42564) — do not write; tell the human' >&2; exit 2; }; \"$b\" --reason 'shape writes only inside work/bundles/ (plus work/backlog.md)' --lift-when-clean work/bundles/ 'work/bundles/*' work/backlog.md"
 ---
 
 # Shape
@@ -205,8 +205,7 @@ rather than a stage:
 
 On approval, make the working tree the exact approved state — the bundle directory untouched since
 the OK, and `${CLAUDE_PROJECT_DIR}/work/backlog.md` with the line the bundle was shaped from and
-every line the Plan gate confirmed as covered deleted, and no line it didn't — then run from the
-repository root:
+every line the Plan gate confirmed as covered deleted, and no line it didn't — then run:
 
 ```text
 ${CLAUDE_PLUGIN_ROOT}/scripts/publish-bundle.sh <bundle-id> [<body-line>]
