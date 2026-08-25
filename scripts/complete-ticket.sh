@@ -36,5 +36,9 @@ fi
 gh pr merge "$pr" "--$TICKET_MERGE_METHOD" --delete-branch --match-head-commit "$accepted"
 
 git worktree remove --force "$WORKTREE_DIR/$branch" 2>/dev/null || true
+git worktree prune
+# git worktree remove deletes only the leaf it was given; drop the scaffolding directories it
+# leaves, each only if empty — never a tree, and never anything above $WORKTREE_DIR.
+rmdir "$WORKTREE_DIR/$(dirname "$branch")" "$WORKTREE_DIR/ticket" "$WORKTREE_DIR" 2>/dev/null || true
 git fetch -q --prune origin
 echo "merged PR #$pr ($branch)"
