@@ -41,6 +41,8 @@ Treat a non-zero exit as a stop, never as something to retry or work around; the
 states the reason and the next action, so nothing else needs a mapping. The numbers are contract
 only for scripts and tests that branch on them:
 
+- `_config.sh`, sourced by every script — `1` outside a git work tree, a malformed
+  `work/config.conf` line, or an unsupported `TICKET_MERGE_METHOD`
 - `publish-bundle.sh` — `2` no such bundle in the working tree · `3` bundle moved on the target
   mid-session · `5` stale publish worktree · `6` push retries exhausted
 - `claim-ticket.sh` — `2` no such ticket · `3` dependency not `done` · `4` already claimed ·

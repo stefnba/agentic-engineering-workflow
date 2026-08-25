@@ -60,7 +60,7 @@ not this one; report it and stop rather than forcing the delete.
 
 ### 3. Delete the published bundle and commit it
 
-From the repository root, on the integration target:
+From the main checkout's root, on the integration target:
 
 ```text
 git rm -r work/bundles/<bundle-id>
