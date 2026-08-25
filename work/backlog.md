@@ -65,3 +65,6 @@ Candidate work and follow-ups nobody has picked yet.
   (`docs/decisions/2026-08-18-script-read-settings.md` gates config on a script reader).
 - [idea] [skills] [docs] `work/backlog.md`'s bullet format could move to a markdown table (`id`,
   `topic`, `areas`, `details`)
+- [idea] [workflow] Create hook instead of AGENTS.md's "one session, one working tree" rule is prose only — nothing
+  mechanically stops an Edit/Write on a file another session already dirtied, and prose compliance
+  decays over a long session.

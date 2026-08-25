@@ -10,6 +10,13 @@ This repo collects agentic-engineering practices — workflow design, documentat
 
 Material claims about the codebase — a diagnosis, a root cause, a recommendation's premise — carry a validation label: **verified** (you read the deciding line or ran the command — cite it) or **suspected** (inference, not checked); the same flags the `finding-rules` skill uses. An unlabeled verdict reads as verified. Citing evidence asserts you actually inspected it. "Suspected, here's how to confirm" is a good answer; a confident guess stated as fact is not.
 
+## One session, one working tree
+
+**Before your first edit, confirm the checkout is yours.** If `git status` shows uncommitted
+changes to files this session never touched and the task doesn't explain them, another session is
+likely sharing this checkout. Stop and report before writing — or, when working autonomously,
+continue in a fresh worktree and leave the foreign changes alone.
+
 ## Where things live
 
 This repo is also the plugin: its root is the plugin root, so everything here ships to consuming
