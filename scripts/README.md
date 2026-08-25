@@ -5,10 +5,12 @@ by the `bundle-state` skill. The rules they implement live in
 [workflow/git-mechanics.md](../workflow/git-mechanics.md); changing those rules changes these
 scripts.
 
-Run every script from the repository root. Settings and their defaults come from
-`work/config.conf`, which documents itself; an environment variable of the same name outranks the
-file. `_config.sh` reads them, holds the branch names, and is sourced by the others rather than run
-on its own.
+Every script anchors itself on the top level of the checkout it is invoked in — a subdirectory is
+fine, a directory outside a git work tree is a loud error — and reads that checkout's `work/` tree,
+which is why `pr-links.sh` works from a ticket worktree and `publish-bundle.sh` publishes the
+shaping session's bytes. Settings and their defaults come from `work/config.conf`, which documents
+itself; an environment variable of the same name outranks the file. `_config.sh` anchors, reads
+them, holds the branch names, and is sourced by the others rather than run on its own.
 
 | Script                               | Purpose                                                                         |
 | ------------------------------------ | ------------------------------------------------------------------------------- |

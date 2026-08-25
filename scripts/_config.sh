@@ -1,9 +1,20 @@
-# Shared settings for the bundle scripts. Sourced, not executed; run from the repository root.
+# Shared settings for the bundle scripts. Sourced, not executed.
 #
 # Values a repository may change live in work/config.conf, which setup writes from the plugin's
 # skills/setup/templates/config.conf. Branch naming is not among them: status is derived by
 # reconstructing these names, so two scripts that disagree would report a claimed ticket as todo and
 # let a dependent ticket start early.
+
+# Anchor on the invoking checkout's top level, so work/config.conf and the work/bundles/ globs
+# below resolve the same from any subdirectory. The top level, not the main worktree: pr-links.sh
+# runs from a ticket worktree and must read its claim-synced files, publish-bundle.sh must read the
+# shaping session's tree, and the inside-a-worktree refusals in land-bundle.sh and abandon-bundle.sh
+# must still see the invoker's context. Outside a work tree there is nothing to read — say so
+# instead of silently applying defaults over empty globs.
+_root=$(git rev-parse --show-toplevel 2>/dev/null) ||
+  { echo "not inside a git work tree — the bundle scripts read work/ from the checkout they are invoked in" >&2; exit 1; }
+cd "$_root"
+unset _root
 
 # An environment variable outranks the file, so a one-off override needs no edit.
 _env_target="${INTEGRATION_TARGET:-}"
