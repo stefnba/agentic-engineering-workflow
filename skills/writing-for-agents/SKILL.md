@@ -1,6 +1,6 @@
 ---
 name: writing-for-agents
-description: Use when writing, reviewing, or improving any document an agent will consume or follow — skills, CLAUDE.md / AGENTS.md files, runbooks, prompt files, workflow docs — including when the user says things like "write a CLAUDE.md", "document this so Claude can follow it", "make a skill for X", or "turn these steps into instructions", without mentioning the word "agent". Also use when the user reports an agent misbehaving around a document — "Claude keeps ignoring my CLAUDE.md", "my skill never triggers", "the agent skips steps in the runbook" — since the fix is usually in the document's wording.
+description: Use when writing, reviewing, or improving any document an agent will consume — skills, CLAUDE.md / AGENTS.md files, runbooks, prompt files — even when the user doesn't say "agent". Also use when the user reports an agent misbehaving around a document — a skill that never triggers, an ignored CLAUDE.md, skipped runbook steps — since the fix is usually in the wording.
 ---
 
 # Writing for Agents

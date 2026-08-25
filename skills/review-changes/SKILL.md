@@ -1,6 +1,6 @@
 ---
 name: review-changes
-description: Judge local git changes with the independent reviewer, without a PR. Use when the user asks to review the working tree, staged or uncommitted changes, the current diff, or a branch with no PR yet — "review my changes", "check this before I commit", "second opinion on this diff" — even when the changes span several conversations or the user authored them by hand. Invoke with an optional base ref (default is HEAD, judging the staged and uncommitted work like `git diff`; a base ref widens it to commits, branches, or remotes) and an optional one-line intent to judge against. Not for a ticket's PR, which review-pr judges.
+description: Judge local git changes with the independent reviewer, without a PR. Use when the user asks to review the working tree, the current diff, or a branch with no PR yet — "review my changes", "check this before I commit". Takes an optional base ref (default HEAD, the uncommitted work) and an optional one-line intent to judge against. Not for a ticket's PR, which review-pr judges.
 argument-hint: "[base ref] [stated intent]"
 context: fork
 agent: reviewer
@@ -83,7 +83,9 @@ Recompute the fingerprint. A changed fingerprint does not void the review — re
 report's baseline line, because findings may point at lines that have moved.
 
 Fill `${CLAUDE_SKILL_DIR}/templates/report.md` and deliver it as your final message — the only
-channel this review has; nothing is posted anywhere.
+channel this review has; nothing is posted anywhere. Open it with the line
+`Report for the human — relay it in full, never summarized.`; the human sees only what the
+dispatching session relays.
 
 **Done when** the fingerprint has been re-checked and the final message carries the assessment
 and every finding.

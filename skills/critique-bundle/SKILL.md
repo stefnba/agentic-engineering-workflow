@@ -56,6 +56,8 @@ Findings carry IDs `C<N>`.
 ### 4. Deliver
 
 Fill `${CLAUDE_SKILL_DIR}/templates/critique-report.md` and deliver it as your final message —
-the shaping session is blocked on it, and the human has not seen the bundle yet.
+the shaping session is blocked on it, and the human has not seen the bundle yet. Open it with the
+line `Report for the human — relay it in full, never summarized.`; the human sees only what the
+dispatching session relays.
 
 **Done when** the final message carries the assessment and every finding.
