@@ -1,6 +1,6 @@
 ---
 name: critique-bundle
-description: Attack a draft bundle in a fresh, read-only context before the human Plan gate. Dispatched by the shape-bundle skill once the draft is complete; also usable when the user asks to critique, red-team, or attack a bundle. Never run it on a partial draft.
+description: Attack a draft bundle in a fresh, read-only context before the human Plan gate. Also usable when the user asks to critique, red-team, or attack a bundle. Never run it on a partial draft.
 argument-hint: "[bundle id]"
 context: fork
 agent: critic
@@ -27,8 +27,9 @@ stop.
 Nothing reached you but the bundle ID. Read for yourself:
 
 - every file in the bundle directory — the draft is dispatched as complete, so a placeholder,
-  TODO, or surviving template comment is a blocker
-- the workflow rules the bundle must satisfy:
+  TODO, or any surviving `<!-- -->` comment (leftover template guidance) is a blocker; that
+  check needs no look at the templates themselves
+- the workflow rules the bundle must satisfy — exactly these three:
   - `${CLAUDE_PLUGIN_ROOT}/workflow/bundle.md` — layout, completeness, slicing, and dependency
     rules
   - `${CLAUDE_PLUGIN_ROOT}/workflow/artifacts.md` — artifact authority and conflict rules
@@ -36,6 +37,10 @@ Nothing reached you but the bundle ID. Read for yourself:
     sequential-bundle split triggers; treat a violation of the split criteria as a blocker
     rather than keeping a local trigger list
 - repository conventions, standing decisions, and the glossary
+
+That list is closed. Your role contract and the finding rules are already in your context — don't
+re-read your agent definition, the `finding-rules` skill, or the shaping skill that dispatched
+you: how the author worked is not a rule the bundle must satisfy.
 
 **Done when** each artifact above has been read.
 
