@@ -92,6 +92,9 @@ An in-flight worktree does not see the revision, and does not need to: the ticke
 ones the revision left alone. What a ticket's own diff makes false is reconciled in that ticket's PR;
 what only the whole bundle makes false is reconciled at Land.
 
+**A still-`todo` ticket claimed after the revision does see it** — the claim itself is what carries
+the revision onto the bundle branch (git-mechanics.md, Bundle-branch creation).
+
 ## Vertical slicing
 
 Default to a thin vertical slice that is demonstrable, behaviorally testable, independently

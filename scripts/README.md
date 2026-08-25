@@ -43,7 +43,8 @@ only for scripts and tests that branch on them:
   mid-session · `5` stale publish worktree · `6` push retries exhausted
 - `claim-ticket.sh` — `2` no such ticket · `3` dependency not `done` · `4` already claimed ·
   `5` stale worktree · `6` malformed `depends_on` · `7` bundle not published on the target, or a
-  stale bundle branch carrying its own commits
+  stale bundle branch carrying its own commits · `8` a bundle revision and an earlier ticket PR
+  both amended the same file
 - `pr-links.sh` — `2` no such ticket · `3` bundle not published · `4` forge unreachable
 - `complete-ticket.sh` — `2` stale against its base · `64` missing the accepted head SHA
 - `land-bundle.sh` — `2` no such bundle · `3` a ticket not `done` · `4` no bundle branch (never

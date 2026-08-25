@@ -77,6 +77,29 @@ if [ -e "$worktree" ]; then
   exit 5
 fi
 
+# A bundle revision after this bundle branch existed lands only on the target
+# (workflow/bundle.md, Revising a published bundle) — nothing else ever writes the bundle branch
+# (workflow/git-mechanics.md, Bundle-branch writes), so a still-todo ticket claimed after a
+# revision would otherwise branch off the pre-revision copy. Check before claiming, against $base
+# rather than the not-yet-created ticket branch: a genuine two-sided edit — this file amended both
+# by an earlier ticket PR on $base and by a revision on $target since they last agreed — stops the
+# claim outright rather than guessing which side wins, and stops it before anything is claimed.
+revbase=$(git merge-base "origin/$base" "origin/$target")
+sync_paths=()
+for path in "$ticket" "work/bundles/$bundle/spec.md" "work/bundles/$bundle/plan.md"; do
+  git cat-file -e "origin/$target:$path" 2>/dev/null || continue
+  ours=$(git rev-parse -q --verify "origin/$base:$path" 2>/dev/null) || ours=""
+  theirs=$(git rev-parse -q --verify "origin/$target:$path" 2>/dev/null) || theirs=""
+  based=$(git rev-parse -q --verify "$revbase:$path" 2>/dev/null) || based=""
+  [ "$ours" = "$theirs" ] && continue
+  [ "$theirs" = "$based" ] && continue # only the branch side moved — nothing to sync, no conflict
+  if [ "$ours" != "$based" ]; then
+    echo "claim aborted: $path was amended both by an earlier ticket PR on $base and by a bundle revision on $target — reconcile by hand, then retry" >&2
+    exit 8
+  fi
+  sync_paths+=("$path")
+done
+
 # The porcelain '*' flag means this push created the branch, so the claim is ours. A racer that
 # pushed the same commit sees '=' and must stop. Capture the output instead of piping it: under
 # pipefail, `grep -q` exits early and SIGPIPEs the push.
@@ -88,30 +111,14 @@ grep -q '^\*' <<<"$result" ||
 git fetch -q origin "+refs/heads/$branch:refs/remotes/origin/$branch"
 git worktree add -q "$worktree" "$branch"
 
-# A bundle revision after this bundle branch existed lands only on the target
-# (workflow/bundle.md, Revising a published bundle) — nothing else ever writes the bundle branch
-# (workflow/git-mechanics.md, Bundle-branch writes), so a still-todo ticket claimed after a
-# revision would otherwise branch off the pre-revision copy. Sync this ticket's own file and the
-# bundle-level docs from the target, scoped to what only the target moved since the two branched:
-# a file an earlier ticket PR also amended here is left alone unless the target agrees with it —
-# a genuine two-sided edit stops the claim instead of guessing which side wins.
-revbase=$(git merge-base "$branch" "origin/$target")
-synced=0
-for path in "$ticket" "work/bundles/$bundle/spec.md" "work/bundles/$bundle/plan.md"; do
-  git cat-file -e "origin/$target:$path" 2>/dev/null || continue
-  ours=$(git rev-parse -q --verify "$branch:$path" 2>/dev/null) || ours=""
-  theirs=$(git rev-parse -q --verify "origin/$target:$path" 2>/dev/null) || theirs=""
-  based=$(git rev-parse -q --verify "$revbase:$path" 2>/dev/null) || based=""
-  [ "$ours" = "$theirs" ] && continue
-  if [ "$ours" != "$based" ]; then
-    echo "claim aborted: $path was amended both by an earlier ticket PR on $branch and by a bundle revision on $target — reconcile by hand, then retry" >&2
-    exit 8
-  fi
-  git -C "$worktree" show "origin/$target:$path" >"$worktree/$path"
-  git -C "$worktree" add -- "$path"
-  synced=1
-done
-if [ "$synced" = 1 ]; then
+# The check above already cleared these paths — apply the target's side, now that a worktree
+# exists to commit it in. This commit is the only way the revision ever reaches the bundle
+# branch: through this ticket's own accepted PR, the same path every other change takes.
+if [ "${#sync_paths[@]}" -gt 0 ]; then
+  for path in "${sync_paths[@]}"; do
+    git -C "$worktree" show "origin/$target:$path" >"$worktree/$path"
+    git -C "$worktree" add -- "$path"
+  done
   git -C "$worktree" commit -q -m "bundle: sync $bundle with $target"
   git -C "$worktree" push -q origin "HEAD:$branch"
   echo "note: synced $branch with a bundle revision on $target"
