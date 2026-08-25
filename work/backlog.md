@@ -7,8 +7,8 @@ Candidate work and follow-ups nobody has picked yet.
 - [follow-up] [agents] Structurally enforce the read-only agents. `agents/reviewer.md` and `agents/critic.md`
   now carry a `tools:` allowlist, which withholds file editing only — both keep `Bash` because
   verification and repository reading need it, so nothing stops a push, approve, or merge except the
-  prompt. Both prompts and `workflow/lifecycle.md`'s Run conditions say so plainly rather than
-  overclaiming. Close it with a hook or a permission rule, and the same question applies to the
+  prompt. Both prompts and `workflow/lifecycle.md`'s Shape and Review run conditions say so plainly
+  rather than overclaiming. Close it with a hook or a permission rule, and the same question applies to the
   Architect's "write access only to the draft bundle" boundary.
 - [follow-up] [skills] `shape-bundle` publishes the approved bundle by hand — `git add`/`commit`/`push` from the
   prompt, sourcing `scripts/_config.sh` for `INTEGRATION_TARGET`. Every other state
