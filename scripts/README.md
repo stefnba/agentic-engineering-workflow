@@ -15,6 +15,7 @@ on its own.
 | `bundle-status.sh`                   | List every bundle with its status.                                              |
 | `bundle-status.sh <bundle-id>`       | One bundle plus the status of each of its tickets.                              |
 | `ticket-status.sh <bundle-id> <NN>`  | Print one ticket's status, for scripts and gates.                               |
+| `publish-bundle.sh <bundle-id>`      | Publish or revise the working tree's approved bundle to the integration target. |
 | `claim-ticket.sh <bundle-id> <NN>`   | Create the ticket's branch and worktree. Claiming is creating the branch.       |
 | `pr-links.sh <bundle-id> <NN>`       | Print a ticket PR body's permalinks and target branch.                          |
 | `complete-ticket.sh <pr> <sha>`      | Merge an accepted ticket PR per `TICKET_MERGE_METHOD`, remove its worktree.     |
@@ -38,6 +39,8 @@ Treat a non-zero exit as a stop, never as something to retry or work around; the
 states the reason and the next action, so nothing else needs a mapping. The numbers are contract
 only for scripts and tests that branch on them:
 
+- `publish-bundle.sh` — `2` no such bundle in the working tree · `3` bundle moved on the target
+  mid-session · `5` stale publish worktree · `6` push retries exhausted
 - `claim-ticket.sh` — `2` no such ticket · `3` dependency not `done` · `4` already claimed ·
   `5` stale worktree · `6` malformed `depends_on` · `7` bundle not published on the target, or a
   stale bundle branch carrying its own commits
@@ -55,7 +58,8 @@ only for scripts and tests that branch on them:
 
 `tests/run.sh` runs the scripts against a local `git daemon` with a stubbed `gh` — no network, and
 nothing written outside a temp dir. It covers a ten-way claim race, the dependency gate, both bundle
-shapes, the stale-bundle-branch heal and its two refusals, listing, an unreachable forge, permalinks pinned past a branch amendment, the flags passed to
+shapes, the stale-bundle-branch heal and its two refusals, the detached-worktree publish — racing
+a sibling backlog append, revising, and refusing a bundle that moved — listing, an unreachable forge, permalinks pinned past a branch amendment, the flags passed to
 the merge, the staleness refusal, a required accepted SHA, a full land for both bundle shapes — gate,
 unrecorded-commit refusal, detached worktree, the moved-target loop, the backlog union, and a guarded
 cleanup — abandoning a bundle mid-flight, both with in-flight tickets and after it has landed, and

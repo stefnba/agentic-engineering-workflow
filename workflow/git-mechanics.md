@@ -163,6 +163,26 @@ rather than committing on it (see Landing a bundle below). Land enforces this st
 first-parent commit on the branch that matches no merged ticket PR's record refuses the land, so a
 direct push is caught before it can reach the target.
 
+## Publishing planning commits
+
+**A planning commit is built in a detached worktree on the integration target, never in the
+session's checkout.** The checkout a shaping session runs in belongs to the human — one writer per
+working tree — so `publish-bundle.sh` stages the approved bytes path-scoped in a scratch tree cut
+from the fetched target and pushes `HEAD:<target>`, the same mechanic as Land's.
+
+**A lost push race rebuilds the commit on the moved base, never merges.** A docs-only commit earns
+no merge commit. The retry is bounded, and each attempt re-checks that the bundle on the target is
+still the copy the session shaped against — one that moved is a sibling's publish or revision,
+which stops for the human rather than being overwritten.
+
+**The backlog edit is re-derived, not copied.** The session's change to `work/backlog.md` is
+re-applied three-way against the target's current copy under the Backlog merges rule below, so a
+sibling's appended line survives a publish that raced it.
+
+After the push, the script fast-forwards the session's checkout only when that is provably safe,
+clearing its own draft copies first — git's overwrite guards check existence, not content —
+and otherwise leaves the sync to a later pull.
+
 ## Backlog merges
 
 `work/backlog.md` is written from several branches at once by design — a Shape session appends a

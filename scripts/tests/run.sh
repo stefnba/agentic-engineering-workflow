@@ -665,5 +665,44 @@ ok "names what it could not resolve"  "$(grep -c 'refused to delete' "$root/netd
 git fetch -q origin
 ok "branches survive the network drop" "$(git ls-remote --heads origin "bundle/$netdrop" "ticket/$netdrop/01" | wc -l | tr -d ' ')" 2
 
+echo "== publish-bundle: detached-worktree publish racing a sibling backlog append"
+sync_main
+pub=2026-08-17-published
+mkdir -p "work/bundles/$pub"
+printf 'depends_on: []\n---\nshaped\n' > "work/bundles/$pub/ticket.md"
+printf -- '- [idea] shaped alongside\n' >> work/backlog.md
+# A sibling session appends to the target's backlog after this session last synced.
+git worktree add -q --detach "$root/sib" origin/main
+printf -- '- [idea] sibling appended meanwhile\n' >> "$root/sib/work/backlog.md"
+git -C "$root/sib" commit -qam "chore(backlog): sibling append" && git -C "$root/sib" push -q origin HEAD:main
+git worktree remove --force "$root/sib"
+"$scripts/publish-bundle.sh" "$pub" > "$root/publish.out" 2>&1
+ok "publish exits 0"                "$?" 0
+ok "bundle is on the target"        "$(git cat-file -e "origin/main:work/bundles/$pub/ticket.md" 2>/dev/null && echo yes)" yes
+ok "subject is the publish form"    "$(git log -1 --format=%s origin/main)" "bundle: publish $pub"
+ok "session backlog line survived"  "$(git show origin/main:work/backlog.md | grep -c 'shaped alongside')" 1
+ok "sibling backlog line survived"  "$(git show origin/main:work/backlog.md | grep -c 'sibling appended meanwhile')" 1
+ok "behind session self-syncs"      "$(git rev-parse main)" "$(git rev-parse origin/main)"
+ok "work/ clean after the sync"     "$(git status --porcelain -- work/ | wc -l | tr -d ' ')" 0
+ok "publish worktree removed"       "$([ ! -e ".claude/worktrees/publish" ] && echo yes)" yes
+
+echo "== publish-bundle: a clean session revises and fast-forwards"
+git pull -q origin main
+printf 'amended\n' >> "work/bundles/$pub/ticket.md"
+"$scripts/publish-bundle.sh" "$pub" > "$root/revise.out" 2>&1
+ok "revise exits 0"                 "$?" 0
+ok "subject is the revise form"     "$(git log -1 --format=%s origin/main)" "bundle: revise $pub"
+ok "local main synced"              "$(git rev-parse main)" "$(git rev-parse origin/main)"
+ok "work/ is clean afterwards"      "$(git status --porcelain -- work/ | wc -l | tr -d ' ')" 0
+
+echo "== publish-bundle: a bundle moved on the target refuses"
+git worktree add -q --detach "$root/sib2" origin/main
+printf 'sibling rewrite\n' > "$root/sib2/work/bundles/$pub/ticket.md"
+git -C "$root/sib2" commit -qam "bundle: revise $pub" && git -C "$root/sib2" push -q origin HEAD:main
+git worktree remove --force "$root/sib2"
+printf 'mine too\n' >> "work/bundles/$pub/ticket.md"
+"$scripts/publish-bundle.sh" "$pub" >/dev/null 2>&1
+ok "moved bundle refuses (3)"       "$?" 3
+
 printf '\n%d passed, %d failed\n' "$pass" "$fail"
 [ "$fail" -eq 0 ]
