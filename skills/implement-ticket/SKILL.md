@@ -50,7 +50,7 @@ command `shape-bundle` handed them. Go to step 2.
 entries all read `done`. The claim re-checks that gate and refuses otherwise, so never work around a
 refusal by picking a different ticket.
 
-Then claim it, from the repository root:
+Then claim it, from the main checkout:
 
 ```text
 ${CLAUDE_PLUGIN_ROOT}/scripts/claim-ticket.sh <bundle-id> <NN>

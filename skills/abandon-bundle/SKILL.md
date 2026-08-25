@@ -12,7 +12,7 @@ dropped — it only executes a choice already made. Read
 `${CLAUDE_PLUGIN_ROOT}/workflow/git-mechanics.md` (Abandoning a bundle) first; this skill sequences
 its rule, it doesn't restate it.
 
-You run **inline, in the human's own session**, from the repository root, on the integration target
+You run **inline, in the human's own session**, in the main checkout, on the integration target
 — the same checkout Shape publishes from.
 
 ## Boundaries

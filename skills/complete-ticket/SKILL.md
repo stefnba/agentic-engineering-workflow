@@ -24,7 +24,7 @@ refuses to run without it.
 
 ### 2. Merge
 
-Run from the repository root:
+Run:
 
 ```text
 ${CLAUDE_PLUGIN_ROOT}/scripts/complete-ticket.sh <pr> <accepted-head-sha>

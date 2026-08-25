@@ -230,8 +230,16 @@ here. Four rules hold continuously:
    applied at install.
 3. **Hooks live on skills, never on agents.** `hooks`, `mcpServers`, and `permissionMode` are
    not supported for plugin-shipped agents.
-4. **Hook commands reference plugin files via `${CLAUDE_PLUGIN_ROOT}`.** Installed plugins run
-   from a cache.
+4. **Hook commands reference plugin files via `${CLAUDE_PLUGIN_ROOT}`, and fail closed when it is
+   empty.** Installed plugins run from a cache — but the variable is sometimes unset in hook
+   subprocesses ([claude-code#42564](https://github.com/anthropics/claude-code/issues/42564)), and
+   since only exit 2 blocks a `PreToolUse` tool call, a bare `${CLAUDE_PLUGIN_ROOT}/...` command
+   then exits 127 and the boundary silently fails open. So a hook command resolves its script as
+   `${CLAUDE_PLUGIN_ROOT:-${CLAUDE_PROJECT_DIR:-.}}/scripts/<name>.sh` — the project-dir fallback
+   is what keeps this repo's own symlinked dogfooding working, and a consuming repo has no such
+   script at its root, so it still fails closed there — and exits 2 with a "do not write; tell the
+   human" stderr when the resolved path is not executable. The two skill frontmatters that carry a
+   hook hold copies of this guard; this rule is its one owner.
 
 Prefer the portable [Agent Skills](https://agentskills.io) spec fields wherever a
 Claude-Code-specific field is not needed. `disallowed-tools` is the deliberate exception: the
@@ -245,7 +253,7 @@ A bare relative path resolves differently at runtime than on GitHub. Use exactly
 | Referencing…                           | Use                                                                                                                                            |
 | -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
 | a plugin file from a `SKILL.md`        | `${CLAUDE_PLUGIN_ROOT}/workflow/<file>.md`                                                                                                     |
-| a shared plugin script                 | `${CLAUDE_PLUGIN_ROOT}/scripts/<name>.sh`                                                                                                      |
+| a shared plugin script                 | `${CLAUDE_PLUGIN_ROOT}/scripts/<name>.sh` — in a hook command, with plugin rule 4's fail-closed guard                                          |
 | the skill's own bundled file           | `${CLAUDE_SKILL_DIR}/<path>`                                                                                                                   |
 | the consuming repo's file              | `${CLAUDE_PROJECT_DIR}/docs/conventions/git.md`                                                                                                |
 | doc to doc inside this repo            | plain relative path, so GitHub renders it                                                                                                      |
