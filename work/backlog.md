@@ -65,6 +65,3 @@ Candidate work and follow-ups nobody has picked yet.
   (`docs/decisions/2026-08-18-script-read-settings.md` gates config on a script reader).
 - [idea] [skills] [docs] `work/backlog.md`'s bullet format could move to a markdown table (`id`,
   `topic`, `areas`, `details`)
-- [follow-up] [skills] An ad-hoc `review-pr` on a non-ticket PR leaves its round comment's Backlog
-  candidates unswept — `land-bundle`'s sweep reads only a bundle's merged ticket PRs, and no other
-  path reads PR comments back.
