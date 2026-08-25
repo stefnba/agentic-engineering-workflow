@@ -202,6 +202,39 @@ ok "trailing comment refuses (6)"   "$?" 6
 "$scripts/claim-ticket.sh" "$bad" 04 >/dev/null 2>&1
 ok "block-sequence refuses (6)"     "$?" 6
 
+echo "== a stale bundle branch with no work of its own is recreated"
+stale=2026-08-17-stale
+git push -q origin "origin/main:refs/heads/bundle/$stale" # leaked before the publish
+mkdir -p "work/bundles/$stale"
+printf 'depends_on: []\n---\nstale\n' > "work/bundles/$stale/ticket.md"
+git add -A && git commit -qm "docs(bundle): publish after the branch leaked" && git push -q origin main
+"$scripts/claim-ticket.sh" "$stale" 01 > "$root/stale.out" 2>&1
+ok "claim heals and exits 0"        "$?" 0
+ok "says it recreated the branch"   "$(grep -c "recreated stale bundle/$stale" "$root/stale.out")" 1
+ok "recreated branch carries the bundle" \
+   "$(git cat-file -e "origin/bundle/$stale:work/bundles/$stale" 2>/dev/null && echo yes)" yes
+ok "worktree carries the ticket"    "$([ -f ".claude/worktrees/ticket/$stale/01/work/bundles/$stale/ticket.md" ] && echo yes)" yes
+
+echo "== a stale bundle branch carrying its own commits refuses"
+salvage=2026-08-17-salvage
+orphan=$(git commit-tree "origin/main^{tree}" -p "$(git rev-parse origin/main)" -m "orphan ticket work")
+git push -q origin "$orphan:refs/heads/bundle/$salvage"
+mkdir -p "work/bundles/$salvage"
+printf 'depends_on: []\n---\nsalvage\n' > "work/bundles/$salvage/ticket.md"
+git add -A && git commit -qm "docs(bundle): publish beside an orphaned branch" && git push -q origin main
+"$scripts/claim-ticket.sh" "$salvage" 01 >/dev/null 2>&1
+ok "own commits refuse (7)"         "$?" 7
+ok "the branch is left untouched"   "$(git ls-remote origin "refs/heads/bundle/$salvage" | awk '{print $1}')" "$orphan"
+
+echo "== a bundle not published on the target is not claimable"
+unpub=2026-08-17-unpub
+mkdir -p "work/bundles/$unpub"
+printf 'depends_on: []\n---\nunpublished\n' > "work/bundles/$unpub/ticket.md" # local only, no push
+"$scripts/claim-ticket.sh" "$unpub" 01 >/dev/null 2>&1
+ok "unpublished bundle refuses (7)" "$?" 7
+rm -rf "work/bundles/$unpub"
+git push -q origin ":refs/heads/bundle/$unpub" 2>/dev/null # the ensure step created it before the refusal
+
 echo "== an unreachable forge never reads as todo"
 mv "$root/bin/gh" "$root/bin/gh.real"
 printf '#!/usr/bin/env bash\nexit 1\n' > "$root/bin/gh" && chmod +x "$root/bin/gh"
@@ -233,6 +266,7 @@ export GH_STUB_LOG="$root/merge.log" GH_STUB_BRANCH="ticket/$multi/01" GH_STUB_B
 ok "squash merge requested"         "$(grep -c -- '--squash' "$root/merge.log")" 1
 ok "head branch deleted"            "$(grep -c -- '--delete-branch' "$root/merge.log")" 1
 ok "accepted sha is enforced"       "$(grep -c -- '--match-head-commit deadbeef' "$root/merge.log")" 1
+ok "scaffolding stays while siblings live" "$([ -d ".claude/worktrees/ticket/$multi" ] && echo yes)" yes
 "$scripts/complete-ticket.sh" 42 >/dev/null 2>&1
 ok "missing accepted sha refuses (64)" "$?" 64
 
@@ -249,6 +283,7 @@ export GH_STUB_LOG="$root/merge2.log" GH_STUB_BRANCH="ticket/$cfg/01" GH_STUB_BA
 "$scripts/complete-ticket.sh" 43 cafef00d >/dev/null 2>&1
 ok "merge honours TICKET_MERGE_METHOD" "$(grep -c -- '--merge' "$root/merge2.log")" 1
 ok "no --squash when overridden"    "$(grep -c -- '--squash' "$root/merge2.log")" 0
+ok "empty worktree scaffolding removed" "$([ ! -e .wt ] && echo yes)" yes
 
 echo "== an unsupported merge method stops at config read, not at land"
 printf 'TICKET_MERGE_METHOD=rebase\n' > work/config.conf

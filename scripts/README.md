@@ -39,7 +39,8 @@ states the reason and the next action, so nothing else needs a mapping. The numb
 only for scripts and tests that branch on them:
 
 - `claim-ticket.sh` — `2` no such ticket · `3` dependency not `done` · `4` already claimed ·
-  `5` stale worktree · `6` malformed `depends_on`
+  `5` stale worktree · `6` malformed `depends_on` · `7` bundle not published on the target, or a
+  stale bundle branch carrying its own commits
 - `pr-links.sh` — `2` no such ticket · `3` bundle not published · `4` forge unreachable
 - `complete-ticket.sh` — `2` stale against its base · `64` missing the accepted head SHA
 - `land-bundle.sh` — `2` no such bundle · `3` a ticket not `done` · `4` no bundle branch (never
@@ -54,7 +55,7 @@ only for scripts and tests that branch on them:
 
 `tests/run.sh` runs the scripts against a local `git daemon` with a stubbed `gh` — no network, and
 nothing written outside a temp dir. It covers a ten-way claim race, the dependency gate, both bundle
-shapes, listing, an unreachable forge, permalinks pinned past a branch amendment, the flags passed to
+shapes, the stale-bundle-branch heal and its two refusals, listing, an unreachable forge, permalinks pinned past a branch amendment, the flags passed to
 the merge, the staleness refusal, a required accepted SHA, a full land for both bundle shapes — gate,
 unrecorded-commit refusal, detached worktree, the moved-target loop, the backlog union, and a guarded
 cleanup — abandoning a bundle mid-flight, both with in-flight tickets and after it has landed, and

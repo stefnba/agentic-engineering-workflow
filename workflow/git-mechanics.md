@@ -149,6 +149,12 @@ branch the ticket off it directly. If not, create it from the integration target
 push is rejected because the ref now exists — another ticket's claim won the race — fetch it and
 branch off that instead of failing.
 
+**An existing bundle branch must carry its bundle.** One that lacks `work/bundles/<bundle-id>/`
+predates the publish — a leftover from an earlier run, a reset integration target, or an abandon
+that skipped branch deletion. With no commits of its own beyond the target it holds no work, so the
+claim recreates it from the target and says so; with its own commits, recreating would discard
+merged ticket work, so the claim stops for the human instead.
+
 ## Bundle-branch writes
 
 **Content reaches a bundle branch only through an accepted ticket PR.** Nothing else ever writes to
