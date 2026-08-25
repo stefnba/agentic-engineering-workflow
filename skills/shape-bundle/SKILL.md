@@ -130,23 +130,47 @@ finding that raised it — never into a guess.
 dispositions. If blockers survive three rounds, stop and report the disagreement to the human
 rather than looping — that pattern usually means the intent itself is unsettled.
 
-**When the loop settles, relay the critic's verdict** — clean, or what it flagged — **and, if you
-revised, a brief summary of what changed.** Critique runs in a fork, so nothing of it reaches the
-human unless you relay it. The per-finding dispositions follow at the Plan gate.
+Critique runs in a fork, so nothing of it reaches the human unless you relay it — the verdict,
+the round count, and every disposition go into the Plan gate presentation's critique slot.
 
 ### 8. Plan gate
 
-Present for approval:
+**Write the presentation as a plain text message to the human, then ask for approval.** An
+approval prompt's own text field is never the presentation — it truncates, and the human decides
+from what you wrote. Fill every slot of this skeleton; write `none` rather than dropping a slot:
 
-- the chosen route, and the intent in a few lines — outcome, and what's out of scope
-- every other `${CLAUDE_PROJECT_DIR}/work/backlog.md` line this bundle covers, quoted verbatim —
-  publishing deletes them alongside the line it was shaped from, so one the human doesn't confirm
-  stays
-- one line per ticket:
-  `NN — <title> — blocked by: <NN, NN | none> — delivers: <one line>`
-- what's serial and what's safe in parallel
-- how each critique finding was dispositioned
-- every concern the human is being asked to accept consciously
+```markdown
+## Plan gate: <bundle-id>
+
+- **Route**: <route> — <why this route, one line>
+- **Intent**: <outcome in 1–3 lines, and what's out of scope>
+
+### Critique
+
+- **Verdict**: <clean | what was flagged> after <N> round(s)
+- <one bullet per finding: what the revision changed, or why you aren't acting on it>
+
+### Tickets
+
+- <NN — title — blocked by: NN, NN | none — delivers: one line, per ticket>
+
+#### Parallelism
+
+<what's serial, what's safe in parallel>
+
+### You are accepting
+
+#### Backlog lines covered
+
+<each quoted verbatim | none>
+
+#### Concerns
+
+<every concern the human is asked to accept consciously | none>
+```
+
+Publishing deletes each covered `${CLAUDE_PROJECT_DIR}/work/backlog.md` line alongside the one
+the bundle was shaped from, so a line the human doesn't confirm here stays.
 
 Then ask three things: is the granularity right, are the blocking edges correct, should any ticket
 merge or split.
