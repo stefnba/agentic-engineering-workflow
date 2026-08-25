@@ -10,10 +10,6 @@ Candidate work and follow-ups nobody has picked yet.
   prompt. Both prompts and `workflow/lifecycle.md`'s Shape and Review run conditions say so plainly
   rather than overclaiming. Close it with a hook or a permission rule, and the same question applies to the
   Architect's "write access only to the draft bundle" boundary.
-- [follow-up] [skills] `shape-bundle` publishes the approved bundle by hand — `git add`/`commit`/`push` from the
-  prompt, sourcing `scripts/_config.sh` for `INTEGRATION_TARGET`. Every other state
-  transition is a script; this one is prose, so a collision retry or a wrong target branch depends
-  on the model following instructions. Consider `scripts/publish-bundle.sh`.
 - [follow-up] [skills] `claim-ticket.sh` is verified over the `git://` smart protocol, never against
   github.com over HTTPS, and the chain claim → PR → `/complete-ticket` → derived `done` has never run
   joined — only its two halves separately. One real push settles both. Smaller gaps:
