@@ -25,7 +25,7 @@ Three separate things were declarable: a bundle's status by which directory held
 status by its frontmatter, and the branch strategy by a line in a per-repo file. Each needed a write
 to stay true, and every write could be skipped, lost in a merge, or land on a branch the reader
 wasn't on — 0016 conceded the point itself, noting the default branch's copy of `work/` lags until
-ship. A ticket that reads `todo` because its `doing` write never reached the reader is what lets a
+land. A ticket that reads `todo` because its `doing` write never reached the reader is what lets a
 dependent ticket start early.
 
 ## Decision

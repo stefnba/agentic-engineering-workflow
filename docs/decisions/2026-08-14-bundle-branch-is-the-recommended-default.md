@@ -27,12 +27,12 @@ Bundle-branch is the recommended default strategy; trunk remains selectable per 
 - Names are bundle-first, verbatim from existing artifacts: `<bundle-id>/bundle` is the
   integration branch, cut from the default branch; `<bundle-id>/ticket/<NN-slug>` is a
   ticket branch, cut from the bundle branch, its PR targeting the bundle branch.
-- The bundle merges to the default branch once, at ship — squash, one revertable commit
+- The bundle merges to the default branch once, at land — squash, one revertable commit
   per bundle.
 - Worktrees are one per branch at `.claude/worktrees/<branch>` — path mirrors branch
   name — created with plain `git worktree add -b`, never `WorktreeCreate` hooks; the main
   checkout stays on the default branch, never a work surface.
-- The implement and ship skills own naming and cleanup; `docs/agents/git.md` stays
+- The implement and land skills own naming and cleanup; `docs/agents/git.md` stays
   minimal — declaration line, worktree location and base rule, commit and PR conventions.
 - Ticket naming and worktrees apply under trunk too — tickets then cut from and PR into
   the default branch; only the bundle branch disappears.
@@ -57,7 +57,7 @@ Bundle-branch is the recommended default strategy; trunk remains selectable per 
 ## Costs
 
 - Late integration becomes the default cost — 0015's warning realized: drift accrues on
-  the bundle branch, conflicts defer to ship, every open bundle is one more branch to sync.
+  the bundle branch, conflicts defer to land, every open bundle is one more branch to sync.
 - A stray branch named exactly `<bundle-id>` blocks the whole `<bundle-id>/*` namespace
   with a cryptic git error — the natural mistake is the poisonous one; kind-first was
   structurally immune.
@@ -68,7 +68,7 @@ Bundle-branch is the recommended default strategy; trunk remains selectable per 
 
 ## Revisit if
 
-- Bundle merges routinely conflict at ship when tickets ran in parallel — the
+- Bundle merges routinely conflict at land when tickets ran in parallel — the
   late-integration failure realized — pushing back toward trunk or continuous syncing.
 - Consuming repos keep declaring trunk anyway — the recommendation is wrong even where the
   mechanics aren't.
