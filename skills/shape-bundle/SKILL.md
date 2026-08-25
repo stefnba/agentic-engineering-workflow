@@ -192,7 +192,7 @@ Report the published bundle path and, for each currently unblocked ticket, a pas
 prompt for its own tab:
 
 ```text
-/implement <bundle-id> <NN>
+/implement-ticket <bundle-id> <NN>
 ```
 
 **Then stop.** The bundle is now in the human's hands, and the next step is their dispatch.

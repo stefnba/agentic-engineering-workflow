@@ -112,13 +112,14 @@ merged, and nothing writes a status afterward.
 Once every ticket is `done`, go back to the bundle's session (or a fresh one) and trigger `/land-bundle`. It
 runs in order, and stops if the first step isn't green:
 
-- confirms the checks pass on the state holding every merged ticket
+- confirms every ticket is `done` and no stale land worktree remains
 - opens a throwaway worktree on the integration target and merges the bundle into it — everything
   below happens there, so a check that fails at the end costs you a directory, not a rescue
 - folds anything durable — system behavior, decisions — into the docs that own it
 - captures unfinished or newly discovered work as backlog lines
 - deletes the bundle, so what lands carries no planning record with it
-- re-verifies, then publishes that state on the integration target
+- re-runs the checks now that Land's own commits and the bundle merge are in the tree, then publishes
+  that state on the integration target
 - removes the branches and worktrees that are left
 
 If somebody else pushes while you're landing, `/land-bundle` merges their work in and sends you back to

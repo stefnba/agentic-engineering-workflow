@@ -21,9 +21,9 @@ A spec can describe the change ("add a retry scheduler") or the destination ("th
 
 ## Costs
 
-- Present tense describing a future system reads as false until the feature ships — readers must know the convention, which is why it's stated in the template itself.
+- Present tense describing a future system reads as false until the feature lands — readers must know the convention, which is why it's stated in the template itself.
 - Amendments must preserve the tense discipline; a "changed X to Y" note is delta phrasing sneaking back in.
 
 ## Revisit if
 
-- Single-ticket features become the only use of specs — with no mid-sequence reader, delta phrasing's cost mostly vanishes (though the durable-docs absorption at ship still favors target state).
+- Single-ticket features become the only use of specs — with no mid-sequence reader, delta phrasing's cost mostly vanishes (though the durable-docs absorption at land still favors target state).

@@ -19,7 +19,7 @@ Status follows unit granularity. A **bundle's** status is its parent directory �
 
 ## Rejected
 
-- **Frontmatter status for bundles**: the carrier problem — a bundle has no single canonical file (brief-only early, spec later), so the status-bearing file would change over the lifecycle or require a dedicated meta file. And frontmatter's headline benefit, stable paths, is neutralized here: bundles are deleted at ship, so no work-item path is durable in any scheme and references must be ID-based regardless.
+- **Frontmatter status for bundles**: the carrier problem — a bundle has no single canonical file (brief-only early, spec later), so the status-bearing file would change over the lifecycle or require a dedicated meta file. And frontmatter's headline benefit, stable paths, is neutralized here: bundles are deleted at land, so no work-item path is durable in any scheme and references must be ID-based regardless.
 - **A JSON/YAML manifest indexing all items**: a second copy of every status plus a merge hotspot on every concurrent transition — a hand-maintained derived view that goes stale invisibly.
 - **Directories for tickets**: constant path churn inside the bundle for a value that changes three times per file.
 
@@ -31,5 +31,5 @@ Status follows unit granularity. A **bundle's** status is its parent directory �
 
 ## Revisit if
 
-- Bundles stop being deleted at ship — durable paths would revive frontmatter's strongest argument, and the call was close on first-principles grounds.
+- Bundles stop being deleted at land — durable paths would revive frontmatter's strongest argument, and the call was close on first-principles grounds.
 - Multi-axis queries over bundles become routine; though past ~20 active bundles the documented answer is GitHub issues, not a richer file scheme.

@@ -17,7 +17,7 @@ superseded_by: piecewise, until nothing operative remained — the branch-strate
 ## Context
 
 The skills hardcode trunk-based mechanics — `implement` branches off the default branch and
-PRs per ticket, `ship` merges to main — without any record deciding that topology. Pinning the
+PRs per ticket, `land` merges to main — without any record deciding that topology. Pinning the
 planned `ticket-runner`'s contract forced the question. An independent ruling (judge,
 2026-08-13) picked trunk-based on first principles: ticket slices are independently green and
 human-reviewed, so short-lived branches minimize rebase churn exactly where parallel runners
@@ -49,7 +49,7 @@ definitions.
   way loses them.
 - **Per-bundle integration branch as the fixed way**: re-creates the late-integration failure
   the ticket design exists to eliminate — branch drift, sync churn, conflicts deferred to
-  ship, and a final merge nobody reviews as a whole — at its worst precisely when tickets run
+  land, and a final merge nobody reviews as a whole — at its worst precisely when tickets run
   in parallel.
 - **A declaration line in `AGENTS.md` with details elsewhere**: once commit conventions
   joined, `implement` has to read `git.md` anyway, so the split line saves no read, creates
@@ -58,7 +58,7 @@ definitions.
 
 ## Costs
 
-- Every git-touching skill pays a file read, and `implement`/`ship`/`ticket-runner` carry
+- Every git-touching skill pays a file read, and `implement`/`land`/`ticket-runner` carry
   two-mode conditionals — each skill now has double the branching paths to verify.
 - A new `docs/agents/` tree lands in every consuming repo for, today, one file.
 - The missing-file trunk fallback is silent — a repo that loses or never scaffolds `git.md`
