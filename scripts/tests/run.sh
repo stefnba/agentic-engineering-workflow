@@ -824,8 +824,17 @@ printf 'sibling rewrite\n' > "$root/sib2/work/bundles/$pub/ticket.md"
 git -C "$root/sib2" commit -qam "bundle: revise $pub" && git -C "$root/sib2" push -q origin HEAD:main
 git worktree remove --force "$root/sib2"
 printf 'mine too\n' >> "work/bundles/$pub/ticket.md"
-"$scripts/publish-bundle.sh" "$pub" >/dev/null 2>&1
+"$scripts/publish-bundle.sh" "$pub" > "$root/moved.out" 2>&1
 ok "moved bundle refuses (3)"       "$?" 3
+ok "names both ways it could move"  "$(grep -c 'a sibling published or revised it, or an earlier publish from this checkout' "$root/moved.out")" 1
+
+echo "== publish-bundle: an id that is not a bundle directory name refuses before touching anything"
+for badid in .. ../.. work/bundles ""; do
+  "$scripts/publish-bundle.sh" "$badid" > "$root/badid.out" 2>&1
+  ok "id '$badid' refuses (2)"        "$?" 2
+  ok "id '$badid' names the shape"    "$(grep -c 'not a bundle directory name' "$root/badid.out")" 1
+done
+ok "the checkout survives it"       "$([ -d work/bundles ] && [ -f work/backlog.md ] && echo yes)" yes
 
 echo "== publish-bundle: a diverged checkout still ends with work/ clean"
 git checkout -q -- "work/bundles/$pub" # drop the refused revision's edit

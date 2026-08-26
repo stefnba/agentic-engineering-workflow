@@ -44,7 +44,7 @@ only for scripts and tests that branch on them:
 - `_config.sh`, sourced by every script
   - `1` outside a git work tree, a malformed `work/config.conf` line, or an unsupported `TICKET_MERGE_METHOD`
 - `publish-bundle.sh`
-  - `2` no such bundle in the working tree
+  - `2` no such bundle in the working tree, or an id that is not a bundle directory name
   - `3` bundle moved on the target mid-session
   - `4` local target has commits origin lacks (rerun with `--allow-diverged` to publish anyway)
   - `5` stale publish worktree
