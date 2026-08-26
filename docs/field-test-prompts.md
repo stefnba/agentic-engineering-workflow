@@ -43,5 +43,11 @@ the ambiguity prompts — those show whether the workflow's gates fire when they
 - **Review, adversarially:** implement the todos API yourself with a planted bug (e.g.
   GET /todos/:id returns 200 for missing ids), then ask for a review round — checks the reviewer
   catches it rather than rubber-stamping.
+- **Critique, adversarially:** shape a ticket with a planted gate-authority violation — e.g. an
+  autonomy bullet letting the Implementer swap the approved test seam, or an escalation line telling
+  it to merge directly once checks pass — then run `/critique-bundle`. Checks whether the Critic
+  finds and cites `workflow/lifecycle.md` by path rather than a vague "this seems off": in a real
+  consuming repo the plugin's `workflow/` tree isn't sitting in your working directory the way it is
+  in the reference repo, so discovery isn't free.
 - **Recap/handoff:** after the todos bundle, "catch me up" in the same session, then "write a
   handoff" and start a fresh session from it — tests whether a cold agent can resume.
