@@ -827,5 +827,78 @@ printf 'mine too\n' >> "work/bundles/$pub/ticket.md"
 "$scripts/publish-bundle.sh" "$pub" >/dev/null 2>&1
 ok "moved bundle refuses (3)"       "$?" 3
 
+echo "== publish-bundle: a diverged checkout still ends with work/ clean"
+git checkout -q -- "work/bundles/$pub" # drop the refused revision's edit
+sync_main
+div=2026-08-17-diverged
+printf 'local only\n' > local-note.txt
+git add local-note.txt && git commit -qm "chore: unpushed local commit"
+git worktree add -q --detach "$root/divadv" origin/main
+( cd "$root/divadv" && printf 'sibling\n' > sib-note.txt && git add sib-note.txt &&
+  git commit -qm "chore: sibling moved the target" && git push -q origin HEAD:main )
+git worktree remove --force "$root/divadv"
+mkdir -p "work/bundles/$div"
+printf 'depends_on: []\n---\ndiverged probe\n' > "work/bundles/$div/ticket.md"
+git add "work/bundles/$div" # a stray stage, as a shaping session may leave behind
+printf -- '- [idea] appended while diverged\n' >> work/backlog.md
+"$scripts/publish-bundle.sh" "$div" > "$root/refuse.out" 2>&1
+ok "a diverged local target refuses (4)" "$?" 4
+ok "names the unpushed commit"      "$(grep -c 'commit(s) origin/main lacks' "$root/refuse.out")" 1
+ok "offers the override"            "$(grep -c -- '--allow-diverged' "$root/refuse.out")" 1
+ok "warns a plain push would fail"  "$(grep -c 'non-fast-forward' "$root/refuse.out")" 1
+ok "names the pull-or-rebase fix"   "$(grep -c 'pull or rebase onto origin/main' "$root/refuse.out")" 1
+ok "nothing reached the target"     "$(git cat-file -e "origin/main:work/bundles/$div/ticket.md" 2>/dev/null && echo yes || echo no)" no
+ok "the draft is untouched"         "$(grep -c 'diverged probe' "work/bundles/$div/ticket.md")" 1
+
+"$scripts/publish-bundle.sh" --allow-diverged "$div" > "$root/diverge.out" 2>&1
+ok "publish exits 0"                "$?" 0
+ok "bundle is on the target"        "$(git cat-file -e "origin/main:work/bundles/$div/ticket.md" 2>/dev/null && echo yes)" yes
+ok "backlog line is on the target"  "$(git show origin/main:work/backlog.md | grep -c 'appended while diverged')" 1
+ok "work/ is clean afterwards"      "$(git status --porcelain -- work/ | wc -l | tr -d ' ')" 0
+ok "nothing under work/ stays staged" "$(git diff --cached --name-only -- work/ | wc -l | tr -d ' ')" 0
+ok "the unpushed commit survives"   "$(git log --oneline main | grep -c 'unpushed local commit')" 1
+ok "notes the accepted divergence" "$(grep -c 'ahead of origin/main' "$root/diverge.out")" 1
+ok "says the branches diverged"     "$(grep -c 'diverged' "$root/diverge.out")" 1
+ok "says the checkout lacks it"     "$(grep -c "does not hold the published $div" "$root/diverge.out")" 1
+ok "names the sync before claiming" "$(grep -c 'merge or rebase before claiming a ticket' "$root/diverge.out")" 1
+"$scripts/bundle-status.sh" "$div" >/dev/null 2>&1
+ok "and status agrees it is absent (2)" "$?" 2
+git pull -q --no-rebase origin main >/dev/null 2>&1
+ok "a later pull is unobstructed"   "$?" 0
+ok "and brings the draft bytes back" "$(grep -c 'diverged probe' "work/bundles/$div/ticket.md")" 1
+
+echo "== publish-bundle: local ahead with nothing new on origin still refuses, but a plain push would work"
+sync_main
+ahead=2026-08-17-ahead-only
+printf 'local only, no sibling this time\n' > local-note2.txt
+git add local-note2.txt && git commit -qm "chore: another unpushed local commit"
+mkdir -p "work/bundles/$ahead"
+printf 'depends_on: []\n---\nahead-only probe\n' > "work/bundles/$ahead/ticket.md"
+"$scripts/publish-bundle.sh" "$ahead" > "$root/ahead.out" 2>&1
+ok "still refuses (4)"              "$?" 4
+ok "does not warn of non-fast-forward" "$(grep -c 'non-fast-forward' "$root/ahead.out")" 0
+ok "says push, not pull-or-rebase"  "$(grep -c -- '— push them, or drop them' "$root/ahead.out")" 1
+git push -q origin main
+"$scripts/publish-bundle.sh" "$ahead" > "$root/ahead2.out" 2>&1
+ok "publish exits 0 once pushed"    "$?" 0
+ok "local main synced"              "$(git rev-parse main)" "$(git rev-parse origin/main)"
+
+echo "== publish-bundle: a checkout off the target reports the bundle as not in it"
+sync_main
+off=2026-08-17-off-target
+git checkout -q -b feature/side
+mkdir -p "work/bundles/$off"
+printf 'depends_on: []\n---\noff-target probe\n' > "work/bundles/$off/ticket.md"
+"$scripts/publish-bundle.sh" "$off" > "$root/offtarget.out" 2>&1
+ok "publish exits 0"                "$?" 0
+ok "bundle is on the target"        "$(git cat-file -e "origin/main:work/bundles/$off/ticket.md" 2>/dev/null && echo yes)" yes
+ok "says the checkout is off main"  "$(grep -c 'this checkout is not on main' "$root/offtarget.out")" 1
+ok "says the checkout lacks it"     "$(grep -c "does not hold the published $off" "$root/offtarget.out")" 1
+ok "names the sync before claiming" "$(grep -c 'switch to main and pull before claiming a ticket' "$root/offtarget.out")" 1
+ok "work/ is clean afterwards"      "$(git status --porcelain -- work/ | wc -l | tr -d ' ')" 0
+"$scripts/bundle-status.sh" "$off" >/dev/null 2>&1
+ok "and status agrees it is absent (2)" "$?" 2
+git checkout -q main
+
 printf '\n%d passed, %d failed\n' "$pass" "$fail"
 [ "$fail" -eq 0 ]

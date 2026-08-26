@@ -2,11 +2,14 @@
 # Publish or revise a bundle: commit the working tree's approved work/bundles/<id>/ bytes, plus
 # this session's work/backlog.md edit, onto the integration target — built in a detached worktree,
 # never in the session's own checkout, whose index and files belong to the human.
-#   usage: publish-bundle.sh <bundle-id> [<body-line>]
+#   usage: publish-bundle.sh [--allow-diverged] <bundle-id> [<body-line>]
 #   exit:  2 no such bundle in the working tree   3 bundle moved on the target mid-session
+#          4 local target ahead of origin (sync, or rerun with --allow-diverged)
 #          5 stale publish worktree   6 push retries exhausted
 set -euo pipefail
 
+allow_diverged=
+[ "${1:-}" = "--allow-diverged" ] && { allow_diverged=1; shift; }
 bundle="$1"
 body="${2:-}"
 here="$(cd "$(dirname "$0")" && pwd)"
@@ -21,6 +24,28 @@ wt="$WORKTREE_DIR/publish/$bundle"
 
 git fetch -q origin
 session_head=$(git rev-parse HEAD)
+
+# The commit is built on origin/$target, so commits a local $target holds beyond it are not
+# carried and the checkout ends diverged from the branch the bundle now lives on. That is the
+# human's call, not the script's: stop before writing anything and let them push, drop, or accept
+# the divergence — --allow-diverged is that acceptance.
+if git rev-parse -q --verify "refs/heads/$target" >/dev/null 2>&1 &&
+   ! git merge-base --is-ancestor "refs/heads/$target" "origin/$target"; then
+  if [ -z "$allow_diverged" ]; then
+    ahead=$(git rev-list --count "origin/$target..refs/heads/$target")
+    behind=$(git rev-list --count "refs/heads/$target..origin/$target")
+    if [ "$behind" -gt 0 ]; then
+      fix="a plain push will be rejected as non-fast-forward — pull or rebase onto origin/$target first, then push"
+    else
+      fix="push them"
+    fi
+    echo "local $target has $ahead commit(s) origin/$target lacks;" \
+         "the publish builds on origin/$target and would leave the two diverged —" \
+         "$fix, or drop them, and rerun; or rerun with --allow-diverged to publish anyway" >&2
+    exit 4
+  fi
+  echo "note: publishing with local $target ahead of origin/$target — the publish carries only origin's side" >&2
+fi
 
 tries=0
 while :; do
@@ -95,6 +120,27 @@ if [ -f work/backlog.md ] && git rev-parse -q --verify "origin/$target:work/back
   git show "origin/$target:work/backlog.md" > work/backlog.md
 fi
 
+# Return work/ to HEAD's state: the pushed commit holds the draft's exact bytes and the
+# union-merged backlog, so nothing under work/ is the only copy — while a leftover untracked
+# draft or modified backlog would block every later pull (git's overwrite guards check
+# existence, not content) and keep the shape-session write fence armed.
+settle_work() {
+  git reset -q -- work/
+  rm -rf "work/bundles/$bundle"
+  git checkout -q HEAD -- "work/bundles/$bundle" 2>/dev/null || true
+  rm -f work/backlog.md
+  git checkout -q HEAD -- work/backlog.md 2>/dev/null || true
+}
+
+# A publish that cannot fast-forward leaves work/ back at HEAD, so the bytes just pushed live on
+# origin/$target alone — and ticket_names reads the working tree, so bundle-status.sh and
+# claim-ticket.sh would both report the bundle missing in the very session that published it. Name
+# the sync that makes it claimable instead of reporting a bare branch state.
+unsynced() { # <branch state> <the sync that fixes it>
+  echo "$1 — work/ is back at HEAD, so this checkout does not hold the published $bundle;" \
+       "$2 before claiming a ticket"
+}
+
 # Fast-forward the session's checkout only in the provably clean case: it sits on the target at
 # the very base the commit was built on, so after the ref moves, refreshing work/'s index entries
 # leaves a clean status — the pushed bytes are the working bytes — and touches nothing else.
@@ -104,22 +150,19 @@ if [ "$(git rev-parse --abbrev-ref HEAD)" = "$target" ] && [ "$(git rev-parse "r
   synced="local $target synced"
 elif [ "$(git rev-parse --abbrev-ref HEAD)" = "$target" ] &&
      git merge-base --is-ancestor "refs/heads/$target" "$new"; then
-  # Behind the base: the draft's bytes are on the target now, but git's overwrite guards check
-  # existence, not content, so the untracked draft and the modified backlog would block the
-  # fast-forward — and every later pull. Clear both (their bytes are safe on the target), then
-  # fast-forward; if that still refuses, put the draft back and leave the sync to a pull.
-  tmpkeep=$(mktemp -d)
-  cp -R "work/bundles/$bundle" "$tmpkeep/"
-  rm -rf "work/bundles/$bundle"
-  git checkout -q HEAD -- work/backlog.md 2>/dev/null || true
+  # Behind the base: settle first so the overwrite guards have nothing to refuse, then
+  # fast-forward; if the merge still refuses, work/ at least stays clean for the later pull.
+  settle_work
   if git merge -q --ff-only "origin/$target" >/dev/null 2>&1; then
     synced="local $target synced"
   else
-    cp -R "$tmpkeep/$bundle" "work/bundles/$bundle"
-    synced="local $target is behind origin/$target — pull when convenient"
+    synced=$(unsynced "local $target is behind origin/$target" "pull")
   fi
-  rm -rf "$tmpkeep"
+elif [ "$(git rev-parse --abbrev-ref HEAD)" = "$target" ]; then
+  settle_work
+  synced=$(unsynced "local $target and origin/$target have diverged and the publish carries only origin's side" "merge or rebase")
 else
-  synced="local $target is behind origin/$target — pull when convenient"
+  settle_work
+  synced=$(unsynced "this checkout is not on $target" "switch to $target and pull")
 fi
 echo "bundle: $verb $bundle -> $target ($new); $synced"
