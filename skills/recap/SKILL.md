@@ -19,6 +19,11 @@ nothing, dispatch nothing. What the conversation does not establish, the recap d
 would settle it. Going to check turns a recap into a fresh investigation, and the human asked what
 was said.
 
+**Commit and branch state is out of scope, not just unverified.** It's exactly the repository state
+this skill's description defers to `bundle-state` for, and it drifts the moment the conversation
+moves on. Report a commit or push as something that happened in the conversation if it came up, but
+don't characterize current state ("not committed yet") — `git status` answers that in one command.
+
 **Part of that is structural, and the rest is on you.** The `disallowed-tools` field above names
 every built-in tool that reads, writes, runs, searches, or dispatches, and removes each one from the
 pool while this skill is active. The four built-ins left available — `AskUserQuestion`,
