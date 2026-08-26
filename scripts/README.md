@@ -82,14 +82,11 @@ only for scripts and tests that branch on them:
 ## Tests
 
 `tests/run.sh` runs the scripts against a local `git daemon` with a stubbed `gh` — no network, and
-nothing written outside a temp dir. It covers a ten-way claim race, the dependency gate, both bundle
-shapes, the stale-bundle-branch heal and its two refusals, the claim-time revision sync — carried onto a
-fresh claim, stopped by a two-sided amendment, left alone for a branch-only one — the
-detached-worktree publish — racing
-a sibling backlog append, revising, and refusing a bundle that moved — listing with a local draft
-as `draft`, an unreachable forge, permalinks pinned past a branch amendment, the flags passed to
-the merge, the staleness refusal, a required accepted SHA, a full land for both bundle shapes — gate,
-unrecorded-commit refusal, detached worktree, the moved-target loop, the backlog union, and a guarded
-cleanup, which an unreachable forge stops rather than licenses — abandoning a bundle mid-flight,
-both with in-flight tickets and after it has landed, and
-the write boundary's deny-by-path. Exits non-zero on failure.
+nothing written outside a temp dir. It covers every script in this directory: claiming and its
+races, the dependency gate, both bundle shapes, the claim-time revision sync, publishing and
+revising, listing and permalinks, merging and its refusals, landing and cleanup, abandoning,
+config reading, and the write boundary — each with its refusal paths, not just its happy one.
+
+The cases are the run's own section headings, one per behavior it pins; `grep '^echo "== '
+tests/run.sh` prints them. Read those rather than a list here, which would drift the first time a
+case is added. Exits non-zero on failure.
