@@ -10,12 +10,23 @@ set -euo pipefail
 
 allow_diverged=
 [ "${1:-}" = "--allow-diverged" ] && { allow_diverged=1; shift; }
-bundle="$1"
+bundle="${1:-}"
 body="${2:-}"
 here="$(cd "$(dirname "$0")" && pwd)"
 . "$here/_config.sh"
 target="$INTEGRATION_TARGET"
 wt="$WORKTREE_DIR/publish/$bundle"
+
+# Every path here is built as work/bundles/$bundle — the copy source, the scratch worktree's
+# target, and the rm -rf that settles the human's own checkout. A traversal id passes the directory
+# test below and resolves that rm to the checkout root, so refuse anything that is not a plain
+# directory name before a byte is read or removed.
+case "$bundle" in
+  '' | . | .. | */*)
+    echo "bundle id '$bundle' is not a bundle directory name — expected <date>-<slug>, no path separators" >&2
+    exit 2
+    ;;
+esac
 
 [ -d "work/bundles/$bundle" ] ||
   { echo "no work/bundles/$bundle in this working tree — run from the shaping session's checkout" >&2; exit 2; }
@@ -52,14 +63,17 @@ while :; do
   base=$(git rev-parse "origin/$target")
 
   # A bundle already on the target is a revision. One whose target copy differs from what this
-  # session's HEAD knows was moved by someone else — a sibling revise, or a fresh publish that took
-  # the same id — and overwriting it silently would discard bytes a human approved elsewhere.
+  # session's HEAD knows moved after this session last synced — a sibling's revise, a fresh publish
+  # that took the same id, or a publish of this checkout's own that could not fast-forward it — and
+  # overwriting it silently would discard bytes a human approved elsewhere. Which of the three it is
+  # cannot be told from here, so name them rather than sending the human after a sibling.
   if git rev-parse -q --verify "$base:work/bundles/$bundle" >/dev/null 2>&1; then
     verb=revise
     if ! git rev-parse -q --verify "$session_head:work/bundles/$bundle" >/dev/null 2>&1 ||
        [ "$(git rev-parse "$base:work/bundles/$bundle")" != "$(git rev-parse "$session_head:work/bundles/$bundle")" ]; then
       echo "work/bundles/$bundle on $target is not the copy this session shaped against — a sibling" \
-           "published or revised it; sync, re-check the approved bytes (or pick a new slug), retry" >&2
+           "published or revised it, or an earlier publish from this checkout never synced back into" \
+           "it; sync, re-check the approved bytes (or pick a new slug), retry" >&2
       exit 3
     fi
   else
