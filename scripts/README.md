@@ -41,26 +41,43 @@ Treat a non-zero exit as a stop, never as something to retry or work around; the
 states the reason and the next action, so nothing else needs a mapping. The numbers are contract
 only for scripts and tests that branch on them:
 
-- `_config.sh`, sourced by every script — `1` outside a git work tree, a malformed
-  `work/config.conf` line, or an unsupported `TICKET_MERGE_METHOD`
-- `publish-bundle.sh` — `2` no such bundle in the working tree · `3` bundle moved on the target
-  mid-session · `5` stale publish worktree · `6` push retries exhausted
-- `claim-ticket.sh` — `2` no such ticket · `3` dependency not `done` · `4` already claimed ·
-  `5` stale worktree · `6` malformed `depends_on` · `7` bundle not published on the target, or a
-  stale bundle branch carrying its own commits · `8` a bundle revision and an earlier ticket PR
-  both amended the same file
-- `pr-links.sh` — `2` no such ticket · `3` bundle not published · `4` forge unreachable
-- `complete-ticket.sh` — `2` stale against its base · `64` missing the accepted head SHA
-- `land-bundle.sh` — `1` cleanup could not verify a branch against the forge: the unverified
-  branches and worktrees stay — a fully unreachable forge stops earlier, at the fetch, with git's
-  own exit · `2` no such bundle, `push` before `start`, or `cleanup` from inside a worktree ·
-  `3` a ticket not `done`, or its PR record unqueryable · `4` no bundle branch (never
-  claimed, or already cleaned up) · `5` leftover land worktree · `6` target moved: not a failure
-  but a loop — re-run the canonical checks, then `push` again · `7` merge conflict, left for the
-  human · `8` a bundle-branch commit matches no merged ticket PR · `9` cleanup on an unlanded
-  bundle branch — nothing is deleted
-- `abandon-bundle.sh` — `1` a branch refused to delete · `2` no such bundle, or run from inside a
-  worktree · `9` already landed — use `land-bundle.sh cleanup` instead
+- `_config.sh`, sourced by every script
+  - `1` outside a git work tree, a malformed `work/config.conf` line, or an unsupported `TICKET_MERGE_METHOD`
+- `publish-bundle.sh`
+  - `2` no such bundle in the working tree
+  - `3` bundle moved on the target mid-session
+  - `4` local target has commits origin lacks (rerun with `--allow-diverged` to publish anyway)
+  - `5` stale publish worktree
+  - `6` push retries exhausted
+- `claim-ticket.sh`
+  - `2` no such ticket
+  - `3` dependency not `done`
+  - `4` already claimed
+  - `5` stale worktree
+  - `6` malformed `depends_on`
+  - `7` bundle not published on the target, or a stale bundle branch carrying its own commits
+  - `8` a bundle revision and an earlier ticket PR both amended the same file
+- `pr-links.sh`
+  - `2` no such ticket
+  - `3` bundle not published
+  - `4` forge unreachable
+- `complete-ticket.sh`
+  - `2` stale against its base
+  - `64` missing the accepted head SHA
+- `land-bundle.sh`
+  - `1` cleanup could not verify a branch against the forge: the unverified branches and worktrees stay; a fully unreachable forge stops earlier, at the fetch, with git's own exit
+  - `2` no such bundle, `push` before `start`, or `cleanup` from inside a worktree
+  - `3` a ticket not `done`, or its PR record unqueryable
+  - `4` no bundle branch (never claimed, or already cleaned up)
+  - `5` leftover land worktree
+  - `6` target moved: not a failure but a loop; re-run the canonical checks, then `push` again
+  - `7` merge conflict, left for the human
+  - `8` a bundle-branch commit matches no merged ticket PR
+  - `9` cleanup on an unlanded bundle branch; nothing is deleted
+- `abandon-bundle.sh`
+  - `1` a branch refused to delete
+  - `2` no such bundle, or run from inside a worktree
+  - `9` already landed; use `land-bundle.sh cleanup` instead
 
 ## Tests
 

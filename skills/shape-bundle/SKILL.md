@@ -32,8 +32,8 @@ ambiguity by asking.
   `${CLAUDE_PROJECT_DIR}/work/bundles/` and `${CLAUDE_PROJECT_DIR}/work/backlog.md`. An agent that can write code will, and will then retrofit the intent to it.
   A shell can still write; treat the boundary as binding anyway. The fence scopes itself to the
   draft: it holds while uncommitted work exists under `work/bundles/` and lifts once that tree is
-  clean — normally right after publish; when the publish cannot fast-forward this checkout, it
-  stays armed until the pull that syncs it.
+  clean — right after publish, whose script settles `work/` even when it cannot fast-forward
+  this checkout.
 - **Ask judgment calls the moment they surface.** A question the repository can answer, answer
   yourself and cite the file. A question with several viable options, or one that crosses a Plan-gate
   boundary, goes to the human before you continue — never parked in the draft as a TODO.
@@ -225,7 +225,16 @@ Exit 3 means the bundle moved on the target mid-session. For a brand-new bundle 
 date-and-slug collision: rename to a disambiguated slug and rerun — a rename, not a rewrite. For a
 revision: sync and re-check the approved bytes before rerunning.
 
+Exit 4 means the local target branch holds commits `origin/<target>` lacks — publishing would
+leave the checkout diverged from the bundle it just published. This is the human's call, not
+yours: report the commit count and ask whether to push or drop those commits first, or accept the
+divergence. Only rerun with `--allow-diverged` once they say which.
+
 ### 10. Hand back
+
+**Read the publish's report line before writing anything.** When it says this checkout does not
+hold the published bundle, lead with that line and the sync it names — the prompts below resolve
+the bundle from the working tree, so they fail until the human has run it.
 
 Report the published bundle path and, for each currently unblocked ticket, a paste-ready opening
 prompt for its own tab:

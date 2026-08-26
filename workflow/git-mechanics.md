@@ -185,13 +185,25 @@ no merge commit. The retry is bounded, and each attempt re-checks that the bundl
 still the copy the session shaped against — one that moved is a sibling's publish or revision,
 which stops for the human rather than being overwritten.
 
+**A local target ahead of origin refuses before building anything.** The commit is built on
+`origin/<target>`, so commits the local branch holds beyond it would be left behind, diverged from
+the branch the bundle now lives on. This fires the same way whether origin is still exactly where
+local branched from or has moved too (true two-way divergence) — either way the local commits
+would be left behind. The script cannot ask interactively, so it stops instead: exit 4, naming the
+commit count and the fix — push them (or, if origin also moved, pull or rebase first, since a plain
+push would be non-fast-forward) or drop them and rerun — or rerun with `--allow-diverged` to accept
+the divergence and publish anyway.
+
 **The backlog edit is re-derived, not copied.** The session's change to `work/backlog.md` is
 re-applied three-way against the target's current copy under the Backlog merges rule below, so a
 sibling's appended line survives a publish that raced it.
 
-After the push, the script fast-forwards the session's checkout only when that is provably safe,
-clearing its own draft copies first — git's overwrite guards check existence, not content —
-and otherwise leaves the sync to a later pull.
+After the push, the script settles the session's `work/` back to its HEAD — the pushed commit
+holds the draft's bytes, while a leftover untracked draft would block every later pull, since
+git's overwrite guards check existence, not content — then fast-forwards the checkout only when
+that is provably safe. When it cannot, the checkout is left holding its HEAD rather than the bundle
+just published, so the run says exactly that and names the sync — a pull, a merge, or a switch back
+to the target — that makes the bundle claimable from this checkout again.
 
 ## Backlog merges
 
