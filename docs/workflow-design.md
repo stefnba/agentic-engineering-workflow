@@ -135,6 +135,18 @@ The loop end to end, as the items below assume it. The issue state is derived, n
 - **Decided.** `docs-init` is in scope from the start, for greenfield and for existing code.
   - A subagent survey of 2026-11-25 found no reference repository that treats the two as entry points to one loop. It is not in `research/`.
   - Spec Kit, GSD and BMAD start greenfield and add a step that documents existing code. OpenSpec, the Elephant Goldfish Model and Pocock assume code exists.
+- **Assumed.** Both modes write the same files. Only the source of each file differs, and brownfield still needs the interview, because code cannot show the vision, the users or the reasons behind a choice.
+- **Assumed.** Greenfield interviews, then writes. Brownfield reads the existing docs, extracts from code, then interviews to fill the gaps and confirm what it extracted.
+- **Assumed.** A decision found in code stays marked as observed until the owner confirms it, because code is not precedent.
+
+| File              | Greenfield                                    | Brownfield                                                               |
+| ----------------- | --------------------------------------------- | ------------------------------------------------------------------------ |
+| `PROJECT.md`      | Interview                                     | Interview, with existing READMEs and docs as a first draft to confirm    |
+| `ARCHITECTURE.md` | Near-empty; filled after the walking skeleton | Extracted from code, each claim citing `[file:symbol]`                   |
+| `GLOSSARY.md`     | Interview, as terms come up                   | Terms from code names; the interview confirms what they mean             |
+| Decision records  | Interview; only the choices the owner settles | Proposed from code and existing docs, marked as observed until confirmed |
+| `research/`       | Not written by `docs-init`                    | Not written by `docs-init`                                               |
+
 - **Assumed.** Only work that is starting gets a full spec.
 - **Assumed.** Before writing the spec, `shape` checks the work in progress for overlap. It has the owner confirm or change the assumptions in the area, and turns blocking questions into decisions.
 - **Open.** Whether `ship` deletes the spec after moving lasting knowledge into `docs/`, or archives it as OpenSpec does. The first draft chose deletion.
@@ -208,10 +220,11 @@ A consuming repository after `setup` and `docs-init`:
 AGENTS.md                  block naming the files in docs/workflow/ and docs/conventions/
 CLAUDE.md                  the same block, for Claude Code
 docs/                      knowledge: slow-changing, safe to publish
-  PRODUCT.md               users, problem, core use cases (UC-n), non-goals
+  PROJECT.md               vision, users, problem, constraints, core use cases (UC-n), non-goals
   GLOSSARY.md              domain terms
   ARCHITECTURE.md          current shape of the system
   decisions/NNNN-slug.md   decision records (D-n), append-only
+  research/                research notes on outside facts
   workflow/                facts the workflow skills read: git.md, areas.md, tracker.md, models.md
   conventions/             the repository's own rules: git.md, naming.md
 .worktrees/                one worktree per ticket, ignored by git
@@ -220,14 +233,18 @@ docs/                      knowledge: slow-changing, safe to publish
 - **Assumed.** The repository keeps a small knowledge layer in `docs/`, in the files below.
 - **Assumed.** Docs name a use case or a decision by its ID, such as `UC-3` or `D-0007`, not by its path.
 - **Assumed.** The folders have generic names, `docs/` and not a name of this workflow. Every reference tool uses a folder named after itself, such as `.specify/` or `openspec/`, which ties the repository to that tool.
-- **Open.** The file names `PRODUCT.md` or `BRIEF.md`, and `docs/decisions/` or `adr/`. A fresh-context terminology review recommended the first of each: "brief" clashed with "work brief", and decisions include product decisions. The same review renamed bootstrap to `docs-init`, to avoid `script/bootstrap` and Claude Code's `/init`. It also flagged "spec" as clashing with test spec files.
+- **Decided.** The knowledge files are `PROJECT.md`, `GLOSSARY.md`, `ARCHITECTURE.md`, the decision records and `research/`. GSD's `REQUIREMENTS.md` and `STATE.md` are left out. Status is derived from GitHub, and the detailed plan lives in its issues and milestones.
+- **Decided.** The project file is named `PROJECT.md`. The name fits a library, a tool or a service as well as an app, and GSD uses it for the same content. `PRODUCT.md` reads oddly outside apps, and `BRIEF.md` clashed with "work brief".
+- **Assumed.** `PROJECT.md` may end with a high-level roadmap of a few lines: Now, Next and Later. A separate `ROADMAP.md` would repeat the milestones and drift from them.
+- **Open.** The folder name `docs/decisions/` or `adr/`. A fresh-context terminology review recommended `docs/decisions/`, because decisions include product decisions. The same review renamed bootstrap to `docs-init`, to avoid `script/bootstrap` and Claude Code's `/init`. It also flagged "spec" as clashing with test spec files.
 
-| File                     | Holds                                              | How it changes                                                                                                                                                                                                     |
-| ------------------------ | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `PRODUCT.md`             | Users, problem, core use cases (`UC-n`), non-goals | Shrinks to about half a page as architecture moves to decision records and use case detail into tests. Users, the one-line use case list and non-goals stay. May become a README section that keeps the `UC-` IDs. |
-| `GLOSSARY.md`            | Domain terms                                       | Edited in place. Git holds the history.                                                                                                                                                                            |
-| `ARCHITECTURE.md`        | The current shape of the system                    | Starts near-empty and describes the current state only.                                                                                                                                                            |
-| `decisions/NNNN-slug.md` | Decision records (`D-n`)                           | Never edited. A new record supersedes an old one.                                                                                                                                                                  |
+| File                     | Holds                                                                                        | How it changes                                                                                                                                                                                                     |
+| ------------------------ | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `PROJECT.md`             | Vision, users, problem, constraints, core use cases (`UC-n`), non-goals, an optional roadmap | Shrinks to about half a page as architecture moves to decision records and use case detail into tests. Users, the one-line use case list and non-goals stay. May become a README section that keeps the `UC-` IDs. |
+| `GLOSSARY.md`            | Domain terms                                                                                 | Edited in place. Git holds the history.                                                                                                                                                                            |
+| `ARCHITECTURE.md`        | The current shape of the system                                                              | Starts near-empty and describes the current state only.                                                                                                                                                            |
+| `decisions/NNNN-slug.md` | Decision records (`D-n`)                                                                     | Never edited. A new record supersedes an old one.                                                                                                                                                                  |
+| `research/`              | Research notes on outside facts, such as other tools or platform features                    | One note per question, with its sources and the date it was checked.                                                                                                                                               |
 
 - **Decided.** The facts the workflow skills read live in `docs/workflow/`, as Markdown, one file per topic: `git.md`, `areas.md`, `tracker.md` and `models.md`. `setup` writes them. They mean nothing without the workflow, and `work/` is not used for them.
 - **Assumed.** Procedure lives in the skills, and facts live in the repository. Workflow documentation is never copied into a consuming repository.
