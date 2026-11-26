@@ -33,16 +33,16 @@ Done when your reply names the file you will edit or create, and whether this is
 
 **For everything else, read to answer a slot, and stop when it is answered.** A file read without a question turns into a section nobody asked for.
 
-| Slot                 | Look first at                                                                                             |
-| -------------------- | --------------------------------------------------------------------------------------------------------- |
-| What it is, for whom | The manifest description, the entry point's help output, the opening lines of the docs index              |
-| Status and limits    | The existing README, deprecation notices, the manifest; otherwise a question to the owner                 |
-| Prerequisites        | The manifest and toolchain version files                                                                  |
-| Install and run      | The task or build file, the manifest scripts, the container file                                          |
-| Minimal example      | In this order: the existing README if it still runs, the examples folder, a documented example, a test    |
-| Development commands | The task or build file, then the CI job that runs the tests                                               |
-| Pointers             | The docs folder and subfolder READMEs: titles and opening lines only, enough to link them                 |
-| Owner and license    | The license file's name, the manifest; the help channel is a question to the owner                        |
+| Slot                 | Look first at                                                                                          |
+| -------------------- | ------------------------------------------------------------------------------------------------------ |
+| What it is, for whom | The manifest description, the entry point's help output, the opening lines of the docs index           |
+| Status and limits    | The existing README, deprecation notices, the manifest; otherwise a question to the owner              |
+| Prerequisites        | The manifest and toolchain version files                                                               |
+| Install and run      | The task or build file, the manifest scripts, the container file                                       |
+| Minimal example      | In this order: the existing README if it still runs, the examples folder, a documented example, a test |
+| Development commands | The task or build file, then the CI job that runs the tests                                            |
+| Pointers             | The docs folder and subfolder READMEs: titles and opening lines only, enough to link them              |
+| Owner and license    | Whether a license file exists at the root; the owner or help channel is a question to the owner        |
 
 **Open a source file only for a slot nothing else answers, and then only the entry point.** Run the tool's help output before reading its definition.
 
@@ -103,7 +103,7 @@ Done when every command in the outline is marked ran, confirmed, or dropped.
 
 **REQUIRED: use the `writing` skill for the prose.** This skill decides what the README contains; `writing` decides how each sentence reads.
 
-**Give a heading only to content of more than one line.** Status, license and owner are single lines.
+**Give a heading only to content of more than one line, except a license section.** Status is a single line under the description. A license section, when the table in "Only when true for this repository" calls for one, gets its own closing heading, because a rendered page shows a line without one as part of the section above it.
 
 Done when no template comment remains and every section traces to a line of the outline.
 
@@ -137,34 +137,34 @@ The template carries these as slots:
 - Quick start: prerequisites with versions, install, one minimal example, the output that shows it worked.
 - Development commands, when readers change the code: set up, run, test, and deploy for a service.
 - Pointers: docs that exist, and where to get help or who owns it.
-- License or owner, as one closing line.
 
 ### Only when true for this repository
 
-| Content                                     | Include when                                                         |
-| ------------------------------------------- | -------------------------------------------------------------------- |
-| One screenshot or short recording           | The result is visual                                                 |
-| "Why this and not X", or when not to use it | A well-known alternative exists and the reader will ask              |
-| Configuration values                        | Needed to get through the quick start; the rest belongs in reference |
-| Folder map                                  | A top-level name misleads or hides a rule, such as a frozen folder   |
-| Known pitfalls or common tasks              | Each one traces to a failure that happened                           |
-| Install table                               | Several install paths exist and all work                             |
-| Badges                                      | Each one states a fact the reader acts on: build, version, license   |
-| Table of contents                           | The file is longer than about 150 lines                              |
+| Content                                     | Include when                                                                                                                                          |
+| ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| One screenshot or short recording           | The result is visual                                                                                                                                  |
+| "Why this and not X", or when not to use it | A well-known alternative exists and the reader will ask                                                                                               |
+| Configuration values                        | Needed to get through the quick start; the rest belongs in reference                                                                                  |
+| Folder map                                  | A top-level name misleads or hides a rule, such as a frozen folder                                                                                    |
+| Known pitfalls or common tasks              | Each one traces to a failure that happened                                                                                                            |
+| Install table                               | Several install paths exist and all work                                                                                                              |
+| Badges                                      | Each one states a fact the reader acts on: build, version, license                                                                                    |
+| Table of contents                           | The file is longer than about 150 lines                                                                                                               |
+| License section                             | No license file sits at the root, the licensing differs by part, or the README is published where the license file is not, such as a package registry |
 
 ### Belongs elsewhere
 
 **Link the place when it exists; when it does not, leave the content out and name it in the report.**
 
-| Content                                             | Place                                                   |
-| --------------------------------------------------- | ------------------------------------------------------- |
-| Full API, option or configuration reference         | The docs folder, generated docs, or the help output     |
-| Full directory tree, description of the code layout | The repository shows it                                 |
-| Changelog, release history, roadmap                 | A changelog file, the releases page, the issue tracker  |
-| Architecture and design history                     | An architecture doc or decision records                 |
+| Content                                              | Place                                                   |
+| ---------------------------------------------------- | ------------------------------------------------------- |
+| Full API, option or configuration reference          | The docs folder, generated docs, or the help output     |
+| Full directory tree, description of the code layout  | The repository shows it                                 |
+| Changelog, release history, roadmap                  | A changelog file, the releases page, the issue tracker  |
+| Architecture and design history                      | An architecture doc or decision records                 |
 | Rules for changing the code, instructions for agents | The agent instruction file or a contributing file       |
-| Contribution process                                | A contributing file; one sentence here when none exists |
-| Full license text                                   | The license file                                        |
+| Contribution process                                 | A contributing file; one sentence here when none exists |
+| Full license text                                    | The license file                                        |
 
 ### Fails the deletion test in most repositories
 
@@ -179,5 +179,5 @@ A features list that restates the description, a tech-stack list, emoji in headi
 - [ ] The first lines say what it is and for whom.
 - [ ] Every command shown was run or confirmed by the owner.
 - [ ] Every link resolves to a file or page that exists.
-- [ ] No heading sits over a single line, and no section is empty or a placeholder.
+- [ ] No heading other than a license section sits over a single line, and no section is empty or a placeholder.
 - [ ] No file other than the root README changed.

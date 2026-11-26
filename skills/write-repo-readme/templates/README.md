@@ -24,6 +24,3 @@ Commands only: rules for changing the code stay in the agent instruction or cont
 
 <!-- Links to docs that exist, one line each saying what the reader finds there.
 Where to ask for help, or who owns it. -->
-
-<!-- License or owner as one closing line. Example:
-MIT licensed. Maintained by the payments team. -->

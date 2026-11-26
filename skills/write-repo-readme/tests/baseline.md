@@ -45,6 +45,12 @@ Run each prompt on a fresh sub-agent, once without the skill and once told to re
 - **With the skill (Haiku):** the same two-line diff, no outline, and a report naming the broken install command it left alone.
 - **Not fixed:** the note repeats a docs file. The skill run did not say so. The request asked for the note, so the duplicate is the owner's call.
 
+## Decision: no license line when a license file exists
+
+The runs above followed an earlier rule: license as one closing line with no heading. The owner saw that README rendered on 2026-11-26: the line read as the end of the section above it. The owner then cut it: a license file at the root already states the license, and the host shows it beside the README.
+
+The skill now writes a license section only under the conditions in its "Only when true for this repository" table, and then under its own closing heading. A license line in a run on these fixtures, which have a license file, is now a failure. Not rerun.
+
 ## Not tested
 
 - The outline round trip with an owner who answers.
