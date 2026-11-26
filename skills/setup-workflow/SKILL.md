@@ -72,17 +72,16 @@ Done when every line is `✅`, or the owner has the report and the commands.
 - **`docs/workflow/`:** present means a rerun. Read its files and offer their values as the proposal in the confirm step.
 - **`docs/conventions/`:** name each file. Note each fact that a `docs/workflow/` file would also state, such as a branch name for workflow work or a worktree path.
 - **`AGENTS.md` and `CLAUDE.md`:** which exist, whether `AGENTS.md` holds the workflow markers, and whether `CLAUDE.md` holds `@AGENTS.md`.
-- **Repository and owner:** the repository name and the owner type from the commands below. Use them for the tracker line of `docs/workflow/tracker.md`, not the folder or the manifest name. An owner type of `User` means a personal account, which has no issue types.
+- **Repository:** the owner and name from the command below. Use them for the tracker line of `docs/workflow/tracker.md`, not the folder or the manifest name.
 
   ```bash
   gh repo view --json name,owner --jq '.owner.login + "/" + .name'
-  gh api "repos/{owner}/{repo}" --jq .owner.type
   ```
 
-- **Issue types:** for a `User` owner, report none, because a personal account has no issue types. For an `Organization` owner, report the names the query below returns. When it fails, ask the owner in the confirm step. confirm: this query was not run against an organization when this skill was written.
+- **Issue types:** the names the query below returns. Personal accounts and organizations both have issue types. Report `none` when the query returns an empty list, and ask the owner in the confirm step when it fails. confirm: this query was run only against a personal account when this skill was written.
 
   ```bash
-  gh api graphql -f query='{ organization(login: "<owner>") { issueTypes(first: 20) { nodes { name } } } }'
+  gh api graphql -F owner='{owner}' -F name='{repo}' -f query='query($owner: String!, $name: String!) { repository(owner: $owner, name: $name) { issueTypes(first: 25) { nodes { name } } } }'
   ```
 
 - **Default branch protection:** run both commands below, with the default branch in place of `<branch>`. Read the result from this table; a result it does not name falls to its last row. confirm: what the first returns for a caller without admin rights was not checked when this skill was written.
@@ -124,7 +123,7 @@ Done when every line is `✅`, or the owner has the report and the commands.
 - `docs/workflow/` — absent; first run
 - `docs/conventions/` — `git.md` found; it names worktrees `.claude/worktrees/`, which `docs/workflow/git.md` would also state
 - `AGENTS.md` — found, no workflow markers; `CLAUDE.md` absent
-- Repository — `acme/billing`, owned by an organization
+- Repository — `acme/billing`
 - Issue types — `Feature`, `Task`, `Bug`, from the GraphQL query
 - Protection of `main` — required reviews, from the branch protection call
 - Layout — monorepo; `pnpm-workspace.yaml` declares `apps/web`, `apps/api`, `packages/ui`
@@ -146,7 +145,7 @@ Done when each slot of the templates in `templates/workflow/` in this skill's fo
 
 **Send one message in plain chat with these parts in order, then wait for a yes:**
 
-1. **Settings:** one bullet each for the target branch, each area with its checks and where they run, the tracker repository, the issue types, or for a personal account `none` with the type labels that replace them, and, when a convention file will be created, the commit style, the pull request title limit and the file-name style. Give each its source. Say in the target branch bullet whether it is protected, or that it waits on the target branch question. On a rerun, name the value it replaces.
+1. **Settings:** one bullet each for the target branch, each area with its checks and where they run, the tracker repository, the issue types, or `none` with the type labels that replace them, and, when a convention file will be created, the commit style, the pull request title limit and the file-name style. Give each its source. Say in the target branch bullet whether it is protected, or that it waits on the target branch question. On a rerun, name the value it replaces.
 2. **Questions:** one bullet per gap, with your proposal.
 3. **Writes:** one bullet per path, with its action, which is create from template, update, skip with the reason, or add the block below.
 4. **Labels:** the labels to create, each with its description. Compare `gh label list --limit 200` with the labels in `templates/workflow/tracker.md`, the type labels when the account has no issue types, and one `area:<name>` label per area. Take each description from the text after the label's dash in `templates/workflow/tracker.md`, with the area's path filled in for an area label. Leave existing labels out of this message; the step "Ask about existing labels" covers them.
@@ -158,7 +157,7 @@ Done when each slot of the templates in `templates/workflow/` in this skill's fo
 - **The target branch**, only when the default branch requires reviews, blocks direct pushes, requires linear history, or its protection is `unknown`: whether feature branches may merge into it or whether work lands on another branch such as `dev`. Otherwise the default branch is a setting.
 - **The models**, in one bullet, because models cannot be observed in the repository. Propose a model for each kind of work in `templates/workflow/models.md` and each harness, from `references/model-tiers.md`. Then name every model `codex debug models` listed, so the owner can pick another.
 - **Each conflict** noted under `docs/conventions/`: which value `docs/workflow/` should hold.
-- **The issue types**, only when the query for them failed: whether the organization has `Feature`, `Task` and `Bug`.
+- **The issue types**, only when the query for them failed: whether the account has `Feature`, `Task` and `Bug`.
 - **The commit style**, when fewer than 80% of at least 10 subjects match: whether `docs/conventions/git.md` should describe the history's style instead.
 - **The file-name style**, when it differs from `templates/conventions/naming.md`: which style the file should state.
 - **Checks taken from a manifest** because CI runs none for the area: whether they count, and for a type-check that writes files, what it writes.
@@ -172,7 +171,7 @@ Done when each slot of the templates in `templates/workflow/` in this skill's fo
 - `api` — `apps/api`; `pnpm test`, run from `apps/api`, from `apps/api/package.json`
 - `ui` — `packages/ui`; none
 - Tracker — GitHub issues in `acme/billing`
-- Issue types — `Feature`, `Task`, `Bug`, from the GraphQL query; for a personal account, none, with `type:feature`, `type:task`, `type:bug` instead
+- Issue types — `Feature`, `Task`, `Bug`, from the GraphQL query; when it returns none, `type:feature`, `type:task`, `type:bug` instead
 - Pull request titles — 65 characters, because squash merges are allowed
 - Commit style — `type(scope): summary`, the template's; 27 of the last 30 subjects match
 - File names — the template's rules; the repository uses kebab-case throughout
