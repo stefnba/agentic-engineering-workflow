@@ -9,6 +9,9 @@ is version 2, designed from an empty tree because version 1 grew too complex.
 Nothing is built yet. `docs/` holds the owner's working drafts: `BRIEF.md` (constraints and
 tested harness facts), `agentic-workflow-design.md`, and `github-issues-workflow.md`.
 
+`.agents/skills/` holds skills for working on this repository, not the product. Run the
+`writing` skill before writing or editing any Markdown file.
+
 ## Guardrails
 
 - **Stay lean.** Add a skill, file, or rule only for a need the owner names. Prefer removing to
