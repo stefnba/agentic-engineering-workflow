@@ -1,8 +1,0 @@
-# Test prompts
-
-Rerun these after editing `SKILL.md` or the template. Give each prompt to a fresh agent that reads `SKILL.md` directly, writes the doc to a scratch path instead of the repo, and lists every other file it would edit. Judge the written doc, not the agent's report.
-
-| Prompt (run in this repo)                                                               | Failure it exposed, and the line that fixes it                                                                                                                                                                                                                                    |
-| --------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| "Write an architecture doc for the bigquery_client package."                            | Without the skill: symbol names, file tree, library table, test and known-issue sections — Guardrails. With it: invented `Owner` — "Write only what the repo shows" and the header step; table said drop System context while member rule said show neighbours — tailoring table. |
-| "Is the Business Performance Studio architecture doc still accurate? Fix what's wrong." | Invented `Owner`; unsure whether review may add a missing section — "add a template section when a fact … has no section to go in"; unsure whether an unenforced rule is _(planned)_ — `target design` bullet.                                                                    |
