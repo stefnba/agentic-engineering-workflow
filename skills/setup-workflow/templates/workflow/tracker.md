@@ -21,14 +21,29 @@ Work items are GitHub issues in `{{OWNER}}/{{REPO}}`.
 
 ## Classification
 
-- Type: Feature (work split into tickets), Task (one ticket or one small item), Bug.
-- Priority label: `P0` drops other work, `P1` is next, `P2` is planned, `P3` is when time allows.
-- Area label: one per row of `docs/workflow/areas.md`.
-- Flag labels: `needs-decision` waits on an owner's decision, `blocked` waits on other work or an outside party.
-<!-- Remove a line the owner declined, and drop `--type` from the commands
-when the account has no issue types. Add labels the repository already uses
-for the same purpose in place of these names, and confirm each meaning with
-the owner. -->
+Each label below has the meaning after its dash; that meaning is also its description on GitHub.
+
+- Type: `Feature` — Work split into tickets. `Task` — One ticket or one small item. `Bug` — Behavior that is wrong.
+<!-- When the account has no issue types, replace the Type line with these
+type labels:
+- `type:feature` — Work split into tickets
+- `type:task` — One ticket or one small item
+- `type:bug` — Behavior that is wrong
+  and in the create commands replace `--type "<type>"` with
+  `--label "<type label>,<labels>"` and `--type Task` with
+  `--label "type:task,<labels>"`. -->
+- `P0` — Drop other work and do this first
+- `P1` — Next up after P0
+- `P2` — Planned, after P1
+- `P3` — When time allows
+- `area:<area>` — Work in `<path>`, one per row of `docs/workflow/areas.md`
+- `needs-decision` — Waits on a decision by the owner
+- `blocked` — Waits on other work or an outside party
+<!-- Remove a label the owner declined. Where the owner agreed to reuse an
+existing label for the same purpose, write its name in place of the
+template's. -->
+
+**Give every work item one type, one priority and one area label.** Add a flag label only while the flag holds.
 
 ## Status
 

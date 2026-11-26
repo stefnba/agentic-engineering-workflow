@@ -16,6 +16,6 @@ Branches and worktrees the workflow skills create. Written by the `setup-workflo
 
 ## Worktrees
 
-- Worktree path: `../{{REPO_NAME}}-<number>-<slug>`
+- Worktree path: `.worktrees/<number>-<slug>`, relative to the repository root
 
-**Create and remove worktrees with plain `git worktree` commands.**
+**Create and remove worktrees with plain `git worktree` commands.** `.gitignore` holds `/.worktrees/`, so the worktrees stay untracked.

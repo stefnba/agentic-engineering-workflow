@@ -39,35 +39,40 @@ Body only when the diff does not show why.
 
 Pick the row whose condition matches the diff. A diff with source changes takes the type of the source change even when tests, docs or manifests change alongside it.
 
-| Type | Use when the diff contains |
-| --- | --- |
-| `feat` | New behavior a user or other code can call |
-| `fix` | A correction to behavior that was wrong |
-| `refactor` | Code moved or restructured with behavior unchanged |
-| `test` | Tests only |
-| `docs` | Markdown, docstrings or agent instructions only |
-| `build` | Manifests, lock files, build files, editor or agent settings files only |
-| `ci` | CI configuration only |
-| `chore` | Housekeeping that fits no row above, such as renames or `.gitignore` entries |
+| Type       | Use when the diff contains                                                   |
+| ---------- | ---------------------------------------------------------------------------- |
+| `feat`     | New behavior a user or other code can call                                   |
+| `fix`      | A correction to behavior that was wrong                                      |
+| `refactor` | Code moved or restructured with behavior unchanged                           |
+| `test`     | Tests only                                                                   |
+| `docs`     | Markdown, docstrings or agent instructions only                              |
+| `build`    | Manifests, lock files, build files, editor or agent settings files only      |
+| `ci`       | CI configuration only                                                        |
+| `chore`    | Housekeeping that fits no row above, such as renames or `.gitignore` entries |
 
 ### Scope
 
 Pick the row whose condition matches the diff. Every file inside an area, including its docs, tests and manifest, takes that area's scope. Ripple in other areas, such as call sites updated because the area changed, adds no scope.
 
-<!-- One row per area of docs/workflow/areas.md, plus the rows below that
-apply. A repository with one area drops the area row and uses the rest. -->
+<!-- One row per area of docs/workflow/areas.md, with its path and a
+trailing slash, such as `apps/web/`. A repository with one area drops the
+area row. Keep `docs` and `agents`. Keep `<skill>` and `skills` only when
+the repository holds a SKILL.md file. -->
 
-| Scope | Use when the change touches |
-| --- | --- |
-| `{{AREA}}` | `{{PATH}}` |
-| `docs` | `docs/`, root `README.md` |
-| `agents` | Root `AGENTS.md`, root `CLAUDE.md`, harness settings files |
-| `<skill>` | One skill's directory, named by that directory |
-| `skills` | Several skills, or skill files outside any one skill's directory |
+| Scope      | Use when the change touches                                      |
+| ---------- | ---------------------------------------------------------------- |
+| `{{AREA}}` | `{{PATH}}`                                                       |
+| `docs`     | `docs/`, root `README.md`                                        |
+| `agents`   | Root `AGENTS.md`, root `CLAUDE.md`, harness settings files       |
+| `<skill>`  | One skill's directory, named by that directory                   |
+| `skills`   | Several skills, or skill files outside any one skill's directory |
 
 ### Example
 
-<!-- Replace with a real change in this repository, in the same shape. -->
+<!-- Replace with a subject from this repository's history that follows the
+skeleton, using a scope of the table above. Keep the body only when the
+commit has one. When no subject fits, keep this example and change its
+scope to one of the table. -->
 
 ```text
 refactor(client): move date formatting into a shared helper
@@ -80,7 +85,7 @@ Two screens format dates; one copy avoids drift.
 <!-- When the repository does not allow squash merges, make the limit in the
 next rule 72 characters and drop its second sentence. -->
 
-**Give a pull request title the shape of a commit subject, 65 characters or fewer.** A squash merge appends ` (#<n>)`, and the commit subject it produces must stay within 72.
+**Give a pull request title the shape of a commit subject, 65 characters or fewer.** A squash merge appends `(#<n>)`, and the commit subject it produces must stay within 72.
 
 **Pick the type by the outcome, not by the shape of the diff.** A pull request that adds a limiter is `feat` even when most of its lines are tests.
 
