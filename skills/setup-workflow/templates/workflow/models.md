@@ -9,9 +9,10 @@ Which model each kind of work runs on, per harness. Written by the `setup-workfl
 **When the cell is a `TODO`, spawn on the session's own model and say so in your reply.**
 
 <!-- Fill each cell with a model the owner confirmed. Claude Code cells are a
-model alias such as `opus` or `sonnet`. Codex cells are the model and the
-`model_reasoning_effort`, such as `<model>`, `high`. Example row:
-| Implement | `sonnet` | `<model>`, `medium` | -->
+model alias such as `opus` or `sonnet`, or a full model ID. Codex cells are
+the model and the `model_reasoning_effort`, such as `gpt-6.1-terra`, `medium`.
+Example row:
+| Implement | `sonnet` | `gpt-6.1-terra`, `medium` | -->
 
 | Work                | Claude Code            | Codex                 |
 | ------------------- | ---------------------- | --------------------- |

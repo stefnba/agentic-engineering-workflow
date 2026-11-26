@@ -11,7 +11,7 @@ Conventions for branches, commits and pull requests in this repository.
 
 **Let the workflow skills name the branches they create.** `docs/workflow/git.md` holds those names; the rule below covers every other branch.
 
-**Name any other branch `<scope>/<kebab-case-topic>`**, where scope is a row of the Scope table below: `docs/git-conventions`.
+**Name any other branch `<scope>/<kebab-case-topic>`**, where scope is a row of the Scope table below, such as `docs/git-conventions`.
 
 ## Commit strategy
 

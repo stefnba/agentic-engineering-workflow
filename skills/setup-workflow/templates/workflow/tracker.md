@@ -29,19 +29,19 @@ type labels:
 - `type:feature` — Work split into tickets
 - `type:task` — One ticket or one small item
 - `type:bug` — Behavior that is wrong
-  and in the create commands replace `--type "<type>"` with
-  `--label "<type label>,<labels>"` and `--type Task` with
-  `--label "type:task,<labels>"`. -->
+  In both create commands, delete the `--type` flag and its value, and put
+  the type label first inside the existing `--label`: `--label "<type label>,<labels>"`
+  for a feature or a small item, `--label "type:task,<labels>"` for a ticket. -->
 - `P0` — Drop other work and do this first
 - `P1` — Next up after P0
 - `P2` — Planned, after P1
 - `P3` — When time allows
-- `area:<area>` — Work in `<path>`, one per row of `docs/workflow/areas.md`
+- `area:{{AREA}}` — Work in {{PATH}}
+<!-- One line per row of docs/workflow/areas.md. Example:
+- `area:web` — Work in apps/web -->
 - `needs-decision` — Waits on a decision by the owner
 - `blocked` — Waits on other work or an outside party
-<!-- Remove a label the owner declined. Where the owner agreed to reuse an
-existing label for the same purpose, write its name in place of the
-template's. -->
+<!-- Remove a label the owner declined. -->
 
 **Give every work item one type, one priority and one area label.** Add a flag label only while the flag holds.
 
