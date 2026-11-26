@@ -12,7 +12,7 @@ Do not add `## Process`, numbered steps, or a completion checklist unless the sk
 
 ## Task skill
 
-A task skill carries out a bounded, repeatable procedure: for example documenting SQL, preparing a pull request, or adding a workbook. It has a clear result and a point at which the agent can stop.
+A task skill carries out a bounded, repeatable procedure: for example documenting SQL, preparing a pull request, or cutting a release. It has a clear result and a point at which the agent can stop.
 
 Use this body shape:
 

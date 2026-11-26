@@ -1,6 +1,6 @@
 # Skill mechanics
 
-What changes when the document is a skill. Everything about the writing itself is in `SKILL.md`; this file covers packaging.
+What changes when the document is a skill. Everything about the writing itself is in `references/steer.md`; this file covers packaging.
 
 If the host platform or a plugin imposes packaging constraints, read its current authoring documentation alongside this file. Platform documentation owns runtime-specific details such as skill loading, paths, and compatibility rules.
 
@@ -27,18 +27,18 @@ Route each file by how the agent consumes it:
 - Read into context for knowledge → `references/`
 - Copied or filled into the output → `templates/`
 - Executed without loading → `scripts/`
-- Imitated but never copied → an example: inline in SKILL.md when short, a reference file when long or numerous (the example rules in `SKILL.md` apply)
+- Imitated but never copied → an example: inline in SKILL.md when short, a reference file when long or numerous (`steer.md`, Templates and examples, applies)
 
 **Name no file, directory, member, product or domain term of a real repository in any skill file**, tests and references included. A skill set is installed into other repositories, where such a name points at nothing and reads as an instruction to find it. Describe a fixture by its shape ("a package of about 2,000 lines and a 6,000-word explainer about it") or invent one (`example_app/`).
 
 Internal structure follows the same split:
 
 - **Reference files open with one or two lines** stating what the file covers — enough for the agent to confirm it opened the right one. The _when to read it_ condition lives in the SKILL.md pointer; don't repeat it here. Body is plain markdown; fence only blocks meant to be reproduced character-for-character.
-- **Template files carry no preamble.** Anything in the file can land verbatim in the deliverable, so an explanatory intro leaks into the output. Ship a bare scaffold with placeholder markers (`{{CLIENT_NAME}}`); usage instructions live next to the SKILL.md pointer, and slot-level guidance rides in comment syntax per SKILL.md's template rules.
+- **Template files carry no preamble.** Anything in the file can land verbatim in the deliverable, so an explanatory intro leaks into the output. Ship a bare scaffold with placeholder markers (`{{CLIENT_NAME}}`); usage instructions live next to the SKILL.md pointer, and slot-level guidance rides in comment syntax per `steer.md`, Templates and examples.
 
 ## The description
 
-The description is the skill's top-level pointer and its only triggering mechanism — the pointer rules in `SKILL.md` apply in full, plus:
+The description is the skill's top-level pointer and its only triggering mechanism — `steer.md`, Pointers decide reachability, applies in full, plus:
 
 - Put _all_ "when to use" information here, none in the body. The body should assume the skill has already fired.
 - Describe triggering conditions and symptoms only — never summarize the skill's workflow. A description that sketches the process gets followed _instead of_ the body; the body becomes documentation the agent skips.
