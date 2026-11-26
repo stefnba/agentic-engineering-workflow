@@ -1,6 +1,6 @@
 # Scripts and deterministic logic in seven reference repositories
 
-For the designer of the version 2 skills: where do the reference projects put code, where prose, and what does the code cost them?
+For a reader of the reference research: how do the reference projects divide work between code and prose, and what maintenance does their code show?
 
 Sources and method: shallow clones of the seven repositories at HEAD, read on 2026-11-26 by a research sub-agent with `git ls-files`, `wc -l`, `grep` and file reads. Issues and pull requests were read through `gh`. Nothing from the clones was executed. Paths are relative to each repository. `[read]` marks a claim seen in a file or issue. `[inferred]` marks a conclusion drawn from what was read. Issue-search counts are full-text hits and overstate the number of bugs.
 
@@ -14,7 +14,7 @@ The seven fall into three groups `[inferred]`:
 - **A few small helpers**: obra/superpowers, about 420 lines of Bash for path, extract, diff and ledger steps, plus one hook and an optional web server.
 - **State and validation behind a CLI or a large script set**: spec-kit, OpenSpec, gsd-core and BMAD-METHOD.
 
-The cost of code is consistent across the groups. Tests run one to six times the size of the scripts they cover. Most script fixes are platform bugs, not logic bugs. Hooks are the piece most often removed.
+Tests run one to six times the size of the scripts they cover `[inferred from counts]`. Most script fixes are platform bugs, not logic bugs `[read]`. Two repositories removed a hook, and a third keeps its hook out of the plugin `[read]`.
 
 ## Comparison
 
@@ -46,7 +46,7 @@ Commit `6f7f783` (2026-11-25).
 - **The claim is the tracker assignee.** `gh issue edit <n> --add-assignee @me` is described as the session's first write `[read: issue-tracker-github.md:49]`.
 - **With local files, the agent edits a `Status:` line and picks the next number.** `[read: issue-tracker-local.md:9-10,26-30]`
 - **The small template still attracts bugs.** 22 issues carry "wizard" in the title, for example #1483 (macOS `tput`), #1260 (Bash 3.2 quoting) and #963 (Windows Git Bash) `[read]`.
-- **Determinism belongs in the consuming repository's own tooling.** `skills/engineering/retro/SKILL.md:19` sends a mechanical violation to the repository's linter or pre-commit, not to a prompt rule `[read]`.
+- **Mechanical checks go to the consuming repository's own tooling.** `skills/engineering/retro/SKILL.md:19` sends a mechanical violation to the repository's linter or pre-commit, not to a prompt rule `[read]`.
 - **A request for a deterministic lint step was closed** because it came from reading, not from an observed failure (#1372) `[read]`.
 - **A separate verify mode for setup was rejected** because a second code path would drift `[read: .out-of-scope/setup-skill-verify-mode.md]`.
 
@@ -144,31 +144,11 @@ Not found: hooks, language twins. Not read: script bodies beyond one docstring, 
 
 ## Patterns across the seven
 
-- **Tests cost one to six times the script.** superpowers 6, spec-kit about 2.5, OpenSpec 1.75, BMAD 1 `[inferred from counts]`. Version 1 of this repository had 944 script lines and 913 test lines, the cheap end of that range.
+- **Tests run one to six times the size of the script.** superpowers 6, spec-kit about 2.5, OpenSpec 1.75, BMAD 1 `[inferred from counts]`.
 - **Platform bugs dominate script fixes.** macOS Bash 3.2, Git Bash path forms, `dash` as `sh`, Windows code pages and stripped executable bits recur in four repositories `[read]`.
 - **Language twins drift.** spec-kit is the only repository with twins and the only one with parity as a changelog category `[read]`.
-- **Hooks are the most fragile piece.** EGM removed its hook, superpowers removed its Codex hook, and mattpocock keeps its hook out of the plugin `[read]`.
+- **Two repositories removed a hook, and a third keeps its hook out of the plugin.** EGM removed its hook, superpowers removed its Codex hook, and mattpocock keeps its hook out of the plugin `[read]`.
 - **Nobody implements multi-person claims in code.** mattpocock delegates the claim to the tracker assignee. spec-kit has an open numbering race `[read]`.
 - **State is always plain files or the tracker.** The repositories differ only in who writes it `[read]`.
-- **Read-side code looks cheaper than write-side code.** OpenSpec and spec-kit return state as JSON and let the agent edit. gsd-core's code-owned transitions carry open state bugs `[inferred]`.
-
-## What this suggests for our design
-
-The two favourites, mattpocock/skills and EGM, run a full workflow with no workflow-time code. That supports the owner's position: prose plus `git` and `gh` is the default, and a script needs a reason `[inferred]`.
-
-Candidate test for giving a step code, all `[inferred]` from the practices above. A step earns a script when every line holds:
-
-1. It has one right answer per input, and a unit test can check it (BMAD's rule).
-2. An agent was observed getting it wrong or re-deriving it on every run (mattpocock's bar for #1372).
-3. It reads state or guards a gate. The agent still makes the edit (OpenSpec's split, superpowers' `task-done`).
-4. It fits one file in one language, called through the interpreter, with no harness variable (superpowers' helpers).
-5. Its tests and platforms are budgeted first: macOS Bash 3.2, Linux `dash` and Git Bash.
-
-Steps that stay prose under this test:
-
-- Anything `git` or `gh` does in one command, including the claim. An issue assignee or a committed status line needs no script.
-- Status and ID changes in files the agent already edits.
-- Anything that classifies meaning.
-- Anything that would need a hook or a second-language twin to work.
-
-Version 1's claim, publish and land scripts fail lines 3 and 4: they mutated state and depended on a Claude-only variable. None of the seven repositories ships an equivalent.
+- **Code writes state in three repositories.** gsd-core writes `STATE.md` through state verbs, BMAD through a ticket script, and superpowers through `task-done`, which appends a ledger line `[read]`.
+- **In two, code reads and the agent writes.** The OpenSpec CLI reads checkboxes back after the agent ticks them. spec-kit scripts return paths as JSON, and the agent ticks tasks `[read]`.

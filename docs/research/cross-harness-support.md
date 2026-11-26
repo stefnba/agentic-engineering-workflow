@@ -1,35 +1,35 @@
 # Cross-harness support in seven reference repositories
 
-For the designer of the version 2 skills: what do the reference projects do so that one skill folder runs under both Claude Code and Codex?
+For a reader who wants facts only: what do the reference projects do so that one skill folder runs under both Claude Code and Codex? The report describes the repositories and gives no design advice.
 
 Sources and method: shallow clones of the seven repositories at HEAD, read on 2026-11-26 by a research sub-agent with `git ls-files`, `grep` and file reads. Issues were read through `gh`. Nothing from the clones was executed and no harness was run. Paths are relative to each repository. `[read]` marks a claim seen in a file or issue. `[inferred]` marks a conclusion. Every statement about how a harness behaves is the cited repository's claim, not a test result.
 
 ## Summary
 
-Five repositories keep one skill text for every harness: mattpocock/skills, superpowers, Elephant Goldfish Model (EGM), BMAD-METHOD version 7 and OpenSpec 2.0. They share four habits `[inferred]`:
+Five repositories keep one skill text for every harness: mattpocock/skills, superpowers, Elephant Goldfish Model (EGM), BMAD-METHOD version 7 and OpenSpec 2.0. They share these habits `[inferred]`, with two EGM exceptions `[read]`:
 
-- Only `name` and `description` carry weight in front matter.
+- Only `name` and `description` carry weight in front matter. EGM also sets `disable-model-invocation` in all 8 skills.
 - Skill text names the action, not the tool.
 - Harness-specific material sits in thin sidecar files outside the skill body.
-- Bundled files resolve relative to the skill folder, with no harness variable.
+- Bundled files resolve relative to the skill folder, with no harness variable. Every EGM skill names `${CLAUDE_PLUGIN_ROOT}` to reach plugin-root files.
 
 Two repositories transform text per harness. spec-kit generates each harness's skills from placeholder templates. gsd-core authors in Claude Code vocabulary and converts at install with a 4,882-line converter `[read]`.
 
-gsd-core is the closest match to version 1 of this repository `[inferred]`. Its cost is the converter plus a long list of Codex installer bugs.
+gsd-core's changelog records Codex installer bugs `[read]`. Eight Codex installer issues are open; they were read by title only.
 
 ## Comparison
 
 All seven repositories exist at the URLs given in the task.
 
-| Repository | Harnesses claimed | Reaches Claude Code by | Reaches Codex by | What differs per harness | Tool names in skill text | Verification |
-| --- | --- | --- | --- | --- | --- | --- |
-| mattpocock/skills | Claude Code, Codex, Copilot managed; others through skills.sh | Official marketplace; `.claude-plugin/` with an explicit `skills` array | The same `.claude-plugin/` manifests; skills.sh | One `agents/openai.yaml` per skill | None except "the Skill tool" (22 hits) | CI parses front matter; dated manual install notes |
-| google/elephant-goldfish-model | Antigravity CLI, Claude Code, Codex verified; six more partial | `.claude-plugin/` with adapter agents | `.codex-plugin/plugin.json` and `.agents/plugins/marketplace.json` | Adapter agents, per-harness guides, `${CLAUDE_PLUGIN_ROOT}` | Three names side by side with a fallback | Offline tests in CI; opt-in live tests; dated record |
-| obra/superpowers | 16 install sections | `.claude-plugin/` and a session-start hook | `.codex-plugin/plugin.json` with `hooks: {}`, `.agents/plugins/marketplace.json` | The bootstrap only; skills are shared verbatim | Actions only; a mapping file per harness | Per-harness plugin tests; an external eval repository |
-| github/spec-kit | About 50 integrations | CLI writes `.claude/skills/speckit-*` | CLI writes `.agents/skills/speckit-*` | Generated per harness from one template | None; commands are placeholders | Offline tests per integration |
-| Fission-AI/OpenSpec | About 55 tool IDs | CLI or skills.sh; a link from `.claude/skills` | CLI or skills.sh into `.agents/skills` | Install path and command spelling only | Neutral after fixes | Offline tests, skills.sh parity test |
-| open-gsd/gsd-core | Claude Code source; ten or more conversion targets | Own installer; a partial `.claude-plugin/` | Own installer converts to `~/.codex/skills` and agent TOML | Paths, invocation, agents, hooks, an adapter header | Claude names in the source, translated at install | Offline tests; install smoke matrix |
-| bmad-code-org/BMAD-METHOD | Whatever the `skills` CLI supports | `npx skills add` | `npx skills add` | Nothing in skill text | None | Static validator in CI; an eval skill |
+| Repository                     | Harnesses claimed                                              | Reaches Claude Code by                                                  | Reaches Codex by                                                                 | What differs per harness                                    | Tool names in skill text                          | Verification                                          |
+| ------------------------------ | -------------------------------------------------------------- | ----------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ----------------------------------------------------------- | ------------------------------------------------- | ----------------------------------------------------- |
+| mattpocock/skills              | Claude Code, Codex, Copilot managed; others through skills.sh  | Official marketplace; `.claude-plugin/` with an explicit `skills` array | The same `.claude-plugin/` manifests; skills.sh                                  | One `agents/openai.yaml` per skill                          | None except "the Skill tool" (22 hits)            | CI parses front matter; dated manual install notes    |
+| google/elephant-goldfish-model | Antigravity CLI, Claude Code, Codex verified; six more partial | `.claude-plugin/` with adapter agents                                   | `.codex-plugin/plugin.json` and `.agents/plugins/marketplace.json`               | Adapter agents, per-harness guides, `${CLAUDE_PLUGIN_ROOT}` | Three names side by side with a fallback          | Offline tests in CI; opt-in live tests; dated record  |
+| obra/superpowers               | 16 install sections                                            | `.claude-plugin/` and a session-start hook                              | `.codex-plugin/plugin.json` with `hooks: {}`, `.agents/plugins/marketplace.json` | The bootstrap only; skills are shared verbatim              | Actions only; a mapping file per harness          | Per-harness plugin tests; an external eval repository |
+| github/spec-kit                | About 50 integrations                                          | CLI writes `.claude/skills/speckit-*`                                   | CLI writes `.agents/skills/speckit-*`                                            | Generated per harness from one template                     | None; commands are placeholders                   | Offline tests per integration                         |
+| Fission-AI/OpenSpec            | About 55 tool IDs                                              | CLI or skills.sh; a link from `.claude/skills`                          | CLI or skills.sh into `.agents/skills`                                           | Install path and command spelling only                      | Neutral after fixes                               | Offline tests, skills.sh parity test                  |
+| open-gsd/gsd-core              | Claude Code source; ten or more conversion targets             | Own installer; a partial `.claude-plugin/`                              | Own installer converts to `~/.codex/skills` and agent TOML                       | Paths, invocation, agents, hooks, an adapter header         | Claude names in the source, translated at install | Offline tests; install smoke matrix                   |
+| bmad-code-org/BMAD-METHOD      | Whatever the `skills` CLI supports                             | `npx skills add`                                                        | `npx skills add`                                                                 | Nothing in skill text                                       | None                                              | Static validator in CI; an eval skill                 |
 
 ## Per-repository notes
 
@@ -176,18 +176,19 @@ Not read: the 6.12 installer branch, validator and eval script bodies.
 - **Codex invocation syntax.** spec-kit, OpenSpec and gsd-core state `$name`; EGM says to use the skill picker.
 - **Claude Code is not a fixed target either.** Two repositories report `TodoWrite` removed or gated by model `[read: superpowers #2177, OpenSpec #643 by title]`.
 
-## What this suggests for our design
+## Shared practices
 
-Nine rules keep one skill folder working on both harnesses. Each rule is `[inferred]`; the evidence beside it is `[read]`.
+Each line states what the repositories do. The grouping across repositories is `[inferred]`; the evidence in each line is `[read]`.
 
-1. **Rely only on `name` and `description`, in strict YAML.** superpowers and BMAD use nothing else. Codex skipped a BMAD skill over invalid YAML.
-2. **Leave every skill model-invocable, or declare user-only twice.** The pair is `disable-model-invocation` plus `agents/openai.yaml` policy. A flagged skill cannot be called by another skill (mattpocock #1052, #740).
-3. **Name the action, not the tool.** OpenSpec, superpowers and mattpocock were each burnt by a tool name.
-4. **Ask the user in plain chat.** A structured question tool is optional (mattpocock, OpenSpec, EGM).
-5. **Refer to another skill by bare name, with "read its `SKILL.md` and follow it" as fallback.** Hard-coded `/name` broke Codex output in spec-kit and OpenSpec. A distinctive prefix avoids built-in collisions.
-6. **Keep everything a skill reads inside its folder, with no harness variable.** EGM breaks this rule and pays with three path branches and no skills.sh install. Call scripts through the interpreter (superpowers #2040). Do not rely on symlinks inside a plugin (mattpocock).
-7. **Ask for a sub-agent in prose: "a fresh context window", a prompt file inside the skill, and a stated fallback.** Ship no agent definition files.
-8. **Let no skill depend on a hook.** Four repositories ship none; superpowers and gsd-core both removed or broke Codex hooks.
-9. **Ship one flat `skills/<name>/` tree with thin manifests, and record one verified run per harness and version.** superpowers and EGM ship the four manifest files for the two harnesses.
-
-A static check covers most reported breakages `[inferred]`: front matter parses, no tool names, no harness variables, relative links resolve. Only EGM, superpowers and BMAD test real sessions.
+- **Front matter.** superpowers and BMAD use `name` and `description` and nothing else. Codex skipped a BMAD skill over invalid YAML.
+- **User-only skills.** mattpocock declares user-only twice: `disable-model-invocation` plus the `agents/openai.yaml` policy. A flagged skill cannot be called by another skill (mattpocock #1052, #740).
+- **Tool names.** OpenSpec, superpowers and mattpocock each report a breakage caused by a tool name in skill text.
+- **Questions to the user.** mattpocock, OpenSpec and EGM treat a structured question tool as optional.
+- **Invocation spelling.** Hard-coded `/name` broke Codex output in spec-kit and OpenSpec.
+- **Files outside the skill folder.** EGM skills read plugin-root files through a harness variable. EGM writes three path branches for plugin-root files (`resources/execution_instructions.md`). EGM does not support skills-only installers (`docs/harnesses.md:24`).
+- **Packaging losses on Codex.** The superpowers Codex package lost executable bits (#2040). mattpocock's decision record 0002 states that Codex drops symlinks when it copies a plugin into its cache.
+- **Sub-agents.** mattpocock and BMAD ask for a sub-agent in prose. superpowers keeps prompt files inside the skill folder. EGM and BMAD state a fallback.
+- **Agent definition files.** mattpocock ships none. EGM ships Claude adapter agents and none for Codex. superpowers removed its named agents. gsd-core ships Markdown agents for Claude and generated TOML for Codex.
+- **Hooks.** Four repositories ship none. superpowers gives Codex no hook, and gsd-core shipped a Codex hook that could never fire.
+- **Manifests.** superpowers and EGM ship the four manifest files for the two harnesses.
+- **Session tests.** Only EGM, superpowers and BMAD test real sessions.

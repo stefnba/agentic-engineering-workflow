@@ -1,6 +1,6 @@
 # Sharing knowledge across skills in seven reference repositories
 
-For the designer of the version 2 skills: where do the reference projects keep knowledge that several skills need, and what does a skills-only installer do to it?
+For a reader who wants facts only: where do the reference projects keep knowledge that several skills need, and what does a skills-only installer do to it? This report records what the repositories do and proposes nothing.
 
 Sources and method: shallow clones of the seven repositories at HEAD, read on 2026-11-26 with `git ls-files`, `grep` and file reads. Issues were read through `gh`. Nothing from the clones was executed. One research sub-agent read mattpocock/skills and Elephant Goldfish Model (EGM) itself. It delegated the other five to further agents and re-checked one or two claims per repository. Paths are relative to each repository. `[read]` marks a claim seen in a file or issue by one of those agents. `[inferred]` marks a conclusion. Line numbers for the five delegated repositories were re-checked only in part.
 
@@ -114,7 +114,7 @@ Commit `f1cd852`. Read by a delegated agent.
 - **A router skill holds the workflow map** and "no workflow steps of its own" `[read: skills/openspec/SKILL.md:33-46, src/core/templates/workflows/router.ts:5]`.
 - **Skills are self-contained.** A `grep` for `../` or `CLAUDE_PLUGIN_ROOT` in `skills/` returns nothing `[read]`.
 - **Cross-references are conditional.** "If that skill is installed" fixed a recurring partial-install bug class (#1975, #1734) `[read]`.
-- **Drift prevention is the strongest of the seven.** Committed skills must equal generator output byte for byte `[read: test/core/templates/skillssh-parity.test.ts]`.
+- **A parity test compares committed skills with generator output.** They must match byte for byte `[read: test/core/templates/skillssh-parity.test.ts]`.
 - **It removed its own setup-written document.** `openspec/AGENTS.md` left in 1.9.0 (#1689) `[read]`.
 - **`npx skills add` is supported on purpose.** The CLI and `openspec/` folder do not arrive with the skills `[read: skills/README.md]`.
 
@@ -148,34 +148,27 @@ Commit `e435a22`, the version 7 preview. Read by a delegated agent. The stable 6
 
 Not found: a plugin manifest, hooks, a sync script. Not read: `docs/`, script bodies.
 
-## Options ranked by machinery
+## Mechanisms observed
 
-Ten ways to share knowledge, from least machinery to most. The ranking is `[inferred]`; the users and breakages are `[read]`.
+The mechanisms the repositories use to share knowledge, sorted by name. The users and breakages are `[read]`.
 
-| Rank | Option | Used by | Survives a skills-only install | Known cost or breakage |
-| --- | --- | --- | --- | --- |
-| 1 | Discover at run time, share nothing | superpowers, EGM bootstrap | Yes | Each skill repeats its detection |
-| 2 | The user's instruction file, with no setup | superpowers | Yes | A skill cannot rely on any fact being there |
-| 3 | Accepted duplication | BMAD, EGM fallbacks, spec-kit | Yes | Copies drift; BMAD's already differ |
-| 4 | A file inside one owning skill, loaded by invoking that skill | mattpocock | Yes, if the owner is installed | Wrappers fail alone (#1012) |
-| 5 | Documents written by a setup skill, reached through the instruction file | mattpocock, BMAD, spec-kit | Yes | The pointer is soft (#1376, #558) |
-| 6 | A sibling skill's file by `../` path | superpowers, EGM | Only when siblings are installed together | Partial installs; confined reads (EGM #455) |
-| 7 | A folder with a `SKILL.md` as the shared container | BMAD, OpenSpec router | Yes | The user must include it |
-| 8 | A plugin-root shared directory | EGM, gsd-core | No | All shared files lost (EGM #150) |
-| 9 | Single source, a generator and a parity check | OpenSpec, gsd-core, spec-kit | Only if the output is self-contained | A build step and committed generated files |
-| 10 | A config file plus a CLI that serves instructions | OpenSpec, gsd-core, BMAD, spec-kit | No; the runtime does not arrive | Version coupling; silent failure (BMAD #3209) |
+| Mechanism | Used by | Survives a skills-only install | Known cost or breakage |
+| --- | --- | --- | --- |
+| A config file plus a CLI that serves instructions | OpenSpec, gsd-core, BMAD, spec-kit | No; the runtime does not arrive | Version coupling; silent failure (BMAD #3209) |
+| A file inside one owning skill, loaded by invoking that skill | mattpocock | Yes, if the owning skill is installed | Wrappers fail alone (#1012) |
+| A folder with a `SKILL.md` as the shared container | BMAD, OpenSpec router | Yes | The user must include it |
+| A plugin-root shared directory | EGM, gsd-core | No | All shared files lost (EGM #150) |
+| A sibling skill's file by `../` path | superpowers, EGM | Only when siblings are installed together | Partial installs; confined reads (EGM #455) |
+| Accepted duplication | BMAD, EGM fallbacks, spec-kit | Yes | Copies drift; BMAD's already differ |
+| Discover at run time, share nothing | superpowers, EGM bootstrap | Yes | Each skill repeats its detection |
+| Documents written by a setup skill, reached through the instruction file | mattpocock, BMAD, spec-kit | Yes | The pointer is soft (#1376, #558) |
+| Single source, a generator and a parity check | OpenSpec, gsd-core, spec-kit | Only if the output is self-contained | A build step and committed generated files |
+| The user's instruction file, with no setup | superpowers | Yes | A skill cannot rely on any fact being there |
 
-## What this suggests for our design
+## Cross-repository observations
 
-Options 1 to 5 cover what mattpocock/skills needs for a full workflow, with no generator and no parity test `[read]`. That is the evidence for starting there and adding option 9 only when real duplication shows up `[inferred]`.
-
-Points for our design, all `[inferred]` from the practices above:
-
-- **Repository facts**: a setup skill writes them as prose documents in the consuming repository. Three repositories do this; none needs code for it.
-- **The pointer**: consumer skills should say what to do when the facts are missing. mattpocock's line is "If not, tell the user to run" the setup skill.
-- **The instruction-file block**: write it to the file each harness reads. mattpocock #558 shows a block in `CLAUDE.md` alone leaves Codex without it.
-- **Artifact formats**: the producing skill owns the format, inline or in its own folder. Readers name the artifact and do not restate it. Restated formats drifted in gsd-core, superpowers and BMAD.
-- **Cross-skill references**: a bare name in prose, conditional on the skill being installed. OpenSpec adopted the conditional form after repeated partial-install bugs.
-- **User-only skills**: avoid them where another skill must reach or detect the skill. mattpocock #812 and #740 both come from that flag.
-- **Text two skills need**: put it in one owning skill and have the other invoke that skill. Accept a short copy before building a generator.
-- **Setup migrations**: no prose-driven setup migrates old repositories. mattpocock's answer is to ask the skill to verify in words.
+- **mattpocock/skills uses two mechanisms in the table.** They are a file inside one owning skill and documents written by a setup skill. It has no generator and no parity test `[read]`.
+- **Three repositories write repository facts into the consuming repository through a setup step.** They are mattpocock, BMAD and spec-kit `[read]`.
+- **Restated formats drifted** in gsd-core, superpowers and BMAD `[inferred]`.
+- **The user-only flag caused two mattpocock issues.** #812 and #740 both come from it `[inferred]`.
+- **No prose-driven setup migrates old repositories.** mattpocock's answer is to ask the skill to verify in words `[inferred]`.

@@ -1,46 +1,42 @@
 # Review angles for spec review and code review
 
-For the owner designing the spec-review and code-review skills: which angles each review must cover to catch what a team review catches, at solo-developer cost.
+For a reader designing spec-review and code-review skills: how the reference projects review a spec and review code. This file holds facts about those sources only.
 
 Sources and method: skill, persona and prompt files read from nine public repositories through the GitHub API on 2026-11-26, plus Google's code review guide. A claim is read from the named file unless it carries "(inferred)". The section "Not found or not read" lists the gaps.
 
 ## Summary
 
-A spec review needs five angles, and two fresh reviewers cover them. One reviewer reads the spec alone and tests whether a stranger can understand and build it. The other reads the spec with the repository and tests scope, risk, grounding in the code, and the test plan.
+The reference repositories ask different questions of a spec and of code. Their spec reviews ask whether a stranger can build the spec and whether it is the right, smallest thing (inferred). Their code reviews ask whether the code is what was asked and whether it is built correctly (inferred).
 
-A code review needs five angles as well. A ticket PR gets one fresh reviewer that returns two separate verdicts: spec compliance, then code quality. The final PR gets two fresh reviewers: one holds the spec, the other sees only the diff.
-
-The reference repositories split the same way. Their spec reviews ask "can a stranger build this, and is it the right, smallest thing?". Their code reviews ask "is it what was asked, and is it built correctly?". Claude Code's plugin and Codex's rubric cover only the second half of the code question.
-
-Three angles appear in the sources and are left out here: prose style, document structure, and inventive problem-solving. The first two suit a lint script (inferred). The third is EGM-specific.
+Claude Code's plugin and Codex's rubric cover only the second half of the code question. Pocock's set, the Claude Code plugin and the Codex rubric hold no spec review step.
 
 ## Comparison across the repositories
 
 Each row names what the repository reviews and how. "None" means the files read hold no such step.
 
-| Repository | Spec or plan review | Code review | Reviewer isolation | Severity tags | Resolution and rounds | Human decides |
-| --- | --- | --- | --- | --- | --- | --- |
-| EGM (`google/elephant-goldfish-model`) | Five stages, eight personas, four document standards | `egm-lite` diff review, five rubric items | Fresh sub-agent per persona; stops if the harness has none | Blocker, Major, Nit; `egm-lite` uses P0 to P3 | Author session classifies each finding; one re-audit per stage, or a loop capped at five rounds | A gate after every stage; which fixes to apply |
-| Pocock (`mattpocock/skills`) | None; the user is questioned before `to-spec` (inferred) | Two parallel reviewers: Standards and Spec | Fresh sub-agent per axis | None; hard violation or judgement call | One fix pass by a fresh implementer; no re-review | Seams before the spec; the final PR |
-| Superpowers (`obra/superpowers`) | One "builder check" on the design; plan self-review by the author | One task reviewer with two verdicts; one whole-branch reviewer at the end | Fresh sub-agent given files, never session history | Critical, Important, Minor | Up to five fix rounds per task with a scoped re-review; one fix wave after the final review | Design, plan, and the controller's recorded rulings |
-| Spec Kit (`github/spec-kit`) | `clarify`, `checklist`, `analyze` across spec, plan and tasks | `converge` compares code to spec and appends tasks; no bug review | None stated; runs in the working session (inferred) | Critical, High, Medium, Low | Read-only report; the user approves any edit | Whether to proceed with open checklist items |
-| OpenSpec (`Fission-AI/OpenSpec`) | Human reads proposal, spec deltas, tasks; a two-minute checklist | `verify`: completeness, correctness, coherence against the change | None stated (inferred) | Critical, Warning, Suggestion | Report only; does not block archiving | Everything; the review is the human's |
-| GSD (`open-gsd/gsd-core`) | `gsd-plan-checker`, twelve-plus dimensions; optional cross-AI plan review | `gsd-code-reviewer` for bugs, security, quality, necessity; `gsd-verifier` for goal achievement | Separate agent per role; other vendors' CLIs as extra reviewers | Blocker, Warning, Info | Plan check loops up to three times; code fix loop capped at three; a disposition per finding | Uncertain truths and the end-of-phase checkpoint |
-| BMAD (`bmad-code-org/BMAD-METHOD`) | Reviewer gate on the architecture; validation checks on tickets | Quick: one reviewer. Thorough: four lenses | Context-free sub-agent per lens | Reviewers assign none; triage assigns high, medium, low, false, maybe-false | Triage verifies each finding, then routes it to patch, defer, or decision needed | "Decision needed" items; apply all or walk through |
-| Claude Code plugin (`anthropics/claude-plugins-official`) | None | Four parallel agents: two for `CLAUDE.md` rules, two for bugs | Sub-agents; given PR title and description | None; only validated issues survive | One validation sub-agent per issue; unvalidated issues are dropped | Whether to post comments |
-| Codex review (`openai/codex`) | None | One rubric: bugs the author would fix | Not stated in the rubric | P0 to P3, a confidence score, an overall verdict | None in the rubric | Not stated |
+| Repository                                                | Spec or plan review                                                                                                                                                                            | Code review                                                                                     | Reviewer isolation                                              | Severity tags                                                               | Resolution and rounds                                                                           | Human decides                                       |
+| --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | --------------------------------------------------------------- | --------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| EGM (`google/elephant-goldfish-model`)                    | Five stages, eight personas, four document standards (sibling file `knowledge-across-skills.md` counts ten persona files and five standards in the repository; the difference was not checked) | `egm-lite` diff review, five rubric items                                                       | Fresh sub-agent per persona; stops if the harness has none      | Blocker, Major, Nit; `egm-lite` uses P0 to P3                               | Author session classifies each finding; one re-audit per stage, or a loop capped at five rounds | A gate after every stage; which fixes to apply      |
+| Pocock (`mattpocock/skills`)                              | None; the user is questioned before `to-spec` (inferred)                                                                                                                                       | Two parallel reviewers: Standards and Spec                                                      | Fresh sub-agent per axis                                        | None; hard violation or judgement call                                      | One fix pass by a fresh implementer; no re-review                                               | Seams before the spec; the final PR                 |
+| Superpowers (`obra/superpowers`)                          | One "builder check" on the design; plan self-review by the author                                                                                                                              | One task reviewer with two verdicts; one whole-branch reviewer at the end                       | Fresh sub-agent given files, never session history              | Critical, Important, Minor                                                  | Up to five fix rounds per task with a scoped re-review; one fix wave after the final review     | Design, plan, and the controller's recorded rulings |
+| Spec Kit (`github/spec-kit`)                              | `clarify`, `checklist`, `analyze` across spec, plan and tasks                                                                                                                                  | `converge` compares code to spec and appends tasks; no bug review                               | None stated; runs in the working session (inferred)             | Critical, High, Medium, Low                                                 | Read-only report; the user approves any edit                                                    | Whether to proceed with open checklist items        |
+| OpenSpec (`Fission-AI/OpenSpec`)                          | Human reads proposal, spec deltas, tasks; a two-minute checklist                                                                                                                               | `verify`: completeness, correctness, coherence against the change                               | None stated (inferred)                                          | Critical, Warning, Suggestion                                               | Report only; does not block archiving                                                           | Everything; the review is the human's               |
+| GSD (`open-gsd/gsd-core`)                                 | `gsd-plan-checker`, twelve-plus dimensions; optional cross-AI plan review                                                                                                                      | `gsd-code-reviewer` for bugs, security, quality, necessity; `gsd-verifier` for goal achievement | Separate agent per role; other vendors' CLIs as extra reviewers | Blocker, Warning, Info                                                      | Plan check loops up to three times; code fix loop capped at three; a disposition per finding    | Uncertain truths and the end-of-phase checkpoint    |
+| BMAD (`bmad-code-org/BMAD-METHOD`)                        | Reviewer gate on the architecture; validation checks on tickets                                                                                                                                | Quick: one reviewer. Thorough: four lenses                                                      | Context-free sub-agent per lens                                 | Reviewers assign none; triage assigns high, medium, low, false, maybe-false | Triage verifies each finding, then routes it to patch, defer, or decision needed                | "Decision needed" items; apply all or walk through  |
+| Claude Code plugin (`anthropics/claude-plugins-official`) | None                                                                                                                                                                                           | Four parallel agents: two for `CLAUDE.md` rules, two for bugs                                   | Sub-agents; given PR title and description                      | None; only validated issues survive                                         | One validation sub-agent per issue; unvalidated issues are dropped                              | Whether to post comments                            |
+| Codex review (`openai/codex`)                             | None                                                                                                                                                                                           | One rubric: bugs the author would fix                                                           | Not stated in the rubric                                        | P0 to P3, a confidence score, an overall verdict                            | None in the rubric                                                                              | Not stated                                          |
 
 ## Notes on EGM
 
-EGM is the deepest spec-review design read. Its five review stages run in order, and each stage controls what the reviewer sees.
+EGM's `egm-review` runs five review stages in order with eight persona files. Each stage controls what the reviewer sees.
 
-| Stage | Persona files | Standard | Reviewer is given |
-| --- | --- | --- | --- |
-| 5 Initial zoom out | `agents/zoom_out.md`, `agents/inventive_catalyst.md` | `zoom-out-standard.md` | Full document and the context reading list |
-| 6 Comprehension | `agents/comprehension.md` | None, on purpose | The document alone |
-| 7 Critic | `agents/design_critic.md`, `agents/structural.md`, `agents/style.md` | `feature-spec-standard.md` | Feature part and context |
-| 8 Intermediate zoom out | `agents/zoom_out.md` | `zoom-out-standard.md` | Full document, context, the stage 5 report |
-| 9 Implementation readiness | `agents/implementation_readiness.md`, `agents/codebase_details.md`, `agents/style.md` | `implementation-readiness-standard.md` | Plan part and context |
+| Stage                      | Persona files                                                                         | Standard                               | Reviewer is given                          |
+| -------------------------- | ------------------------------------------------------------------------------------- | -------------------------------------- | ------------------------------------------ |
+| 5 Initial zoom out         | `agents/zoom_out.md`, `agents/inventive_catalyst.md`                                  | `zoom-out-standard.md`                 | Full document and the context reading list |
+| 6 Comprehension            | `agents/comprehension.md`                                                             | None, on purpose                       | The document alone                         |
+| 7 Critic                   | `agents/design_critic.md`, `agents/structural.md`, `agents/style.md`                  | `feature-spec-standard.md`             | Feature part and context                   |
+| 8 Intermediate zoom out    | `agents/zoom_out.md`                                                                  | `zoom-out-standard.md`                 | Full document, context, the stage 5 report |
+| 9 Implementation readiness | `agents/implementation_readiness.md`, `agents/codebase_details.md`, `agents/style.md` | `implementation-readiness-standard.md` | Plan part and context                      |
 
 The stage table is in `skills/egm-review/SKILL.md`. Standards are in `resources/document_standards/`.
 
@@ -65,7 +61,7 @@ How findings are handled:
 `skills/egm-lite/SKILL.md` is the small-change path, and it reviews both a checklist and a diff:
 
 - **Spec review**: one fresh reviewer reads the checklist with four rubric items: scope and YAGNI, tagged unverified contracts, edge cases and failure modes, and a runnable test plan.
-- **Gate**: it recommends the spec review when the change touches two or more production files, concurrency, a public API, or an unverified assumption. Otherwise it calls direct execution reasonable.
+- **Gate**: it advises the spec review when the change touches two or more production files, concurrency, a public API, or an unverified assumption. Otherwise it calls direct execution reasonable.
 - **Diff review**: one fresh reviewer gets the checklist, the change inventory and the full change content. It gets no conversation history and no author justification.
 - **Diff rubric**: thread and state safety, boundary conditions, test coverage of new logic, deletable code, and leftover unverified tags checked against the checklist.
 - **Contract**: findings only, tagged P0 to P3, or an explicit LGTM on zero findings. Style nitpicks are suppressed.
@@ -147,81 +143,60 @@ For design review, "Design Docs at Google" (industrialempathy.com) structures a 
 
 ## Reported weaknesses
 
-Each weakness below is reported by a source file, and most sources name a countermeasure.
+Each weakness below is reported by a source file. The third column records what a named source does about it.
 
-| Weakness | Where reported | Countermeasure in the sources |
-| --- | --- | --- |
-| Findings never run out | Pocock `docs/engineering/code-review.md`: reruns always find new issues. EGM `egm-review-loop`: a zero-finding round is rare | Stop on no open Blocker or Major, not on zero findings; cap the rounds; keep a list of settled findings |
-| Forced findings | BMAD's adversarial lens demands a minimum count | BMAD's triage verifies every finding afterwards |
-| False positives | Pocock docs: a sub-agent finding is a hypothesis and may cite the wrong location | Claude Code validates each issue; BMAD asks whether the bad state is reachable; Codex requires proof of affected code |
-| Reviewer shares the author's context | Pocock docs: `implement` reviews inside the authoring session | EGM refuses to call a same-context review a review; Superpowers passes files, never history |
-| Author's rationale sways the reviewer | Superpowers task-reviewer prompt | A stated rationale never lowers a severity; BMAD withholds the claims until the trace is done |
-| No check against the spec | Claude Code plugin and Codex rubric have none; EGM's five stages review documents only | Pocock's Spec axis; Superpowers' spec verdict; OpenSpec `verify`; BMAD's intent auditor |
-| Token cost | Superpowers design note `docs/superpowers/specs/2026-06-09-sdd-task-scoped-review-dispatch-design.md`: quality reviewers cost four to eight times spec reviewers; a hardened version doubled tokens | Merge the per-task reviewers into one; hand over the diff as a file; forbid re-running tests |
-| Runaway fan-out | Pocock docs: review sub-agents re-invoked the skill, one report above 50 agents | Superpowers and BMAD tell the reviewer not to spawn sub-agents |
-| Slow reviews | BMAD `bmod-method/help/review-choices.md`: thorough review can take half an hour | A quick depth with one reviewer |
+| Weakness                              | Where reported                                                                                                                                                                                      | What a source does about it                                                                                         |
+| ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| Findings never run out                | Pocock `docs/engineering/code-review.md`: reruns always find new issues. EGM `egm-review-loop`: a zero-finding round is rare                                                                        | EGM `egm-review-loop` stops after two rounds with no open Blocker or Major, and caps at five rounds                 |
+| Forced findings                       | BMAD's adversarial lens demands a minimum count                                                                                                                                                     | BMAD's triage verifies every finding afterwards                                                                     |
+| False positives                       | Pocock docs: a sub-agent finding is a hypothesis and may cite the wrong location                                                                                                                    | Claude Code validates each issue; BMAD triage verifies each finding; Codex needs the affected code identified       |
+| Reviewer shares the author's context  | Pocock docs: `implement` reviews inside the authoring session                                                                                                                                       | EGM gives each persona a fresh sub-agent and stops if the harness has none; Superpowers passes files, never history |
+| Author's rationale sways the reviewer | Superpowers task-reviewer prompt                                                                                                                                                                    | Superpowers' reviewer treats rationales as unverified claims; BMAD reads commit messages only after the trace       |
+| No check against the spec             | Claude Code plugin and Codex rubric have none; EGM's five stages review documents only                                                                                                              | Pocock runs a Spec axis; Superpowers gives a spec verdict; OpenSpec runs `verify`; BMAD runs an intent auditor      |
+| Token cost                            | Superpowers design note `docs/superpowers/specs/2026-06-09-sdd-task-scoped-review-dispatch-design.md`: quality reviewers cost four to eight times spec reviewers; a hardened version doubled tokens | Superpowers uses one task reviewer, hands it the diff as a file, and tells it not to re-run the suite               |
+| Runaway fan-out                       | Pocock docs: review sub-agents re-invoked the skill, one report above 50 agents                                                                                                                     | Superpowers and BMAD tell the reviewer not to spawn sub-agents                                                      |
+| Slow reviews                          | BMAD `bmod-method/help/review-choices.md`: thorough review can take half an hour                                                                                                                    | BMAD offers a quick depth with one reviewer                                                                         |
 
-## Candidate angles for spec review
+## Angles found for spec or plan review
 
-Five angles cover the failures the sources guard against.
+Each row is a review angle the sources apply to a spec or a plan.
 
-| Angle | Failure it catches | Used by |
-| --- | --- | --- |
-| Comprehension: paraphrase the spec from the text alone | Parts that do not connect, undefined project terms, knowledge the author assumed | EGM stage 6; Superpowers builder check |
-| Buildability: list where a builder would have to guess | Vague or untestable requirements, design decisions left to the implementer | EGM stage 9; Superpowers builder check; Spec Kit `analyze` and `clarify`; OpenSpec; GSD plan checker |
-| Scope and simplicity | Wrong problem, scope creep, speculative features, reinventing existing code | EGM stages 5 and 8; `egm-lite`; OpenSpec; GSD plan checker |
-| Risk and failure modes | Missing edge cases, error paths, migrations, security implications, unexamined alternatives | EGM stage 7; `egm-lite`; Spec Kit `clarify`; Superpowers plan self-review |
-| Grounding and coverage | False statements about current code, non-existent references, requirements with no ticket or test | EGM `codebase_details`; Spec Kit `analyze`; GSD plan checker; BMAD validation checks |
+| Angle                                                  | What it checks or catches                                                                         | Used by                                                                                              |
+| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| Comprehension: paraphrase the spec from the text alone | Parts that do not connect, undefined project terms, knowledge the author assumed                  | EGM stage 6; Superpowers builder check                                                               |
+| Buildability: list where a builder would have to guess | Vague or untestable requirements, design decisions left to the implementer                        | EGM stage 9; Superpowers builder check; Spec Kit `analyze` and `clarify`; OpenSpec; GSD plan checker |
+| Scope and simplicity                                   | Wrong problem, scope creep, speculative features, reinventing existing code                       | EGM stages 5 and 8; `egm-lite`; OpenSpec; GSD plan checker                                           |
+| Risk and failure modes                                 | Missing edge cases, error paths, migrations, security implications, unexamined alternatives       | EGM stage 7; `egm-lite`; Spec Kit `clarify`; Superpowers plan self-review                            |
+| Grounding and coverage                                 | False statements about current code, non-existent references, requirements with no ticket or test | EGM `codebase_details`; Spec Kit `analyze`; GSD plan checker; BMAD validation checks                 |
+| Prose style and document structure                     | Heading hierarchy, template sections, filler, claims that outrun their evidence                   | EGM `structural` and `style` personas, stages 7 and 9                                                |
+| Inventive problem-solving                              | Not recorded in the files read                                                                    | EGM `inventive_catalyst` persona, stage 5                                                            |
 
-The first two angles need their own reviewer, given the spec and nothing else. Repository access would let that reviewer fill gaps the document leaves open (inferred from EGM stage 6, which withholds context and standard).
+EGM stage 6 gives its reviewer the document alone, with no context and no standard.
 
-The last three can share one reviewer, given the spec and the repository. `egm-lite` already runs scope, failure modes and test plan as one rubric. Whether one reviewer holds three angles as well as EGM's separate personas do is unmeasured.
+`egm-lite` runs scope, failure modes and test plan as one rubric for one reviewer. No file read compares one reviewer holding several angles with EGM's separate personas.
 
-## Candidate angles for code review
+## Angles found for code review
 
-Five angles cover the failures the sources guard against.
+Each row is a review angle the sources apply to code.
 
-| Angle | Failure it catches | Used by |
-| --- | --- | --- |
-| Spec compliance: missing, extra, misunderstood | The wrong thing built well; scope creep; a requirement claimed but not implemented | Pocock Spec axis; Superpowers; BMAD intent auditor; OpenSpec `verify`; Spec Kit `converge`; GSD verifier |
-| Correctness in the diff | Boundary errors, unhandled error paths, races, call-site mismatches, regressions from deleted code | `egm-lite`; BMAD edge-case hunter; Claude Code; Codex; GSD |
-| Tests prove behaviour | New logic without a test, tests that assert nothing or restate the code, weakened assertions | `egm-lite`; BMAD verification-gap lens; Superpowers; Pocock `tdd` on the author side |
-| Repository rules | Breaches of documented standards and agent instruction files | Pocock Standards axis; Claude Code; Codex; BMAD quick lens |
-| Simplicity and necessity | Abstractions nobody asked for, impossible-state guards, duplication | `egm-lite`; Pocock smell baseline; GSD necessity; Google's guide |
+| Angle                                          | What it checks or catches                                                                          | Used by                                                                                                  |
+| ---------------------------------------------- | -------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| Spec compliance: missing, extra, misunderstood | The wrong thing built well; scope creep; a requirement claimed but not implemented                 | Pocock Spec axis; Superpowers; BMAD intent auditor; OpenSpec `verify`; Spec Kit `converge`; GSD verifier |
+| Correctness in the diff                        | Boundary errors, unhandled error paths, races, call-site mismatches, regressions from deleted code | `egm-lite`; BMAD edge-case hunter; Claude Code; Codex; GSD                                               |
+| Tests prove behaviour                          | New logic without a test, tests that assert nothing or restate the code, weakened assertions       | `egm-lite`; BMAD verification-gap lens; Superpowers; Pocock `tdd` on the author side                     |
+| Repository rules                               | Breaches of documented standards and agent instruction files                                       | Pocock Standards axis; Claude Code; Codex; BMAD quick lens                                               |
+| Simplicity and necessity                       | Abstractions nobody asked for, impossible-state guards, duplication                                | `egm-lite`; Pocock smell baseline; GSD necessity; Google's guide                                         |
+| Security and irreversible operations           | Security problems in the change                                                                    | GSD code reviewer; Superpowers final review; Claude Code logic and security agent                        |
 
-Security and irreversible operations form a sixth angle that only some changes need. GSD and the Superpowers final review carry it. A path or keyword trigger could switch it on (inferred from GSD's depth overrides).
-
-Sharing differs by PR type (inferred from the Superpowers cost data and BMAD's lens inputs):
-
-- **Ticket PR**: one fresh reviewer, given the ticket, the spec constraints and the diff. It reports spec compliance first, then the four quality angles, as two verdicts that are never merged into one score.
-- **Final PR, spec reviewer**: one fresh reviewer, given the spec and the whole branch diff. It catches requirements lost between tickets.
-- **Final PR, blind reviewer**: one fresh reviewer, given the diff and the repository but no spec and no PR narrative. A reviewer that knows the intent tends to read the code as fulfilling it.
-
-## Rule for skipping spec review
-
-A change goes straight to one PR only when every line holds. The thresholds are inferred from `egm-lite`'s gate, OpenSpec's right-sizing advice and Pocock's merge-danger fields.
-
-- It fits one ticket and one PR.
-- It changes no public interface, data schema or stored format.
-- It touches no authentication, payment, secret, or destructive operation, and a revert undoes it.
-- It adds no concurrency.
-- It rests on no unverified assumption about an external system.
-- Its intended behaviour and its check fit in two sentences.
-
-Two safeguards keep the shortcut honest. The PR description states those two sentences, and the code reviewer treats them as the spec. A reviewer that finds a line of the rule broken sends the change back to shaping instead of reviewing it.
-
-## Undecided
+## Where the sources differ
 
 - **Rounds**: one pass (Superpowers builder check), one re-audit (EGM stages), or a loop to two clean rounds (EGM review loop).
-- **Who triages**: the author session with its context (EGM), or a fresh validator per finding (Claude Code). The second fits the fresh-reviewer assumption but costs more.
+- **Who triages**: the author session with its context (EGM), or a fresh validator per finding (Claude Code).
 - **Severity**: three tiers from the reviewer (EGM, Superpowers), or none from the reviewer and a grade at triage (BMAD).
 - **Ticket review split**: one reviewer with two verdicts (Superpowers) or two reviewers (Pocock). Only Superpowers publishes cost and quality numbers, from its own evals.
-- **Blind reviewer frequency**: on the final PR only, or on every ticket PR.
-- **Reading beyond the diff**: forbidden (Claude Code's first bug agent), allowed per named risk (Superpowers), or open.
+- **Reading beyond the diff**: forbidden (Claude Code's first bug agent) or allowed per named risk (Superpowers).
 - **Duplicate reviewers**: EGM and Claude Code run two instances for recall. The gain is not quantified in any file read.
-- **Security angle**: always on, or triggered by path.
-- **Style and structure of the spec**: a lint script or nothing.
-- **Skip-rule thresholds**: none of the numbers is tested on real changes.
+- **Skipping spec review**: `egm-lite` advises it when the change touches two or more production files, concurrency, a public API, or an unverified assumption. Superpowers skips the builder check for a small change. OpenSpec gives right-sizing advice; its content is not recorded here.
 
 ## Not found or not read
 
