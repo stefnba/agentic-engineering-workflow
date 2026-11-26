@@ -24,8 +24,9 @@ critique can deep-link them.
 
 The sections below are what this artifact owns. It does not own current repository facts, file
 paths, ticket order, status, or interior implementation choices — those belong to the plan, ticket,
-repository, or PR/CI; ${CLAUDE_PLUGIN_ROOT}/workflow/artifacts.md owns that authority split and
-what happens to this file at Land.
+repository, or PR/CI — Artifact authority in
+bundle-rules.md. Land deletes this file, so
+anything durable it establishes moves to its owner then.
 
 Write target behavior in present tense; the spec describes the system as it will behave, not a
 promise about future work. Every sentence constrains behavior or gets deleted. Use the repository's
@@ -159,7 +160,7 @@ One AC is proved by one slice. If two tickets would each satisfy half of an AC, 
 the slicing is wrong; fix it here rather than writing "the worker half" into a ticket.
 
 Each must be verifiable by observing the system, not by reading the diff. Green tests are evidence,
-not acceptance — the Accept gate stays the human's.
+not acceptance — accepting the PR stays the human's.
 
 Example:
 AC-3 (BR-4): Given the upstream errors and a prior fetch exists, when the screen loads, then the
@@ -169,8 +170,7 @@ prior balance is shown marked stale with its original timestamp. -->
 
 ## Test intent
 
-<!-- What Shape owns about testing — test ownership across roles is already defined workflow-wide;
-state here only what is specific to this bundle. Not test
+<!-- What Shape owns about testing: only what is specific to this bundle. Not test
 code, and not the repository's canonical checks, which stay canonical in CI.
 
 - Seam: the observable boundary the acceptance tests attach to. Prefer one that already exists, and
@@ -181,8 +181,9 @@ code, and not the repository's canonical checks, which stay canonical in CI.
 - Levels: which behavior is proven at which level, and why that level is the honest one.
 - Risk cases: the failure, boundary, permission, concurrency, and compatibility cases that must be
   tested because they are where this change is dangerous.
-- Locked tests: the scope of any test authored outside the implementing agent. lifecycle.md owns when
-  that exception is admissible and who may run or modify them. Write "none" when it does not apply.
+- Locked tests: the scope of any acceptance test written before implementation, outside the
+  implementing session, which the implementer must run unmodified. Use one only when the implementer
+  could otherwise weaken the test that proves the change. Write "none" when it does not apply.
 
 When the outcome is "behavior unchanged", characterization tests are mandatory and bind the
 decomposition, not this document. State the outcome here; do not restate the mandate. -->
@@ -222,7 +223,7 @@ or in a ticket's Implementation notes. -->
 the section it constrains, then delete this section. A surviving open question blocks approval.
 
 A bounded local choice is not an open question — write it as explicit discretion under the ticket's
-Autonomy boundaries, with the bounds it may not cross — never a judgment
-${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md reserves for the human. -->
+Autonomy boundaries, with the bounds it may not cross — never a product decision, a change to the
+approved outcome, or architecture shared with another ticket, which stay the human's. -->
 
 - [ ] <question that needs a human decision>

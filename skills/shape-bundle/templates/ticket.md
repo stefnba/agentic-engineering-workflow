@@ -12,7 +12,7 @@ plan: ../plan.md
 # Every other YAML form — quoted ("01") or unpadded (1) numbers, a trailing # comment,
 # block-sequence style — is refused at claim time rather than parsed.
 # Record only real blocking edges; Dependencies and parallelization in
-# ${CLAUDE_PLUGIN_ROOT}/workflow/bundle.md defines which edges those are.
+# bundle-rules.md defines which edges those are.
 depends_on: []
 ---
 
@@ -21,14 +21,14 @@ One ticket is one approved slice, one fresh agent session, and one pull request.
 "done" as checkable conditions and commands with expected results, the ticket is not shaped yet:
 clarify it, or merge it with the ticket it is really part of.
 
-File name, ticket number, and heading number follow Naming and layout in
-${CLAUDE_PLUGIN_ROOT}/workflow/bundle.md.
+File name, ticket number, and heading number follow Layout in
+bundle-rules.md.
 
-Those three keys are the whole frontmatter. Never add a status field — todo, doing, and done are
-derived from the ticket's branch and its merged PR — and never record an external blocker here; it
+Those three keys are the whole frontmatter. Never add a status field — whether a ticket is started or
+done is read from its branch and PR — and never record an external blocker here; it
 belongs on the PR, where it cannot go stale.
 
-This file is the brief for an agent that receives the bundle and repository conventions, but not the
+This file is written for an agent that receives the bundle and repository conventions, but not the
 other tickets. It never introduces intent or cross-ticket architecture; where the bundle has a spec,
 it references BR/BC/INV/NG/AC IDs instead of restating them, and where it has a plan, PD IDs.
 
@@ -69,8 +69,8 @@ bundles only: delete it on the direct ticket route, where the section below carr
 ## Approved intent (direct ticket route only)
 
 <!-- This bundle has no spec, so this section is the approved intent: it is what the human approves
-at the Plan gate and what Review judges against. Delete the whole section — heading included — when
-the bundle has a spec.
+at the Plan gate and what the PR is reviewed against. Delete the whole section — heading included — when
+the bundle has a spec; otherwise keep it and drop the "(direct ticket route only)" suffix.
 
 Keep the categories, skip the ID machinery: with one ticket there is nothing to cross-reference.
 Test intent belongs here too; a lighter route drops artifacts, not the decisions Shape owns.
@@ -145,7 +145,7 @@ Example:
 ## Autonomy boundaries
 
 <!-- Bounded implementation discretion, never an unresolved product or cross-cutting question. A
-material decision is resolved before approval; anything left here is a decision the Implementer is
+material decision is resolved before approval; anything left here is a decision the implementer is
 authorized to take alone.
 
 Under Must preserve, write the ID plus the one clause that makes it checkable — a bare ID is
@@ -196,11 +196,11 @@ after, or a locked acceptance test to run unchanged. -->
 **Commands:**
 
 <!-- This ticket's own verification only, each with the outcome that counts as passing. The
-repository's canonical test, lint, type, build, and policy commands are run by the Implementer as a
+repository's canonical test, lint, type, build, and policy commands are run by the implementer as a
 matter of course and must not be copied here — a private copy drifts from CI.
 
 Requires: state what has to be true before these commands run — a service up, a seeded fixture, a
-restored snapshot, credentials — since an independent Reviewer reruns them from a fresh worktree.
+restored snapshot, credentials — since the PR's reviewer reruns them from a fresh checkout.
 
 Example: pytest tests/api/test_rate_limit.py -q   # expect: 4 passed -->
 
@@ -212,10 +212,9 @@ Example: pytest tests/api/test_rate_limit.py -q   # expect: 4 passed -->
 
 ## Escalate instead of guessing if…
 
-<!-- Slice-specific tripwires only. The standing escalation triggers — anything that returns work to
-the Plan gate, or settles architecture shared with another ticket — reach the Implementer from
-${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md and must not be copied into a ticket, which adds only the
-boundaries specific to its own slice.
+<!-- Slice-specific tripwires only. The standing ones — anything that would change the approved
+outcome, or settle architecture shared with another ticket — apply to every ticket and need not be
+repeated here.
 
 Example: The limiter would have to key on user identity, which changes the approved seam. -->
 

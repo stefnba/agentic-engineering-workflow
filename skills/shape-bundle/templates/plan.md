@@ -17,7 +17,7 @@ numbered PD-n and referenced the same way from tickets. Slice number = ticket nu
 ticket's file name. Numbers are stable once approved.
 
 Before dispatching critique, check the bundle against A complete bundle in
-${CLAUDE_PLUGIN_ROOT}/workflow/bundle.md. That check is the Architect's, and its result is not plan
+bundle-rules.md. That check is the Architect's, and its result is not plan
 content: nothing in this file attests that the bundle is ready.
 -->
 
@@ -36,7 +36,10 @@ Every consequential claim is something you inspected, not something you remember
 <!-- Architecture, components, boundaries, data flow, persistence, validation, and failure handling
 — enough that another agent can explain the solution and its failure modes without inventing a
 missing decision. Name the existing extension points being used; prefer extending a pattern that
-exists over introducing one. Explain the design; do not write the code. -->
+exists over introducing one. Name the public surface the bundle adds or changes — each function,
+class, CLI command, or file format another module or a later ticket relies on — as its signature
+and one line of purpose; leave everything internal to the implementer. Explain the design; do not
+write the code. -->
 
 <approach>
 
@@ -57,14 +60,14 @@ one enforcement point for every future auth route.
   Rejected: gateway rate limiting, which cannot see the authenticated principal. -->
 
 - PD-1: <decision> — <reason>
-  - Rejected: <alternative and why>
+    - Rejected: <alternative and why>
 
 ## External prerequisites
 
 <!-- Optional. Anything a slice depends on that this repository cannot produce: infrastructure in
 another repo, a credential or role an operator must create, a vendor change, an approval. Name the
 owner and what unblocks it — these are invisible to depends_on and to every check, and they are what
-strands a ticket that otherwise looks claimable. Omit when the bundle is self-contained. -->
+strands a ticket that otherwise looks ready to start. Omit when the bundle is self-contained. -->
 
 - <what must exist> — <who owns it> — <blocks slice NN>
 
@@ -128,8 +131,9 @@ too big — split it before the Plan gate. -->
 <!-- Optional. Which slices may run at the same time, and why their write surfaces do not collide —
 shared modules, migrations, schemas, generated artifacts, and integration tests all have to be
 considered, not just the dependency column. Absence of a dependency is not evidence of safety, and
-Dependencies and parallelization in ${CLAUDE_PLUGIN_ROOT}/workflow/bundle.md sets the ceiling on how
-wide a wave to shape. Omit the section when the work is sequential. -->
+Dependencies and parallelization in
+bundle-rules.md sets the ceiling on how wide a wave
+to shape. Omit the section when the work is sequential. -->
 
 - <slices that may run together> — <why their write surfaces are compatible>
 
@@ -150,7 +154,7 @@ served in. Omit the section when the change ships in one step. -->
 ## Reconciliation targets
 
 <!-- Optional. The durable documentation, colocated READMEs, and glossary terms this bundle makes
-stale, and which slice updates each. List only what a specific slice can fix inside its own PR;
+stale — including each _(planned)_ mark in ARCHITECTURE.md it builds — and which slice updates each. List only what a specific slice can fix inside its own PR;
 knowledge that only becomes true once every ticket has landed is Land's. Omit the section when no
 document goes wrong. -->
 

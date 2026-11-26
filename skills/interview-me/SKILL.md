@@ -1,18 +1,16 @@
 ---
 name: interview-me
 description: Grill user intent into a settled shared understanding, before anything is written down. Use when the user brings a feature, bug, or problem to discuss from scratch, or wants to pick up a vague backlog line.
-argument-hint: "[what you want to build or fix]"
+argument-hint: '[what you want to build or fix]'
 disable-model-invocation: true
-allowed-tools: Read, Grep, Glob
 ---
 
 # Interview me
 
-Discover-stage narrowing. Start from `$ARGUMENTS` if given, otherwise the ask already in this conversation — or ask what to
+Narrow discovery before shaping. Start from `$ARGUMENTS` if given, otherwise the ask already in this conversation — or ask what to
 discuss if neither exists.
 
-**This writes nothing.** No file, no backlog line, no bundle. You hold `Read`, `Grep`, and `Glob`
-only, structurally. `/shape-bundle` is the first thing that produces a file.
+**This writes nothing.** No file, no backlog line, no bundle. You only explore and clarify. `/shape-bundle` is the first thing that produces a file.
 
 ## The design tree
 
@@ -45,7 +43,7 @@ frontier each round. A question that depends on another still-open one belongs t
 already exists — never the human's to be asked. Don't block the rest of the frontier on one lookup;
 ask the rest now and fold the answer in when you have it.
 
-**Language matters as much as logic.** A term that conflicts with `${CLAUDE_PROJECT_DIR}/GLOSSARY.md` gets called out with
+**Language matters as much as logic.** A term that conflicts with `GLOSSARY.md` gets called out with
 both readings, never silently picked; fuzzy or overloaded language gets a proposed canonical term.
 When a term resolves, offer the `glossary` skill to capture it.
 
@@ -56,7 +54,7 @@ line that the problem, in the human's framing, is settled, and that the next ste
 same session. Don't invoke it yourself; dispatching a stage is the human's call.
 
 **Too small to interview** — the conversation converges on something that fits one line. Say so and
-offer to append it to `${CLAUDE_PROJECT_DIR}/work/backlog.md` instead; the human writes it, since you hold no write tool.
+offer to append it to the backlog instead; on the users' yes, add it with the `backlog` skill.
 
 **Feasibility or diagnosis is genuinely unknown** — don't force it into a shapeable outcome. Say that
 the work looks like the investigation or spike route, whose evidence becomes the next thing the human

@@ -1,25 +1,59 @@
 ---
 name: backlog
 description: Caretaker for work/backlog.md, the repo's list of candidate work and follow-ups nobody has picked yet. Use when the user asks to record something for later, asks what is outstanding for an area, or reports a backlog item done — and at the end of a task, to offer what you noticed but did not fix. Not everything you notice earns a line.
-argument-hint: "[what to record, complete, or look up]"
+argument-hint: '[what to record, complete, or look up]'
 model: sonnet
 allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 
 # Backlog
 
-`${CLAUDE_PROJECT_DIR}/work/backlog.md` holds one line per piece of candidate work nobody has picked
-yet. Its value is that it reads top to bottom in under a minute — the codebase holds the detail, this
-file holds the reminder. A line leaves it two ways: the human picks it and `shape-bundle` turns it into a
+A `work/backlog.md` holds one line per piece of candidate work nobody has picked
+yet. Its value is that it reads top to bottom in under a minute. A backlog item leaves it two ways: the human picks it and `shape-bundle` turns it into a
 bundle, or it is deleted.
 
-**Read the Backlog section of `${CLAUDE_PLUGIN_ROOT}/workflow/artifacts.md` before writing one**,
-along with the Areas section beside it. That document owns the bar and the tags, and most of what
-you are tempted to file misses it — dropping a candidate is the ordinary outcome, not a failure to
-capture.
+## Path conventions
 
-Where no file exists — a repo that skipped `setup` — create it on the first confirmed line, as a
-`# Backlog` heading, one sentence of what it holds, and an `## Items` heading.
+- Every path is relative to the repository root, `git rev-parse --show-toplevel`, not the current
+  directory.
+
+## Which backlog file to use
+
+In a monorepo, each repository member can have its own backlog file. Invoke the `workflow-manager` skill to list all work folder and then choose the relevant one. Ask the user if unsure.
+
+## What earns a line
+
+Most of what you are tempted to file misses the bar below — dropping a candidate is the ordinary
+outcome, not a failure to capture.
+
+A line earns its place only when all three hold:
+
+- **It outlives the session that noticed it.** Something fixable in two minutes, in a file already
+  open, gets fixed.
+- **It still means something in three weeks.** A line nobody can decode is worse than no line.
+- **It is work someone must choose to do** — not a fact, an open question, or a preference.
+
+What misses the bar has an owner already: a term dispute goes to the `glossary` skill, a settled
+rationale to `record-decision`, an unsettled question to the human, work a live bundle covers to
+that bundle, and a small defect in what an unlanded bundle shipped to that bundle's sweep ticket
+through the `sweep-bundle` skill. Taste with no concrete failure behind it goes nowhere.
+
+**State the problem, never the solution** — the solution is what shaping is for. A line may carry
+the evidence that proves its claim, never a design for the fix.
+
+**Carry only what is outstanding.** When part of a line's scope lands, delete that part rather than
+recording it as done.
+
+**Tag every line with one kind, then its areas**, space-separated (`- [drift] [catalog] …`, since
+`][` parses as a markdown reference link):
+
+- `[idea]` — worth exploring, nothing agreed
+- `[drift]` — an inconsistency between documents, or between documents and code
+- `[follow-up]` — concrete agreed work
+
+**Reuse the areas already in the file**, coining one only when none fits. An area names a place —
+a package, a layer, a definition kind — coarse enough to repeat; widen an existing term rather than
+adding a near-synonym.
 
 ## Who may write
 
@@ -61,9 +95,7 @@ sketch the schema and the migration steps — that is a plan, so offer `/shape-b
 **Read the file in full first.** Near-duplicate lines are the common failure: sharpen the line
 that's already there rather than adding a second one beside it.
 
-**Check `${CLAUDE_PROJECT_DIR}/work/bundles/` for a bundle that already covers it.** If one does,
-say so and record the point in that bundle instead — a backlog line shadowing live work is two
-copies that drift, with neither obviously the stale one.
+**Check current bundles if one already covers it**: Invoke the `workflow-manager` skill to list all existing bundles and see if one already addresses the item in question. If one does, say so rather than adding a line.
 
 ## Operations
 
@@ -100,7 +132,7 @@ Four things earn a proposal:
 - **Landed, whole or in part.** The work exists now. A line whose scope only partly landed is edited
   down to what's left — never given a clause recording the part that's done.
 - **Superseded.** A newer line covers the same ground better.
-- **Shadowed.** A live bundle under `${CLAUDE_PROJECT_DIR}/work/bundles/` already owns it.
+- **Shadowed.** A live bundle already owns it.
 - **Duplicated.** Two or three lines circling one problem consolidate into one sharper line, rather
   than becoming three deletions.
 
@@ -135,5 +167,4 @@ Show the lines that changed and nothing more:
 - [drift] [ui] date-range filters can't map to contract keys   (completed)
 ```
 
-Don't print the file, don't summarise its state, and don't suggest what to work on next — `/pick`
-answers that question, in front of the human.
+Don't print the file, don't summarize its state, and don't suggest what to work on next — picking is the human's call.

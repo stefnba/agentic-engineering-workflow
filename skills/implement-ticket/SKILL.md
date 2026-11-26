@@ -1,211 +1,202 @@
 ---
 name: implement-ticket
-description: Implement one approved ticket — claim it, build it against the ticket's own evidence, verify, reconcile, open the PR, then run its review–fix rounds to convergence. Invoke with the bundle ID and ticket number, in that ticket's own tab.
-argument-hint: "[bundle id] [NN]"
-disable-model-invocation: true
-model: sonnet
+description: Use when the user asks to implement, build, start, or pick up a ticket of an approved work bundle — "implement ticket 02 of <bundle>", a paste-ready prompt from shape-bundle — or when a session opens on a `ticket/` branch. Takes a bundle reference and a two-digit ticket number. Not for shaping a bundle, and not for work no bundle backs.
+argument-hint: '[bundle reference] [NN]'
 ---
 
-# Implement one ticket
+# Implement ticket
 
-**You are the Implementer for this ticket**: a senior engineer executing one approved ticket to a
-verified, reconciled PR. Everything decidable was decided at the Plan gate — the bundle, the ticket,
+Build one approved ticket to a verified, reviewed pull request into its bundle branch, and stop at
+the human's Accept gate. Everything decidable was decided at the Plan gate: the bundle, the ticket,
 and the code in front of you are the whole input.
 
-You run **inline, in this ticket's own tab**, with the human present through the first pass and every
-fix round alike. Only the review rounds fork, into fresh context with no authorship of the diff.
+## Path conventions
 
-## Boundaries
+- `references/` and `templates/` paths are relative to this skill's directory, the folder holding
+  this file.
+- The PR body template is `../write-pr/templates/pr-body.md`, relative to the same directory.
+  Requires the `write-pr` skill: if that path is missing, load that skill by name only to find its
+  directory; if that fails too, stop and tell the human to install it.
+- Every other path is relative to the repository root, `git rev-parse --show-toplevel`, not the
+  current directory.
 
-- **One ticket, one branch, one worktree, one PR.** A second ticket is a second tab and a second
-  human dispatch, never a second pass here.
-- **Never merge, never approve, never review your own diff.** Accept is the human's gate, and the
-  loop below stops in front of it.
+## Guardrails
+
+- **One ticket, one branch, one worktree, one PR.** A second ticket is a new session the human
+  starts, or that the `implement-bundle` session the human dispatched starts.
 - **Build the approved ticket and nothing else** — no redesign, no unrelated refactor, no future
-  ticket, no opportunistic cleanup. What you notice outside scope is a backlog line at hand-back,
-  never a commit here. Decide local implementation details only inside the ticket's own autonomy
-  boundaries.
-- **Stop and ask the human** when a change would alter behavior, binding architecture,
-  decomposition, security, migration, compatibility, or acceptance criteria — those return to the
-  Plan gate. Never convert a material planning question into an implementation choice — and the
-  same rule binds a review finding, which is escalated rather than silently redesigned around.
-- **A repository fact that drifted without changing intent** you correct in place, in the affected
-  plan or ticket, and make visible in the PR.
-- **Write no status, anywhere.** `todo`, `doing`, and `done` are derived from the ticket's branch and
-  its merged PR — a ticket carries no status field, and nothing is recorded after the merge.
-- **Read the bundle from this worktree**, never from the main checkout — step 2 says why they differ.
+  ticket, no opportunistic cleanup. Decide local details only inside the ticket's Autonomy
+  boundaries; what you notice outside scope is offered as a backlog line at hand-back.
+- **Stop and ask the human when a change would alter behavior, architecture another ticket shares,
+  the ticket split, security, migration, compatibility, or acceptance criteria.** Those return to
+  the Plan gate. The same holds for a review finding or alternative whose resolution would cross
+  that line: escalate it, never design around it.
+- **Correct a repository fact that drifted without changing intent** — a moved path, a renamed
+  symbol — in the affected ticket or spec in this branch, and list it under the PR body's
+  Corrections.
+- **Never merge, approve, or review your own diff.** Accept is the human's gate; the review loop
+  stops in front of it.
+- **Write no status anywhere.** `doing` and `done` are derived from the ticket's branch and its
+  merged PR.
 
 ## Process
 
-### 1. Resolve the ticket and claim it
+### 1. Claim the ticket
 
-Resolve `$ARGUMENTS` against `${CLAUDE_PROJECT_DIR}/work/bundles/`. No match, or two matching — ask,
-don't guess.
+The argument is a bundle reference — `<bundle-id>` for the root, `<member>/<bundle-id>` for a
+member — and a two-digit ticket number. Ask when either is ambiguous; never guess.
 
-**If this session is already on `ticket/<bundle-id>/<NN>`, the claim happened** — the human ran the
-command `shape-bundle` handed them. Go to step 2.
+**When the current branch is already `ticket/<bundle-reference>/<NN>`, the claim happened**; go to
+the orient step.
 
-**With no ticket number given**, take the lowest-numbered ticket that reads `todo` in
-`${CLAUDE_PLUGIN_ROOT}/scripts/bundle-status.sh <bundle-id>` and whose `depends_on`
-entries all read `done`. The claim re-checks that gate and refuses otherwise, so never work around a
-refusal by picking a different ticket.
+Claim it with the `workflow-manager` skill's `claim`, from the main checkout. A non-zero exit is a stop: report its message and leave what it names to the human. Never pick a
+different ticket to get around a refusal.
 
-Then claim it, from the main checkout:
-
-```text
-${CLAUDE_PLUGIN_ROOT}/scripts/claim-ticket.sh <bundle-id> <NN>
-```
-
-Creating the branch _is_ the claim — that is what serializes two sessions reaching for the same
-ticket. Read a non-zero exit as a stop, not as something to retry around: its message states the
-reason and the next action — report it, and leave anything it says is in the way to the human.
-
-On success it prints the branch, the branch it was cut from, and the worktree path. **The branch it was cut from
-is your PR's target** — never declared and never guessed. Move into the worktree; every step below
-runs there.
+**Done when** the claim printed the ticket worktree's path as its last line; run every later
+command from that worktree. The PR's base is `bundle/<reference>`.
 
 ### 2. Orient
 
-In the worktree, read in one batch: the ticket, whatever its `intent:` and `plan:` frontmatter point
-at, and the files its Scope names together with their colocated `README.md` and the
-`${CLAUDE_PROJECT_DIR}/docs/decisions/` records covering that area.
+In the worktree, read in one batch: the ticket, the spec and plan its `intent:` and `plan:`
+frontmatter point to, the files its Scope names, the `AGENTS.md` of every member it touches, and the
+`docs/decisions/` records covering that area.
 
-**This copy of the bundle is not the one in the main checkout.** A ticket branch is cut from the
-bundle branch, so what you have here carries the corrections and amendments earlier tickets' PRs made
-to the spec and to the remaining tickets. The main checkout still holds the state at Shape and does
-not catch up until Land.
+**Read the bundle from this worktree, never from the main checkout.** This copy carries the
+corrections earlier tickets' PRs made to the spec and the remaining tickets.
 
-Where a colocated README and the bundle disagree about the current system, **the README wins**: it
-describes what is, and the bundle owns only what this change makes true.
+**Where a colocated README or `AGENTS.md` and the bundle disagree about the current system, the
+README wins**: it describes what is, and the bundle owns only what this change makes true.
 
-**Done when** every path, ID, and current-state claim the ticket cites has been checked against what
-is actually here. What doesn't resolve is drift — take it through Boundaries above before writing a
-line of code, because code written against a wrong claim entrenches it.
+**Done when** every path, ID, and current-state claim the ticket cites has been checked against the
+code. What does not hold is drift: take it through the Guardrails before writing a line, because
+code written against a wrong claim entrenches it.
 
-### 3. Build the ticket
+### 3. Build
 
-Red evidence, smallest coherent change, verify, reconcile:
+**Produce the ticket's `Pre-change evidence` first**, and record the command, the commit it ran at,
+and what it showed — the PR body needs it, and no reviewer can reproduce it once the change exists.
+It binds: never skip it because the change looks obvious.
 
-- **The ticket's `Pre-change evidence` line defines red, and it binds.** A failing test at the
-  approved seam, observed to fail for the expected reason — or the alternative the ticket names
-  where a red test doesn't apply. You neither choose it nor skip it because the change looks
-  obvious; a test that passes before the change proves nothing about the ticket.
-- **Where the ticket adds or changes behavior, read the `tdd` skill and build by its loop** — every
-  slice after the `Pre-change evidence` red gets its own failing test before its implementation.
-- **A locked acceptance test is run, never edited.** One that cannot pass unmodified is drift, not a
-  test to adjust.
-- **Make the smallest coherent change that satisfies the ticket**, refactoring only within scope and
-  only while behavior stays green. Where the ticket introduces or reshapes a module seam, read the
-  `code-design` skill before placing it and apply its deletion test before adding an abstraction.
-- **Take one `Done when` condition at a time**, running that condition's own command and the
-  typechecker as you go. The repository's canonical checks run once, at verify — not per condition.
-- **Commit as you go**, message per `${CLAUDE_PROJECT_DIR}/docs/conventions/git.md`.
-- **Reconcile in this branch, before the PR** — every document this diff made false: colocated
-  READMEs, glossary entries it renamed or redefined, the spec where implementation corrected it, and
-  the remaining tickets it invalidated. Land reconciles only what no single ticket owned; what you
-  defer to it is simply lost.
+**When the ticket adds or changes behavior, read `references/tdd.md` and build by its loop.**
 
-### 4. Open the PR
+**Run a locked acceptance test unchanged.** One that cannot pass unmodified is drift, not a test to
+adjust.
 
-Push the branch and open the PR **against the base `claim-ticket.sh` reported**.
+**When the ticket introduces or reshapes a module seam, read the `codebase-design` skill before
+placing it.**
 
-**Title from `${CLAUDE_SKILL_DIR}/templates/pr-title.md`, body from
-`${CLAUDE_SKILL_DIR}/templates/pr-body.md`.** Both carry their own filling instructions in a leading
-comment: read them as you fill and delete them, rather than reasoning about the shape from memory.
-That body is the whole handoff to Review, and an incomplete one is a blocker the Reviewer raises
-before it reads the diff.
+**Take one Done when condition at a time**, running that condition's own command as you go, and
+make the smallest coherent change that satisfies the ticket.
 
-**Take the permalinks from the script, not from `gh browse`.** Run, from this worktree:
+**Commit as you go**, messages per `docs/conventions/git.md`.
 
-```text
-${CLAUDE_PLUGIN_ROOT}/scripts/pr-links.sh <bundle-id> <NN>
-```
+**Done when** every Done when condition holds by its own command.
 
-It prints the body's whole Ticket section, pinned to the commit that published the approved bundle on
-the integration target. That is deliberately not this branch's head — see the template's Ticket
-comment.
+### 4. Verify and reconcile
 
-### 5. Run the review–fix loop
+Run the ticket's Commands and `make lint typecheck test`; fix what fails.
 
-This loop dispatches itself, round to round, without a separate human trigger — though the human is
-in this tab throughout, and the loop pauses for them, rather than dispatching straight on, at any
-stop it cannot clear on its own: a text conflict with the base, or a second stop from the same
-unresolved head or mergeability cause. It ends at their Accept gate, at an escalation, or at the
-round limit — never at a merge.
+Update, in this branch, every document this diff made false: colocated READMEs and `AGENTS.md`
+files, glossary entries through the `glossary` skill, `ARCHITECTURE.md` through the
+`write-architecture-doc` skill, the spec where the implementation corrected it, and the remaining
+tickets this one invalidated. Land reconciles only what no ticket owned; what you defer to it is
+lost.
 
-**Round N — review.** Invoke the `review-pr` skill with the PR number, the exact head SHA
-(`gh pr view <pr> --json headRefOid`), the round number, and — on round 2 or later — the scope
-`delta`; pass `full` instead when the human directs it or the fixes reshaped the change beyond
-the findings' locations. Nothing else. It blocks, and it
-forks: what it reads, it reads for itself. A summary from you is your authorship leaking into a
-judgment whose whole value is that it is independent.
+**When you changed any bundle file and the bundle holds a `brief.md`, rewrite the brief lines the
+change made false**, in the same commit; the human judges the bundle from the brief.
 
-**Change nothing while a round runs.** It shares this worktree and first confirms it sits at the PR
-head with no tracked file modified — an edit of yours makes it stop rather than review.
+**Done when** every check passes and every stale document is updated and committed.
 
-Act on the assessment it returns:
+### 5. Open the PR
 
-- **ready for human review** → step 6.
-- **fixes required** → fix round, below.
-- **human escalation required** → stop the loop and go to step 6 carrying both positions.
-- **stopped before judging** → read what it reports; nothing was judged, so the round never
-  happened. A text conflict with the base stops for the human — resolve it together before
-  continuing. A head that simply moved, or a mergeability check still `UNKNOWN`, needs no judgment
-  call: retry once with the current head SHA; a second stop for the same reason goes to the human
-  instead of retrying again. Either way, once clear, invoke round N again with the same number.
+Push the branch, then **run the `write-pr` skill with base `bundle/<reference>` and this
+ticket**.
 
-**Fix round — yours, here, in this session.** Re-read the approved intent, plan, ticket, and current
-PR before acting on the round; what you remember writing is not what was approved. **Confirm every
-`suspected` finding before disposing it** — reproduce it, or establish that it does not hold — then
-give each finding ID exactly one disposition:
+**Check the body as the correctness reviewer will, before every review round** — it treats a
+missing or stale slot as a blocker, raised before it judges the diff.
 
-- **fix it** when the evidence is correct and the required outcome stays within approved intent
-- **rebut it** when the claim is incorrect or already satisfied — cite the passing case, the line
-  that already handles it, or the ID that puts the behavior out of scope
-- **escalate it** when resolution would cross a Plan-gate boundary
+**Judge each slot against the head, never against the previous body** — a fix round that adds a
+file or a check makes slots stale that it never touched. Hold
+`git diff --name-only origin/bundle/<reference>...HEAD` and `gh pr view <pr> --json body -q .body`,
+and confirm against the PR body template:
 
-**You wrote this diff, so both failure modes are yours.** Defending it: a rebuttal has to convince a
-third party reading only the bundle and the code — "that was intentional" fails, because a real
-intent is in the bundle and an absent one is a Plan-gate question. Deferring to it: satisfy the
-finding's required outcome, not the fix its comment happened to suggest.
+- no `<!--` survives, and the Summary's Checks line names `git rev-parse --short=8 HEAD`;
+- every slot the template keeps for a ticket PR is present;
+- Scope names, with its reason, every listed path the ticket's Scope does not, and the Door and
+  Blast radius lines hold for every listed path;
+- Delivered carries a fenced view unless the template's view comment exempts the listed files;
+- every Checks bullet is one verbatim command in backticks with its result — a sentence describing
+  a comparison is a retelling, so write the command that ran it;
+- Requires names everything a check needs that a fresh clone lacks — a gitignored file, an absolute
+  path, a credential, a running service; better, rewrite the check to run without it;
+- the Checks count equals the number of Checks bullets.
 
-Make the smallest coherent fix, re-check the entire accumulated change for regressions, rerun every
-ticket command and canonical check, and reconcile affected documentation. Post one fix-response
-comment carrying each finding ID and its disposition — for a `suspected` finding, also what
-confirming it showed — the change or evidence behind it, verification commands and results, and the
-new head SHA. Bring the PR body's head and verification results forward, and start round N+1 at that
-SHA. An escalation ends the loop instead.
+When one fails, fix the body file, refresh it with `gh pr edit <pr> --body-file <file>`, and check
+again.
 
-**Before you hand back, check currency:** `git merge-base --is-ancestor origin/<base> HEAD`. A
-sibling ticket that merged first moved the base out from under the reviewed diff, and the two states
-can merge with no text conflict and still be broken. Merge the base in, re-verify, and run another
-round. `complete-ticket.sh` refuses a stale branch anyway; discovering it at merge time costs an
-entire extra Accept.
+**Done when** the PR is open against `bundle/<reference>` and its body passes the body check.
 
-**Where the loop stops.** The round limits and their diagnosis are
-`${CLAUDE_PLUGIN_ROOT}/skills/finding-rules/SKILL.md`'s Convergence and round limit; what the human
-sees at each is fixed here:
+### 6. Review until ready
 
-- **At the normal maximum with blockers still open** — stop and report: the diagnosis, each open
-  blocker ID with what its fix round showed, and the three moves — direct one more round, return
-  the ticket to Shape, or abandon it. A round past the normal maximum runs only on explicit human
-  direction, one at a time — never dispatched as a remaining budget.
-- **At the absolute maximum** — Shape is the only route left. Cancel the claim — delete the ticket
-  branch and worktree, so the ticket reads `todo` again — close the PR, and carry the open
-  blockers with both positions to the shaping session.
+Each round is the `review-pr` skill with the PR number — plus `design` when the previous fix round
+adopted an alternative. It posts its reviews on the PR and replies with the assessment.
 
-Reaching a limit never closes a blocker.
+Read the round's comments with `gh pr view <pr> --comments`, then act on the words of each
+review's verdict, the first bullet under its `### Summary`; the glyph before them is for the human:
 
-### 6. Hand back at the Accept gate
+- **Human escalation required** in either review → stop the loop and hand back, carrying both
+  positions.
+- **Ready for human review**, with no alternative left undisposed → the hand-back step.
+- **Fixes required**, or a design verdict of "💡 <N> alternative(s) raised" → a fix round, below.
+- **a stop before judging** — the PR conflicts with its base: resolve it with the human, then rerun
+  the same round.
+- **incomplete** — a reviewer did not post: rerun the same round once; when it is incomplete again,
+  stop and report it to the human.
 
-Report, in this order:
+**When the human asks for a change between rounds**, make it in the next fix round and list it under
+that fix response's Changes you asked for.
 
-- the PR, its current head SHA, and the final round's assessment
-- every finding ID and its disposition — and any escalation with both positions side by side
-- each open concern and what accepting it costs; the human disposes every one
-- what reconcile touched
-- what you noticed outside scope — offer it through the `backlog` skill, which owns what earns a line
+**Fix round.** Re-read the ticket and the round's comments first; what you remember writing is not
+what was approved.
 
-Then stop. The human reads the PR and merges, directly or via `/complete-ticket`. That
-merge is the last write, and `done` follows from it. Don't merge it yourself, and don't start the
-next ticket — that is a fresh tab and the human's dispatch.
+1. **Confirm every `suspected` alternative and finding** — read the line or run the case it rests
+   on, and record whether it holds.
+2. **Dispose of the alternatives before the findings** — an adopted alternative reshapes the code,
+   and findings against the old shape become moot. Adopt one that stays inside the Autonomy
+   boundaries and costs less than it saves; otherwise reject it.
+3. **Escalate an alternative or finding whose resolution would cross the Guardrails.**
+4. **Give every other finding one disposition:** fix it when the evidence holds and the fix stays
+   inside approved intent; rebut it when the claim is wrong or already satisfied.
+5. **Carry every design question to the hand-back unanswered** — only the human settles it.
+6. Make the smallest fixes, rerun the verify-and-reconcile step in full, push, rerun the
+   `write-pr` skill so the body describes the new head, and run the open-the-PR step's body check.
+7. Post `templates/fix-response.md`, filled, with `gh pr comment <pr> --body-file <file>`, then run
+   the next round.
+
+**Stop after round 3 with blockers still open.** Report each open blocker and what its fix round
+showed, and offer the human three moves: direct one more round, return the ticket to Shape, or
+abandon it. A further round runs only on the human's explicit direction, one at a time.
+
+**Before handing back, check currency:** `git merge-base --is-ancestor origin/bundle/<reference>
+HEAD`. When it fails, a sibling ticket merged first: merge `origin/bundle/<reference>` in, rerun
+step 4, push, rerun the `write-pr` skill and the body check, and run another round.
+
+**Done when** a round reports ready for human review at a current head, or the loop stopped for the
+human.
+
+### 7. Hand back at the Accept gate
+
+**Fill `templates/hand-back.md` and post it as one plain chat message.** Follow it with what you
+noticed outside scope, offered through the `backlog` skill.
+
+Then stop. The human reads the PR and runs that command from the main checkout, or asks a session
+to run it through the `workflow-manager` skill; it merges only that head, and the merge makes the
+ticket `done`. Starting the next ticket is the human's dispatch, in a new session, or the
+`implement-bundle` session's when the human dispatched that.
+
+## Checklist
+
+- [ ] Every alternative, question, and finding ID of every round has a disposition in a
+      fix-response comment.
+- [ ] Before every review round, the PR body passed the open-the-PR step's body check against the
+      current head.

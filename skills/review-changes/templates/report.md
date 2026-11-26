@@ -1,46 +1,27 @@
-<!-- Reviewer report for local changes, delivered as the final message. Fill every slot; delete
-these comments as you fill. One line per bullet. Drop any section with nothing to put in it. A
-check that passed and raised no finding appears only in the verification table. -->
+<!--
+The local review report, delivered in chat. Fill every slot and delete the comments as you fill; a
+surviving comment is an unfilled slot.
+-->
 
-## Review — local changes
+## Local Review: <branch name | working tree>
 
-Baseline: `<SHA>` (<HEAD | merge-base with `<base ref>`>) — fingerprint <✅ unchanged | ⚠️ tree
-moved during review>
+<!-- The baseline the reviewers diffed against, bare, and how it was chosen. -->
 
-Judged against: <the stated intent | repository conventions and decision records only — no
-stated intent>
+**Baseline:** <baseline sha> · <HEAD | merge-base with `<base ref>`>
 
-### Findings
+**Judged against:** <the stated intent | ticket `<path>` | repository conventions only>
 
-<!-- Blockers before concerns; one block per finding, in finding-rules' record form. Admissible
-referents here: a decision record, a repository convention or canonical check, the stated
-intent, or a concrete failure mechanism. -->
+### Verdicts
 
-❌ F<N> [verified|suspected] <axis> — <file:line or command>
+<!-- Each reply's verdict, the first bullet under its `### Verdicts`, glyph included; a reply with
+no such bullet is "⚠️ <Design | Correctness> reply incomplete". Last, the tree: "✅ Tree unchanged
+during review", or "⚠️ Tree moved during review" when the fingerprint changed, since line references
+may then be off. -->
 
-- **Violates**: <the referent>
-- **Claim**: <what the change does or asserts>
-- **Evidence**: <what you ran or read, and the result>
-- **Impact**: <the concrete failure or risk>
-- **Required outcome**: <the property a fix must establish, without writing the fix>
+- <design verdict>
+- <correctness verdict>
+- <tree state>
 
-### Verification
+<!-- The design reviewer's reply, verbatim. -->
 
-| check       | result                                       |
-| ----------- | -------------------------------------------- |
-| `<command>` | ✅ / ❌ <failure, and the finding it raised> |
-
-### Assessment
-
-✅ ready for human review | ❌ fixes required | ⚠️ human escalation required
-
-### Residual risk
-
-- <only what could change the human's decision>
-
-### Backlog candidates
-
-- <evidence-backed, non-gating; never a finding>
-
-<!-- An escalation carries both positions and a concern carries only yours; finding-rules owns
-the difference. -->
+<!-- The correctness reviewer's reply, verbatim. -->

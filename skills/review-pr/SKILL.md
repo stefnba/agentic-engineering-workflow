@@ -1,134 +1,150 @@
 ---
 name: review-pr
-description: Judge one implementation PR at its exact head SHA. Dispatched by the implement-ticket skill once per review round; also use when the user asks to review or re-review a ticket's PR. Takes the PR number, head SHA, round number, and a scope — full (default) or delta (only the fixes since the previous round). Every argument is optional; an omitted PR number resolves from the current branch, an omitted SHA or round number from the forge.
-argument-hint: "[PR number] [head SHA] [round number] [full|delta] — omitted values are derived"
-context: fork
-agent: reviewer
-background: false
+description: Use when the user asks to review or re-review a pull request — "review PR 42", "review my PR", "run another review round" — and for every review round the implement-ticket skill runs. Takes an optional PR number, defaulting to the current branch's PR, and the word `design` to rerun the design reviewer after round 1. The review lands on the pull request as comments. Not for local changes no PR carries.
+argument-hint: '[PR number] [design]'
 ---
 
 # Review PR
 
-One review round: judge the PR at the assigned head SHA and return the round's findings.
+Runs one review round on a pull request with the `review-changes` skill's two reviewers — design,
+then correctness — and has each post its own reply on the PR as a comment. The chat gets only the
+assessment and the links. Written for any agent harness; use your harness's own sub-agent
+mechanism.
+
+Each reviewer posts its own comment so the verdict reaches the PR in the reviewer's words, never
+relayed by the session that asked for it — often the session that wrote the change.
+
+## Path conventions
+
+- The prompts are `../review-changes/prompts/` and the reply templates
+  `../review-changes/templates/`, relative to this skill's directory, the folder holding this
+  file. Requires the `review-changes` skill: if that path is missing, load that skill by name only
+  to find its directory, and keep following this skill's process, not its steps; if that fails too,
+  stop and tell the human to install it.
+- The PR body template is `../write-pr/templates/pr-body.md`, relative to the same directory.
+  Requires the `write-pr` skill: if that path is missing, load that skill by name only to find its
+  directory; if that fails too, stop and tell the human to install it.
+- Every other path is relative to the repository root, `git rev-parse --show-toplevel`, not the
+  current directory.
 
 ## Process
 
-### 1. Resolve the assignment
+### 1. Resolve the pull request and the round
 
-`$ARGUMENTS` carries up to four values in order — PR number, head SHA to judge, round number,
-and a scope, `full` or `delta`.
+Take the PR number from the argument, or from the current branch with
+`gh pr view --json number -q .number`. No PR is your result: report it and stop.
 
-The implement-ticket loop passes the first three explicitly; a
-human typing `/review-pr` may pass any prefix of them, including nothing.
+Read `gh pr view <pr> --json number,url,headRefName,headRefOid,baseRefName,mergeable,comments`
+and derive:
 
-A passed value binds exactly as given. Derive each omitted one — never stop over it, and never ask:
+- **Head** — `headRefOid`, the SHA this round judges.
+- **Round** — one more than the number of comments whose first line starts with
+  `## Correctness Review: Round`; `1` when there is none.
+- **Design runs** — when no `## Design Review: Round <round>` comment is on the PR yet, and the
+  round is 1 or the argument carries `design`.
 
-- **PR number** — the current branch's PR: `gh pr view --json number -q .number`. No PR for the
-  branch is your result: report it and stop.
-- **Head SHA** — the PR's current head: `gh pr view <pr> --json headRefOid`. A passed SHA is an
-  independent cross-check on the dispatch; a derived one waives that check — say so in your
-  report and beside the round comment's `Head:` value, so the record shows which one this was.
-- **Round number** — one more than the highest `Review — round <N>` comment already on the PR;
-  `1` when there is none. This keeps finding IDs continuous across rounds.
-- **Scope** — `full`; round 1 is `full` regardless — there is no earlier round to narrow
-  against.
+`mergeable` of `CONFLICTING` stops the round: report that the PR conflicts with its base and stop —
+a diff that cannot merge as judged wastes the round. `UNKNOWN` means the forge is still computing
+it; wait a few seconds and read it once more.
 
-Resolve the PR with `gh pr view <pr>`. A number that doesn't resolve is your result: report it
-and stop. Anything that does resolve is a working value, not a result — announcing the resolved
-dispatch is not running the round; the round ends only at step 6's report or at a stop a step
-names.
+**Done when** you hold the PR, the head, the round number, and whether design runs, and the PR does
+not conflict.
 
-**Done when** you hold all four values and the PR resolves.
+### 2. Put a checkout at the head
 
-### 2. Confirm the tree
+Use the current checkout when `git rev-parse HEAD` equals the head and
+`git status --porcelain --untracked-files=no` prints nothing. Otherwise create a detached one under
+the worktree directory named in `docs/conventions/git.md`, Worktrees:
 
-**The SHA resolved in step 1 is the one you judge.** Confirm:
+```bash
+git worktree remove --force <worktree dir>/review/pr-<pr> 2>/dev/null
+git fetch -q origin <headRefName> && git worktree add --detach <worktree dir>/review/pr-<pr> <head>
+```
 
-- the SHA to judge is the PR's actual head — `gh pr view <pr> --json headRefOid`; for a derived
-  SHA this only catches a head that moved since step 1
-- the tree you are in sits at that SHA — `git rev-parse HEAD`
-- no tracked file is modified — `git status --porcelain --untracked-files=no`
-- the PR has no text conflict with its base — `gh pr view <pr> --json mergeable -q .mergeable`. Only
-  `CONFLICTING` is a stop; `UNKNOWN` is the forge still computing it, wait a few seconds and check
-  once more before treating it as unresolved. Branch protection, a pending required check, or a
-  missing approval (`mergeStateStatus`: `BLOCKED`, `UNSTABLE`, `BEHIND`) are not this check's
-  concern — those gate the merge, not whether the diff can be judged, and this review is often what
-  clears them.
+The first line clears a worktree an interrupted earlier round left behind.
 
-Untracked build output from an earlier round is expected. Any other disagreement stops the round —
-report it instead of reviewing, because a review dispatched from the author's own worktree is
-otherwise indistinguishable from reviewing unpushed work. A text conflict is the same kind of stop:
-judging a diff that cannot land as reviewed spends the round on a defect a sync resolves, not one a
-finding would.
+The merge base the reviewers diff against is `git merge-base origin/<baseRefName> <head>`, after
+`git fetch -q origin <baseRefName>`.
 
-**Done when** all four checks agree, or the round has stopped with the disagreement reported.
+**Change nothing in the checkout until step 4 ends.** The reviewers read and run checks in it.
 
-### 3. Read the contract
+**Done when** a clean checkout sits at the head, and you hold its absolute path and the merge base.
 
-Nothing reached you but the dispatched values. Read for yourself:
+### 3. Resolve the contract
 
-- repository conventions and the decision records the change touches
-- the complete diff and, on round 2 or later, all earlier review and fix-response comments
-- the PR body and planning record, per the route below
+The head branch name decides:
 
-The head branch name picks the route: `ticket/<bundle-id>/<NN>`
-(`${CLAUDE_PLUGIN_ROOT}/workflow/git-mechanics.md#branch-naming`) means a bundle backs this PR;
-any other name means none does.
+- **`ticket/<bundle-reference>/<NN>`** — the contract is ``the ticket at `<path>` and the spec and
+plan its frontmatter points to, plus the pull request's body``, the ticket read from the bundle
+  folder in the checkout.
+- **Any other name** — the contract is `the pull request's title and body`.
 
-- **Bundle-backed** — read the bundle and the ticket, including its Done when conditions. The
-  body must satisfy the handoff contract in `${CLAUDE_PLUGIN_ROOT}/workflow/lifecycle.md` — an
-  incomplete handoff is a blocker before you read the diff.
-- **No bundle** — there is no planning record. The body must state the intent, delivered scope,
-  verification commands and results from the current head, and known limitations or residual
-  risk; a missing one is the same blocker. With no Done when condition, requirement fit drops out
-  of this review.
+End either with ``; the PR body template is `<path>` ``, the PR body template's absolute path: the
+reviewer runs with no session context and cannot resolve a skill name.
 
-**Done when** the route is determined and each artifact it calls for has been read at this round's
-head.
+**Done when** the contract is one of the two.
 
-### 4. Verify at the head
+### 4. Run the reviewers in order
 
-Rerun every verification command the ticket names and the repository's canonical checks, at the
-head.
+For `01-design.md`, when design runs, then `02-correctness.md`:
 
-**Done when** your role's recorded-result condition holds at this head.
+1. Read the file and replace every placeholder:
+    - `{{reply_template}}` — the absolute path of `design-reply.md` for `01-design.md`, of
+      `correctness-reply.md` for `02-correctness.md`
+    - `{{target}}` — ``pull request #<pr> (<url>) at head `<head>`, in the checkout at
+      `<absolute path>`, which sits at that head: the change is `git diff <merge base>..<head>` ``
+    - `{{contract}}` — the step-3 contract
+    - `{{history}}` — on round 1, `none — this is round 1.`; later, ``rounds 1 to <round − 1>:
+      read every `## Design Review`, `## Correctness Review`, and `## Fix Response` comment with
+      `gh pr view <pr> --comments`.``
+    - `{{round}}` — the round number
+    - `{{head}}` — `git rev-parse --short=8` of the head
+    - `{{prefix}}` — `` `R<round>-`, so IDs read `R2-A1`, `R2-Q1`, or `R2-F1` ``, unique across rounds
+    - `{{deliver}}` — ``Before your final message, post the filled template as one comment on
+      pull request #<pr>: write it to a file made with `mktemp`, then run
+      `gh pr comment <pr> --body-file <that file>`. That comment is your only write. Then give the
+      same text as your final message.``
+    - `{{previous}}`, in `02-correctness.md` only — the design reviewer's reply, verbatim; when
+      design did not run, `not run this round — the design review of an earlier round is on the
+      PR`
 
-### 5. Judge the round
+2. Spawn one sub-agent with that text as its entire prompt, on the model the Review row of
+   `docs/conventions/models.md` names for this harness. Add no session context and no extra
+   instructions. In Claude Code that is the Agent tool with the `general-purpose` type, in the
+   foreground and without worktree isolation — the prompt names the checkout.
+3. Wait for its reply before starting the next. Never run the two in parallel; the second reads the
+   first.
 
-Judge the change under your role's contract. On round 2 or later, check every earlier finding ID
-against the author's disposition, then re-judge at the new head under the assigned scope:
+**Done when** each reviewer that runs has replied and its comment is on the PR — check with
+`gh pr view <pr> --json comments`. A reviewer that replied without posting is rerun once; never
+post its reply yourself. When the rerun does not post either, the round is incomplete: go to the
+report step and report `Review round <round> of PR #<pr> incomplete — <reviewer> did not post`. No
+correctness comment means the next run reuses this round number, which is correct: nothing was
+judged. If the harness cannot spawn sub-agents, stop and ask the human to run each
+filled prompt in a new session, in order, and paste the replies back; the prompts post the
+comments themselves.
 
-- **full** — the complete accumulated PR, not only the fix diff; the fix may have broken
-  something the fix diff does not touch.
-- **delta** — a deep pass only on the earlier findings, the diff from the previous round
-  comment's `Head:` SHA to the current head — never "the last commit" — and that diff's blast
-  radius: the callers and tests of what it changed. Everything else gets confirmation-level
-  tracing — enough to see the fix did not reach it. Whatever step 4's verification flags
-  re-enters the deep pass wherever it lives.
+### 5. Report
 
-A delta scope narrows reading, never reporting: `finding-rules`' round rules still bind, and a
-finding you do reach is reported whether or not it sits inside the scope.
+Remove the worktree step 2 created, if any, whether or not the round finished:
+`git worktree remove --force <path>`.
 
-Findings carry IDs `R<round>-F<N>`.
+Derive the assessment from the replies: the design verdict, or `design not rerun`, then the
+correctness verdict on its own line, glyphs included. A verdict is the first bullet under the
+reply's `### Summary`, without its `- `; a reply with no such bullet is reported as
+`<reviewer> reply incomplete`.
 
-**Done when** the PR is judged at the head under the assigned scope and your role's re-review
-condition holds for every earlier finding.
+Reply in chat with exactly this, and nothing of the reviews themselves — they are on the PR:
 
-### 6. Deliver
+```text
+Review round <round> of PR #<pr> at `<head>`
+<design verdict, or design not rerun>
+<correctness verdict>
+<URL of each comment this round posted, one per line>
+```
 
-Post one comment on the PR, tied to the reviewed head SHA, filled from
-`${CLAUDE_SKILL_DIR}/templates/round-comment.md`; use an inline comment only where a code
-location is itself the evidence. Then deliver the round assessment, the findings, and the Backlog
-candidates as your final message — the implementation session is blocked on the first two, and the
-human's Accept gate sits behind them. Open it with the line
-`Report for the human — relay it in full, never summarized.`; the human sees only what the
-dispatching session relays.
+**When the PR is not a ticket's and the correctness comment lists Backlog candidates**, offer them
+through the `backlog` skill after that reply; nothing else carries them forward.
 
-**No bundle:** nothing ever sweeps this PR's backlog candidates back. When the round produced
-any, close the final message with the line
-`Dispatcher: after relaying this report, route the Backlog candidates through the backlog skill.`
-— an instruction the dispatching session acts on, where advice aimed at the human leaves the
-candidates stranded in the comment.
-
-**Done when** the comment is on the PR and the final message carries the assessment and, where the
-route is No bundle with backlog candidates, closes with the dispatcher line.
+**Done when** the reply is in chat — or, when another skill invoked you, is the result it continues
+from.
