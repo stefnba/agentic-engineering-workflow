@@ -103,7 +103,7 @@ Done when every line is `✅`, or the owner has the report and the commands.
   1. A workspace declaration: `pnpm-workspace.yaml`, `workspaces` in the root `package.json`, `[workspace]` in `Cargo.toml`, `[tool.uv.workspace]` in `pyproject.toml`, `go.work`.
   2. A monorepo build tool at the root: `turbo.json`, `nx.json`, `lerna.json`, `rush.json`, `moon.yml`.
   3. More than one manifest below the root, by the globs `*/<manifest>` and `*/*/<manifest>` for `package.json`, `Cargo.toml`, `go.mod`, `pyproject.toml`, `build.gradle*`, `pom.xml`.
-- **Areas and checks:** one bullet per area, with its path, its check commands, the directory each runs from, and the file each came from. Also name the area's own docs folder, such as `apps/web/docs/`, or `none`. A check is a command that tests, lints or type-checks. Judge a script by what it runs, not by its name: a `build` script that runs only `tsc` type-checks.
+- **Areas and checks:** one bullet per area, with its path, its check commands, the directory each runs from, and the file each came from. Also name the area's own docs folder, such as `apps/web/docs/`, or `none`. A check is a command that tests, lints or type-checks. Judge a script by what it runs, not by its name: a `build` script that runs only `tsc` type-checks. A type-check that writes files, such as `tsc` under a config without `noEmit`, is a build; name what it writes and ask in the confirm step whether it counts.
   - Take the commands CI runs for the area, as written in the CI configuration.
   - When CI runs none, take the checking scripts of the area's manifest or task runner file, and say that CI runs none. Write each as the command that runs the script from the area's folder, such as `pnpm build` for a `build` script, and give that folder as where it runs.
   - When neither has one, the area has no checks: write `none` for its checks and for where they run.
@@ -161,8 +161,8 @@ Done when each slot of the templates in `templates/workflow/` in this skill's fo
 - **The issue types**, only when the query for them failed: whether the organization has `Feature`, `Task` and `Bug`.
 - **The commit style**, when fewer than 80% of at least 10 subjects match: whether `docs/conventions/git.md` should describe the history's style instead.
 - **The file-name style**, when it differs from `templates/conventions/naming.md`: which style the file should state.
-- **Checks taken from a manifest** because CI runs none for the area: whether they count.
-- **Each config that scans worktrees:** whether to add `.worktrees` to its exclusions. Name in the same bullet each area whose type-check falls back to that config, because its check then scans every worktree too, and the rest of what that config covers. Leave that edit to the owner; it is outside what this skill writes.
+- **Checks taken from a manifest** because CI runs none for the area: whether they count, and for a type-check that writes files, what it writes.
+- **Each config that scans worktrees:** whether to add `.worktrees` to its exclusions. When the config has no exclusion list yet, propose the tool's defaults with `.worktrees` added, because a new list replaces the defaults: for a `tsconfig.json`, `"exclude": ["node_modules", ".worktrees"]`. Name in the same bullet each area whose type-check falls back to that config, because its check then scans every worktree too, and the rest of what that config covers. Leave that edit to the owner; it is outside what this skill writes.
 
 ```markdown
 **Settings**
@@ -182,7 +182,7 @@ Done when each slot of the templates in `templates/workflow/` in this skill's fo
 - Target branch — `main` requires reviews. May feature branches merge into it, or does work land on `dev`?
 - Models — Claude Code `opus` for shape and both reviews, `sonnet` for implement; Codex `gpt-6.1-sol`, `high` for shape and both reviews, `gpt-6.1-terra`, `medium` for implement? `codex debug models` lists `gpt-6.1-sol`, `gpt-6.1-terra`, `gpt-6-sol`, `gpt-6-luna`.
 - Checks for `api` — CI runs none. Does `pnpm test` from `apps/api/package.json` count?
-- Root `tsconfig.json` — it would type-check every worktree, and so would `ui`'s `tsc`, which falls back to it and so checks `apps/` too. Will you add `.worktrees` to its `exclude`?
+- Root `tsconfig.json` — it would type-check every worktree, and so would `ui`'s `tsc`, which falls back to it and so checks `apps/` too. Will you add `"exclude": ["node_modules", ".worktrees"]`? A new `exclude` replaces the default one, which leaves out `node_modules`.
 
 **Writes**
 
@@ -309,7 +309,7 @@ Done when the owner has answered, and `gh label list --limit 200` no longer show
 **Yours from here**
 
 - Review the diff and commit it. Nothing is committed.
-- Add `.worktrees` to the `exclude` of the root `tsconfig.json`, as you agreed. This skill does not edit that file.
+- Add `"exclude": ["node_modules", ".worktrees"]` to the root `tsconfig.json`, as you agreed. This skill does not edit that file.
 - `docs/conventions/` is yours to edit. A rerun never changes a file in it.
 ```
 
