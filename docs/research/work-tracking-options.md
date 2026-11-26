@@ -2,7 +2,7 @@
 
 For a reader revisiting the tracker decision, or adding local-file support later: the arguments for and against each option, and what each choice implies for the rest of the design. The rules and open questions of the local-files option are in `workflow-design.md`, section "Local-files option". The owner chose GitHub issues on 2026-11-26, for the backlog and for the work items. Local-file support is open.
 
-Sources: the first design draft and the GitHub issues draft of 2026-11-25, the version 1 backlog, and the design session of 2026-11-26. No trial has run yet.
+Sources: the first design draft and the GitHub issues draft of 2026-11-25, the version 1 backlog, and the design session of 2026-11-26. Facts about GitHub features come from `github-planning-features.md`, checked on 2026-11-26. No trial has run yet.
 
 ## GitHub issues
 
@@ -41,7 +41,7 @@ Against:
 
 - The skills need a working `gh` login. A sandboxed run without it cannot claim, list or close work items.
 - `Closes #N` works only on the default branch, so a ticket that merges into a feature branch must be closed by command or by an Action.
-- Status can be derived from the issue and its pull request, with no file to keep in sync.
+- Each issue has a native status that GitHub moves when people assign the issue, link a pull request, or close it. No file has to be kept in sync.
 - Where the spec lives stays open: the issue body, or a file on the feature branch.
 - Open questions become work items flagged `needs-decision`. Side findings and assumptions still need a GitHub home instead of `INBOX.md` and `OPEN_QUESTIONS.md`.
 - The local-files material (`work/`, bundles, inbox, claim commit, ID checks in CI) is not built. `workflow-design.md` keeps its rules as an open option.
@@ -52,7 +52,7 @@ What each GitHub feature offers, and one way to combine them. The values are exa
 
 ### Example flow of one work item
 
-The example uses one issue, #123, from idea to merge. Its number names the branch, the spec folder and the final pull request. The spec is a file on the feature branch, and a Project board tracks the stage.
+The example uses one issue, #123, from idea to merge. Its number names the branch, the spec folder and the final pull request. The spec is a file on the feature branch, and a Project board tracks the stage. GitHub's native status has no Shaping or Ready, so the example needs the board for those two stages.
 
 1. **Backlog.** Issue created from the Backlog item form: type Feature, status Backlog, a few lines on the problem or goal. Loose brainstorming happens in issue comments.
 2. **Shaping.** Create `feature/123-<slug>` and commit `specs/123-<slug>/intent.md` and `plan.md`. Critique and revisions happen locally with the agent; the spec gets no PR. Add "Spec in progress on feature/123-<slug>" to the issue body, keeping the original brief.
@@ -68,14 +68,15 @@ The example uses one issue, #123, from idea to merge. Its number names the branc
 
 ### What each GitHub feature allows
 
-| Feature                             | Defined at                             | Per issue           | Customizable                                                             |
-| ----------------------------------- | -------------------------------------- | ------------------- | ------------------------------------------------------------------------ |
-| Issue types                         | Personal account (Settings → Planning) | One                 | Rename, add, color, pin fields per type; defaults Task, Bug, Feature     |
-| Issue fields                        | Personal account (Settings → Planning) | One value per field | Name, type (text, single select, number, date), visibility, pinned types |
-| Status                              | Project field                          | One                 | Options fully editable; drives board columns and automations             |
-| Labels                              | Per repo                               | Many                | Fully custom names, colors, descriptions                                 |
-| Milestones                          | Per repo                               | One                 | Title, description, due date only                                        |
-| Sub-issues, dependencies, assignees | Built in                               | —                   | Not configurable                                                         |
+| Feature                             | Defined at                    | Per issue           | Customizable                                                                           |
+| ----------------------------------- | ----------------------------- | ------------------- | -------------------------------------------------------------------------------------- |
+| Issue types                         | Account (Settings → Planning) | One                 | Rename, add, color, pin fields per type; defaults Task, Bug, Feature                   |
+| Issue fields                        | Account (Settings → Planning) | One value per field | Name, type (text, single select, multi-select, number, date), visibility, pinned types |
+| Issue status                        | GitHub, one fixed set         | One                 | Not customizable; GitHub moves it on assignment, linked pull requests and close        |
+| Project Status                      | Project field                 | One                 | Options fully editable; drives board columns; syncs with issue status by name          |
+| Labels                              | Per repo                      | Many                | Fully custom names, colors, descriptions                                               |
+| Milestones                          | Per repo                      | One                 | Title, description, due date only                                                      |
+| Sub-issues, dependencies, assignees | Built in                      | —                   | Not configurable                                                                       |
 
 ### Issue types
 
@@ -91,20 +92,22 @@ An account starts with Task, Bug and Feature and can add more. Each type can pin
 
 ### Issue fields
 
-Priority and Effort exist by default. Other fields have to be created. Examples:
+Every account starts with Priority, Effort, Start date and Target date. Other fields have to be created. The defaults below show GitHub's options; Agent mode is an example:
 
 | Field       | Type          | Options                          |
 | ----------- | ------------- | -------------------------------- |
-| Priority    | Single select | P0, P1, P2, P3                   |
-| Effort      | Single select | S, M, L                          |
+| Priority    | Single select | Urgent, High, Medium, Low        |
+| Effort      | Single select | High, Medium, Low                |
 | Agent mode  | Single select | Autonomous, Assisted, Human only |
 | Target date | Date          | —                                |
 
-Field visibility decides who can read the values, agent tokens included.
+Field visibility matters only in public repositories, where a field is Restricted by default or Public.
 
 ### Project Status
 
-A Project board tracks the stage in a Status field, which stores status beside the issue. Example columns:
+Every issue has a native status, from a fixed set: Backlog, Todo, In progress and In review while open, and Done, Not planned or Duplicate once closed. A Project board adds its own Status field with editable options.
+
+The two sync both ways when a Project option has the same name as an issue status, unless the Project turns the sync off. In the example columns below, Backlog, In progress, In review and Done would sync with the issue. Shaping and Ready exist only on the board. Example columns:
 
 | Status      | Meaning                                         | Applies to      |
 | ----------- | ----------------------------------------------- | --------------- |
@@ -127,20 +130,19 @@ Labels suit values that can overlap. Example families:
 | Workflow flags | `needs-decision`, `needs-info`, `blocked`                                            | States on top of a stage; can stack     |
 | Nature / risk  | `breaking-change`, `security`, `tech-debt`, `performance`                            | Extra review attention                  |
 
-In this example, values that hold one thing at a time sit elsewhere: type and the fields on the issue, status in the Project, resolution in the close reason, and dependencies in links. An account without issue types or fields can use labels for type and priority instead.
+In this example, values that hold one thing at a time sit elsewhere: type and the fields on the issue, status on the issue and in the Project, resolution in the close reason, and dependencies in links. Since 2026-11-11 every account has issue types and fields, so type and priority need no labels.
 
 ### Automations
 
-What Project workflows and Actions can take over. Examples:
+What GitHub does on its own, and what Actions can take over. Examples:
 
-| Automation                           | Trigger                        | Effect                                                                     |
-| ------------------------------------ | ------------------------------ | -------------------------------------------------------------------------- |
-| Project workflow: add                | Issue added to Project         | Status = Backlog                                                           |
-| Project workflow: review / done      | PR linked / item closed        | Status = In review / Done                                                  |
-| Close task on feature merge (Action) | PR merged into `feature/*`     | Closes the linked sub-issue (`Closes #N` only works on the default branch) |
-| Block specs on main (Action)         | PR into `main`                 | Fails if `specs/` still exists                                             |
-| Post final spec (Action, optional)   | Feature → main PR ready        | Posts the spec as a comment on the parent issue                            |
-| Label sync (Action)                  | Change to `.github/labels.yml` | Creates and updates repo labels                                            |
+| Automation                           | Trigger                                                    | Effect                                                                     |
+| ------------------------------------ | ---------------------------------------------------------- | -------------------------------------------------------------------------- |
+| Native issue status (built in)       | Issue created / person assigned / PR linked / issue closed | Status = Backlog / Todo / In progress or In review / Done                  |
+| Close task on feature merge (Action) | PR merged into `feature/*`                                 | Closes the linked sub-issue (`Closes #N` only works on the default branch) |
+| Block specs on main (Action)         | PR into `main`                                             | Fails if `specs/` still exists                                             |
+| Post final spec (Action, optional)   | Feature → main PR ready                                    | Posts the spec as a comment on the parent issue                            |
+| Label sync (Action)                  | Change to `.github/labels.yml`                             | Creates and updates repo labels                                            |
 
 ## How the local-files option could be built
 
