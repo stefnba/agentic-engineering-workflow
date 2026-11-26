@@ -20,7 +20,7 @@ codex debug models | jq -r '.models[] | select(.visibility == "list") | .slug + 
 
 Take the slug with the highest version for each family, such as `gpt-6.1-sol` over `gpt-6-sol`. When `codex` is not installed, or no listed slug names a family, write the cell as `TODO` and ask the owner.
 
-Confirm: `codex debug models` renders the catalog bundled with the installed CLI, which can lag the models an account can pick in `/model`. A newer CLI lists newer models.
+**When the owner names a newer model of the same family, write theirs.** confirm: `codex debug models` appeared to list the catalog bundled with the installed CLI, which lagged the models the account could pick in `/model` when this file was written.
 
 ## Proposal
 

@@ -79,13 +79,13 @@ Done when every line is `✅`, or the owner has the report and the commands.
   gh api "repos/{owner}/{repo}" --jq .owner.type
   ```
 
-- **Issue types:** for a `User` owner, report none, because a personal account has no issue types. For an `Organization` owner, report the names the query below returns. Confirm: this query was not verified when this skill was written; when it fails, ask the owner in the confirm step.
+- **Issue types:** for a `User` owner, report none, because a personal account has no issue types. For an `Organization` owner, report the names the query below returns. When it fails, ask the owner in the confirm step. confirm: this query was not run against an organization when this skill was written.
 
   ```bash
   gh api graphql -f query='{ organization(login: "<owner>") { issueTypes(first: 20) { nodes { name } } } }'
   ```
 
-- **Default branch protection:** run both commands below, with the default branch in place of `<branch>`. Read the result from this table. Confirm: what the first returns for a caller without admin rights was not verified when this skill was written.
+- **Default branch protection:** run both commands below, with the default branch in place of `<branch>`. Read the result from this table; a result it does not name falls to its last row. confirm: what the first returns for a caller without admin rights was not checked when this skill was written.
 
   ```bash
   gh api "repos/{owner}/{repo}/branches/<branch>/protection"
@@ -111,7 +111,10 @@ Done when every line is `✅`, or the owner has the report and the commands.
 - **Commit style**, only when `docs/conventions/git.md` is missing: how many of the last 30 subjects of `git log --format=%s` match `type(scope): summary` or `type: summary`, and the merge methods `gh repo view --json squashMergeAllowed,mergeCommitAllowed,rebaseMergeAllowed` reports. The history follows the template's style when at least 80% match. With fewer than 10 commits, report it as too short to judge, such as `6 commits, too short to judge`, and use the template's style.
 - **File names**, only when `docs/conventions/naming.md` is missing: the case style of the directory and file names in `git ls-files`, leaving out names a tool requires, such as `package.json`.
 - **Skills:** whether any `SKILL.md` file exists in the repository. Only then do the `<skill>` and `skills` scope rows of `templates/conventions/git.md` apply.
-- **Worktrees:** whether `git check-ignore -q .worktrees/x` reports `.worktrees/` as ignored. Also name each test, lint or type-check config whose file patterns reach `.worktrees/` and do not respect `.gitignore`. A pattern resolves from its config's folder, so only a config at the repository root, or one whose pattern climbs to it with `../`, can reach it. An example is a root `tsconfig.json` whose `include` is `**/*.ts` and whose `exclude` lacks `.worktrees`. Such a tool scans every worktree's copy of the code. Also name each area whose type-check has no config in the area's own folder: the tool then falls back to a parent config, such as `tsc` in a folder without `tsconfig.json` using the root one.
+- **Worktrees:**
+  - Whether `git check-ignore -q .worktrees/x` reports `.worktrees/` as ignored.
+  - Each test, lint or type-check config whose file patterns reach `.worktrees/` and do not respect `.gitignore`, because such a tool scans every worktree's copy of the code. A pattern resolves from its config's folder, so only a config at the repository root, or one whose pattern climbs to it with `../`, can reach it. An example is a root `tsconfig.json` whose `include` is `**/*.ts` and whose `exclude` lacks `.worktrees`.
+  - Each area whose type-check has no config in the area's own folder, and what the parent config it falls back to covers. For example, `tsc` in a folder without `tsconfig.json` uses the root one and so checks more than its area.
 
 **Treat the layout as a reading the owner confirms.** A vendored dependency or an examples folder trips the manifest glob.
 
@@ -153,13 +156,13 @@ Done when each slot of the templates in `templates/workflow/` in this skill's fo
 **Ask in the questions part:**
 
 - **The target branch**, only when the default branch requires reviews, blocks direct pushes, requires linear history, or its protection is `unknown`: whether feature branches may merge into it or whether work lands on another branch such as `dev`. Otherwise the default branch is a setting.
-- **The models.** Ask for each cell of `templates/workflow/models.md`. Models cannot be observed in the repository. Propose the cells from `references/model-tiers.md`, and name the Codex models the CLI listed.
+- **The models**, in one bullet, because models cannot be observed in the repository. Propose a model for each kind of work in `templates/workflow/models.md` and each harness, from `references/model-tiers.md`. Then name every model `codex debug models` listed, so the owner can pick another.
 - **Each conflict** noted under `docs/conventions/`: which value `docs/workflow/` should hold.
 - **The issue types**, only when the query for them failed: whether the organization has `Feature`, `Task` and `Bug`.
 - **The commit style**, when fewer than 80% of at least 10 subjects match: whether `docs/conventions/git.md` should describe the history's style instead.
 - **The file-name style**, when it differs from `templates/conventions/naming.md`: which style the file should state.
 - **Checks taken from a manifest** because CI runs none for the area: whether they count.
-- **Each config that scans worktrees:** whether to add `.worktrees` to its exclusions. Name in the same bullet each area whose type-check falls back to that config, because its check then scans every worktree too. Leave that edit to the owner; it is outside what this skill writes.
+- **Each config that scans worktrees:** whether to add `.worktrees` to its exclusions. Name in the same bullet each area whose type-check falls back to that config, because its check then scans every worktree too, and the rest of what that config covers. Leave that edit to the owner; it is outside what this skill writes.
 
 ```markdown
 **Settings**
@@ -177,9 +180,9 @@ Done when each slot of the templates in `templates/workflow/` in this skill's fo
 **Questions**
 
 - Target branch — `main` requires reviews. May feature branches merge into it, or does work land on `dev`?
-- Models — Claude Code `opus` for shape and both reviews, `sonnet` for implement; Codex `gpt-6.1-sol`, `high` for shape and both reviews, `gpt-6.1-terra`, `medium` for implement, the newest of each family `codex debug models` lists?
+- Models — Claude Code `opus` for shape and both reviews, `sonnet` for implement; Codex `gpt-6.1-sol`, `high` for shape and both reviews, `gpt-6.1-terra`, `medium` for implement? `codex debug models` lists `gpt-6.1-sol`, `gpt-6.1-terra`, `gpt-6-sol`, `gpt-6-luna`.
 - Checks for `api` — CI runs none. Does `pnpm test` from `apps/api/package.json` count?
-- Root `tsconfig.json` — it would type-check every worktree, and so would `ui`'s `tsc`, which falls back to it. Will you add `.worktrees` to its `exclude`?
+- Root `tsconfig.json` — it would type-check every worktree, and so would `ui`'s `tsc`, which falls back to it and so checks `apps/` too. Will you add `.worktrees` to its `exclude`?
 
 **Writes**
 
@@ -285,7 +288,7 @@ Done when the owner has answered, and `gh label list --limit 200` no longer show
 
 ### 9. Report
 
-**Report one bullet per path or folder, one for the labels created, and one for the existing labels: written, updated, created, deleted, kept, or skipped with the reason.** Then list every `TODO` that remains with its question, and the owner's next steps.
+**Report one bullet per path or folder, one for the labels created, and one for the existing labels: written, updated, created, deleted, kept, or skipped with the reason.** Then list every `TODO` that remains with its question, and the owner's next steps: reviewing and committing the diff, and each edit the owner agreed to in the confirm step that this skill does not make.
 
 ```markdown
 **Installed**
@@ -306,6 +309,7 @@ Done when the owner has answered, and `gh label list --limit 200` no longer show
 **Yours from here**
 
 - Review the diff and commit it. Nothing is committed.
+- Add `.worktrees` to the `exclude` of the root `tsconfig.json`, as you agreed. This skill does not edit that file.
 - `docs/conventions/` is yours to edit. A rerun never changes a file in it.
 ```
 
