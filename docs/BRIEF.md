@@ -9,26 +9,9 @@ owns, and how files are laid out are the design's to decide.
 A set of agent skills for a staged engineering workflow, installed into other repositories. It
 replaces a first version the owner found too complex.
 
-## Decided
-
-Owner, 2026-11-26. Treat these as fixed.
-
-- **The staged workflow is the standard**, for large work: shape a unit of work into a spec,
-  plan, and tickets; implement ticket by ticket with a pull request and an independent review
-  per ticket; land the whole.
-- **A quick path for small work comes in a later version.** Build nothing for it now. Keep
-  shaping and reviewing usable on their own so it can be added on top.
-- **A unit of work is deleted when it lands.** Its spec, plan, and tickets are working files.
-  What must outlive it moves out first: a decision into a decision record, a term into the
-  glossary, a follow-up into the backlog.
-- **Harness agnostic.** The skills run under Claude Code and Codex CLI today. No skill depends
-  on a mechanism only one harness has.
-- **The owner also wants these capabilities:** choosing what to work on next, handing a session
-  off to a fresh agent, recapping a conversation, and researching before shaping.
-- **Simpler and leaner than version 1.** Confirm with the owner: no limit on skill count or file
-  length is set yet.
-
 ## Harness facts
+
+**Might have changed since we tested it. Needs to be re-verified.**
 
 Tested 2026-09-30 on Claude Code 2.1.247, GitHub Copilot CLI 1.0.78, and Codex CLI 0.159.2, in
 throwaway repositories, with each session started inside a monorepo member directory. One run
