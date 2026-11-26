@@ -23,8 +23,7 @@ Read variants at these paths, on the branch checked out there. Do not switch bra
 
 **The baseline on branch `v2` holds these variants as unchanged copies** in `skills/<name>/`,
 taken at GCA `984d2db5`, TAB `5596b2b`, GMCA `49a4985`, and REF `v1-final`. It holds every GCA
-skill, including those this file marks for cutting, so each cut is its own diff. `write-pr`
-(GCA) and `create-pr` (GMCA) both sit there until PR writing is merged into one skill.
+skill, including those this file marks for cutting, so each cut is its own diff.
 
 **GCA is the default base.** It is the most complete, it ran real work (17 merged bundle PRs,
 37 ticket PRs), and it already runs under Codex as well as Claude Code. REF is the first draft:
@@ -74,7 +73,7 @@ install the suite as a whole. This removes the per-skill "Path conventions" sect
 | `codebase-design`        | GCA                                          | 110          |
 | `review-changes`         | GCA                                          | 250          |
 | `review-pr`              | GCA                                          | 110          |
-| PR writing               | GMCA `create-pr`, plus a new body template   | 80           |
+| `write-pr`               | GCA, plus two rules from GMCA `create-pr`    | not sized    |
 | `scan-codebase`          | GCA                                          | 90           |
 | `tdd`                    | REF                                          | 35           |
 | `interview-me`           | GCA                                          | as is        |
@@ -179,19 +178,22 @@ install the suite as a whole. This removes the per-skill "Path conventions" sect
   a push after dispatch is reviewed without notice (suspected, low impact).
 - **Cut.** Ticket and bundle routing. Add one line: an optional expected-SHA check.
 
-### PR writing
+### write-pr
 
-- **Why GMCA `create-pr`.** 53 lines, coupled only to `docs/conventions/git.md`. It splits mixed
-  history (`:22`) and separates drafting from publishing (`:14`, `:42-44`). GCA's `write-pr` is
-  287 lines and bundle coupled.
-- **Objection.** `create-pr` has no body template; it defers to a 19-line
-  `.github/pull_request_template.md` lacking two slots the correctness reviewer audits.
-- **Resolution.** Write a new body template of about 30 lines: Summary, Changes, Before at
-  `<sha>`, Checks at `<head sha>`, Risks. Take from GCA `write-pr` the "always pass
-  `--body-file`" rule (`:97-98`). Drop GCA's bundle commit computation (`:68-81`).
-- **Keep the template short.** In GCA's templated review format, most blocker titles concerned
-  the PR body and template slots, not code (suspected: an agent's regex count, 17 of 21,
-  classification approximate).
+- **Why GCA.** `implement-ticket`, `review-pr`, `land-bundle`, and two `setup-workflow` templates
+  reference it, and its bundle and ticket labels fit the staged workflow v2 ships. The owner
+  chose it as the one PR skill (2026-11-26); `create-pr` was removed from the baseline.
+- **Objection.** The first pick was GMCA `create-pr`: 53 lines against 287, with no bundle
+  coupling. That counted only while the small workflow was an option.
+- **Add from `create-pr`** (GMCA `49a4985`, `.agents/skills/create-pr/SKILL.md`):
+  - Split mixed history (`:22`): when the branch holds independent changes, ask the user to
+    choose one PR or several before writing.
+  - Drafting is not publishing (`:14`, `:42-44`): a request for a title or description returns
+    text only; push or open the PR only on an explicit request to create or publish it.
+- **Cut.** Shorten the 177-line body template. In GCA's templated review format, most blocker
+  titles concerned the PR body and template slots, not code (suspected: an agent's regex count,
+  17 of 21, classification approximate). Keep the two slots the correctness reviewer audits:
+  pre-change evidence and checks at the head SHA.
 
 ### scan-codebase
 
