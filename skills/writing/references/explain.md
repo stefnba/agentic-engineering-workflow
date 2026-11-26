@@ -4,11 +4,11 @@ Rules for a document a reader opens once, looking for one thing, whether that re
 
 ## Before drafting
 
-**Name the reader and the one question they bring, in one sentence in the first two lines of the document.** "For an engineer joining the team: how a request becomes a stored order." Every later choice — what to include, how deep to go — is settled against that line. Without it, a doc drifts into everything the author knows.
+**Name the reader and the one question they bring, in one sentence, before drafting.** "For an engineer joining the team: how a request becomes a stored order." Every later choice — what to include, how deep to go — is settled against that sentence. Without it, a doc drifts into everything the author knows.
 
-**Put the sources read and the method on their own line after the opening**, so the reader line stays one sentence.
+**State that sentence in your reply, after the kind you judged; the document itself opens with the answer.** The human sees the choice in the reply and can overrule it. Printed in the document, it repeats what the opening paragraph says.
 
-**When rewriting one section, leave the document's reader line as the only one.**
+**Put the sources read and the method on their own line after the opening paragraph**, so the opening holds only the answer.
 
 **Write an explainer or a reference, and keep the other out.** An explainer answers "how does this work, and why": the mechanism, one worked example, the reasons. A reference answers "what exactly is the rule": every rule, value and edge case, in tables. An explainer that needs precise rules — error lists, config keys, defaults, internal names — links to a reference section or appendix.
 

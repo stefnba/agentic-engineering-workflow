@@ -8,27 +8,27 @@ Writing a new document and improving an existing one follow the same loop:
 
 ### 1. Decide the packaging
 
-Choose a skill, instructions file, or runbook. For a skill, read `references/skill-mechanics.md` before drafting; if a dedicated skill-scaffolding skill is installed, it owns scaffolding and evals — this document owns the writing.
+Choose a skill, instructions file, or runbook. For a skill, read `references/skill-mechanics.md` before drafting; if a dedicated skill-scaffolding skill is installed, it owns scaffolding and evals — this document owns the writing. Done when your reply names the packaging.
 
 ### 2. Establish a baseline
 
-For a new document or section, give the task to an agent _without_ it and record what actually goes wrong — `references/testing.md` has the mechanics. For a change to an existing line, rerun the prompts that motivated that line instead of a full baseline.
+For a new document or section, give the task to an agent _without_ it and record what actually goes wrong — `references/testing.md` has the mechanics. For a change to an existing line, rerun the prompts that motivated that line instead of a full baseline. Done when each failure is written down beside the prompt that exposed it.
 
 ### 3. Draft short
 
-Write the shortest sentence that resolves the observed failure, using the sections below. Add words only when the baseline shows the terse version still fails — not by default, and not to explain the why unless a reader without it acted wrong.
+Write the shortest sentence that resolves the observed failure, using the sections below. Add words only when the baseline shows the terse version still fails — not by default, and not to explain the why unless a reader without it acted wrong. Done when every recorded failure has a line that answers it.
 
 ### 4. Prune
 
-Prune sentence by sentence (see Pruning) — a pass for what the draft still let through, not the primary mechanism.
+Prune sentence by sentence (see Pruning) — a pass for what the draft still let through, not the primary mechanism. Done when every remaining sentence has passed the no-op test.
 
 ### 5. Verify
 
 Rerun the same prompts with the document in place; the observed failures should disappear.
 
-## The two budgets
+## Context load and cognitive load
 
-Every document and every reference to it spends one of two budgets:
+Every document and every reference to it spends a budget:
 
 - **Context load** — always-loaded material (an agent-instructions line or a skill description) costs tokens and attention on every turn, whether or not it fires. Prune it hardest.
 - **Cognitive load** — the human's burden of remembering what documents exist and when to invoke them. Not a cost to zero out — it's the price of human control — but spend it deliberately.
@@ -61,7 +61,7 @@ the naming scheme and which tables must not be locked.
 
 ## The information hierarchy
 
-Documents mix two content types: **steps** (ordered actions) and **reference** (rules, facts, definitions consulted on demand). Place each piece on a ladder ranked by how immediately the agent needs it:
+Documents mix **steps** (ordered actions) and **reference** (rules, facts, definitions consulted on demand). Place each piece on a ladder ranked by how immediately the agent needs it:
 
 1. **In-file steps** — the primary tier: what to do, in order.
 2. **In-file reference** — consulted on demand; a flat set of rules on one rung is fine.
@@ -73,7 +73,7 @@ Progressive disclosure is the move down this ladder. It's not mainly token savin
 
 ## Writing steps
 
-End every step on a **completion criterion** — the observable condition that says the step is done. Two properties matter:
+End every step on a **completion criterion** — the observable condition that says the step is done. A criterion needs both of these:
 
 - **Clarity**: the agent can tell done from not-done. "Understanding reached" invites quitting early; "all tests in `tests/` pass" does not.
 - **Demand**: how much the criterion requires. "Every modified file accounted for in the changelog" forces thoroughness where "produce a changelog" does not.
