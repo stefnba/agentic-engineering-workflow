@@ -1,6 +1,6 @@
 # Concerns about agent coding in general
 
-## reenfield isn't really supported
+## Greenfield isn't really supported
 
 - Existing workflows assume the basic structure and use cases are already decided. In a new repo nothing is, and the agent proceeds as if it were.
 
@@ -9,7 +9,7 @@
 - A small implementation detail slips past review and later becomes the foundation for further decisions that you never intended.
 - It is unclear what is settled, what is a working assumption, and what may change soon.
 
-## Agents produce too much\*\*
+## Agents produce too much
 
 - Five or six tiny backlog items come out of a single ticket, leaving a long, unstructured backlog.
 - Agents are too eager to write decision records.
