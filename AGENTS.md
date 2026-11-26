@@ -9,7 +9,7 @@ This is version 2, designed from an empty tree because version 1 grew too comple
 ## Guardrails
 
 - **Treat the files in `docs/` as the owner's working drafts.** They are not settled decisions.
-- **Treat `.agents/skills/` as tools for working on this repository.** It is not the product.
+- **Put every skill in `skills/<name>/`.** That folder is the product. To use a skill in this repository, link it: `.agents/skills/<name>` → `../../skills/<name>`.
 - **Run the `writing` skill before writing or editing any Markdown file.**
 - **Use only mechanisms that both Claude Code and Codex have.** The skills must run under both.
 - **Design without the earlier versions.** Tags `v1-final` and `v2-baseline` hold them; read them only when the owner asks.
