@@ -58,7 +58,11 @@ Done when you know the note's path, new or existing.
 
 **When the question concerns a versioned tool, resolve its versions before writing the brief.** Take the project's current version from its manifest or lockfile, and the latest stable release from the release page or package registry. Your memory stops at your training date, so it is not a source for "latest".
 
+**Look up what each named product is today before you scope it.** One name can cover several forms, such as a CLI, a desktop app, an IDE extension and a cloud service, and forms appear after your training date. Find the current forms on the vendor's site, and cover every form the user's words cover.
+
 **Use one sub-question for a single fact, up to 3 for most questions, and up to 6 when the question covers many independent items.**
+
+**List below the brief every place where it is narrower than the user's words**, such as one form of a product, one release channel or one platform, each as a choice the user can widen.
 
 **Show the user the brief and wait for their OK before spawning anyone**, also when another skill invoked this one. Nothing later in the run catches a wrong or slanted question. When the user edits the brief, apply the edits to the saved file and show it again.
 
