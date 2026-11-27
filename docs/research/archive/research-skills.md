@@ -52,15 +52,6 @@ Tags:
 - **Commit `016db04` changed the note shape** to a bold one-sentence claim plus source bullets: "Write for a scanner, not a reader" `[read]`.
 - **`v2-baseline` holds the same research files as `v1-final`** `[read]`.
 
-## The notes in this folder
-
-These notes were written before this one, without a skill `[read]`:
-
-- They open with the reader and the question, and several add "proposes nothing" or "gives no design advice".
-- A "Sources and method" paragraph names what was read, the date, the tools, who read it and what was not done. It ends with the tag legend.
-- `[read]` and `[inferred]` are the usual tags. `github-planning-features.md` also uses `[tested]`, `[docs]`, `[reported]` and `[unverified]`.
-- The `skill-*.md` notes are the only ones with a Recommendations section.
-
 ## Labels for evidence and confidence
 
 | System                       | What it grades                              | Categories                                                                                      | Tag      |

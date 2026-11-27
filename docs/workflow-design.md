@@ -21,7 +21,7 @@ Each item starts with its state. **Decided** means the owner confirmed it. **Ass
 - **Decided.** No scripts that encode the workflow itself, such as claim, publish or land. Version 1 had 10 such scripts with 944 lines, and 28 of their 30 commits fell within five days.
 - **Decided.** A script is allowed where it clearly helps.
 - **Assumed.** A step starts as prose with a few shell commands. Both main references run their whole workflow this way, with no code at workflow time.
-- **Assumed.** A step earns a script only when all four conditions hold. The test is a proposal of this document, drawn from practices reported in `research/scripts-and-deterministic-logic.md`.
+- **Assumed.** A step earns a script only when all four conditions hold. The test is a proposal of this document, drawn from practices reported in `research/archive/scripts-and-deterministic-logic.md`.
   1. It has one right answer per input, and a unit test can check it.
   2. An agent was seen getting it wrong, or working it out again on every run.
   3. It reads state or guards a gate. The agent still makes the edit.
@@ -31,13 +31,13 @@ Each item starts with its state. **Decided** means the owner confirmed it. **Ass
 
 ## 3. Work tracking
 
-- **Decided.** GitHub issues hold the backlog and the work items. `research/work-tracking-options.md` keeps the arguments and the consequences.
+- **Decided.** GitHub issues hold the backlog and the work items. `research/archive/work-tracking-options.md` keeps the arguments and the consequences.
 - **Open.** Whether local files are supported later. Section 11 keeps that option's design.
 - **Assumed.** No skill names a tracker. Skills say "the work item", and `docs/workflow/tracker.md` says how to create, list, claim and close one.
 - **Assumed.** Issues carry a small classification: a type (Feature, Bug, Task), a priority (P0 to P3), `area:*` labels, and the flags `needs-decision` and `blocked`.
 - **Assumed.** A value that can hold only one thing at a time is an issue type or an issue field. Things that can overlap are labels.
 - **Open.** Whether type and priority are issue fields or labels. The GitHub draft used issue types and fields. GitHub ships Priority (Urgent, High, Medium, Low), Effort, Start date and Target date as default fields. The `setup-workflow` templates write `P0` to `P3` as labels, with type labels as a fallback when the account has no issue types. Since 2026-11-11 every account, personal or organization, has issue types and fields.
-- **Assumed.** Issue types and issue fields are defined on the account, personal or organization, under Settings → Planning. Labels are defined per repository. Field visibility matters only in public repositories. `research/github-planning-features.md` holds the facts about each GitHub feature, checked on 2026-11-26.
+- **Assumed.** Issue types and issue fields are defined on the account, personal or organization, under Settings → Planning. Labels are defined per repository. Field visibility matters only in public repositories. `research/archive/github-planning-features.md` holds the facts about each GitHub feature, checked on 2026-11-26.
 
 - **Open.** Whether the classification grows. The GitHub draft proposed:
   - the types Spike (time-boxed research ending in a decision) and Chore (maintenance with no user-facing change);
@@ -49,7 +49,7 @@ Each item starts with its state. **Decided** means the owner confirmed it. **Ass
 - **Assumed.** Milestones only for releases or real deadlines.
 - **Assumed.** The owner chooses the work. An agent never picks up a work item on its own.
 - **Decided.** Status is derived from the state of the issue and its pull request. It is never stored a second time.
-- **Open.** Whether the tracker reads GitHub's native issue status instead, in public preview since 2026-11-23. Its fixed set has no Shaping or Ready, and `gh` cannot set it yet. `research/github-planning-features.md`, section "Issue status", has the facts.
+- **Open.** Whether the tracker reads GitHub's native issue status instead, in public preview since 2026-11-23. Its fixed set has no Shaping or Ready, and `gh` cannot set it yet. `research/archive/github-planning-features.md`, section "Issue status", has the facts.
 - **Open.** Whether "spec in progress" and "ready for work" need a label, a Project board, or nothing.
   - The GitHub draft proposed a Project Status field: Backlog, Shaping, Ready, In progress, In review, Done. It would store status a second time.
   - Project workflows would then set Backlog when an issue is added, In review when a pull request links, and Done on close.
@@ -172,7 +172,7 @@ The loop end to end, as the items below assume it. The issue state is derived, n
 | `review-code` | Reviews the diff of one ticket or one feature                                        |
 | `ship`        | Opens the pull request, moves lasting knowledge into `docs/`, merges after approval  |
 
-One skill text serves both harnesses. Five of the seven reference repositories work this way, and the rules below are proposals of this document, drawn from practices reported in `research/cross-harness-support.md`.
+One skill text serves both harnesses. Five of the seven reference repositories work this way, and the rules below are proposals of this document, drawn from practices reported in `research/archive/cross-harness-support.md`.
 
 - **Assumed.** Front matter relies only on `name` and `description`, in strict YAML.
 - **Assumed.** Skill text names the action and never a harness tool. It asks the user in plain chat.
@@ -189,13 +189,13 @@ One skill text serves both harnesses. Five of the seven reference repositories w
   - The `v2-baseline` wording was corrected against real agent failures.
   - `work/v2-skill-inventory.md` at that tag compares the variants and names what to cut.
   - To read it beside this tree: `git worktree add ../aew-baseline v2-baseline`.
-- **Open.** Whether a session started inside a git worktree finds its skills. `research/harness-tests.md` lists it as untested, and the worktree per ticket depends on it.
+- **Open.** Whether a session started inside a git worktree finds its skills. `research/archive/harness-tests.md` lists it as untested, and the worktree per ticket depends on it.
 
 ## 6. Review and verification
 
 - **Decided.** The spec gets a review and the code gets a review. They are separate skills.
 - **Decided.** A review is done by a fresh sub-agent that sees only the artifact. If the harness has no sub-agents, the skill stops.
-- **Open.** Which angles each review covers. The candidate below is a proposal of this document, drawn from the practices reported in `research/review-angles.md`. The owner has not reviewed it. The first draft kept each reviewer persona as a file in the review skill's `references/`.
+- **Open.** Which angles each review covers. The candidate below is a proposal of this document, drawn from the practices reported in `research/archive/review-angles.md`. The owner has not reviewed it. The first draft kept each reviewer persona as a file in the review skill's `references/`.
   - Spec review, reviewer with the spec only: can it restate the spec, and where must a builder guess.
   - Spec review, reviewer with the spec and the repository: scope and simplicity, risks and failure modes, fit with the existing code and test coverage of each requirement.
   - Code review: spec compliance, correctness of the diff, tests that prove the behaviour, repository rules, simplicity.
@@ -256,7 +256,7 @@ docs/                      knowledge: slow-changing, safe to publish
 - **Assumed.** A short block in `AGENTS.md` names each file in both folders with the work it covers. `CLAUDE.md` imports `AGENTS.md` with the line `@AGENTS.md`, because Claude Code does not read `AGENTS.md` itself.
 - **Open.** Whether the block also carries the rules that hold when no skill runs. The first draft gave it about 15 lines. Agents ignore long rule files, as reported for Spec Kit's constitution, so the important rules belong in CI.
 - **Assumed.** The skill that writes an artifact owns its format. Other skills name the artifact and do not restate the format.
-- **Assumed.** No shared folder beside the skills and no build step that copies text into them. Text two skills need sits in one skill, and the other invokes that skill. `research/knowledge-across-skills.md` shows shared folders breaking under skills-only installs in four repositories.
+- **Assumed.** No shared folder beside the skills and no build step that copies text into them. Text two skills need sits in one skill, and the other invokes that skill. `research/archive/knowledge-across-skills.md` shows shared folders breaking under skills-only installs in four repositories.
 - **Open.** How `setup` migrates a repository after the workflow changes. No prose-driven setup among the references does. Migration needs a recorded workflow version, and no file in `docs/workflow/` holds one yet.
 
 A monorepo needs no logic of its own in any skill. These items cover it:
@@ -266,16 +266,16 @@ A monorepo needs no logic of its own in any skill. These items cover it:
 - **Assumed.** `implement` and `review-code` read the row for the area of their ticket.
 - **Assumed.** Product and decision records live at the root only. The glossary lives at the root, unless two apps use one word differently.
 - **Assumed.** Architecture has a root overview. An app gets its own architecture doc only when it has its own shape.
-- **Assumed.** A monorepo gets the skills copied into the repository. `research/harness-tests.md` shows a project plugin in Claude Code loading only from the repository root.
+- **Assumed.** A monorepo gets the skills copied into the repository. `research/archive/harness-tests.md` shows a project plugin in Claude Code loading only from the repository root.
 
 ## 8. Earlier drafts
 
-Two drafts were folded into this file and `research/work-tracking-options.md` on 2026-11-26, then removed. "The first draft" and "the GitHub draft" in this file refer to them. Git keeps both:
+Two drafts were folded into this file and `research/archive/work-tracking-options.md` on 2026-11-26, then removed. "The first draft" and "the GitHub draft" in this file refer to them. Git keeps both:
 
 - The first draft: `git show 8d178f3:docs/agentic-workflow-design.md`.
 - The GitHub draft: `git show 8168e7a:docs/github-issues-workflow.md`.
 
-The former `BRIEF.md` is now `research/harness-tests.md`. It holds the harness behaviour tested here on 2026-09-30, and what stays untested.
+The former `BRIEF.md` is now `research/archive/harness-tests.md`. It holds the harness behaviour tested here on 2026-09-30, and what stays untested.
 
 ## 9. Keeping agents restrained
 
@@ -322,7 +322,7 @@ What support would add:
 
 ### The `work/` folder
 
-`research/work-tracking-options.md` shows the folder tree and how each file evolves.
+`research/archive/work-tracking-options.md` shows the folder tree and how each file evolves.
 
 "Now" is not a list. It is whatever folders exist in `work/bundles/`, so there is no shared index to keep in sync. A monorepo has one `work/` at the root.
 
@@ -330,7 +330,7 @@ Each assumption gets an `ASSUMPTION(A-n)` marker at its site in code. A new bund
 
 ### Steps of this option
 
-The option adds capture, triage, kickoff and close around the loop. `research/work-tracking-options.md` shows them as a table.
+The option adds capture, triage, kickoff and close around the loop. `research/archive/work-tracking-options.md` shows them as a table.
 
 ### Visibility for several developers
 
