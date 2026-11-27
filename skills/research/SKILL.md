@@ -43,13 +43,21 @@ Done when you know the report's path, new or existing.
 **Write the brief yourself and save it as `brief.md` in a new working folder, `docs/research/.work/<slug>/`:**
 
 ```markdown
-**Question** — What changes in the configuration format from examplelib 1.9 to examplelib 2.3.1?
-**Kind** — Migration or upgrade
-**Purpose** — Planning an upgrade of a service that loads plugins through the configuration file
-**Constraints** — examplelib 1.9.0 (lockfile) to 2.3.1 (registry `latest`, released 2026-10-14); configuration file only, plugin APIs out of scope; as of 2026-11-27
-**Sub-questions** — 1. Which keys are removed, renamed or added, or is the format unchanged? 2. What upgrade path do the maintainers document, if any? 3. What upgrade problems are reported in issues, if any?
-**Answer gives** — The documented path in order, the known breakages, and what the maintainers advise.
-**Report** — `docs/research/0007-examplelib-2-configuration.md` (new)
+- **Question:** What changes in the configuration format from examplelib 1.9 to examplelib 2.3.1?
+- **Kind:** Migration or upgrade
+- **Purpose:** Planning an upgrade of a service that loads plugins through the configuration file
+- **Constraints:**
+  - examplelib 1.9.0 (lockfile) to 2.3.1 (registry `latest`, released 2026-10-14)
+  - The configuration file only; plugin APIs are out of scope
+  - As of 2026-11-27
+- **Sub-questions:**
+  1. Which keys are removed, renamed or added, or is the format unchanged?
+  2. What upgrade path do the maintainers document, if any?
+  3. What upgrade problems are reported in issues, if any?
+- **Answer gives:** The documented path in order, the known breakages, and what the maintainers advise.
+- **Narrower than asked:**
+  - Covers the `latest` channel; the `stable` channel is at 2.2.4
+- **Report:** `docs/research/0007-examplelib-2-configuration.md` (new)
 ```
 
 **Keep every working file of the run in that folder.** A folder outside the repository may refuse a subagent's writes.
@@ -58,19 +66,21 @@ Done when you know the report's path, new or existing.
 
 **Carry every constraint the user gave into Constraints**, with today's date. Leave open what the user left open.
 
-**When the question concerns a versioned tool, resolve its versions before writing the brief.** Take the project's current version from its manifest or lockfile, and the latest release from the release page or package registry. Your memory stops at your training date, so it is not a source for "latest".
+**When the question concerns a versioned tool, resolve its versions before writing the brief.** Take the project's current version from its manifest or lockfile when it has one, and the latest release from the release page or package registry. Your memory stops at your training date, so it is not a source for "latest".
 
-**Name beside each version where you took it from**, such as "lockfile" or "registry `latest`". When a registry has several channels, such as `latest` and `stable`, take the newest release and list the other channel as a narrowing below the brief.
+**Name beside each version where you took it from**, such as "lockfile" or "registry `latest`". Take the registry's default channel, such as npm `latest`, and list any other channel or newer pre-release under "Narrower than asked".
 
 **Look up what each named product is today before you scope it.** One name can cover several forms, such as a CLI, a desktop app, an IDE extension and a cloud service, and forms appear after your training date. Find the current forms on the vendor's site, and cover every form the user's words cover.
 
+**Give reported problems their own sub-question when the question is about how a tool behaves.** A researcher who also reads docs or code spends its tool calls there, and the issue reports go unfound.
+
 **Use one sub-question for a single fact, up to 3 for most questions, and up to 6 when the question covers many independent items.**
 
-**List below the brief every place where it is narrower than the user's words**, such as one form of a product, one release channel or one platform, each as a choice the user can widen.
+**List under "Narrower than asked" every place where the brief is narrower than the user's words**, such as one form of a product, one release channel or one platform, each as a choice the user can widen. Write "nothing" when there is none.
 
 **Show the user the brief and wait for their OK before spawning anyone**, also when another skill invoked this one. Nothing later in the run catches a wrong or slanted question. When the user edits the brief, apply the edits to the saved file and show it again.
 
-**Add a last line to the saved brief, `**Confirmed by user** — yes`, once the user has confirmed it.** When no user can answer, write `no` there and go on; the writer carries the line into the report's Method section.
+**Add a last item to the saved brief, `- **Confirmed by user:** yes`, once the user has confirmed it.** When no user can answer, write `no` there and go on; the writer carries the line into the report's Method section.
 
 Done when the user has confirmed the saved brief, or the run has noted that nobody could.
 
