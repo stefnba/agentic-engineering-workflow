@@ -12,20 +12,20 @@ versions: "gh 2.98.0 (installed, tested) to gh 2.106.0 (release notes only); Git
 - gh covers labels, milestones on an issue, assignees, close reason, issue type, sub-issues, dependencies and Projects with its own flags. Issue fields, issue statuses, "Relates to", milestone definitions and sub-issue order need `gh api` with REST or GraphQL.
 - The table is built from gh 2.98.0 help output, the REST and GraphQL docs, and live schema introspection, all on 2026-11-27. The gh releases from 2.99.0 to 2.106.0 change none of these commands, by a keyword scan of their notes (tested 2026-11-27: `gh release view <tag> -R cli/cli`).
 
-| Feature | Defined at | Status | Read | Set |
-|---|---|---|---|---|
-| Labels | Repository | GA | `gh label list`; `gh issue view --json labels` | `gh label create/edit/delete`; `gh issue edit --add-label/--remove-label` |
-| Milestones | Repository | GA | REST `GET …/milestones`; `--json milestone` | Define: REST `…/milestones` only. On an issue: `gh issue edit --milestone` |
-| Assignees | Repository (users who can be assigned) | GA | `--json assignees` | `gh issue edit --add-assignee/--remove-assignee` |
-| State and close reason | GitHub (fixed reasons) | GA | `--json state,stateReason` | `gh issue close --reason [--duplicate-of]`; `gh issue reopen` |
-| Issue types | Account, inherited by its repositories | GA for personal accounts since 2026-11-11 | `--json issueType`; REST `GET /repos/…/issue-types` | `gh issue edit --type`. Define: REST `/user/issue-types` or GraphQL, scope `user` |
-| Issue fields | Account, inherited by its repositories | GA for personal accounts since 2026-11-11 | REST `issue_field_values`; GraphQL `issueFieldValues` | REST `issue_field_values` or GraphQL `setIssueFieldValue`. Define: REST `/user/issue-fields` or GraphQL, scope `user` |
-| Issue statuses | GitHub (fixed seven) | Public preview since 2026-11-23 | REST and GraphQL `status`; `gh issue list --search 'status:…'` | REST `status` or GraphQL `setIssueStatus` |
-| Repository boards | Repository saved views | Public preview since 2026-11-23 | None | None; dragging a card sets the status |
-| Sub-issues | Issue | GA | `--json parent,subIssues,subIssuesSummary` | `gh issue edit --parent/--add-sub-issue/--remove-sub-issue`; reorder only by REST or GraphQL |
-| Dependencies | Issue | GA since 2025-08-21 | `--json blockedBy,blocking` | `gh issue edit --add-blocked-by/--add-blocking` and their `--remove-` forms |
-| "Relates to" | Issue | GA since 2026-09-25 | REST `…/relates_to`; GraphQL `relatesTo` | REST `POST/DELETE …/relates_to` or GraphQL `addRelatesTo/removeRelatesTo` |
-| Project item and fields | The Project, owned by the account | GA | `gh project item-list`, scope `read:project` | `gh project item-add`, `item-edit`, scope `project` |
+| Feature                 | Defined at                             | Status                                    | Read                                                           | Set                                                                                                                   |
+| ----------------------- | -------------------------------------- | ----------------------------------------- | -------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| Labels                  | Repository                             | GA                                        | `gh label list`; `gh issue view --json labels`                 | `gh label create/edit/delete`; `gh issue edit --add-label/--remove-label`                                             |
+| Milestones              | Repository                             | GA                                        | REST `GET …/milestones`; `--json milestone`                    | Define: REST `…/milestones` only. On an issue: `gh issue edit --milestone`                                            |
+| Assignees               | Repository (users who can be assigned) | GA                                        | `--json assignees`                                             | `gh issue edit --add-assignee/--remove-assignee`                                                                      |
+| State and close reason  | GitHub (fixed reasons)                 | GA                                        | `--json state,stateReason`                                     | `gh issue close --reason [--duplicate-of]`; `gh issue reopen`                                                         |
+| Issue types             | Account, inherited by its repositories | GA for personal accounts since 2026-11-11 | `--json issueType`; REST `GET /repos/…/issue-types`            | `gh issue edit --type`. Define: REST `/user/issue-types` or GraphQL, scope `user`                                     |
+| Issue fields            | Account, inherited by its repositories | GA for personal accounts since 2026-11-11 | REST `issue_field_values`; GraphQL `issueFieldValues`          | REST `issue_field_values` or GraphQL `setIssueFieldValue`. Define: REST `/user/issue-fields` or GraphQL, scope `user` |
+| Issue statuses          | GitHub (fixed seven)                   | Public preview since 2026-11-23           | REST and GraphQL `status`; `gh issue list --search 'status:…'` | REST `status` or GraphQL `setIssueStatus`                                                                             |
+| Repository boards       | Repository saved views                 | Public preview since 2026-11-23           | None                                                           | None; dragging a card sets the status                                                                                 |
+| Sub-issues              | Issue                                  | GA                                        | `--json parent,subIssues,subIssuesSummary`                     | `gh issue edit --parent/--add-sub-issue/--remove-sub-issue`; reorder only by REST or GraphQL                          |
+| Dependencies            | Issue                                  | GA since 2025-08-21                       | `--json blockedBy,blocking`                                    | `gh issue edit --add-blocked-by/--add-blocking` and their `--remove-` forms                                           |
+| "Relates to"            | Issue                                  | GA since 2026-09-25                       | REST `…/relates_to`; GraphQL `relatesTo`                       | REST `POST/DELETE …/relates_to` or GraphQL `addRelatesTo/removeRelatesTo`                                             |
+| Project item and fields | The Project, owned by the account      | GA                                        | `gh project item-list`, scope `read:project`                   | `gh project item-add`, `item-edit`, scope `project`                                                                   |
 
 The sections below hold the evidence for each row.
 
@@ -43,15 +43,15 @@ The sections below hold the evidence for each row.
 - Since 2026-11-23 any field can be added to an issue of any type. A field shows by default only when it is pinned to that type ([GitHub Changelog, 2026-11-23][cl-1123]).
 - Issue statuses and repository boards are in public preview ([GitHub Changelog, 2026-11-23][cl-1123]). The seven statuses are fixed by GitHub, and each maps to a state and a close reason (tested 2026-11-27: GraphQL `repository{planningStatuses{nodes{name category{key state stateReason}}}}`):
 
-  | Status | Category key | State | Close reason |
-  |---|---|---|---|
-  | Backlog | `backlog` | OPEN | none |
-  | Todo | `planned` | OPEN | none |
-  | In progress | `started` | OPEN | none |
-  | In review | `started` | OPEN | none |
-  | Done | `completed` | CLOSED | `COMPLETED` |
+  | Status      | Category key  | State  | Close reason  |
+  | ----------- | ------------- | ------ | ------------- |
+  | Backlog     | `backlog`     | OPEN   | none          |
+  | Todo        | `planned`     | OPEN   | none          |
+  | In progress | `started`     | OPEN   | none          |
+  | In review   | `started`     | OPEN   | none          |
+  | Done        | `completed`   | CLOSED | `COMPLETED`   |
   | Not planned | `not_planned` | CLOSED | `NOT_PLANNED` |
-  | Duplicate | `duplicate` | CLOSED | `DUPLICATE` |
+  | Duplicate   | `duplicate`   | CLOSED | `DUPLICATE`   |
 
 - A reply of 2026-11-19 by a GitHub collaborator says "The issue statuses are fixed to this set." The 2026-11-27 reply by the author of #212151, cited in the Answer, says custom statuses per team are coming. Both are in community discussions ([discussion #212171][d212171]; [discussion #212151][d212151]).
 - Statuses change on their own when a user is assigned (to Todo) or a pull request is linked (to In progress or In review) ([GitHub Changelog, 2026-11-23][cl-1123]).
@@ -202,6 +202,105 @@ Project sync:
 - gh has no flag or JSON field for it, and the request is open ([cli/cli#14467][cli-14467]). Its 2026-09-17 claim that the API lacks the relationship predates the GA and the schema change.
 - A `relatesTo` query on the test repository's issues was accepted but had no issues to read (tested 2026-11-27: `gh api graphql`). Inferred: a personal-account repository has the relationship, from the GA post naming no restriction and the accepted query. No issue in such a repository was read.
 
+## Findings carried over from the note of 2026-11-26
+
+An earlier note on the same question held the findings below, which this run's researchers did not reach. They were read or tested on 2026-11-26 with gh 2.98.0 and were not rechecked on 2026-11-27. "Tested 2026-11-26" marks a live read-only call against `stefnba/agentic-engineering-workflow`.
+
+Who can set a status ([GitHub Docs, About issue statuses][docs-status]):
+
+- A workflow whose `GITHUB_TOKEN` has `issues: write` can set a status, as a GitHub App with Issues write access can.
+- Choosing a status that closes or reopens an issue also needs permission to close or reopen it.
+- A person who cannot choose a status can still close or reopen an issue they may close. That sets the default status for the new state.
+- An issue created before its repository had statuses has none, and the field is `null`, until someone or GitHub sets one.
+
+What GitHub sets automatically on an open issue ([GitHub Docs, About issue statuses][docs-status]):
+
+| Trigger                                                                                  | From                                    | To          |
+| ---------------------------------------------------------------------------------------- | --------------------------------------- | ----------- |
+| A person is assigned                                                                     | No status or Backlog                    | Todo        |
+| An agent, such as Copilot, is assigned                                                   | No status, Backlog or Todo              | In progress |
+| An open draft pull request is linked, or a linked draft is reopened                      | No status, Backlog or Todo              | In progress |
+| A pull request ready for review is linked or reopened, or a linked draft is marked ready | No status, Backlog, Todo or In progress | In review   |
+| A person or agent is assigned while a linked pull request is ready for review            | No status, Backlog, Todo or In progress | In review   |
+| The last linked ready pull request becomes a draft, closes unmerged, or is unlinked      | In review                               | In progress |
+
+- These changes only move an issue forward. The last row is the one exception.
+- No trigger fires when a pull request merges. An issue reaches Done only by being closed, for example by a closing keyword.
+- Only pull requests in the issue's repository, or in a public repository, change its status.
+- A change does not happen when the person or app behind it cannot choose a status.
+- A pull request counts as linked through a closing keyword or the Development section of the issue.
+- A closing keyword such as `Closes #12` links only a pull request whose base is the default branch. For any other base GitHub creates no link, so none of the triggers fire unless the pull request is linked through the Development section ([GitHub Docs, Linking a pull request to an issue][docs-linking]).
+
+Project sync, beyond the rules under the sub-question on issue status ([GitHub Docs, About issue statuses][docs-status]):
+
+- Issue to Project: the item moves to the option with the same name. Matching ignores case, extra spaces and emoji. With no matching option, the item stays.
+- Project to issue: moving an item to an option named like a status sets that status, which can close or reopen the issue. Adding an issue to a Project in a column counts as a move. A Duplicate option does not change the issue.
+- Built-in Project workflows that set Status set the option matching the issue's status instead of their configured one.
+
+Status webhooks ([GitHub Docs, Issue status webhooks and workflows][docs-status-webhooks]):
+
+- The `issues` webhook event has an action `status_changed`. The docs mark these webhooks as preview.
+- Delivery is best effort and can arrive out of order.
+- A status change that also closes or reopens the issue sends two deliveries.
+- The page advises matching on a status's category as well as its `id`, because names may change and categories may be added.
+
+Commands for status. The two list commands were tested 2026-11-26; the set commands rest on docs and schema:
+
+| Action                   | Command                                                                                                                                                 |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Read one issue's status  | `gh api graphql -F n=12 -f query='query($n:Int!){repository(owner:"OWNER",name:"REPO"){issue(number:$n){status{id name category{key state}}}}}'`        |
+| List the status IDs      | `gh api graphql -f query='{repository(owner:"OWNER",name:"REPO"){planningStatuses(first:50){nodes{id name category{key}}}}}'`                           |
+| List the statuses (REST) | `gh api repos/OWNER/REPO/planning-statuses`                                                                                                             |
+| Set a status (REST)      | `gh api -X PATCH repos/OWNER/REPO/issues/N -f status="In progress"`                                                                                     |
+| Set a status (GraphQL)   | `gh api graphql -f query='mutation($i:ID!,$s:ID!){setIssueStatus(input:{issueId:$i,statusId:$s}){clientMutationId}}' -f i=ISSUE_NODE_ID -f s=STATUS_ID` |
+
+- The `status:` search qualifier with an unknown name returns HTTP 422 (tested 2026-11-26).
+- `status:started` was rejected, although the error message says "Use an exact status name or category key" (tested 2026-11-26). The `category:` qualifier under the sub-question on issue status is the documented way to search by category.
+- The status set has the same IDs on the organization `github` as on the test repository and its owner, which suggests one set shared by every account (tested 2026-11-26). Whether a set can ever differ is not known.
+- The docs conflict on who sees `status` in REST responses. The REST reference says only accounts enrolled in the preview ([REST docs, Issues][rest-issues]). The webhooks page says any request that can read the issue ([GitHub Docs, Issue status webhooks and workflows][docs-status-webhooks]).
+- The community discussion on statuses starts on 2026-11-05, before the announcement of 2026-11-23 ([discussion #212151][d212151]).
+
+Issue types and issue fields:
+
+- Organizations have had issue types since April 2025, and issue fields generally available since 2026-07-02 ([GitHub Changelog, 2026-07-02][cl-0702]). Fields were in preview for selected organizations from 2026-03-12 and for all organizations from 2026-05-21.
+- The default fields, their options and their pinning ([GitHub Docs, Managing issue fields][docs-fields]):
+
+  | Field       | Type          | Options                   | Pinned to                           |
+  | ----------- | ------------- | ------------------------- | ----------------------------------- |
+  | Priority    | Single select | Urgent, High, Medium, Low | Every type, and issues with no type |
+  | Effort      | Single select | High, Medium, Low         | Bug, Task, Feature                  |
+  | Start date  | Date          | none                      | Feature                             |
+  | Target date | Date          | none                      | Feature                             |
+
+- The pinning comes from the docs only. Live calls returned no pinned fields per type, and only Priority as pinned for the repository (tested 2026-11-26).
+- A type pins at most 10 fields ([GitHub Docs, Managing issue fields][docs-fields]).
+- Field visibility matters only in public repositories, and a public Project shows only fields set to Public ([GitHub Docs, Managing issue fields][docs-fields]).
+- Three open pull requests would add field support to gh, as read in `cli/cli` on 2026-11-26:
+  - cli/cli#13948 adds writing through a new command, `gh issue edit-field`. It is a draft until issue fields are in the public schema as generally available.
+  - cli/cli#14130 adds reading in `gh issue view`, and field discovery.
+  - cli/cli#13707 adds `issueFieldValues` to `--json`.
+- The REST body for field values is `{"issue_field_values":[{"field_id":<int>,"value":…}]}`, and for a single-select field `value` is the option name ([REST docs, Issue field values][rest-field-values]).
+- A returned field value holds `issue_field_id`, `issue_field_name`, `node_id`, `data_type`, `value`, and `single_select_option` or `multi_select_options` ([REST docs, Issue field values][rest-field-values]).
+- `GET …/issues/N/issue-field-values` returned 200 with an empty list even for an issue that does not exist, so that read proves little (tested 2026-11-26).
+- GraphQL `setIssueFieldValue` takes `issueId` and `issueFields`, a list of `{fieldId, singleSelectOptionId}`. Other field types use `dateValue`, `textValue`, `numberValue` or `multiSelectOptionIds`, and `delete` clears a value (schema read 2026-11-26).
+
+Token permissions:
+
+- For fine-grained tokens, the docs require Issues write access to add a dependency, and Issues write access plus further permissions to write field values ([GitHub Docs, Fine-grained token permissions][docs-fg]).
+- Whether a classic `repo` token is enough to set status, dependencies and fields was not confirmed by any source or test on 2026-11-26.
+
+Other recent features:
+
+| Feature                           | State, date                                        | Note                                                                                                                          |
+| --------------------------------- | -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| Issue artifacts                   | Preview, 2026-10-28                                | Markdown, link or HTML items attached to an issue, managed with `gh issue artifact` ([GitHub Changelog, 2026-10-28][cl-1028]) |
+| Saved views for repository issues | Preview 2026-06-25, generally available 2026-09-25 | Basis of repository boards                                                                                                    |
+| Improved issue search             | Preview 2026-01-29, generally available 2026-04-02 | none                                                                                                                          |
+| Projects hierarchy view           | Preview 2026-01-15, generally available 2026-03-19 | none                                                                                                                          |
+| Sub-issues                        | Generally available since April 2025               | none                                                                                                                          |
+
+- The GitHub MCP server also reads and sets statuses, and status changes can trigger Copilot automations ([GitHub Changelog, 2026-11-23][cl-1123]).
+
 ## Open questions
 
 - Every write route is untested: status, types, fields, sub-issues, dependencies, "Relates to" and Project values. Each rests on docs and schema introspection, because the run sent no writes.
@@ -225,6 +324,7 @@ Project sync:
 - Notes 7 covered reading status, its effect on state, and Project sync.
 - Notes 8 covered the account-level API for issue types and fields.
 - Notes 9 covered "Relates to".
+- The section "Findings carried over from the note of 2026-11-26" was added by hand on 2026-11-27 from an earlier note. This run's checker did not see it.
 - All live checks were read-only `gh` calls on 2026-11-27, with gh 2.98.0 and a token scoped `gist`, `read:org`, `repo` and `workflow`. No write was sent and no Project was read.
 - A source check on 2026-11-27 reopened the changelog entries, the REST, GraphQL and Docs pages, both discussions and the cited `cli/cli` issues, and reran the gh help, introspection and test-repository reads, the board-type schema search and the release-note scan. gh 2.106.0 is still the latest release, and the REST versions are unchanged. It narrowed the Answer's live-check claim and the label-defaults claim, said that #212151's author writes for the team rather than calling the author staff, corrected the dates of two discussion reports, and corrected how #14467 dates the blocked-by flags. Every section was covered except four sources that were not reopened: the two `cli/cli` source files at v2.106.0, the REST Project items page and the GraphQL Projects reference.
 
@@ -272,3 +372,8 @@ Project sync:
 [cli-13816]: https://github.com/cli/cli/issues/13816
 [src-item-edit]: https://github.com/cli/cli/blob/v2.106.0/pkg/cmd/project/item-edit/item_edit.go
 [src-field-create]: https://github.com/cli/cli/blob/v2.106.0/pkg/cmd/project/field-create/field_create.go
+[docs-linking]: https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue
+[docs-fields]: https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/managing-issue-fields-in-your-organization
+[rest-field-values]: https://docs.github.com/en/rest/issues/issue-field-values
+[cl-0702]: https://github.blog/changelog/2026-07-02-issue-fields-are-now-generally-available/
+[cl-1028]: https://github.blog/changelog/2026-10-28-issue-artifacts-are-now-in-public-preview/

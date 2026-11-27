@@ -37,7 +37,7 @@ Each item starts with its state. **Decided** means the owner confirmed it. **Ass
 - **Assumed.** Issues carry a small classification: a type (Feature, Bug, Task), a priority (P0 to P3), `area:*` labels, and the flags `needs-decision` and `blocked`.
 - **Assumed.** A value that can hold only one thing at a time is an issue type or an issue field. Things that can overlap are labels.
 - **Open.** Whether type and priority are issue fields or labels. The GitHub draft used issue types and fields. GitHub ships Priority (Urgent, High, Medium, Low), Effort, Start date and Target date as default fields. The `setup-workflow` templates write `P0` to `P3` as labels, with type labels as a fallback when the account has no issue types. Since 2026-11-11 every account, personal or organization, has issue types and fields.
-- **Assumed.** Issue types and issue fields are defined on the account, personal or organization, under Settings → Planning. Labels are defined per repository. Field visibility matters only in public repositories. `research/archive/github-planning-features.md` holds the facts about each GitHub feature, checked on 2026-11-26.
+- **Assumed.** Issue types and issue fields are defined on the account, personal or organization, under Settings → Planning. Labels are defined per repository. Field visibility matters only in public repositories. `research/0001-github-native-issue-tracking.md` holds the facts about each GitHub feature, researched on 2026-11-27.
 
 - **Open.** Whether the classification grows. The GitHub draft proposed:
   - the types Spike (time-boxed research ending in a decision) and Chore (maintenance with no user-facing change);
@@ -49,7 +49,7 @@ Each item starts with its state. **Decided** means the owner confirmed it. **Ass
 - **Assumed.** Milestones only for releases or real deadlines.
 - **Assumed.** The owner chooses the work. An agent never picks up a work item on its own.
 - **Decided.** Status is derived from the state of the issue and its pull request. It is never stored a second time.
-- **Open.** Whether the tracker reads GitHub's native issue status instead, in public preview since 2026-11-23. Its fixed set has no Shaping or Ready, and `gh` cannot set it yet. `research/archive/github-planning-features.md`, section "Issue status", has the facts.
+- **Open.** Whether the tracker reads GitHub's native issue status instead, in public preview since 2026-11-23. Its fixed set has no Shaping or Ready, and `gh` cannot set it yet. `research/0001-github-native-issue-tracking.md` has the facts, in its sections on issue status.
 - **Open.** Whether "spec in progress" and "ready for work" need a label, a Project board, or nothing.
   - The GitHub draft proposed a Project Status field: Backlog, Shaping, Ready, In progress, In review, Done. It would store status a second time.
   - Project workflows would then set Backlog when an issue is added, In review when a pull request links, and Done on close.
