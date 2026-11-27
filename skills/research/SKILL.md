@@ -1,21 +1,21 @@
 ---
 name: research
-description: Use when the user says "research this", "look into", "find out how other repositories do it", "what is the current best practice for", "how do we migrate from X to Y" or "check the docs for", when a Spike needs its evidence, or when a choice depends on outside facts, such as other tools, platform features or published practice, that no note in `docs/research/` holds yet. Also use when a note in `docs/research/` may be out of date. Not for a quick answer the user wants only in chat.
+description: Use when the user says "research this", "look into", "find out how other repositories do it", "what is the current best practice for", "how do we migrate from X to Y" or "check the docs for", when a Spike needs its evidence, or when a choice depends on outside facts, such as other tools, platform features or published practice, that no report in `docs/research/` holds yet. Also use when a report in `docs/research/` may be out of date. Not for a quick answer the user wants only in chat.
 ---
 
 # Research
 
-A note in `docs/research/` answers one question: the answer first, then the sourced findings it rests on, each checked against its source by a separate agent.
+A report in `docs/research/` answers one question: the answer first, then the sourced findings it rests on, each checked against its source by a separate agent.
 
 ## Guardrails
 
-**Coordinate; leave reading, writing and checking to fresh subagents.** Your context holds the project's plans and existing notes, and a subagent that gets only its brief is not steered by them. Spawn each one fresh, never as a fork of this conversation. When subagents are unavailable, do each role yourself in the same order and say so in the note's Method section.
+**Coordinate; leave reading, writing and checking to fresh subagents.** Your context holds the project's plans and existing reports, and a subagent that gets only its brief is not steered by them. Spawn each one fresh, never as a fork of this conversation. When subagents are unavailable, do each role yourself in the same order and say so in the report's Method section.
 
 **Give subagents the purpose, and keep the preferred answer to yourself.** A researcher needs to know what the answer will be used for to judge what is relevant. It does not need to know which answer you or the user expect.
 
-**Say what the evidence shows, and stop before the project's choice.** The note states facts, what they add up to, and what sources advise, attributed to them. What this project should do goes into a design doc or a decision record, written by the user or by `record-decision`.
+**Say what the evidence shows, and stop before the project's choice.** The report states facts, what they add up to, and what sources advise, attributed to them. What this project should do goes into a design doc or a decision record, written by the user or by `record-decision`.
 
-**Write only the note in `docs/research/`.** Leave it uncommitted; the user reviews the diff first.
+**Leave only the report behind, in `docs/research/`.** Delete the working folder at hand-over, and leave the report uncommitted; the user reviews the diff first.
 
 ## Kinds of question
 
@@ -30,33 +30,37 @@ These kinds are examples. For a question that fits none of them, split it into p
 
 ## Process
 
-### 1. Look for an existing note
+### 1. Look for an existing report
 
-**List `docs/research/` and read the front matter of each note whose title touches the question.** When one holds the same question, this run rewrites it under its existing file name, and the writer gets the old note as background.
+**List `docs/research/` and read the front matter of each report whose title touches the question.** When one holds the same question, this run rewrites it under its existing file name, and the writer gets the old report as background.
 
-**Name a new note `NNNN-slug.md`, with the next number after the highest one in the folder.** The first note is `0001`, and the slug is the subject in kebab-case. The number keeps the notes in the order they were created; a note keeps its number when it is rewritten.
+**Name a new report `NNNN-slug.md`, with the next number after the highest one among the files directly in `docs/research/`.** Subfolders do not count. The first report is `0001`, and the slug is the subject in kebab-case. The number keeps the reports in the order they were created; a report keeps its number when it is rewritten.
 
-Done when you know the note's path, new or existing.
+Done when you know the report's path, new or existing.
 
 ### 2. Write the brief
 
-**Write the brief yourself and save it as `brief.md` in a new temporary folder outside the repository:**
+**Write the brief yourself and save it as `brief.md` in a new working folder, `docs/research/.work/<slug>/`:**
 
 ```markdown
 **Question** — What changes in the configuration format from examplelib 1.9 to examplelib 2.3.1?
 **Kind** — Migration or upgrade
 **Purpose** — Planning an upgrade of a service that loads plugins through the configuration file
-**Constraints** — examplelib 1.9.0 to 2.3.1 (latest stable, released 2026-10-14); configuration file only, plugin APIs out of scope; as of 2026-11-27
+**Constraints** — examplelib 1.9.0 (lockfile) to 2.3.1 (registry `latest`, released 2026-10-14); configuration file only, plugin APIs out of scope; as of 2026-11-27
 **Sub-questions** — 1. Which keys are removed, renamed or added, or is the format unchanged? 2. What upgrade path do the maintainers document, if any? 3. What upgrade problems are reported in issues, if any?
 **Answer gives** — The documented path in order, the known breakages, and what the maintainers advise.
-**Note** — `docs/research/0007-examplelib-2-configuration.md` (new)
+**Report** — `docs/research/0007-examplelib-2-configuration.md` (new)
 ```
+
+**Keep every working file of the run in that folder.** A folder outside the repository may refuse a subagent's writes.
 
 **Word the question so it does not lead.** Ask "what is", "how does" or "what changed"; turn "why X beats Y" into "how X and Y compare on <named criteria>"; name every outcome a sub-question covers, including "none" or "unchanged".
 
 **Carry every constraint the user gave into Constraints**, with today's date. Leave open what the user left open.
 
-**When the question concerns a versioned tool, resolve its versions before writing the brief.** Take the project's current version from its manifest or lockfile, and the latest stable release from the release page or package registry. Your memory stops at your training date, so it is not a source for "latest".
+**When the question concerns a versioned tool, resolve its versions before writing the brief.** Take the project's current version from its manifest or lockfile, and the latest release from the release page or package registry. Your memory stops at your training date, so it is not a source for "latest".
+
+**Name beside each version where you took it from**, such as "lockfile" or "registry `latest`". When a registry has several channels, such as `latest` and `stable`, take the newest release and list the other channel as a narrowing below the brief.
 
 **Look up what each named product is today before you scope it.** One name can cover several forms, such as a CLI, a desktop app, an IDE extension and a cloud service, and forms appear after your training date. Find the current forms on the vendor's site, and cover every form the user's words cover.
 
@@ -66,35 +70,39 @@ Done when you know the note's path, new or existing.
 
 **Show the user the brief and wait for their OK before spawning anyone**, also when another skill invoked this one. Nothing later in the run catches a wrong or slanted question. When the user edits the brief, apply the edits to the saved file and show it again.
 
-**Add a last line to the saved brief, `**Confirmed by user** — yes`, once the user has confirmed it.** When no user can answer, write `no` there and go on; the writer carries the line into the note's Method section.
+**Add a last line to the saved brief, `**Confirmed by user** — yes`, once the user has confirmed it.** When no user can answer, write `no` there and go on; the writer carries the line into the report's Method section.
 
 Done when the user has confirmed the saved brief, or the run has noted that nobody could.
 
 ### 3. Run the researchers
 
-**Fill `templates/researcher-brief.md` from this skill's folder once per sub-question.** Each filled brief is a subagent's whole prompt and names the file in the temporary folder where that researcher saves its report.
+**Fill `templates/researcher-brief.md` from this skill's folder once per sub-question.** Each filled brief is a subagent's whole prompt and names the file in the working folder where that researcher saves its notes.
 
 **Spawn every researcher in one message**, so they run in parallel.
 
+**When a researcher returns its notes as its message because the write was refused, save that message to its notes file word for word.**
+
 **Run one more round only for a sub-question whose researcher found no answer**, with a brief that names what is missing. After that round, go on with what there is.
 
-Done when every sub-question has a report file in the temporary folder.
+Done when every sub-question has a notes file in the working folder.
 
-### 4. Write the note
+### 4. Write the report
 
-**Fill `templates/writer-brief.md` and spawn the writer.** It reads the brief and the reports, and writes the note at the path the brief names, from `templates/note.md`.
+**Fill `templates/writer-brief.md` and spawn the writer.** It reads the brief and the researchers' notes, and writes the report at the path the brief names, from `templates/report.md`.
 
-Done when the note exists at its path.
+Done when the report exists at its path.
 
-### 5. Check the note
+### 5. Check the report
 
-**Fill `templates/checker-brief.md` and spawn the checker.** It opens the sources the note cites, corrects the note where a source says less or something else, and returns what it changed.
+**Fill `templates/checker-brief.md` and spawn the checker.** It opens the sources the report cites, corrects the report where a source says less or something else, and returns what it changed.
 
 Done when the checker has returned its list of changes.
 
-### 6. Report
+### 6. Hand over
 
-**Report in this shape:**
+**Delete the run's working folder, and `docs/research/.work/` when that leaves it empty.**
+
+**Tell the user the result in this shape:**
 
 ```markdown
 - `docs/research/0007-examplelib-2-configuration.md` — new; 3 researchers; checker narrowed 3 claims and moved 2 to Open questions
@@ -102,4 +110,4 @@ Done when the checker has returned its list of changes.
 - Open: whether the old `plugins` key still loads with a warning
 ```
 
-Done when the user has the path, the answer in a line or two, what the checker changed and what is still open.
+Done when the working folder is gone and the user has the path, the answer in a line or two, what the checker changed and what is still open.
