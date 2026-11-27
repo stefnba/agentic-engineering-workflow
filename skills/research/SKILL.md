@@ -73,11 +73,13 @@ Done when you know the report's path, new or existing.
 
 **Look up what each named product is today before you scope it.** One name can cover several forms, such as a CLI, a desktop app, an IDE extension and a cloud service, and forms appear after your training date. Find the current forms on the vendor's site, and cover every form the user's words cover.
 
+**Use one sub-question for a single fact, up to 3 for most questions, and up to 6 when the question covers many independent items.**
+
 **Give reported problems their own sub-question when the question is about how a tool behaves.** A researcher who also reads docs or code spends its tool calls there, and the issue reports go unfound.
 
-**Name a target under "Live checks" when a command that only reads could settle a claim**, such as "`owner/repo` on GitHub, read-only", and write "none" otherwise. A doc can say a feature exists while the user's account does not have it, and one read shows which. The user approves the target with the brief. A researcher runs these commands with the user's credentials after reading pages it cannot trust, so the token's scope and the session's permission mode are the limit that holds, not the brief's wording.
+**Name a target under "Live checks" when a command that only reads could settle a claim**, such as "`owner/repo` on GitHub, read-only", and write "none" otherwise. A doc can say a feature exists while the user's account does not have it, and one read shows which.
 
-**Use one sub-question for a single fact, up to 3 for most questions, and up to 6 when the question covers many independent items.**
+**Name the smallest target that settles the claim: one repository or one account.** A researcher runs these commands with the user's credentials after reading pages it cannot trust. The token's scope and the session's permission mode limit what it can do; the brief's wording does not.
 
 **List under "Narrower than asked" every place where the brief is narrower than the user's words**, such as one form of a product, one release channel or one platform, each as a choice the user can widen. Write "nothing" when there is none.
 
@@ -97,7 +99,9 @@ Done when the user has confirmed the saved brief, or the run has noted that nobo
 
 **Read the Follow-ups section of each notes file, and leave the rest to the writer.** It lists what the question covers but no sub-question did, and the parts a researcher did not reach.
 
-**Run one second round for the follow-ups, with at most three researchers spawned in one message.** A follow-up gets a researcher when the confirmed question's own words cover it and its entry names a source, or when it is a part of a confirmed sub-question left unanswered. When more qualify than there are researchers, take first the ones more researchers reported. You know which answer the project hopes for, so decide by these tests and not by which follow-up looks useful.
+**Give a follow-up a researcher in a second round when the confirmed question's own words cover it and its entry names a source, or when it is a part of a confirmed sub-question left unanswered.** You know which answer the project hopes for, so decide by these tests and not by which follow-up looks useful.
+
+**Spawn at most three researchers for that round, in one message.** When more follow-ups qualify, take first the ones more researchers reported, and give related entries to one researcher.
 
 **Append each follow-up you research to the saved brief as a sub-question ending in "(added after confirmation)".** The writer then gives it a section like any other.
 
@@ -124,10 +128,10 @@ Done when the checker has returned its list of changes.
 **Tell the user the result in this shape:**
 
 ```markdown
-- `docs/research/0007-examplelib-2-configuration.md` — new; 3 researchers; checker narrowed 3 claims and moved 2 to Open questions
+- `docs/research/0007-examplelib-2-configuration.md` — new; 3 researchers; checker narrowed 3 claims and moved 2 to Open questions, and checked every section
 - Answer: 2.x renames `plugins` to `extensions` and drops `legacy_mode`; the maintainers document a two-step upgrade through 2.0.
 - Open: whether the old `plugins` key still loads with a warning
 - Follow-ups: researched the new `extensions.order` key; not researched: plugin API changes, outside the question
 ```
 
-Done when the working folder is gone and the user has the path, the answer in a line or two, what the checker changed, what is still open, and every follow-up with whether it was researched.
+Done when the working folder is gone and the user has the path, the answer in a line or two, what the checker changed and what it did not reach, what is still open, and every follow-up with whether it was researched.
