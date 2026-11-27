@@ -54,6 +54,7 @@ Done when you know the report's path, new or existing.
   1. Which keys are removed, renamed or added, or is the format unchanged?
   2. What upgrade path do the maintainers document, if any?
   3. What upgrade problems are reported in issues, if any?
+- **Live checks:** none
 - **Answer gives:** The documented path in order, the known breakages, and what the maintainers advise.
 - **Narrower than asked:**
   - Covers the `latest` channel; the `stable` channel is at 2.2.4
@@ -74,6 +75,8 @@ Done when you know the report's path, new or existing.
 
 **Give reported problems their own sub-question when the question is about how a tool behaves.** A researcher who also reads docs or code spends its tool calls there, and the issue reports go unfound.
 
+**Name a target under "Live checks" when a command that only reads could settle a claim**, such as "`owner/repo` on GitHub, read-only", and write "none" otherwise. A doc can say a feature exists while the user's account does not have it, and one read shows which. The user approves the target with the brief. A researcher runs these commands with the user's credentials after reading pages it cannot trust, so the token's scope and the session's permission mode are the limit that holds, not the brief's wording.
+
 **Use one sub-question for a single fact, up to 3 for most questions, and up to 6 when the question covers many independent items.**
 
 **List under "Narrower than asked" every place where the brief is narrower than the user's words**, such as one form of a product, one release channel or one platform, each as a choice the user can widen. Write "nothing" when there is none.
@@ -92,9 +95,15 @@ Done when the user has confirmed the saved brief, or the run has noted that nobo
 
 **When a researcher returns its notes as its message because the write was refused, save that message to its notes file word for word.**
 
-**Run one more round only for a sub-question whose researcher found no answer**, with a brief that names what is missing. After that round, go on with what there is.
+**Read the Follow-ups section of each notes file, and leave the rest to the writer.** It lists what the question covers but no sub-question did, and the parts a researcher did not reach.
 
-Done when every sub-question has a notes file in the working folder.
+**Run one second round for the follow-ups, with at most three researchers spawned in one message.** A follow-up gets a researcher when the confirmed question's own words cover it and its entry names a source, or when it is a part of a confirmed sub-question left unanswered. When more qualify than there are researchers, take first the ones more researchers reported. You know which answer the project hopes for, so decide by these tests and not by which follow-up looks useful.
+
+**Append each follow-up you research to the saved brief as a sub-question ending in "(added after confirmation)".** The writer then gives it a section like any other.
+
+**Run no third round.** What the second round leaves open goes to the writer as it is.
+
+Done when every sub-question, including the added ones, has a notes file in the working folder.
 
 ### 4. Write the report
 
@@ -118,6 +127,7 @@ Done when the checker has returned its list of changes.
 - `docs/research/0007-examplelib-2-configuration.md` — new; 3 researchers; checker narrowed 3 claims and moved 2 to Open questions
 - Answer: 2.x renames `plugins` to `extensions` and drops `legacy_mode`; the maintainers document a two-step upgrade through 2.0.
 - Open: whether the old `plugins` key still loads with a warning
+- Follow-ups: researched the new `extensions.order` key; not researched: plugin API changes, outside the question
 ```
 
-Done when the working folder is gone and the user has the path, the answer in a line or two, what the checker changed and what is still open.
+Done when the working folder is gone and the user has the path, the answer in a line or two, what the checker changed, what is still open, and every follow-up with whether it was researched.

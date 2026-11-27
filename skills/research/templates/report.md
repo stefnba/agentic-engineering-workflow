@@ -31,4 +31,4 @@ A conclusion no source states:
 
 ## Method
 
-<!-- One line each: whether the user confirmed the brief; what each researcher covered; anything not done, such as "nothing was run". The checker adds its own line after you. -->
+<!-- One line each: whether the user confirmed the brief; what each researcher covered; which sub-questions were added after confirmation; anything not done, such as "nothing was run". The checker adds its own line after you. -->
