@@ -32,7 +32,9 @@ These kinds are examples. For a question that fits none of them, split it into p
 
 ### 1. Look for an existing note
 
-**List `docs/research/` and read the front matter of each note whose title touches the question.** When one holds the same question, this run rewrites it, and the writer gets the old note as background.
+**List `docs/research/` and read the front matter of each note whose title touches the question.** When one holds the same question, this run rewrites it under its existing file name, and the writer gets the old note as background.
+
+**Name a new note `NNNN-slug.md`, with the next number after the highest one in the folder.** The first note is `0001`, and the slug is the subject in kebab-case. The number keeps the notes in the order they were created; a note keeps its number when it is rewritten.
 
 Done when you know the note's path, new or existing.
 
@@ -47,7 +49,7 @@ Done when you know the note's path, new or existing.
 **Constraints** — examplelib 1.9.0 to 2.3.1 (latest stable, released 2026-10-14); configuration file only, plugin APIs out of scope; as of 2026-11-27
 **Sub-questions** — 1. Which keys are removed, renamed or added, or is the format unchanged? 2. What upgrade path do the maintainers document, if any? 3. What upgrade problems are reported in issues, if any?
 **Answer gives** — The documented path in order, the known breakages, and what the maintainers advise.
-**Note** — `docs/research/examplelib-2-configuration.md` (new)
+**Note** — `docs/research/0007-examplelib-2-configuration.md` (new)
 ```
 
 **Word the question so it does not lead.** Ask "what is", "how does" or "what changed"; turn "why X beats Y" into "how X and Y compare on <named criteria>"; name every outcome a sub-question covers, including "none" or "unchanged".
@@ -76,7 +78,7 @@ Done when every sub-question has a report file in the temporary folder.
 
 ### 4. Write the note
 
-**Fill `templates/writer-brief.md` and spawn the writer.** It reads the brief and the reports, and writes `docs/research/<slug>.md` from `templates/note.md`.
+**Fill `templates/writer-brief.md` and spawn the writer.** It reads the brief and the reports, and writes the note at the path the brief names, from `templates/note.md`.
 
 Done when the note exists at its path.
 
@@ -91,7 +93,7 @@ Done when the checker has returned its list of changes.
 **Report in this shape:**
 
 ```markdown
-- `docs/research/examplelib-2-configuration.md` — new; 3 researchers; checker narrowed 3 claims and moved 2 to Open questions
+- `docs/research/0007-examplelib-2-configuration.md` — new; 3 researchers; checker narrowed 3 claims and moved 2 to Open questions
 - Answer: 2.x renames `plugins` to `extensions` and drops `legacy_mode`; the maintainers document a two-step upgrade through 2.0.
 - Open: whether the old `plugins` key still loads with a warning
 ```
