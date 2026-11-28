@@ -25,7 +25,21 @@ Ways coding agents go wrong in everyday use, independent of any one tool or work
 - **Comments cite docs:** a code comment says "see `docs/…`" instead of stating the reason. The doc gets moved, rewritten or deleted, and the comment keeps pointing at something that no longer says what it claimed.
 - **Comments cite briefs:** a code comment names the brief or ticket the code came from. The brief is gone once the work ships, and the code now leans on context nobody can read.
 
-## Agent suggestions and reviews can't be trusted at face value
+## Agent code is hard to understand
+
+- **Needless complexity:** the code works but is deeply nested and split into many small functions, so people struggle to follow it.
+- **Duplicates instead of reusing:** agents rebuild helpers that already exist and layer new code on old instead of refactoring.
+- **Review can't keep up:** agents write plausible, almost-right code faster than anyone can check it, and large diffs get less scrutiny.
+- **Comprehension debt:** the team no longer understands code that works and passed review, and nothing measures it.
+
+## Work goes wrong at the wrong size
+
+- **Long sessions degrade:** quality drops as the context fills, compaction loses instructions, and repeated corrections stop working.
+- **Wrong task size:** a big or bundled request comes back as a big-bang change instead of a small working slice, and a tiny task costs more overhead than it saves.
+
+## Agent output can't be trusted at face value
+
+- **False "done":** the agent reports success after skipping or weakening tests, dropping a requirement or swallowing errors.
 
 - **No conviction:** the agent suggests something, you challenge it, and it immediately agrees it wasn't needed. You can't tell whether the suggestion was ever worth making.
 - **No sense of scope:** design reviews return many points that don't fit what you're trying to achieve and that overcomplicate the design.
