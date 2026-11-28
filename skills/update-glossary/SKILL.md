@@ -23,9 +23,13 @@ description: Use when the user defines a domain term, says "add this to the glos
 
 - **New:** not in the glossary.
 - **Same:** in the glossary with the same meaning. Skip it.
-- **Conflict:** in the glossary with another meaning, or a second word for a term already there.
+- **Conflict:** in the glossary with another meaning, or a second word for a term already there, including a word in an Avoid list.
 
 **Ask the user to settle each conflict and each new term without a confirmed meaning**, one numbered question per term, with the meaning you would write. A caller that ran an interview has already confirmed its terms.
+
+**For two words that name one thing, ask which word to keep.** The other word goes in the kept entry's Avoid list.
+
+**For one word with two senses, ask which sense keeps the word and what the other sense is called.**
 
 Done when every new or conflicting term has a confirmed meaning, or the user dropped it.
 
@@ -36,10 +40,16 @@ Done when every new or conflicting term has a confirmed meaning, or the user dro
 **Write each entry in this shape, keeping the list in alphabetical order:**
 
 ```markdown
-**Invoice** — the monthly bill for one customer. Not a receipt, which confirms a single payment.
+**Invoice**: the monthly bill for one customer. Not a **Receipt**, which confirms a single payment. Avoid: bill, statement.
 ```
 
-**Name the term it is confused with, when there is one.** That line stops the next reader from mixing them up.
+**Keep each entry on one line, with the definition in one sentence.** A search for any word in the entry then returns the term with it.
+
+**Name the term it is confused with, when there is one.** That sentence stops the next reader from mixing up two different things.
+
+**List the other words for the same thing after "Avoid:", when there are any.** Readers use the term in their place.
+
+**Bold a term that has its own entry.**
 
 **Edit a conflicting entry in place.** Git keeps its history.
 
@@ -47,6 +57,6 @@ Done when each confirmed term has exactly one entry.
 
 ### 3. Report
 
-**List each term as added, changed or skipped, with the reason for a skip.**
+**List each term as added, changed or skipped, with the reason for a skip, and each word moved to an Avoid list.**
 
 Done when the caller or the user has the list.
