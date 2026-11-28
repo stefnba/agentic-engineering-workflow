@@ -11,7 +11,7 @@ description: Use when the user defines a domain term, says "add this to the glos
 
 **Write only `docs/GLOSSARY.md`.**
 
-**Write a meaning only as the user confirmed it.** A name in the code shows that a term exists, not what it means.
+**Write an entry only as the user confirmed it, Avoid list included.** A name in the code shows that a term exists, not what it means, and readers follow an Avoid list as a rule.
 
 **Leave every change uncommitted.** The user reviews the diff first.
 
@@ -21,17 +21,20 @@ description: Use when the user defines a domain term, says "add this to the glos
 
 **Read `docs/GLOSSARY.md`, and sort each term you were given:**
 
+- **General:** a general programming concept, such as a timeout or a retry. Skip it, even when the code uses it often.
 - **New:** not in the glossary.
 - **Same:** in the glossary with the same meaning. Skip it.
-- **Conflict:** in the glossary with another meaning, or a second word for a term already there, including a word in an Avoid list.
+- **Conflict:** in the glossary with another meaning, or a second word for a term already there, including a rename and a word in an Avoid list.
 
-**Ask the user to settle each conflict and each new term without a confirmed meaning**, one numbered question per term, with the meaning you would write. A caller that ran an interview has already confirmed its terms.
+**Ask the user to settle each conflict and each new term without a confirmed entry**, one numbered question per term, with the exact entry line you would write. A caller that ran an interview has already confirmed its terms.
 
 **For two words that name one thing, ask which word to keep.** The other word goes in the kept entry's Avoid list.
 
+**For a rename, edit the existing entry in place.** The new word takes the entry and the old word goes to its Avoid list, so the glossary never holds two entries for one thing.
+
 **For one word with two senses, ask which sense keeps the word and what the other sense is called.**
 
-Done when every new or conflicting term has a confirmed meaning, or the user dropped it.
+Done when every new or conflicting term has a confirmed entry, or the user dropped it.
 
 ### 2. Write the entries
 
