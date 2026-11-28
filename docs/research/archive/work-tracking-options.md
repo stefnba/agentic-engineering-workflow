@@ -2,7 +2,7 @@
 
 For a reader revisiting the tracker decision, or adding local-file support later: the arguments for and against each option, and what each choice implies for the rest of the design. The rules and open questions of the local-files option are in `workflow-design.md`, section "Local-files option". The owner chose GitHub issues on 2026-11-26, for the backlog and for the work items. Local-file support is open.
 
-Sources: the first design draft and the GitHub issues draft of 2026-11-25, the version 1 backlog, and the design session of 2026-11-26. Facts about GitHub features come from `github-planning-features.md`, checked on 2026-11-26. No trial has run yet.
+Sources: the first design draft and the GitHub issues draft of 2026-11-25, the version 1 backlog, and the design session of 2026-11-26. Facts about GitHub features come from the note `github-planning-features.md`, checked on 2026-11-26 and since folded into [`0001-github-native-issue-tracking.md`](../0001-github-native-issue-tracking.md). No trial has run yet.
 
 ## GitHub issues
 
