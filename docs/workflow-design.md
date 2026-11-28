@@ -256,6 +256,7 @@ docs/                      knowledge: slow-changing, safe to publish
 - **Assumed.** A short block in `AGENTS.md` names each file in both folders with the work it covers. `CLAUDE.md` imports `AGENTS.md` with the line `@AGENTS.md`, because Claude Code does not read `AGENTS.md` itself.
 - **Open.** Whether the block also carries the rules that hold when no skill runs. The first draft gave it about 15 lines. Agents ignore long rule files, as reported for Spec Kit's constitution, so the important rules belong in CI.
 - **Assumed.** The skill that writes an artifact owns its format. Other skills name the artifact and do not restate the format.
+- **Assumed.** `ship` hands each term that the diff renames or redefines to `update-glossary`. `docs/GLOSSARY.md` is rarely in the diff that makes it wrong, as v1's decision 0014 recorded, and v1 kept it true with this check in every pull request. To do when `ship` is written.
 - **Assumed.** No shared folder beside the skills and no build step that copies text into them. Text two skills need sits in one skill, and the other invokes that skill. `research/archive/knowledge-across-skills.md` shows shared folders breaking under skills-only installs in four repositories.
 - **Open.** How `setup` migrates a repository after the workflow changes. No prose-driven setup among the references does. Migration needs a recorded workflow version, and no file in `docs/workflow/` holds one yet.
 
@@ -285,6 +286,7 @@ The former `BRIEF.md` is now [`experiments/harness-tests.md`](experiments/harnes
 - **Assumed.** An undecided area gets a throwaway spike on a branch. Only the resulting decision record merges.
 - **Assumed.** Every agent hand-back lists the choices it made that the spec did not cover, sorted by how hard they are to reverse. The owner marks each one accepted, assumed or rejected.
 - **Assumed.** Agents only propose decision records. A record needs all four: the choice is hard to reverse, it affects more than one feature, a reader of the code would wonder why, and a real alternative existed. Everything else is just code.
+- **Assumed.** A choice of name or term is a glossary entry, not a decision record, unless the term encodes a contested trade-off. v1's `glossary` skill said so. To do: name `docs/GLOSSARY.md` in `record-decision` where it sends a choice that fails the bar.
 - **Assumed.** A durable decision goes into a short decision record or a code comment, not only into an issue, because closed issues are rarely read.
 - **Assumed.** Each assumption records what was chosen, why, and what it would cost to change. Code built on an assumption is not extended or copied without asking.
 - **Assumed.** An open question that blocks work is a work item flagged `needs-decision`.
