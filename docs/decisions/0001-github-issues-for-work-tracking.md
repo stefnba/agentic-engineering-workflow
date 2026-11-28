@@ -1,5 +1,5 @@
 ---
-status: Proposed
+status: Accepted
 date: 2026-11-28
 ---
 
@@ -11,7 +11,7 @@ The workflow needs one place for the backlog and the work items, read and change
 
 ## Decision
 
-GitHub issues hold the backlog and the work items.
+GitHub issues hold the backlog and the work items. Skills reach them only through the commands in `docs/workflow/tracker.md`, and the repository has no `work/` folder, `BACKLOG.md` or `INBOX.md`.
 
 ## Alternatives
 
