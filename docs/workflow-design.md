@@ -189,7 +189,7 @@ One skill text serves both harnesses. Five of the seven reference repositories w
   - The `v2-baseline` wording was corrected against real agent failures.
   - `work/v2-skill-inventory.md` at that tag compares the variants and names what to cut.
   - To read it beside this tree: `git worktree add ../aew-baseline v2-baseline`.
-- **Open.** Whether a session started inside a git worktree finds its skills. `research/archive/harness-tests.md` lists it as untested, and the worktree per ticket depends on it.
+- **Open.** Whether a session started inside a git worktree finds its skills. [`experiments/harness-tests.md`](experiments/harness-tests.md) lists it as untested, and the worktree per ticket depends on it.
 
 ## 6. Review and verification
 
@@ -266,7 +266,7 @@ A monorepo needs no logic of its own in any skill. These items cover it:
 - **Assumed.** `implement` and `review-code` read the row for the area of their ticket.
 - **Assumed.** Product and decision records live at the root only. The glossary lives at the root, unless two apps use one word differently.
 - **Assumed.** Architecture has a root overview. An app gets its own architecture doc only when it has its own shape.
-- **Assumed.** A monorepo gets the skills copied into the repository. `research/archive/harness-tests.md` shows a project plugin in Claude Code loading only from the repository root.
+- **Assumed.** A monorepo gets the skills copied into the repository. [`experiments/harness-tests.md`](experiments/harness-tests.md) shows a project plugin in Claude Code loading only from the repository root.
 
 ## 8. Earlier drafts
 
@@ -275,7 +275,7 @@ Two drafts were folded into this file and `research/archive/work-tracking-option
 - The first draft: `git show 8d178f3:docs/agentic-workflow-design.md`.
 - The GitHub draft: `git show 8168e7a:docs/github-issues-workflow.md`.
 
-The former `BRIEF.md` is now `research/archive/harness-tests.md`. It holds the harness behaviour tested here on 2026-09-30, and what stays untested.
+The former `BRIEF.md` is now [`experiments/harness-tests.md`](experiments/harness-tests.md). It holds the harness behaviour tested here on 2026-09-30, and what stays untested.
 
 ## 9. Keeping agents restrained
 
