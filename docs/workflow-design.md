@@ -31,7 +31,7 @@ Each item starts with its state. **Decided** means the owner confirmed it. **Ass
 
 ## 3. Work tracking
 
-- **Decided.** GitHub issues hold the backlog and the work items. `research/archive/work-tracking-options.md` keeps the arguments and the consequences.
+- **Decided.** GitHub issues hold the backlog and the work items. [D-0001](decisions/0001-github-issues-for-work-tracking.md) keeps the arguments and the consequences.
 - **Open.** Whether local files are supported later. Section 11 keeps that option's design.
 - **Assumed.** No skill names a tracker. Skills say "the work item", and `docs/workflow/tracker.md` says how to create, list, claim and close one.
 - **Assumed.** Issues carry a small classification: a type (Feature, Bug, Task), a priority (P0 to P3), `area:*` labels, and the flags `needs-decision` and `blocked`.
@@ -270,7 +270,7 @@ A monorepo needs no logic of its own in any skill. These items cover it:
 
 ## 8. Earlier drafts
 
-Two drafts were folded into this file and `research/archive/work-tracking-options.md` on 2026-11-26, then removed. "The first draft" and "the GitHub draft" in this file refer to them. Git keeps both:
+Two drafts were folded into this file on 2026-11-26, then removed. Their arguments about the tracker are in [D-0001](decisions/0001-github-issues-for-work-tracking.md). "The first draft" and "the GitHub draft" in this file refer to them. Git keeps both:
 
 - The first draft: `git show 8d178f3:docs/agentic-workflow-design.md`.
 - The GitHub draft: `git show 8168e7a:docs/github-issues-workflow.md`.
@@ -320,9 +320,26 @@ What support would add:
 - **References go one way.** Work state may reference docs. Docs never reference work state. Nothing outside a bundle references into it.
 - **Agents capture, humans commit.** Agents may append to the inbox. Only triage puts something in the backlog.
 
-### The `work/` folder
+### The `work/` folder (not planned for now)
 
-`research/archive/work-tracking-options.md` shows the folder tree and how each file evolves.
+```text
+work/                      work state: churns constantly
+  BACKLOG.md               Next and Later
+  INBOX.md                 raw one-line notes from agents
+  OPEN_QUESTIONS.md        open questions (Q-n) and working assumptions (A-n)
+  bundles/<id>-<slug>/     one folder per piece of work in progress
+    SPEC.md                problem, acceptance criteria, out of scope
+    tickets/               vertical slices of the spec
+```
+
+Each file evolves in its own way:
+
+| Artifact            | How it evolves                                                                                                                           |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `OPEN_QUESTIONS.md` | A question or assumption leaves when you decide it. It becomes a decision record if it passes the bar for one, and is removed otherwise. |
+| `BACKLOG.md`        | Later: one line each, uncapped. Next: a paragraph each, at most about 10.                                                                |
+| `INBOX.md`          | Empty after every triage.                                                                                                                |
+| `bundles/`          | Exists only while the work is in progress. At most about 5 at once.                                                                      |
 
 "Now" is not a list. It is whatever folders exist in `work/bundles/`, so there is no shared index to keep in sync. A monorepo has one `work/` at the root.
 
@@ -330,7 +347,14 @@ Each assumption gets an `ASSUMPTION(A-n)` marker at its site in code. A new bund
 
 ### Steps of this option
 
-The option adds capture, triage, kickoff and close around the loop. `research/archive/work-tracking-options.md` shows them as a table.
+The option adds these steps around the loop:
+
+| Step    | Trigger                 | What happens                                                                                                                   | Output                   |
+| ------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ------------------------ |
+| capture | any time, by agents     | Append one line about a side issue. No fixing outside scope, no ticket.                                                        | line in `INBOX.md`       |
+| triage  | regularly, by you       | Each inbox line is deleted (the default), moved to Later or Next with a UC link, or turned into an open question.              | empty inbox              |
+| kickoff | when a Next item starts | Claim the bundle, then shape it as this file describes.                                                                        | bundle, decision records |
+| close   | in the merging PR       | Distill lasting knowledge into `docs/`. Delete the bundle, or archive it if section 5, "Skills", decides so. Run the ID check. | updated docs, no bundle  |
 
 ### Visibility for several developers
 
