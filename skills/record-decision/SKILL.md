@@ -9,7 +9,7 @@ A decision that meets the bar is a numbered record in `docs/decisions/`, with a 
 
 ## Guardrails
 
-**Write only files in `docs/decisions/`.** In an existing record, change only its front matter: `status` to Accepted when the user accepts it, or the superseding fields below.
+**Write only files in `docs/decisions/`.** A record with no commit yet is a draft; revise it in place on the user's feedback. In a committed record, change only its front matter: `status` to Accepted when the user accepts it, or the superseding fields below.
 
 **Mark a record Accepted only when the user accepted, in this conversation, the choice as its Decision section states it.** Agents propose decisions; the user accepts them. A decision found in code, suggested by an agent, or stated more broadly than the user saw is Proposed.
 
