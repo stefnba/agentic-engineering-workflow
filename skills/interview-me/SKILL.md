@@ -19,6 +19,8 @@ The user and you share one understanding of the topic, and every point in it is 
 
 **Put every call you make yourself into the round as assumed**, so the user can reject it. A default the user never heard is one they could not reject.
 
+**Ask the user every decision that is hard to reverse, even one that looks minor**: changing it later means migrating data, breaking users or reworking more than one feature. When the user answers such a decision with "you choose" or "not sure", restate its trade-offs once before you mark it assumed.
+
 **Include the smaller option in every choice**: leave it out, or keep it as it is. Recommend it when nothing you found argues for more.
 
 **Hold a recommendation when the user challenges it.** Say whether their point changes it and why, and change it only for a reason you can name.
@@ -37,7 +39,7 @@ Done when you have read each of these that exists, or found that none does.
 
 **List the decisions the topic needs, each with the decisions it depends on.** When the caller gave topics, start from those. When the repository has no docs and no code, start from these: the problem, who it is for, the core use cases, the constraints, what done means and what is out of scope.
 
-**Leave out a decision the repository or the conversation already settles, and one whose answer would not change the outcome.** Settle such a minor point yourself and mark it assumed.
+**Leave out a decision the repository or the conversation already settles, and one whose answer would not change the outcome.** Settle such a minor point yourself and mark it assumed. A decision that is hard to reverse is never minor.
 
 **Note each idea outside the topic as out of scope**, instead of mapping it.
 
@@ -73,6 +75,8 @@ Reply by number, such as "Q1 yes, Q2 B, Q3 not sure".
 
 **Ask an unanswered question again in the next round, under its number.**
 
+**Challenge a vague answer, or one that names a solution instead of a need, once in the next round**: ask what it must achieve, or what breaks without it. It stays open until the user answers.
+
 **Mark a decision open, naming its blocker, when it depends on a decision the user left open.** It cannot be asked in this interview.
 
 **When the user says "stop", "done" or "enough", mark every decision not yet asked open**, with "not asked" as its blocker, and go to the summary.
@@ -87,10 +91,12 @@ Done when no decision on the map is askable and every decision has a mark.
 **Decided**
 
 - Q1 Teams in the first release — solo developer only; nothing may block a team later
+- Q2 Storage — one SQLite file per project; record candidate
 
 **Assumed**
 
 - Q4 Tracker — GitHub issues; switching later means moving every open item
+- Q5 Log format — plain text; switching later means changing one writer
 
 **Open**
 
@@ -101,6 +107,10 @@ Done when no decision on the map is askable and every decision has a mark.
 
 - A plugin marketplace — came up in Q3
 ```
+
+**List the assumed points hardest to reverse first**, so the user checks those before the rest.
+
+**Tag a decided point "record candidate" when it is hard to reverse, affects more than one feature and had a real alternative.** `record-decision` makes the final call; an untagged point needs no record.
 
 **When the user corrects the summary, change it and ask again.** When the correction brings new facts or changes the goal, go back to mapping the decisions.
 
