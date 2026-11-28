@@ -50,7 +50,7 @@ Done when every candidate has a source.
 
 ### 3. Interview the user
 
-**REQUIRED: run `interview-user` with these topics:**
+**REQUIRED: run `interview-me` skill with these topics:**
 
 - Problem, users, core use cases and non-goals for `PROJECT.md`. Use cases get IDs `UC-1`, `UC-2`.
 - Constraints: what the project must run on, work with or stay within.
