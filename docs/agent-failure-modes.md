@@ -1,4 +1,4 @@
-# Concerns about agent coding in general
+# Agent failure modes
 
 ## Greenfield isn't really supported
 
@@ -12,8 +12,13 @@
 ## Agents produce too much
 
 - Five or six tiny backlog items come out of a single ticket, leaving a long, unstructured backlog.
-- Agents are too eager to write decision records.
+- Agents are too eager to write decision records or backlog items.
 - Temporary docs reference each other, go stale, and then mislead later agents.
+
+## Agents point code at Markdown files
+
+- **Comments cite docs:** a code comment says "see `docs/…`" instead of stating the reason. The doc gets moved, rewritten or deleted, and the comment keeps pointing at something that no longer says what it claimed.
+- **Comments cite briefs:** a code comment names the brief or ticket the code came from. The brief is gone once the work ships, and the code now leans on context nobody can read.
 
 ## Agent suggestions and reviews can't be trusted at face value
 
