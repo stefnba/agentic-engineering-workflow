@@ -1,4 +1,4 @@
-<!-- Fill every section; delete these comments as you fill. Drop a section the user left empty. Nothing someone could close goes in this file: no tasks, dates, owners, statuses or issue numbers. -->
+<!-- Fill every section; delete these comments as you fill. Drop a section the user left empty. Nothing someone could close goes in this file: no tasks, dates, owners, statuses or issue numbers. Nothing about how the system is built either: parts, stack, stores and data flow go in docs/ARCHITECTURE.md. -->
 
 # {{PROJECT_NAME}}
 
@@ -16,7 +16,8 @@ A billing service that turns usage events into monthly invoices, so finance stop
 
 ## Constraints
 
-<!-- What the project must run on, work with or stay within, each with its reason. Mark a point the user did not settle "Assumed:", with what changing it would cost. -->
+<!-- What the project must run on, work with or stay within, each with its reason. Only limits from outside the code, such as a customer, a law, a budget or a platform; a technology the team chose is a decision record. Mark a point the user did not settle "Assumed:", with what changing it would cost. Example:
+- Runs on the customer's existing Postgres 14, because they will not run a second database. -->
 
 ## Non-goals
 

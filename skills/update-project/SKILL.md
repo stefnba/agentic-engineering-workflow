@@ -11,9 +11,13 @@ description: Use when the user says "add a use case", "add a non-goal", "that is
 
 **Write only `docs/PROJECT.md`.**
 
-**Write a point only when the user decided it, the user left it assumed, or the code shows it.** Mark an assumed point "Assumed:", with what changing it would cost. An open point goes in the report, never in the file.
+**Write a point only when the user decided it, the user left it assumed, or the code shows a user can already do it.** Mark an assumed point "Assumed:", with what changing it would cost. An open point goes in the report, never in the file.
 
 **Keep out of `docs/PROJECT.md` anything someone could close:** a task, a bug, acceptance criteria, an estimate, an owner, a date, a status, a checkbox or an issue number. Return it as a candidate work item instead. Work lives in the tracker; a file that tracks it goes stale every week and turns into a second backlog.
+
+**Keep out of `docs/PROJECT.md` how the system is built:** its parts, stack, libraries, stores, endpoints and data flow. A line that a code change could make false belongs in `docs/ARCHITECTURE.md`, which `write-architecture` keeps true to the code.
+
+**Write a constraint only when it comes from outside the code**, such as a customer, a law, a budget or a platform the project must run on. A technology the team chose is a candidate decision for `record-decision`, not a constraint.
 
 **Leave every change uncommitted.** The user reviews the diff first.
 
@@ -24,7 +28,7 @@ description: Use when the user says "add a use case", "add a non-goal", "that is
 **Read `docs/PROJECT.md`, and sort each point you were given:**
 
 - **Work item:** someone could close it. Skip it, and return it as a candidate work item.
-- **Elsewhere:** how the code is built goes to `write-architecture`, the reason for a hard-to-reverse choice to `record-decision`, and a term's meaning to `update-glossary`. Skip it, and name where it belongs.
+- **Elsewhere:** how the code is built goes to `write-architecture`, a technology the team chose and the reason for a hard-to-reverse choice to `record-decision`, and a term's meaning to `update-glossary`. Skip it, and name where it belongs.
 - **New:** a problem, user, use case, constraint, non-goal or roadmap theme not in the file.
 - **Same:** already in the file with the same meaning. Skip it.
 - **Conflict:** contradicts a line in the file, such as a non-goal the user now wants as a use case.
