@@ -29,20 +29,46 @@ Done when you have the source files to read, or the user knows why nothing was w
 
 ### 2. Extract from the code
 
-**Read `references/extract.md` and follow it.** Done when each claim cites `[path:symbol]`, and each candidate decision names where it was seen.
+**Read `references/extract.md` and follow it.**
 
-### 3. Write the file
+**When `docs/ARCHITECTURE.md` exists, extract only the parts that changed.** Run `git diff --name-only <commit>..HEAD`, with the commit its "Built from" line names, and extract each part holding a listed file. When the line is missing, extract every part.
+
+Done when each claim cites `[path:symbol]`, and each candidate decision names where it was seen.
+
+### 3. Check every cite
+
+**Open each cited path and find the symbol in it.** Drop a claim whose cite does not resolve, and list it under unconfirmed claims in the report.
+
+**Check that each link in the file you will write points at a file that exists.**
+
+Done when every cite and link resolves.
+
+### 4. Write the file
 
 **When `docs/ARCHITECTURE.md` is missing, fill `templates/ARCHITECTURE.md` from this skill's folder into it, and delete its comments as you fill.** When it exists, show the changes and wait for approval.
 
+**Set the "Built from" line to the output of `git rev-parse --short HEAD`.** An uncommitted change in a cited file makes the line false; say so in the report.
+
 Done when every claim in the file carries a cite.
 
-### 4. Report
+### 5. Test it with a fresh reader
+
+**Give a fresh context window the file's text and three questions a new contributor would bring to this repository**, such as "which part writes an order", "where does a new field on an order go" and "what may the orders part not import". When the file exists, give it the text with your changes applied.
+
+**Tell the window to answer from the text alone, naming the section it used or saying "not in the doc".** Leave your extraction out of its brief, so the answers show what the file alone gives.
+
+**Check each answer against the code.** Fix the line behind a wrong answer. When the Parts table should have answered a "not in the doc" question, add the missing row. Leave out detail that only one file's code holds.
+
+**When no fresh context window is available, skip the test and say so in the report.** You wrote the file, so your own reading of it tests nothing.
+
+Done when each answer is checked against the code and the line behind each wrong one is fixed.
+
+### 6. Report
 
 **Report in this shape:**
 
 ```markdown
-**Architecture** — `docs/ARCHITECTURE.md` written; 5 parts, 2 data stores, 1 external system
+**Architecture** — `docs/ARCHITECTURE.md` written; 5 parts, 2 with no decision record; 2 data stores, 1 external system
 
 **Candidate decisions**
 
@@ -53,6 +79,10 @@ Done when every claim in the file carries a cite.
 - Settlement — names `src/billing/settlement.ts`; meaning unconfirmed
 
 **Unconfirmed claims** — `docs/design-notes.md` says payments retry three times; no code shows it
+
+**Not read** — `src/legacy/`; its window stopped before returning
+
+**Fresh reader** — 2 of 3 right; it named the web part as the writer of orders, so the Parts row now names the orders part
 ```
 
 Done when the caller or the user has the report.
