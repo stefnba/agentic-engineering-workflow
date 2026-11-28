@@ -9,9 +9,9 @@ description: Use when the user says "describe the project", "write the project d
 
 ## Guardrails
 
-**Write only `docs/PROJECT.md` yourself.** The architecture, the glossary and the decision records are written by `write-architecture`, `update-glossary` and `record-decision`, which own their formats.
+**Write no doc yourself.** `update-project`, `write-architecture`, `update-glossary` and `record-decision` write `docs/PROJECT.md`, the architecture, the glossary and the decision records, and own their formats.
 
-**Write a point only when the user decided it, the user left it assumed, or the code shows it.** Mark an assumed point "Assumed:", with what changing it would cost. An open point goes in the report, never in a doc.
+**Hand the writers only points the user decided, the user left assumed, or the code shows.** An open point goes in the report, never in a doc.
 
 **Treat a file these skills write that already exists as a draft to confirm.** Edit it only after the user approves the change.
 
@@ -54,7 +54,7 @@ Done when every candidate has a source.
 
 - Problem, users, core use cases and non-goals for `PROJECT.md`. Use cases get IDs `UC-1`, `UC-2`.
 - Constraints: what the project must run on, work with or stay within.
-- Whether a short Now, Next and Later roadmap is wanted, and what it says.
+- Whether a short Now, Next and Later roadmap of themes is wanted, and which themes.
 - Each candidate from the gather step: accept, change or reject.
 - Each term that two people could read differently.
 - Each choice still to make that is hard to reverse, affects more than one feature, and had a real alternative.
@@ -65,7 +65,7 @@ Done when the user confirmed the interview summary.
 
 ### 4. Write the docs
 
-**Fill `templates/PROJECT.md` in this skill's folder into `docs/PROJECT.md`, and delete its comments as you fill.**
+**Run `update-project` with the confirmed problem, users, use cases, constraints, non-goals and roadmap.** It returns any point someone could close as a candidate work item.
 
 **Run `update-glossary` with the confirmed terms.**
 
@@ -106,6 +106,6 @@ Done when the answers match the summary, or each mismatch is fixed or listed.
 
 **Offer to edit each overlapping doc**, and change it only after the user approves.
 
-**When `docs/workflow/tracker.md` exists, offer to create one work item per open question that blocks work, flagged as that file says for a needed decision.** Create them only after the user says yes, because work items are visible to everyone with access.
+**When `docs/workflow/tracker.md` exists, offer to create one work item per candidate work item from `update-project`, and one per open question that blocks work, flagged as that file says for a needed decision.** Create them only after the user says yes, because work items are visible to everyone with access.
 
 Done when the user has the report and the diff is uncommitted.
