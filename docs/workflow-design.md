@@ -284,7 +284,7 @@ The former `BRIEF.md` is now [`experiments/harness-tests.md`](experiments/harnes
 - **Assumed.** A greenfield repository builds a walking skeleton before feature work: one thin end-to-end slice, reviewed by hand, because agents copy its patterns.
 - **Assumed.** An undecided area gets a throwaway spike on a branch. Only the resulting decision record merges.
 - **Assumed.** Every agent hand-back lists the choices it made that the spec did not cover, sorted by how hard they are to reverse. The owner marks each one accepted, assumed or rejected.
-- **Assumed.** Agents only propose decision records. A record needs all three: the choice is hard to reverse, it affects more than one feature, and a real alternative existed. Everything else is just code.
+- **Assumed.** Agents only propose decision records. A record needs all four: the choice is hard to reverse, it affects more than one feature, a reader of the code would wonder why, and a real alternative existed. Everything else is just code.
 - **Assumed.** A durable decision goes into a short decision record or a code comment, not only into an issue, because closed issues are rarely read.
 - **Assumed.** Each assumption records what was chosen, why, and what it would cost to change. Code built on an assumption is not extended or copied without asking.
 - **Assumed.** An open question that blocks work is a work item flagged `needs-decision`.
